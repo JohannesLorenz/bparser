@@ -1,13 +1,13 @@
 %{
  
-/*
- * Parser.y file
+/**
+ * @file parser.y
  * To generate the parser run: "bison Parser.y"
  */
  
-#include "Expression.h"
-#include "Parser.h"
-#include "Lexer.h"
+#include "node.h"
+#include "parser.h"
+#include "lexer.h"
 
 int yyerror(node_t **expression, yyscan_t scanner, const char *msg) {
     fprintf(stderr,"Line %d, column %d: Error:%s\n", yyget_lineno(scanner), yyget_column(scanner), msg); return 0;
@@ -25,8 +25,8 @@ typedef void* yyscan_t;
 
 }
 
-%output  "Parser.c"
-%defines "Parser.h"
+%output  "parser.c"
+%defines "parser.h"
  
 %define api.pure
 %lex-param   { yyscan_t scanner }
@@ -184,7 +184,7 @@ multiplicative_expression
 
 additive_expression
 	: multiplicative_expression { $$=$1; }
-	| additive_expression '+' multiplicative_expression { $$ = new expression_t(e_plus, $1, $3); }
+	| additive_expression '+' multiplicative_expression { $$ = new expression_t(op_add, $1, $3); }
 	| additive_expression '-' multiplicative_expression
 	;
 

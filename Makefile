@@ -1,20 +1,31 @@
 # Makefile
 
-FILES	= Lexer.c Parser.c Expression.c main.c
+FILES	= lexer.o parser.o node.o visitor.o main.o
 CC	= g++
 # -Werror -Wno-unused ?
 CFLAGS	= -Wall -Wextra -Werror -Wno-unused -g -ansi -DYYDEBUG=1
 BISON_BIN = /home/t0161834/pakete/bison-3.0.4/install/bin/bison
 FLEX_BIN = /home/t0161834/pakete/flex-2.5.39/install/bin/flex
 
-test: $(FILES)
-	$(CC) $(CFLAGS) $(FILES) -o test
+all: main
+main: $(FILES)
+	$(CC) $(CFLAGS) *.o -o main
 
-Lexer.c: Lexer.l 
-	$(FLEX_BIN) Lexer.l
+lexer.c: lexer.l 
+	$(FLEX_BIN) lexer.l
 
-Parser.c: Parser.y Lexer.c
-	$(BISON_BIN) -t --debug Parser.y
+parser.c: parser.y lexer.c
+	$(BISON_BIN) -t --debug parser.y
 
+# default compilation rule
+%.o: %.cpp lexer.c parser.c %.h
+	$(CC) $(CFLAGS) -c $< -o $@
+# main.cpp has no header file:
+main.o: main.cpp lexer.c parser.c
+	$(CC) $(CFLAGS) -c $< -o $@
+# rule to compile lexer and parser:
+%.o: %.c lexer.c parser.c node.h
+	$(CC) $(CFLAGS) -c $< -o $@
 clean:
-	rm -f *.o *~ Lexer.c Lexer.h Parser.c Parser.h test
+	rm -f *.o *~ lexer.c lexer.h parser.c parser.h main
+rebuild: clean all

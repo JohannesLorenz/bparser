@@ -1,18 +1,18 @@
 %{
  
-/*
- * Lexer.l file
- * To generate the lexical analyzer run: "flex Lexer.l"
+/**
+ * @file lexer.l
+ * To generate the lexical analyzer run: "flex lexer.l"
  */
  
-#include "Expression.h"
-#include "Parser.h"
+#include "node.h"
+#include "parser.h"
 
 #include <stdio.h>
  
 %}
 
-%option outfile="Lexer.c" header-file="Lexer.h"
+%option outfile="lexer.c" header-file="lexer.h"
 %option warn nodefault
  
 %option reentrant noyywrap never-interactive nounistd
@@ -42,8 +42,6 @@ ES  (\\(['"\?\\abfnrtv]|[0-7]{1,3}|x[a-fA-F0-9]+))
 WS  [ \t\v\n\f]
 
 %{
-#include <stdio.h>
-
 extern void yyerror(const char *);  /* prints grammar violation message */
 
 extern int sym_type(const char *);  /* returns type from symbol table */

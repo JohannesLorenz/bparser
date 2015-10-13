@@ -1,5 +1,6 @@
-Lexer.c
-Lexer.h
-Parser.c
-Parser.h
+lexer.c
+lexer.h
+parser.c
+parser.h
+main
 
