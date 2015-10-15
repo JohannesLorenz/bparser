@@ -1,20 +1,28 @@
 %{
- 
+
 /**
  * @file parser.y
  * To generate the parser run: "bison Parser.y"
  */
- 
+
+#include <iostream>
 #include "node.h"
 #include "parser.h"
 #include "lexer.h"
 #include "visitor.h"
 
 int yyerror(node_t **expression, yyscan_t scanner, const char *msg) {
-    fprintf(stderr,"Line %d, column %d: Error:%s\n", yyget_lineno(scanner), yyget_column(scanner), msg); return 0;
-    // Add error handling routine as needed
+	fprintf(stderr,"At: %s,\n  line %d, column %d: Error:%s\n", yyget_text(scanner), yyget_lineno(scanner), yyget_column(scanner), msg); return 0;
+	// Add error handling routine as needed
 }
- 
+
+extern geom_t get_pos();
+
+/*struct last_pos {
+	static std::size_t last_line;
+	std::size_t last_text;
+}*/
+
 %}
 
 %code requires {
@@ -43,6 +51,11 @@ typedef void* yyscan_t;
 	compound_statement_t* compound_statement;
 	external_declaration_t* external_declaration;
 	function_definition_t* function_definition;
+	storage_class_specifier_t* storage_class_specifier;
+	type_specifier_t* type_specifier;
+	type_qualifier_t* type_qualifier;
+	alignment_specifier_t* alignment_specifier;
+	function_specifier_t* function_specifier;
 }
 
 %token	IDENTIFIER I_CONSTANT F_CONSTANT STRING_LITERAL FUNC_NAME SIZEOF
@@ -66,11 +79,6 @@ typedef void* yyscan_t;
 %type <expression> translation_unit
 	declaration
 	static_assert_declaration
-	storage_class_specifier
-	type_specifier
-	type_qualifier
-	function_specifier
-	alignment_specifier
 	block_item_list
 	block_item
 	statement
@@ -100,6 +108,11 @@ typedef void* yyscan_t;
 %type <declaration_list> declaration_list
 %type <function_definition> function_definition
 %type <external_declaration> external_declaration
+%type <storage_class_specifier> storage_class_specifier
+%type <type_specifier> type_specifier
+%type <type_qualifier> type_qualifier
+%type <alignment_specifier> alignment_specifier
+%type <function_specifier> function_specifier
 
 %start translation_unit
 
@@ -287,16 +300,16 @@ declaration
 	;
 
 declaration_specifiers
-	: storage_class_specifier declaration_specifiers
-	| storage_class_specifier
-	| type_specifier declaration_specifiers
-	| type_specifier
-	| type_qualifier declaration_specifiers
-	| type_qualifier
-	| function_specifier declaration_specifiers
-	| function_specifier
-	| alignment_specifier declaration_specifiers
-	| alignment_specifier
+	: storage_class_specifier declaration_specifiers { $2->storage_class_specifiers.push_back($1); $$=$2; }
+	| storage_class_specifier { $$ = new declaration_specifiers_t($1); }
+	| type_specifier declaration_specifiers { $2->type_specifiers.push_back($1); $$=$2; }
+	| type_specifier { $$ = new declaration_specifiers_t($1); }
+	| type_qualifier declaration_specifiers { $2->type_qualifiers.push_back($1); $$=$2; }
+	| type_qualifier { $$ = new declaration_specifiers_t($1); }
+	| function_specifier declaration_specifiers { $2->function_specifiers.push_back($1); $$=$2; }
+	| function_specifier { $$ = new declaration_specifiers_t($1); }
+	| alignment_specifier declaration_specifiers { $2->alignment_specifiers.push_back($1); $$=$2; }
+	| alignment_specifier { $$ = new declaration_specifiers_t($1); }
 	;
 
 init_declarator_list
@@ -322,9 +335,9 @@ type_specifier
 	: VOID
 	| CHAR
 	| SHORT
-	| INT { $$ = new type_specifier_t(); } // TODO
+	| INT { $$ = new type_specifier_t(get_pos(), t_int); }
 	| LONG
-	| FLOAT
+	| FLOAT  { $$ = new type_specifier_t(get_pos(), t_float); }
 	| DOUBLE
 	| SIGNED
 	| UNSIGNED
@@ -597,8 +610,8 @@ jump_statement
 	;
 
 translation_unit
-	: external_declaration { *expression = new translation_unit_t(); dynamic_cast<translation_unit_t*>(*expression)->v.push_back(dynamic_cast<external_declaration_t*>($1)); }
-	| translation_unit external_declaration { dynamic_cast<translation_unit_t*>(*expression)->v.push_back(dynamic_cast<external_declaration_t*>($2)); /* append_t<external_declaration_t> a($2); (*expression)->accept(a); (*expression)->append($2);*/ } // TODO: this case hopefully never happens?
+	: external_declaration { *expression = new translation_unit_t(); dynamic_cast<translation_unit_t*>(*expression)->v.push_back($1); }
+	| translation_unit external_declaration { dynamic_cast<translation_unit_t*>(*expression)->v.push_back($2); /* append_t<external_declaration_t> a($2); (*expression)->accept(a); (*expression)->append($2);*/ } // TODO: this case hopefully never happens?
 	;
 
 external_declaration

@@ -1,5 +1,19 @@
+#include <iostream>
+
 #include "node.h"
 #include "visitor.h"
+
+std::ostream& operator<<(std::ostream& stream,
+	const geom_t& g)
+{
+	return stream << "geometry(line: " << g.line << ", col: " << g.col << ")";
+}
+
+std::ostream& operator<<(std::ostream& stream,
+	const span_t& s)
+{
+	return stream << "span(" << s.first << ", " << s.second << ")";
+}
 
 void number_t::accept(visitor_t& v) { v.visit(this); }
 void expression_t::accept(visitor_t& v) { v.visit(this); }

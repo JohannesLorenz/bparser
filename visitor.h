@@ -37,8 +37,20 @@ class dumper_t : public visitor_t
 	std::size_t depth;
 	std::ostream& stream;
 	void handle_depth();
+
 	template<class T>
 	bool tvisit(T* ptr) { return ptr ? (visit(ptr), true) : false; }
+
+	template<class T>
+	void vvisit(const std::vector<T*>& v)
+	{
+		for(typename std::vector<T*>::const_iterator itr = v.begin();
+			itr != v.end(); ++itr)
+		{
+			visit(*itr);
+		}
+	} 
+
 public:
 	dumper_t(std::ostream& stream = std::cout) : depth(0), stream(stream) {};
 	void visit(number_t *e);

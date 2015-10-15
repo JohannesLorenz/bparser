@@ -8,8 +8,41 @@
 #include "node.h"
 #include "parser.h"
 
-#include <stdio.h>
- 
+#include <cassert>
+#include <cstdio> // TODO: remove?
+#include <iostream>
+
+class pos_counter
+{
+	static std::size_t last_line;
+	static std::size_t last_col;
+	static std::size_t last_mult;
+public:
+	static span_t count(const char* text_pos, std::size_t mult = 1) {
+		static const char* last_text = text_pos;
+		last_col += ((text_pos - last_text) * last_mult);
+		std::cout << "last_col: " << last_col << ", mult: " << mult << std::endl;
+		last_text = text_pos;
+		last_mult = mult;
+		
+		//geom_t geom(last_pos::value.line, yytext - last_text) last_span::value =  }
+		return span_t();
+	}
+
+	static void newline() { ++last_col; last_line=0; }
+
+	static geom_t pos() { return geom_t(last_line, last_col); }
+};
+
+std::size_t pos_counter::last_line = 0;
+std::size_t pos_counter::last_col = 0;
+std::size_t pos_counter::last_mult = 1;
+
+span_t cnt(const char* text_pos, std::size_t mult = 1) {
+	return pos_counter::count(text_pos, mult); }
+
+geom_t get_pos() { return pos_counter::pos(); }
+
 %}
 
 %option outfile="lexer.c" header-file="lexer.h"
@@ -73,7 +106,7 @@ static int check_type(void);
 "goto"					{ return(GOTO); }
 "if"					{ return(IF); }
 "inline"				{ return(INLINE); }
-"int"					{ return(INT); }
+"int"					{ cnt(yytext); return(INT); }
 "long"					{ return(LONG); }
 "register"				{ return(REGISTER); }
 "restrict"				{ return(RESTRICT); }
@@ -102,7 +135,7 @@ static int check_type(void);
 "_Thread_local"                         { return THREAD_LOCAL; }
 "__func__"                              { return FUNC_NAME; }
 
-{L}{A}*					{ return check_type(); }
+{L}{A}*					{ cnt(yytext); return check_type(); }
 
 {HP}{H}+{IS}?				{ sscanf(yytext, "%x", &yylval->value); return I_CONSTANT; }
 {NZ}{D}*{IS}?				{ sscanf(yytext, "%d", &yylval->value); return I_CONSTANT; }
@@ -141,13 +174,13 @@ static int check_type(void);
 "=="					{ return EQ_OP; }
 "!="					{ return NE_OP; }
 ";"					{ return ';'; }
-("{"|"<%")				{ return '{'; }
-("}"|"%>")				{ return '}'; }
+("{"|"<%")				{ cnt(yytext); return '{'; }
+("}"|"%>")				{ cnt(yytext); return '}'; }
 ","					{ return ','; }
 ":"					{ return ':'; }
 "="					{ return '='; }
-"("					{ return '('; }
-")"					{ return ')'; }
+"("					{ cnt(yytext); return '('; }
+")"					{ cnt(yytext); return ')'; }
 ("["|"<:")				{ return '['; }
 ("]"|":>")				{ return ']'; }
 "."					{ return '.'; }
@@ -165,8 +198,12 @@ static int check_type(void);
 "|"					{ return '|'; }
 "?"					{ return '?'; }
 
-{WS}					{ /* whitespace separates tokens */ }
-.					{ /* discard bad characters */ }
+"\t"					{ cnt(yytext, 8); /* whitespace separates tokens */ }
+"\n"					{ cnt(yytext); pos_counter::newline(); /* whitespace separates tokens */ }
+"\v"					{ throw "non-supported sign \\v"; }
+"\f"					{ throw "non-supported sign \\f"; }
+" "					{ cnt(yytext); }
+.					{ std::cerr << "At: " << yytext << std::endl; throw "bad character"; /* discard bad characters */ }
 
 %%
 

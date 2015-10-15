@@ -36,7 +36,8 @@ void dumper_t::visit(storage_class_specifier_t* n)
 
 void dumper_t::visit(type_specifier_t* n)
 {
-	
+	incr_depth_t x(&depth, stream);
+	stream << "type specifier, id: " << +n->id << ", pos: " << n->span << std::endl;
 }
 
 void dumper_t::visit(type_qualifier_t* n) {}
@@ -63,6 +64,11 @@ void dumper_t::visit(declaration_specifiers_t* n)
 {
 	incr_depth_t x(&depth, stream);
 	stream << "declaration specifiers" << std::endl;
+	vvisit(n->storage_class_specifiers);
+	vvisit(n->type_specifiers);
+	vvisit(n->type_qualifiers);
+	vvisit(n->function_specifiers);
+	vvisit(n->alignment_specifiers);
 }
 void dumper_t::visit(function_definition_t* n)
 {
@@ -84,11 +90,7 @@ void dumper_t::visit(translation_unit_t* n)
 {
 	incr_depth_t x(&depth, stream);
 	stream << "translation unit" << std::endl;
-	for(std::vector<external_declaration_t*>::const_iterator itr = n->v.begin();
-		itr != n->v.end(); ++itr)
-	{
-		visit(*itr);
-	}
+	vvisit(n->v);
 }
 
 void dumper_t::visit(declaration_t* n) {}

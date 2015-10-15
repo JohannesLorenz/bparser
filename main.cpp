@@ -1,6 +1,4 @@
-/*
- * main.c file
- */
+	#include <iostream>
 
 #include "node.h"
 #include "visitor.h"
@@ -16,19 +14,23 @@ translation_unit_t *getAST(const char *expr)
 	translation_unit_t *expression;
 	yyscan_t scanner;
 	YY_BUFFER_STATE state;
+	
 	// yydebug = 1;
 	if (yylex_init(&scanner)) {
 		// couldn't initialize
 		return NULL;
 	}
-	
+	std::cerr << "text: " << yyget_text(scanner) << std::endl;
 	state = yy_scan_string(expr, scanner);
 	
+	std::cerr << "text: " << yyget_text(scanner) << std::endl;
+
 	if (yyparse((node_t**)&expression, scanner)) { // TODO bad cast??
 		// error parsing
 		return NULL;
 	}
-	
+	std::cerr << "text: " << yyget_text(scanner) << std::endl;	
+
 	yy_delete_buffer(state, scanner);
 	
 	yylex_destroy(scanner);
@@ -65,7 +67,7 @@ int main(void)
 		"return 42 + 0;"
 		"}\n";
 #else
-	char test[] = "int main() {}";
+	char test[] = "\tint main() {}";
 #endif
 	
 	int result = 0;
