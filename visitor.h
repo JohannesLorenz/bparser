@@ -42,9 +42,9 @@ class dumper_t : public visitor_t
 	bool tvisit(T* ptr) { return ptr ? (visit(ptr), true) : false; }
 
 	template<class T>
-	void vvisit(const std::vector<T*>& v)
+	void vvisit(const std::list<T*>& v)
 	{
-		for(typename std::vector<T*>::const_iterator itr = v.begin();
+		for(typename std::list<T*>::const_iterator itr = v.begin();
 			itr != v.end(); ++itr)
 		{
 			visit(*itr);

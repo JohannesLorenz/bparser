@@ -6,7 +6,7 @@
 #define NODE_H
 
 #include <cstddef>
-#include <vector>
+#include <list>
 
 struct geom_t
 {
@@ -110,7 +110,7 @@ struct alignment_specifier_t : public node_t{
 struct declaration_list_t : public node_t
 {
 	virtual void accept(class visitor_t& v);
-	std::vector<struct declaration_t*> declarations;
+	std::list<struct declaration_t*> declarations;
 };
 struct compound_statement_t : public node_t {
 	virtual void accept(class visitor_t& v);
@@ -133,11 +133,11 @@ struct declarator_t : public node_t
 struct declaration_specifiers_t : public node_t
 {
 	virtual void accept(class visitor_t& v);
-	std::vector<storage_class_specifier_t*> storage_class_specifiers;
-	std::vector<type_specifier_t*> type_specifiers;
-	std::vector<type_qualifier_t*> type_qualifiers;
-	std::vector<function_specifier_t*> function_specifiers;
-	std::vector<alignment_specifier_t*> alignment_specifiers;
+	std::list<storage_class_specifier_t*> storage_class_specifiers;
+	std::list<type_specifier_t*> type_specifiers;
+	std::list<type_qualifier_t*> type_qualifiers;
+	std::list<function_specifier_t*> function_specifiers;
+	std::list<alignment_specifier_t*> alignment_specifiers;
 	declaration_specifiers_t(storage_class_specifier_t* s)
 		{ storage_class_specifiers.push_back(s); }
 	declaration_specifiers_t(type_specifier_t* s)
@@ -180,7 +180,7 @@ struct external_declaration_t : public node_t
 
 struct translation_unit_t : public node_t
 {
-	std::vector<external_declaration_t*> v;
+	std::list<external_declaration_t*> v;
 	virtual void accept(class visitor_t& v);
 };
 

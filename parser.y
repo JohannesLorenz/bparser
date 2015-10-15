@@ -18,10 +18,21 @@ int yyerror(node_t **expression, yyscan_t scanner, const char *msg) {
 
 extern geom_t get_pos();
 
-/*struct last_pos {
-	static std::size_t last_line;
-	std::size_t last_text;
-}*/
+template<class R, class Left>
+R* init(Left* left) {
+	R* r = new R(); r->push_back(left);
+	return r;
+}
+
+template<class R, class S, class Left>
+R* app_left(R* cur, S& stor, Left* left) {
+	 return stor.push_front(left), cur; 
+}
+
+template<class R, class S, class Right>
+R* app_right(R* cur, S& stor, Right* left) {
+	 return stor.push_back(left), cur;
+}
 
 %}
 
@@ -300,15 +311,15 @@ declaration
 	;
 
 declaration_specifiers
-	: storage_class_specifier declaration_specifiers { $2->storage_class_specifiers.push_back($1); $$=$2; }
+	: storage_class_specifier declaration_specifiers { $2->storage_class_specifiers.push_front($1); $$=$2; }
 	| storage_class_specifier { $$ = new declaration_specifiers_t($1); }
-	| type_specifier declaration_specifiers { $2->type_specifiers.push_back($1); $$=$2; }
+	| type_specifier declaration_specifiers { $2->type_specifiers.push_front($1); $$=$2; }
 	| type_specifier { $$ = new declaration_specifiers_t($1); }
-	| type_qualifier declaration_specifiers { $2->type_qualifiers.push_back($1); $$=$2; }
+	| type_qualifier declaration_specifiers { $2->type_qualifiers.push_front($1); $$=$2; }
 	| type_qualifier { $$ = new declaration_specifiers_t($1); }
-	| function_specifier declaration_specifiers { $2->function_specifiers.push_back($1); $$=$2; }
+	| function_specifier declaration_specifiers { $2->function_specifiers.push_front($1); $$=$2; }
 	| function_specifier { $$ = new declaration_specifiers_t($1); }
-	| alignment_specifier declaration_specifiers { $2->alignment_specifiers.push_back($1); $$=$2; }
+	| alignment_specifier declaration_specifiers { $2->alignment_specifiers.push_front($1); $$=$2; }
 	| alignment_specifier { $$ = new declaration_specifiers_t($1); }
 	;
 
