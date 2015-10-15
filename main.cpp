@@ -11,9 +11,9 @@ extern int yydebug;
 
 int yyparse(node_t **expression, yyscan_t scanner);
 
-node_t *getAST(const char *expr)
+translation_unit_t *getAST(const char *expr)
 {	
-	node_t *expression;
+	translation_unit_t *expression;
 	yyscan_t scanner;
 	YY_BUFFER_STATE state;
 	// yydebug = 1;
@@ -24,7 +24,7 @@ node_t *getAST(const char *expr)
 	
 	state = yy_scan_string(expr, scanner);
 	
-	if (yyparse(&expression, scanner)) {
+	if (yyparse((node_t**)&expression, scanner)) { // TODO bad cast??
 		// error parsing
 		return NULL;
 	}
@@ -54,14 +54,19 @@ int evaluate(node_t *e)
  
 int main(void)
 {
-	node_t *e = NULL;
+	translation_unit_t *e = NULL;
 	//    char test[]=" 4 + 2*10 + 3*( 5 + 1 )";
+
+#if 0
 	char test[] = "int main()\n"
 		"{\n"
 	//        "int x = 0;\n"
 	//        "return x < 3;\n"
 		"return 42 + 0;"
 		"}\n";
+#else
+	char test[] = "int main() {}";
+#endif
 	
 	int result = 0;
 	

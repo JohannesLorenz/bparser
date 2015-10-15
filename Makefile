@@ -3,7 +3,7 @@
 FILES	= lexer.o parser.o node.o visitor.o main.o
 CC	= g++
 # -Werror -Wno-unused ?
-CFLAGS	= -Wall -Wextra -Werror -Wno-unused -g -ansi -DYYDEBUG=1
+CFLAGS	= -Wall -Wextra -Werror -Wno-unused -g -ggdb -ansi -DYYDEBUG=1
 BISON_BIN = /home/t0161834/pakete/bison-3.0.4/install/bin/bison
 FLEX_BIN = /home/t0161834/pakete/flex-2.5.39/install/bin/flex
 

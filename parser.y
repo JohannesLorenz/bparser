@@ -8,6 +8,7 @@
 #include "node.h"
 #include "parser.h"
 #include "lexer.h"
+#include "visitor.h"
 
 int yyerror(node_t **expression, yyscan_t scanner, const char *msg) {
     fprintf(stderr,"Line %d, column %d: Error:%s\n", yyget_lineno(scanner), yyget_column(scanner), msg); return 0;
@@ -34,8 +35,14 @@ typedef void* yyscan_t;
 %parse-param { yyscan_t scanner }
 
 %union {
-    int value;
-    node_t *expression;
+	int value;
+	node_t *expression;
+	declaration_specifiers_t* declaration_specifiers;
+	declarator_t* declarator;
+	declaration_list_t* declaration_list;
+	compound_statement_t* compound_statement;
+	external_declaration_t* external_declaration;
+	function_definition_t* function_definition;
 }
 
 %token	IDENTIFIER I_CONSTANT F_CONSTANT STRING_LITERAL FUNC_NAME SIZEOF
@@ -56,14 +63,14 @@ typedef void* yyscan_t;
 %token	ALIGNAS ALIGNOF ATOMIC GENERIC NORETURN STATIC_ASSERT THREAD_LOCAL
 
 %type <value> I_CONSTANT
-%type <expression> translation_unit external_declaration declaration function_definition declaration_specifiers
+%type <expression> translation_unit
+	declaration
 	static_assert_declaration
 	storage_class_specifier
 	type_specifier
 	type_qualifier
 	function_specifier
 	alignment_specifier
-	compound_statement
 	block_item_list
 	block_item
 	statement
@@ -87,11 +94,18 @@ typedef void* yyscan_t;
 	assignment_expression
 	expression
 
+%type <declaration_specifiers> declaration_specifiers
+%type <compound_statement> compound_statement
+%type <declarator > declarator
+%type <declaration_list> declaration_list
+%type <function_definition> function_definition
+%type <external_declaration> external_declaration
+
 %start translation_unit
 
 %printer { fprintf (yyoutput, "constant %d", $$); } I_CONSTANT
 // %printer { fprintf (yyoutput, "type %d", $$.expression->type); } <>
- %printer { fprintf (yyoutput, "<...?>"); } <>
+%printer { fprintf (yyoutput, "<...?>"); } <>
 
 
 %%
@@ -308,7 +322,7 @@ type_specifier
 	: VOID
 	| CHAR
 	| SHORT
-	| INT
+	| INT { $$ = new type_specifier_t(); } // TODO
 	| LONG
 	| FLOAT
 	| DOUBLE
@@ -424,7 +438,7 @@ direct_declarator
 	| direct_declarator '(' identifier_list ')'
 	;
 
-pointer
+pointer // should actually be named: "pointers"
 	: '*' type_qualifier_list pointer
 	| '*' type_qualifier_list
 	| '*' pointer
@@ -540,8 +554,8 @@ labeled_statement
 	;
 
 compound_statement
-	: '{' '}'
-	| '{'  block_item_list '}'  { $$=$2; }
+	: '{' '}' { $$ = new compound_statement_t(); }
+	| '{'  block_item_list '}'
 	;
 
 block_item_list
@@ -572,7 +586,7 @@ iteration_statement
 	| FOR '(' expression_statement expression_statement expression ')' statement
 	| FOR '(' declaration expression_statement ')' statement
 	| FOR '(' declaration expression_statement expression ')' statement
-	;
+	;	
 
 jump_statement
 	: GOTO IDENTIFIER ';'
@@ -583,18 +597,18 @@ jump_statement
 	;
 
 translation_unit
-	: external_declaration { *expression = $1; }
-	| translation_unit external_declaration
+	: external_declaration { *expression = new translation_unit_t(); dynamic_cast<translation_unit_t*>(*expression)->v.push_back(dynamic_cast<external_declaration_t*>($1)); }
+	| translation_unit external_declaration { dynamic_cast<translation_unit_t*>(*expression)->v.push_back(dynamic_cast<external_declaration_t*>($2)); /* append_t<external_declaration_t> a($2); (*expression)->accept(a); (*expression)->append($2);*/ } // TODO: this case hopefully never happens?
 	;
 
 external_declaration
-	: function_definition { $$ = $1; }
+	: function_definition { $$ = new external_declaration_t($1); }
 	| declaration
 	;
 
 function_definition
-	: declaration_specifiers declarator declaration_list compound_statement { $$ = $4; }
-	| declaration_specifiers declarator compound_statement { $$ = $3; }
+	: declaration_specifiers declarator declaration_list compound_statement { $$ = new function_definition_t($1, $2, $3, $4); }
+	| declaration_specifiers declarator compound_statement { $$ = new function_definition_t($1, $2, NULL, $3); }
 	;
 
 declaration_list
