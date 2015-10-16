@@ -8,6 +8,7 @@
 class visitor_t
 {
 public:
+	virtual void visit(type_specifier_simple_t* e) {}
 	virtual void visit(number_t *e) {}
 	virtual void visit(expression_t *e) {}
 	virtual void visit(storage_class_specifier_t* e) {}
@@ -24,6 +25,7 @@ public:
 	virtual void visit(function_definition_t* e) {}
 	virtual void visit(external_declaration_t* e) {}
 	virtual void visit(translation_unit_t *e) {}
+	virtual void visit(token_t* t) {}
 	virtual ~visitor_t() {}
 };
 
@@ -49,11 +51,23 @@ class dumper_t : public visitor_t
 		{
 			visit(*itr);
 		}
-	} 
+	}
+
+	template<class T>
+	void vaccept(const std::list<T*>& v)
+	{
+		for(typename std::list<T*>::const_iterator itr = v.begin();
+			itr != v.end(); ++itr)
+		{
+			(*itr)->accept(*this);
+		}
+	}
 
 public:
 	dumper_t(std::ostream& stream = std::cout) : depth(0), stream(stream) {};
+	virtual void visit(type_specifier_simple_t* e);
 	void visit(number_t *e);
+	void visit(token_t* e);
 	void visit(expression_t *e);
 	//void visit(node_t *e); //!< default
 	void visit(storage_class_specifier_t* n);

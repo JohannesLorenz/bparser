@@ -15,11 +15,14 @@ std::ostream& operator<<(std::ostream& stream,
 	return stream << "span(" << s.first << ", " << s.second << ")";
 }
 
+template<>
+void type_specifier_simple_t::accept(visitor_t& v) { v.visit(this); }
+
+void token_t::accept(visitor_t& v) { v.visit(this); }
 void number_t::accept(visitor_t& v) { v.visit(this); }
 void expression_t::accept(visitor_t& v) { v.visit(this); }
-
 void storage_class_specifier_t::accept(visitor_t& v) { v.visit(this); }
-void type_specifier_t::accept(visitor_t& v) { v.visit(this); }
+//void type_specifier_t::accept(visitor_t& v) { v.visit(this); }
 void type_qualifier_t::accept(visitor_t& v) { v.visit(this); }
 void function_specifier_t::accept(visitor_t& v) { v.visit(this); }
 void alignment_specifier_t::accept(visitor_t& v) { v.visit(this); }
@@ -31,7 +34,6 @@ void declarator_t::accept(visitor_t& v) { v.visit(this); }
 void declaration_specifiers_t::accept(visitor_t& v) { v.visit(this); }
 void function_definition_t::accept(visitor_t& v) { v.visit(this); }
 void external_declaration_t::accept(visitor_t& v) { v.visit(this); }
-
 void translation_unit_t::accept(visitor_t& v) { v.visit(this); }
 
 void expression_t::accept_children(visitor_t& v)

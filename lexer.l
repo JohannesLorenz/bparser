@@ -11,6 +11,7 @@
 #include <cassert>
 #include <cstdio> // TODO: remove?
 #include <iostream>
+#include <vector>
 
 class pos_counter
 {
@@ -41,7 +42,40 @@ std::size_t pos_counter::last_mult = 1;
 span_t cnt(const char* text_pos, std::size_t mult = 1) {
 	return pos_counter::count(text_pos, mult); }
 
-geom_t get_pos() { return pos_counter::pos(); }
+geom_t get_pos() { return pos_counter::pos(); } // TODO: common header instead of extern?
+
+struct token_str
+{
+	static std::vector<node_t*> value;
+};
+
+std::vector<node_t*> token_str::value;
+
+std::vector<node_t*>& get_token_vector() { return token_str::value; }
+
+int app(int token_id, const char* text, int mult = 1) {
+	cnt(text, mult);
+	return token_str::value.push_back(new token_t(get_pos(), token_id)), token_id;
+}
+
+int app_num(int value) {
+	return token_str::value.push_back(new number_t(value)), I_CONSTANT;
+}
+
+template<class T> void app(T* elem) {
+	token_str::value.push_back(elem);
+}
+
+int tmp_i;
+
+token_t* tok(int id, const char* text) {
+	cnt(text);
+	token_t* t = new token_t(get_pos(), id);
+	app(t);
+	return t;
+}
+
+
 
 %}
 
@@ -106,7 +140,7 @@ static int check_type(void);
 "goto"					{ return(GOTO); }
 "if"					{ return(IF); }
 "inline"				{ return(INLINE); }
-"int"					{ cnt(yytext); return(INT); }
+"int"					{ return app(INT, yytext); }
 "long"					{ return(LONG); }
 "register"				{ return(REGISTER); }
 "restrict"				{ return(RESTRICT); }
@@ -135,11 +169,11 @@ static int check_type(void);
 "_Thread_local"                         { return THREAD_LOCAL; }
 "__func__"                              { return FUNC_NAME; }
 
-{L}{A}*					{ cnt(yytext); return check_type(); }
+{L}{A}*					{ return app(check_type(), yytext); }
 
-{HP}{H}+{IS}?				{ sscanf(yytext, "%x", &yylval->value); return I_CONSTANT; }
-{NZ}{D}*{IS}?				{ sscanf(yytext, "%d", &yylval->value); return I_CONSTANT; }
-"0"{O}*{IS}?				{ sscanf(yytext, "%o", &yylval->value); return I_CONSTANT; }
+{HP}{H}+{IS}?				{ sscanf(yytext, "%x", &tmp_i); return app_num(tmp_i); }
+{NZ}{D}*{IS}?				{ sscanf(yytext, "%d", &tmp_i); return app_num(tmp_i); }
+"0"{O}*{IS}?				{ sscanf(yytext, "%o", &tmp_i); return app_num(tmp_i); }
 {CP}?"'"([^'\\\n]|{ES})+"'"		{ return I_CONSTANT; }
 
 {D}+{E}{FS}?				{ return F_CONSTANT; }
@@ -174,13 +208,13 @@ static int check_type(void);
 "=="					{ return EQ_OP; }
 "!="					{ return NE_OP; }
 ";"					{ return ';'; }
-("{"|"<%")				{ cnt(yytext); return '{'; }
-("}"|"%>")				{ cnt(yytext); return '}'; }
+("{"|"<%")				{ return app('{', yytext); }
+("}"|"%>")				{ return app('}', yytext); }
 ","					{ return ','; }
 ":"					{ return ':'; }
 "="					{ return '='; }
-"("					{ cnt(yytext); return '('; }
-")"					{ cnt(yytext); return ')'; }
+"("					{ return app('(', yytext); }
+")"					{ return app(')', yytext); }
 ("["|"<:")				{ return '['; }
 ("]"|":>")				{ return ']'; }
 "."					{ return '.'; }
@@ -198,11 +232,11 @@ static int check_type(void);
 "|"					{ return '|'; }
 "?"					{ return '?'; }
 
-"\t"					{ cnt(yytext, 8); /* whitespace separates tokens */ }
-"\n"					{ cnt(yytext); pos_counter::newline(); /* whitespace separates tokens */ }
+"\t"					{ app('\t', yytext, 8); /* whitespace separates tokens */ }
+"\n"					{ pos_counter::newline(); app('\n', yytext); /* whitespace separates tokens */ }
 "\v"					{ throw "non-supported sign \\v"; }
 "\f"					{ throw "non-supported sign \\f"; }
-" "					{ cnt(yytext); }
+" "					{ cnt(yytext); app(' ', yytext); }
 .					{ std::cerr << "At: " << yytext << std::endl; throw "bad character"; /* discard bad characters */ }
 
 %%

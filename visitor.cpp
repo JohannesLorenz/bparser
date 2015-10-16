@@ -16,10 +16,22 @@ public:
 	~incr_depth_t() { --*depth; }
 };
 
+void dumper_t::visit(type_specifier_simple_t* e)
+{
+	incr_depth_t x(&depth, stream);
+	stream << "simple type specifier, type: " << e->id << std::endl;
+}
+
 void dumper_t::visit(number_t* e)
 {
 	incr_depth_t x(&depth, stream);
-	stream << "value: " << e->value << std::endl;
+	stream << "number, value: " << e->value << std::endl;
+}
+
+void dumper_t::visit(token_t* e)
+{
+	incr_depth_t x(&depth, stream);
+	stream << "token, value: " << e->value << std::endl;
 }
 
 void dumper_t::visit(expression_t* e)
@@ -37,7 +49,7 @@ void dumper_t::visit(storage_class_specifier_t* n)
 void dumper_t::visit(type_specifier_t* n)
 {
 	incr_depth_t x(&depth, stream);
-	stream << "type specifier, id: " << +n->id << ", pos: " << n->span << std::endl;
+//	stream << "type specifier, id: " << +n->id << ", pos: " << n->span << std::endl;
 }
 
 void dumper_t::visit(type_qualifier_t* n) {}
@@ -64,11 +76,12 @@ void dumper_t::visit(declaration_specifiers_t* n)
 {
 	incr_depth_t x(&depth, stream);
 	stream << "declaration specifiers" << std::endl;
-	vvisit(n->storage_class_specifiers);
+	/*vvisit(n->storage_class_specifiers);
 	vvisit(n->type_specifiers);
 	vvisit(n->type_qualifiers);
 	vvisit(n->function_specifiers);
-	vvisit(n->alignment_specifiers);
+	vvisit(n->alignment_specifiers);*/
+	vaccept(n->specifiers);
 }
 void dumper_t::visit(function_definition_t* n)
 {

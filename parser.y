@@ -5,6 +5,7 @@
  * To generate the parser run: "bison Parser.y"
  */
 
+#include <vector>
 #include <iostream>
 #include "node.h"
 #include "parser.h"
@@ -18,10 +19,15 @@ int yyerror(node_t **expression, yyscan_t scanner, const char *msg) {
 
 extern geom_t get_pos();
 
-template<class R, class Left>
+/*template<class R, class Left>
 R* init(Left* left) {
 	R* r = new R(); r->push_back(left);
 	return r;
+}*/
+
+template<class S, class Left>
+void app_first(S& stor, Left* left) {
+	 stor.push_front(left); 
 }
 
 template<class R, class S, class Left>
@@ -33,6 +39,17 @@ template<class R, class S, class Right>
 R* app_right(R* cur, S& stor, Right* left) {
 	 return stor.push_back(left), cur;
 }
+
+void c11() { throw "This C11 extension is not implemented yet."; }
+void not_yet() { throw "This extension is to be done."; }
+
+extern std::vector<token_t*>& get_token_vector();
+
+token_t* app_token() { return get_token_vector().back(); }
+
+template<class T> void alloc(T*& ptr_ref) { ptr_ref = new T*(); }
+
+token_t* t(int token_id) { return new token(get_pos(); token_id); }
 
 %}
 
@@ -55,6 +72,8 @@ typedef void* yyscan_t;
 
 %union {
 	int value;
+	op_t _operator;
+	type_specifier_id _type_specifier_id;
 	node_t *expression;
 	declaration_specifiers_t* declaration_specifiers;
 	declarator_t* declarator;
@@ -67,6 +86,19 @@ typedef void* yyscan_t;
 	type_qualifier_t* type_qualifier;
 	alignment_specifier_t* alignment_specifier;
 	function_specifier_t* function_specifier;
+	pointer_t* pointer;
+	direct_declarator_t* direct_declarator;
+	struct_or_union_specifier_t* struct_or_union_specifier;
+	enum_specifier_t* enum_specifier;
+	conditional_expression_t* conditional_expression;
+	declaration_t* declaration;
+	labeled_statement_t* labeled_statement;
+	expression_statement_t* expression_statement;
+	jump_statement_t* jump_statement;
+	selection_statement_t* selection_statement;
+	iteration_statement_t* iteration_statement;
+	init_declarator_list_t* init_declarator_list;
+	identifier_t* identifier;
 }
 
 %token	IDENTIFIER I_CONSTANT F_CONSTANT STRING_LITERAL FUNC_NAME SIZEOF
@@ -86,14 +118,13 @@ typedef void* yyscan_t;
 
 %token	ALIGNAS ALIGNOF ATOMIC GENERIC NORETURN STATIC_ASSERT THREAD_LOCAL
 
-%type <value> I_CONSTANT
+// TODO: identifier should not just return an int
+%type <value> I_CONSTANT struct_or_union ';' ':' CASE DEFAULT '{' '}' IF ELSE '(' ')' SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN IDENTIFIER
 %type <expression> translation_unit
-	declaration
 	static_assert_declaration
 	block_item_list
 	block_item
 	statement
-	jump_statement
 	constant
 	primary_expression
 	postfix_expression
@@ -109,10 +140,13 @@ typedef void* yyscan_t;
 	inclusive_or_expression
 	logical_and_expression
 	logical_or_expression
-	conditional_expression
 	assignment_expression
 	expression
 
+%type <declaration> declaration
+%type <identifier> identifier
+%type <_type_specifier_id> type_specifier_simple
+%type <_operator> unary_operator assignment_operator
 %type <declaration_specifiers> declaration_specifiers
 %type <compound_statement> compound_statement
 %type <declarator > declarator
@@ -124,6 +158,17 @@ typedef void* yyscan_t;
 %type <type_qualifier> type_qualifier
 %type <alignment_specifier> alignment_specifier
 %type <function_specifier> function_specifier
+%type <pointer> pointer
+%type <direct_declarator> direct_declarator
+%type <struct_or_union_specifier> struct_or_union_specifier
+%type <enum_specifier> enum_specifier
+%type <iteration_statement> iteration_statement
+%type <selection_statement> selection_statement
+%type <expression_statement> expression_statement
+%type <init_declarator_list> init_declarator_list
+%type <labeled_statement> labeled_statement
+%type <jump_statement> jump_statement
+%type <conditional_expression> conditional_expression constant_expression
 
 %start translation_unit
 
@@ -139,7 +184,7 @@ primary_expression
 	| constant { $$=$1; }
 	| string
 	| '(' expression ')'
-	| generic_selection
+	| generic_selection { c11(); }
 	;
 
 constant
@@ -154,7 +199,7 @@ enumeration_constant		/* before it has been defined as such */
 
 string
 	: STRING_LITERAL
-	| FUNC_NAME
+	| FUNC_NAME { c11(); }
 	;
 
 generic_selection
@@ -200,12 +245,12 @@ unary_expression
 	;
 
 unary_operator
-	: '&'
-	| '*'
-	| '+'
-	| '-'
-	| '~'
-	| '!'
+	: '&' { $$=op_addr; }
+	| '*' { $$=op_ptr; }
+	| '+' { $$=op_pos; }
+	| '-' { $$=op_neg; }
+	| '~' { $$=op_compl; }
+	| '!' { $$=op_not; }
 	;
 
 cast_expression
@@ -222,7 +267,7 @@ multiplicative_expression
 
 additive_expression
 	: multiplicative_expression { $$=$1; }
-	| additive_expression '+' multiplicative_expression { $$ = new expression_t(op_add, $1, $3); }
+	| additive_expression '+' multiplicative_expression
 	| additive_expression '-' multiplicative_expression
 	;
 
@@ -267,12 +312,12 @@ logical_and_expression
 	;
 
 logical_or_expression
-	: logical_and_expression { $$=$1; }
+	: logical_and_expression
 	| logical_or_expression OR_OP logical_and_expression
 	;
 
 conditional_expression
-	: logical_or_expression { $$=$1; }
+	: logical_or_expression
 	| logical_or_expression '?' expression ':' conditional_expression
 	;
 
@@ -282,17 +327,17 @@ assignment_expression
 	;
 
 assignment_operator
-	: '='
-	| MUL_ASSIGN
-	| DIV_ASSIGN
-	| MOD_ASSIGN
-	| ADD_ASSIGN
-	| SUB_ASSIGN
-	| LEFT_ASSIGN
-	| RIGHT_ASSIGN
-	| AND_ASSIGN
-	| XOR_ASSIGN
-	| OR_ASSIGN
+	: '=' { $$=op_asn; }
+	| MUL_ASSIGN { $$=op_asn_mul; }
+	| DIV_ASSIGN { $$=op_asn_div; }
+	| MOD_ASSIGN { $$=op_asn_mod; }
+	| ADD_ASSIGN { $$=op_asn_add; }
+	| SUB_ASSIGN { $$=op_asn_sub; }
+	| LEFT_ASSIGN { $$=op_asn_left; }
+	| RIGHT_ASSIGN { $$=op_asn_right; }
+	| AND_ASSIGN { $$=op_asn_and; }
+	| XOR_ASSIGN { $$=op_asn_xor; }
+	| OR_ASSIGN { $$=op_asn_or; }
 	;
 
 expression
@@ -301,26 +346,26 @@ expression
 	;
 
 constant_expression
-	: conditional_expression	/* with constraints */
+	: conditional_expression { $$=$1; }	/* with constraints */
 	;
 
 declaration
-	: declaration_specifiers ';'
-	| declaration_specifiers init_declarator_list ';'
-	| static_assert_declaration
+	: declaration_specifiers ';' { $$ = new declaration_t(); $$->declaration_specifiers = $1; $$->semicolon = t($2); }
+	| declaration_specifiers init_declarator_list ';' { $$ = new declaration_t(); $$->declaration_specifiers = $1; $$->init_declarator_list = $2; $$->semicolon = $3; }
+	| static_assert_declaration { c11(); }
 	;
 
 declaration_specifiers
-	: storage_class_specifier declaration_specifiers { $2->storage_class_specifiers.push_front($1); $$=$2; }
-	| storage_class_specifier { $$ = new declaration_specifiers_t($1); }
-	| type_specifier declaration_specifiers { $2->type_specifiers.push_front($1); $$=$2; }
-	| type_specifier { $$ = new declaration_specifiers_t($1); }
-	| type_qualifier declaration_specifiers { $2->type_qualifiers.push_front($1); $$=$2; }
-	| type_qualifier { $$ = new declaration_specifiers_t($1); }
-	| function_specifier declaration_specifiers { $2->function_specifiers.push_front($1); $$=$2; }
-	| function_specifier { $$ = new declaration_specifiers_t($1); }
-	| alignment_specifier declaration_specifiers { $2->alignment_specifiers.push_front($1); $$=$2; }
-	| alignment_specifier { $$ = new declaration_specifiers_t($1); }
+	: storage_class_specifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
+	| storage_class_specifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); }
+	| type_specifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
+	| type_specifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); }
+	| type_qualifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
+	| type_qualifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); }
+	| function_specifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
+	| function_specifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); }
+	| alignment_specifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
+	| alignment_specifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); }
 	;
 
 init_declarator_list
@@ -337,28 +382,32 @@ storage_class_specifier
 	: TYPEDEF	/* identifiers must be flagged as TYPEDEF_NAME */
 	| EXTERN
 	| STATIC
-	| THREAD_LOCAL
+	| THREAD_LOCAL { c11(); }
 	| AUTO
 	| REGISTER
 	;
 
+type_specifier_simple
+	: VOID { $$ = t_void; }
+	| CHAR { $$ = t_char; }
+	| SHORT { $$ = t_short; }
+	| INT { $$ = t_int; }
+	| LONG { $$ = t_long; }
+	| FLOAT { $$ = t_float; }
+	| DOUBLE { $$ = t_double; }
+	| SIGNED { $$ = t_signed; }
+	| UNSIGNED { $$ = t_unsigned; }
+	| BOOL { $$ = t_bool; }
+	| COMPLEX { $$ = t_complex; }
+	| IMAGINARY { c11(); }		/* non-mandated extension */
+	;
+
 type_specifier
-	: VOID
-	| CHAR
-	| SHORT
-	| INT { $$ = new type_specifier_t(get_pos(), t_int); }
-	| LONG
-	| FLOAT  { $$ = new type_specifier_t(get_pos(), t_float); }
-	| DOUBLE
-	| SIGNED
-	| UNSIGNED
-	| BOOL
-	| COMPLEX
-	| IMAGINARY	  	/* non-mandated extension */
-	| atomic_type_specifier
-	| struct_or_union_specifier
-	| enum_specifier
-	| TYPEDEF_NAME		/* after it has been defined as such */
+	: type_specifier_simple { $$ = new type_specifier_simple_t(get_pos(), $1); }
+	| atomic_type_specifier { c11(); }
+	| struct_or_union_specifier { $$ = $1; }
+	| enum_specifier { $$ = $1; }
+	| TYPEDEF_NAME { not_yet(); }		/* after it has been defined as such */
 	;
 
 struct_or_union_specifier
@@ -368,8 +417,8 @@ struct_or_union_specifier
 	;
 
 struct_or_union
-	: STRUCT
-	| UNION
+	: STRUCT { $$ = t_struct; }
+	| UNION { $$ = t_union; }
 	;
 
 struct_declaration_list
@@ -380,7 +429,7 @@ struct_declaration_list
 struct_declaration
 	: specifier_qualifier_list ';'	/* for anonymous struct/union */
 	| specifier_qualifier_list struct_declarator_list ';'
-	| static_assert_declaration
+	| static_assert_declaration { c11(); }
 	;
 
 specifier_qualifier_list
@@ -427,27 +476,27 @@ type_qualifier
 	: CONST
 	| RESTRICT
 	| VOLATILE
-	| ATOMIC
+	| ATOMIC { c11(); }
 	;
 
 function_specifier
 	: INLINE
-	| NORETURN
+	| NORETURN { c11(); }
 	;
 
 alignment_specifier
-	: ALIGNAS '(' type_name ')'
-	| ALIGNAS '(' constant_expression ')'
+	: ALIGNAS '(' type_name ')' { c11(); }
+	| ALIGNAS '(' constant_expression ')' { c11(); }
 	;
 
 declarator
-	: pointer direct_declarator
-	| direct_declarator
+	: pointer direct_declarator { $$ = new declarator_t; $$->pointer = $1; $$->direct_declarator = $2; }
+	| direct_declarator { $$ = new declarator_t; $$->direct_declarator = $1; }
 	;
 
 direct_declarator
 	: IDENTIFIER
-	| '(' declarator ')'
+	| '(' declarator ')' { $$->bracktype = 0; }
 	| direct_declarator '[' ']'
 	| direct_declarator '[' '*' ']'
 	| direct_declarator '[' STATIC type_qualifier_list assignment_expression ']'
@@ -563,61 +612,64 @@ static_assert_declaration
 	;
 
 statement
-	: labeled_statement
-	| compound_statement
-	| expression_statement
-	| selection_statement
-	| iteration_statement
+	: labeled_statement { $$=$1; }
+	| compound_statement { $$=$1; }
+	| expression_statement { $$=$1; }
+	| selection_statement { $$=$1; }
+	| iteration_statement { $$=$1; }
 	| jump_statement { $$=$1; }
 	;
 
+
+
 labeled_statement
-	: IDENTIFIER ':' statement
-	| CASE constant_expression ':' statement
-	| DEFAULT ':' statement
+	: IDENTIFIER ':' statement { alloc($$); $$->identifier = $1; $$->colon = $2; $$->statement = $3; }
+	| CASE constant_expression ':' statement { alloc($$); $$->case_token = $1; $$->expression = $2; $$->colon = $3; $$->statement = $4; }
+	| DEFAULT ':' statement { alloc($$); $$->default_token = $1; $$->colon = $2; $$->statement = $3; }
 	;
 
+// TODO: alloc($$) -> template<class T> alloc(T*& ptr_ref) { ptr_ref = new T*(); }
 compound_statement
-	: '{' '}' { $$ = new compound_statement_t(); }
-	| '{'  block_item_list '}'
+	: '{' '}' { alloc($$); $$.lbrack = $1; $$.rbrack=$2; }
+	| '{'  block_item_list '}'  { alloc($$); $$.lbrack = $1; $$.block_item_list=$2; $$.rbrack=$3; }
 	;
 
 block_item_list
-	: block_item { $$=$1; }
-	| block_item_list block_item
+	: block_item { alloc($$); app_first($$.items, $1); }
+	| block_item_list block_item { app_right($$, $$.items, $2); }
 	;
 
 block_item
-	: declaration
+	: declaration { $$=$1; }
 	| statement { $$=$1; }
 	;
 
 expression_statement
-	: ';'
-	| expression ';'
+	: ';' { alloc($$); $$->semicolon = $1; }
+	| expression ';' { alloc($$); $$->expression = $1; $$->semicolon = $2; }
 	;
 
 selection_statement
-	: IF '(' expression ')' statement ELSE statement
-	| IF '(' expression ')' statement
-	| SWITCH '(' expression ')' statement
+	: IF '(' expression ')' statement ELSE statement { alloc($$); $$->if_token = $1; $$->lbrace = $2; $$->expression = $3; $$->rbrace = $4; $$->statement = $5; $$->else_token=$6; $$->else_statement = $7; }
+	| IF '(' expression ')' statement { alloc($$); $$->if_token = $1; $$->lbrace = $2; $$->expression = $3; $$->rbrace = $4; $$->statement = $5; }
+	| SWITCH '(' expression ')' statement { alloc($$); $$->switch_token = $1; $$->lbrace = $2; $$->expression = $3; $$->rbrace = $4; $$->statement = $5; }
 	;
 
 iteration_statement
-	: WHILE '(' expression ')' statement
-	| DO statement WHILE '(' expression ')' ';'
-	| FOR '(' expression_statement expression_statement ')' statement
-	| FOR '(' expression_statement expression_statement expression ')' statement
-	| FOR '(' declaration expression_statement ')' statement
-	| FOR '(' declaration expression_statement expression ')' statement
+	: WHILE '(' expression ')' statement { alloc($$); $$->while_token = $1; $$->lbrace = $2; $$->expression = $3; $$->rbrace = $4; $$->statement = $5; }
+	| DO statement WHILE '(' expression ')' ';' { alloc($$); $$->do_token = $1; $$->statement = $2; $$->while_token = $3; $$->lbrace = $4; $$->expression = $5; $$->rbrace = $6; $$->semicolon = $7; }
+	| FOR '(' expression_statement expression_statement ')' statement { alloc($$); $$->for_token = $1; $$->lbrace = $2; $$->for_init_statement = $3; $$->for_condition = $4; $$->rbrace = $5; $$->statement = $6; }
+	| FOR '(' expression_statement expression_statement expression ')' statement { alloc($$); $$->for_token = $1; $$->lbrace = $2; $$->for_init_statement = $3; $$->for_condition = $4; $$->rbrace = $5; $$->expression = $6; $$->statement = $7; }
+	| FOR '(' declaration expression_statement ')' statement { alloc($$); $$->for_token = $1; $$->lbrace = $2; $$->for_init_declaration = $3; $$->for_condition = $4; $$->rbrace = $5; $$->statement = $6; }
+	| FOR '(' declaration expression_statement expression ')' statement { alloc($$); $$->for_token = $1; $$->lbrace = $2; $$->for_init_declaration = $3; $$->for_condition = $4; $$->rbrace = $5; $$->expression = $6; $$->statement = $7; }
 	;	
 
 jump_statement
-	: GOTO IDENTIFIER ';'
-	| CONTINUE ';'
-	| BREAK ';'
-	| RETURN ';'
-	| RETURN expression ';'  { $$=$2; }
+	: GOTO IDENTIFIER ';' { alloc($$); $$->keyword = $1; $$->identifier = $2; $$->semicolon = $3; }
+	| CONTINUE ';' { alloc($$); $$->keyword = $1; $$->semicolon = $2; }
+	| BREAK ';' { alloc($$); $$->keyword = $1; $$->semicolon = $2; }
+	| RETURN ';' { alloc($$); $$->keyword = $1; $$->semicolon = $2; }
+	| RETURN expression ';' { alloc($$); $$->keyword = $1; $$->expression = $2; $$->semicolon = $3; }
 	;
 
 translation_unit
@@ -625,9 +677,9 @@ translation_unit
 	| translation_unit external_declaration { dynamic_cast<translation_unit_t*>(*expression)->v.push_back($2); /* append_t<external_declaration_t> a($2); (*expression)->accept(a); (*expression)->append($2);*/ } // TODO: this case hopefully never happens?
 	;
 
-external_declaration
+external_declaration // TODO: this class is not needed (->virtual)
 	: function_definition { $$ = new external_declaration_t($1); }
-	| declaration
+	| declaration { $$ = new external_declaration_t($1); }
 	;
 
 function_definition
@@ -636,8 +688,8 @@ function_definition
 	;
 
 declaration_list
-	: declaration
-	| declaration_list declaration
+	: declaration { alloc($$); app_first($$->declarations, $1); }
+	| declaration_list declaration { app_right($1, $1->declarations, $2); }
 	;
 
 %%
