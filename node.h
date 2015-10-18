@@ -423,7 +423,7 @@ struct function_definition_t : public node_t
 
 	function_definition_t(declaration_specifiers_t* declaration_specifiers,
 		declarator_t* declarator,
-		declaration_list_t* declarator_list,
+		declaration_list_t* declaration_list,
 		compound_statement_t* compound_statement) :
 		declaration_specifiers(declaration_specifiers),
 		declarator(declarator),

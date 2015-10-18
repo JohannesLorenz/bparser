@@ -49,7 +49,7 @@ token_t* app_token() { return get_token_vector().back(); }
 
 template<class T> void alloc(T*& ptr_ref) { ptr_ref = new T*(); }
 
-token_t* t(int token_id) { return new token(get_pos(); token_id); }
+token_t* t(int token_id) { return new token_t(get_pos(), token_id); }
 
 %}
 
@@ -144,7 +144,7 @@ typedef void* yyscan_t;
 	expression
 
 %type <declaration> declaration
-%type <identifier> identifier
+//%type <identifier> identifier
 %type <_type_specifier_id> type_specifier_simple
 %type <_operator> unary_operator assignment_operator
 %type <declaration_specifiers> declaration_specifiers
