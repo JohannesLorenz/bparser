@@ -80,6 +80,10 @@ int main(void)
 #else
 	char test[] = "\tint main() {"
 		"for(;;) {;}"
+		"while(true) {;}"
+		"do {;} while (true);"
+		"int x = 3;"
+		"x++;"
 		"}";
 #endif
 	

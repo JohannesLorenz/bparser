@@ -138,6 +138,8 @@ enum op_t
 	op_neg,
 	op_compl,
 	op_not,
+	op_inc, //!< ++
+	op_dec, //!< --
 
 	
 	op_asn,
@@ -240,13 +242,16 @@ struct declaration_list_t : public node_t
 };
 
 
-struct block_item_t : public node_t {};
+struct block_item_t : public node_t {
+	virtual void accept(class visitor_t& v);
+};
 
 struct statement_t : public block_item_t {};
 
 struct identifier_t : public node_t {
 	std::string name;
 	virtual void accept(class visitor_t& v);
+	identifier_t(const char* name) : name(name) {}
 };
 
 struct conditional_expression_t : public expression_t
@@ -261,12 +266,11 @@ struct labeled_statement_t : public statement_t
 	statement_t* statement;
 
 	// label:
-	//identifier_t* identifier;
-	token_t* identifier;
+	identifier_t* identifier;
 	
 	// case ...:
 	token_t* case_token;
-	conditional_expression_t* expression;
+	expression_t* expression;
 	
 	// default:
 	token_t* default_token;
@@ -395,7 +399,8 @@ struct block_item_list_t : public node_t
 struct compound_statement_t : public statement_t
 {
 	token_t* lbrack, *rbrack;
-	block_item_list_t* block_item_list;
+	//block_item_list_t* block_item_list;
+	std::list<block_item_t*> block_items;
 	virtual void accept(class visitor_t& v);
 };
 

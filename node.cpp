@@ -52,3 +52,7 @@ void expression_t::accept_children(visitor_t& v)
 	if(n2) n2->accept(v);
 	if(n3) n3->accept(v);
 }
+
+
+void block_item_t::accept(visitor_t &v) { v.visit(this); }
+void identifier_t::accept(visitor_t &v) { v.visit(this); }

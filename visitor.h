@@ -34,6 +34,8 @@ public:
 	virtual void visit(iteration_statement_t* ) {}
 	virtual void visit(jump_statement_t* ) {}
 	virtual void visit(block_item_list_t* ) {}
+	virtual void visit(block_item_t* ) {}
+	virtual void visit(identifier_t* ) {}
 	virtual ~visitor_t() {}
 };
 
@@ -77,6 +79,7 @@ public:
 	void visit(number_t *e);
 	void visit(token_t* e);
 	void visit(expression_t *e);
+	void visit(expression_statement_t *e);
 	//void visit(node_t *e); //!< default
 	void visit(storage_class_specifier_t* n);
 	void visit(type_specifier_t* n);
@@ -94,6 +97,7 @@ public:
 	void visit(translation_unit_t* n);
 	void visit(declaration_t* n);
 	void visit(iteration_statement_t* n);
+	void visit(identifier_t* n);
 	
 };
 

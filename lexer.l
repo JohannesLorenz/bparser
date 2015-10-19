@@ -169,7 +169,7 @@ static int check_type(void);
 "_Thread_local"                         { return THREAD_LOCAL; }
 "__func__"                              { return FUNC_NAME; }
 
-{L}{A}*					{ return app(check_type(), yytext); }
+{L}{A}*					{ yylval->name = new char[2]; yylval->name[0] = 'x'; yylval->name[1] = 0; return app(check_type(), yytext); }
 
 {HP}{H}+{IS}?				{ sscanf(yytext, "%x", &tmp_i); return app_num(tmp_i); }
 {NZ}{D}*{IS}?				{ sscanf(yytext, "%d", &tmp_i); return app_num(tmp_i); }
@@ -278,7 +278,7 @@ static int check_type(void)
     case ENUMERATION_CONSTANT:        /* previously defined */
         return ENUMERATION_CONSTANT;
     default:                          /* includes undefined */
-        return IDENTIFIER;
+	return IDENTIFIER;
     }
 }
 

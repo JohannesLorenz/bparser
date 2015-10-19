@@ -71,6 +71,7 @@ typedef void* yyscan_t;
 %parse-param { yyscan_t scanner }
 
 %union {
+	char* name;
 	int value;
 	node_t* node;
 	op_t _operator;
@@ -91,7 +92,6 @@ typedef void* yyscan_t;
 	direct_declarator_t* direct_declarator;
 	struct_or_union_specifier_t* struct_or_union_specifier;
 	enum_specifier_t* enum_specifier;
-	conditional_expression_t* conditional_expression;
 	declaration_t* declaration;
 	labeled_statement_t* labeled_statement;
 	expression_statement_t* expression_statement;
@@ -102,7 +102,6 @@ typedef void* yyscan_t;
 	identifier_t* identifier;
 	statement_t* statement;
 	block_item_t* block_item;
-	block_item_list_t* block_item_list;
 	constant_t* constant;
 
 	primary_expression_t* primary_expression;
@@ -126,7 +125,11 @@ typedef void* yyscan_t;
 %token	ALIGNAS ALIGNOF ATOMIC GENERIC NORETURN STATIC_ASSERT THREAD_LOCAL
 
 // TODO: identifier should not just return an int
-%type <value> I_CONSTANT struct_or_union ';' ':' CASE DEFAULT '{' '}' IF ELSE '(' ')' SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN IDENTIFIER
+%type <name> IDENTIFIER
+
+%type <value> I_CONSTANT struct_or_union ';' ':' CASE DEFAULT
+	'{' '}' IF ELSE '(' ')' SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
+	INC_OP DEC_OP
 %type <node> translation_unit
 	static_assert_declaration
 
@@ -151,7 +154,6 @@ typedef void* yyscan_t;
 
 %type <primary_expression> primary_expression
 
-%type <block_item_list>	block_item_list
 %type <block_item> block_item
 
 %type <declaration> declaration
@@ -160,7 +162,7 @@ typedef void* yyscan_t;
 %type <_type_specifier_id> type_specifier_simple
 %type <_operator> unary_operator assignment_operator
 %type <declaration_specifiers> declaration_specifiers
-%type <compound_statement> compound_statement
+%type <compound_statement> compound_statement block_item_list
 %type <declarator > declarator
 %type <declaration_list> declaration_list
 %type <function_definition> function_definition
@@ -180,7 +182,7 @@ typedef void* yyscan_t;
 %type <init_declarator_list> init_declarator_list
 %type <labeled_statement> labeled_statement
 %type <jump_statement> jump_statement
-%type <conditional_expression> conditional_expression constant_expression
+%type <expression> conditional_expression constant_expression
 
 %start translation_unit
 
@@ -235,7 +237,7 @@ postfix_expression
 	| postfix_expression '(' argument_expression_list ')'
 	| postfix_expression '.' IDENTIFIER
 	| postfix_expression PTR_OP IDENTIFIER
-	| postfix_expression INC_OP
+	| postfix_expression INC_OP { $$ = new expression_t(op_inc, t($2), NULL, $1); }
 	| postfix_expression DEC_OP
 	| '(' type_name ')' '{' initializer_list '}'
 	| '(' type_name ')' '{' initializer_list ',' '}'
@@ -324,12 +326,12 @@ logical_and_expression
 	;
 
 logical_or_expression
-	: logical_and_expression
+	: logical_and_expression { $$=$1; }
 	| logical_or_expression OR_OP logical_and_expression
 	;
 
 conditional_expression
-	: logical_or_expression
+	: logical_or_expression { $$=$1; }
 	| logical_or_expression '?' expression ':' conditional_expression
 	;
 
@@ -635,7 +637,7 @@ statement
 
 
 labeled_statement
-	: IDENTIFIER ':' statement { alloc($$); $$->identifier = t($1); $$->colon = t($2); $$->statement = $3; }
+	: IDENTIFIER ':' statement { alloc($$); $$->identifier = new identifier_t($1); $$->colon = t($2); $$->statement = $3; }
 	| CASE constant_expression ':' statement { alloc($$); $$->case_token = t($1); $$->expression = $2; $$->colon = t($3); $$->statement = $4; }
 	| DEFAULT ':' statement { alloc($$); $$->default_token = t($1); $$->colon = t($2); $$->statement = $3; }
 	;
@@ -643,12 +645,12 @@ labeled_statement
 // TODO: alloc($$) -> template<class T> alloc(T*& ptr_ref) { ptr_ref = new T*(); }
 compound_statement
 	: '{' '}' { alloc($$); $$->lbrack = t($1); $$->rbrack = t($2); }
-	| '{'  block_item_list '}'  { alloc($$); $$->lbrack = t($1); $$->block_item_list=$2; $$->rbrack=t($3); }
+	| '{'  block_item_list '}'  { alloc($$); $$->lbrack = t($1); $$=$2; $$->rbrack=t($3); }
 	;
 
 block_item_list
-	: block_item { alloc($$); app_first($$->items, $1); }
-	| block_item_list block_item { app_right($$, $$->items, $2); }
+	: block_item { alloc($$); app_first($$->block_items, $1); }
+	| block_item_list block_item { app_right($$, $$->block_items, $2); }
 	;
 
 block_item

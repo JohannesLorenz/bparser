@@ -41,14 +41,35 @@ void dumper_t::visit(expression_t* e)
 	e->accept_children(*this);
 }
 
+void dumper_t::visit(expression_statement_t *e)
+{
+	incr_depth_t x(&depth, stream);
+	stream << "expression statement" << std::endl;
+	e->expression->accept(*this);
+}
+
 void dumper_t::visit(storage_class_specifier_t* n)
 {
 	
 }
 
-void dumper_t::visit(iteration_statement_t* n) {
+void dumper_t::visit(iteration_statement_t* n)
+{
 	incr_depth_t x(&depth, stream);
-	stream << "iteration statement" << std::endl;
+	const char* loop_type =
+		n->for_token
+			? "for"
+			: (n->do_token
+				? "do-while"
+				: "while");
+	stream << "iteration statement (type " << loop_type << ")"
+	       << std::endl;
+}
+
+void dumper_t::visit(identifier_t *n)
+{
+	incr_depth_t x(&depth, stream);
+	stream << "identifier: " << n->name << std::endl;
 }
 
 void dumper_t::visit(type_specifier_t* n)
@@ -78,7 +99,7 @@ void dumper_t::visit(compound_statement_t* n)
 	incr_depth_t x(&depth, stream);
 	stream << "compound statement" << std::endl;
 	
-	vaccept(*n->block_item_list);
+	vaccept(n->block_items);
 }
 void dumper_t::visit(pointer_t* n) {
 	incr_depth_t x(&depth, stream);
