@@ -47,7 +47,7 @@ extern std::vector<token_t*>& get_token_vector();
 
 token_t* app_token() { return get_token_vector().back(); }
 
-template<class T> void alloc(T*& ptr_ref) { ptr_ref = new T*(); }
+template<class T> void alloc(T*& ptr_ref) { ptr_ref = new T(); }
 
 token_t* t(int token_id) { return new token_t(get_pos(), token_id); }
 
@@ -72,9 +72,10 @@ typedef void* yyscan_t;
 
 %union {
 	int value;
+	node_t* node;
 	op_t _operator;
 	type_specifier_id _type_specifier_id;
-	node_t *expression;
+	expression_t *expression;
 	declaration_specifiers_t* declaration_specifiers;
 	declarator_t* declarator;
 	declaration_list_t* declaration_list;
@@ -99,6 +100,12 @@ typedef void* yyscan_t;
 	iteration_statement_t* iteration_statement;
 	init_declarator_list_t* init_declarator_list;
 	identifier_t* identifier;
+	statement_t* statement;
+	block_item_t* block_item;
+	block_item_list_t* block_item_list;
+	constant_t* constant;
+
+	primary_expression_t* primary_expression;
 }
 
 %token	IDENTIFIER I_CONSTANT F_CONSTANT STRING_LITERAL FUNC_NAME SIZEOF
@@ -120,14 +127,12 @@ typedef void* yyscan_t;
 
 // TODO: identifier should not just return an int
 %type <value> I_CONSTANT struct_or_union ';' ':' CASE DEFAULT '{' '}' IF ELSE '(' ')' SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN IDENTIFIER
-%type <expression> translation_unit
+%type <node> translation_unit
 	static_assert_declaration
-	block_item_list
-	block_item
-	statement
-	constant
-	primary_expression
-	postfix_expression
+
+%type<constant> constant
+
+%type<expression> postfix_expression
 	unary_expression
 	cast_expression
 	multiplicative_expression
@@ -141,9 +146,16 @@ typedef void* yyscan_t;
 	logical_and_expression
 	logical_or_expression
 	assignment_expression
-	expression
+
+%type <expression> expression
+
+%type <primary_expression> primary_expression
+
+%type <block_item_list>	block_item_list
+%type <block_item> block_item
 
 %type <declaration> declaration
+%type <statement> statement
 //%type <identifier> identifier
 %type <_type_specifier_id> type_specifier_simple
 %type <_operator> unary_operator assignment_operator
@@ -181,14 +193,14 @@ typedef void* yyscan_t;
 
 primary_expression
 	: IDENTIFIER
-	| constant { $$=$1; }
+	| constant { alloc($$); $$->constant = $1; }
 	| string
 	| '(' expression ')'
 	| generic_selection { c11(); }
 	;
 
 constant
-	: I_CONSTANT { $$=new number_t($1); }		/* includes character_constant */
+	: I_CONSTANT { alloc($$); $$->iconstant = $1; }		/* includes character_constant */
 	| F_CONSTANT
 	| ENUMERATION_CONSTANT	/* after it has been defined as such */
 	;
@@ -351,7 +363,7 @@ constant_expression
 
 declaration
 	: declaration_specifiers ';' { $$ = new declaration_t(); $$->declaration_specifiers = $1; $$->semicolon = t($2); }
-	| declaration_specifiers init_declarator_list ';' { $$ = new declaration_t(); $$->declaration_specifiers = $1; $$->init_declarator_list = $2; $$->semicolon = $3; }
+	| declaration_specifiers init_declarator_list ';' { $$ = new declaration_t(); $$->declaration_specifiers = $1; $$->init_declarator_list = $2; $$->semicolon = t($3); }
 	| static_assert_declaration { c11(); }
 	;
 
@@ -623,20 +635,20 @@ statement
 
 
 labeled_statement
-	: IDENTIFIER ':' statement { alloc($$); $$->identifier = $1; $$->colon = $2; $$->statement = $3; }
-	| CASE constant_expression ':' statement { alloc($$); $$->case_token = $1; $$->expression = $2; $$->colon = $3; $$->statement = $4; }
-	| DEFAULT ':' statement { alloc($$); $$->default_token = $1; $$->colon = $2; $$->statement = $3; }
+	: IDENTIFIER ':' statement { alloc($$); $$->identifier = t($1); $$->colon = t($2); $$->statement = $3; }
+	| CASE constant_expression ':' statement { alloc($$); $$->case_token = t($1); $$->expression = $2; $$->colon = t($3); $$->statement = $4; }
+	| DEFAULT ':' statement { alloc($$); $$->default_token = t($1); $$->colon = t($2); $$->statement = $3; }
 	;
 
 // TODO: alloc($$) -> template<class T> alloc(T*& ptr_ref) { ptr_ref = new T*(); }
 compound_statement
-	: '{' '}' { alloc($$); $$.lbrack = $1; $$.rbrack=$2; }
-	| '{'  block_item_list '}'  { alloc($$); $$.lbrack = $1; $$.block_item_list=$2; $$.rbrack=$3; }
+	: '{' '}' { alloc($$); $$->lbrack = t($1); $$->rbrack = t($2); }
+	| '{'  block_item_list '}'  { alloc($$); $$->lbrack = t($1); $$->block_item_list=$2; $$->rbrack=t($3); }
 	;
 
 block_item_list
-	: block_item { alloc($$); app_first($$.items, $1); }
-	| block_item_list block_item { app_right($$, $$.items, $2); }
+	: block_item { alloc($$); app_first($$->items, $1); }
+	| block_item_list block_item { app_right($$, $$->items, $2); }
 	;
 
 block_item
@@ -645,31 +657,31 @@ block_item
 	;
 
 expression_statement
-	: ';' { alloc($$); $$->semicolon = $1; }
-	| expression ';' { alloc($$); $$->expression = $1; $$->semicolon = $2; }
+	: ';' { alloc($$); $$->semicolon = t($1); }
+	| expression ';' { alloc($$); $$->expression = $1; $$->semicolon = t($2); }
 	;
 
 selection_statement
-	: IF '(' expression ')' statement ELSE statement { alloc($$); $$->if_token = $1; $$->lbrace = $2; $$->expression = $3; $$->rbrace = $4; $$->statement = $5; $$->else_token=$6; $$->else_statement = $7; }
-	| IF '(' expression ')' statement { alloc($$); $$->if_token = $1; $$->lbrace = $2; $$->expression = $3; $$->rbrace = $4; $$->statement = $5; }
-	| SWITCH '(' expression ')' statement { alloc($$); $$->switch_token = $1; $$->lbrace = $2; $$->expression = $3; $$->rbrace = $4; $$->statement = $5; }
+	: IF '(' expression ')' statement ELSE statement { alloc($$); $$->if_token = t($1); $$->lbrace = t($2); $$->expression = $3; $$->rbrace = t($4); $$->statement = $5; $$->else_token=t($6); $$->else_statement = $7; }
+	| IF '(' expression ')' statement { alloc($$); $$->if_token = t($1); $$->lbrace = t($2); $$->expression = $3; $$->rbrace = t($4); $$->statement = $5; }
+	| SWITCH '(' expression ')' statement { alloc($$); $$->switch_token = t($1); $$->lbrace = t($2); $$->expression = $3; $$->rbrace = t($4); $$->statement = $5; }
 	;
 
 iteration_statement
-	: WHILE '(' expression ')' statement { alloc($$); $$->while_token = $1; $$->lbrace = $2; $$->expression = $3; $$->rbrace = $4; $$->statement = $5; }
-	| DO statement WHILE '(' expression ')' ';' { alloc($$); $$->do_token = $1; $$->statement = $2; $$->while_token = $3; $$->lbrace = $4; $$->expression = $5; $$->rbrace = $6; $$->semicolon = $7; }
-	| FOR '(' expression_statement expression_statement ')' statement { alloc($$); $$->for_token = $1; $$->lbrace = $2; $$->for_init_statement = $3; $$->for_condition = $4; $$->rbrace = $5; $$->statement = $6; }
-	| FOR '(' expression_statement expression_statement expression ')' statement { alloc($$); $$->for_token = $1; $$->lbrace = $2; $$->for_init_statement = $3; $$->for_condition = $4; $$->rbrace = $5; $$->expression = $6; $$->statement = $7; }
-	| FOR '(' declaration expression_statement ')' statement { alloc($$); $$->for_token = $1; $$->lbrace = $2; $$->for_init_declaration = $3; $$->for_condition = $4; $$->rbrace = $5; $$->statement = $6; }
-	| FOR '(' declaration expression_statement expression ')' statement { alloc($$); $$->for_token = $1; $$->lbrace = $2; $$->for_init_declaration = $3; $$->for_condition = $4; $$->rbrace = $5; $$->expression = $6; $$->statement = $7; }
+	: WHILE '(' expression ')' statement { alloc($$); $$->while_token = t($1); $$->lbrace = t($2); $$->while_condition = $3; $$->rbrace = t($4); $$->statement = $5; }
+	| DO statement WHILE '(' expression ')' ';' { alloc($$); $$->do_token = t($1); $$->statement = $2; $$->while_token = t($3); $$->lbrace = t($4); $$->while_condition = $5; $$->rbrace = t($6); $$->semicolon = t($7); }
+	| FOR '(' expression_statement expression_statement ')' statement { alloc($$); $$->for_token = t($1); $$->lbrace = t($2); $$->for_init_statement = $3; $$->for_condition = $4; $$->rbrace = t($5); $$->statement = $6; }
+	| FOR '(' expression_statement expression_statement expression ')' statement { alloc($$); $$->for_token = t($1); $$->lbrace = t($2); $$->for_init_statement = $3; $$->for_condition = $4; $$->for_expression = $5; $$->rbrace = t($6); $$->statement = $7; }
+	| FOR '(' declaration expression_statement ')' statement { alloc($$); $$->for_token = t($1); $$->lbrace = t($2); $$->for_init_declaration = $3; $$->for_condition = $4; $$->rbrace = t($5); $$->statement = $6; }
+	| FOR '(' declaration expression_statement expression ')' statement { alloc($$); $$->for_token = t($1); $$->lbrace = t($2); $$->for_init_declaration = $3; $$->for_condition = $4; $$->for_expression = $5; $$->rbrace = t($6); $$->statement = $7; }
 	;	
 
 jump_statement
-	: GOTO IDENTIFIER ';' { alloc($$); $$->keyword = $1; $$->identifier = $2; $$->semicolon = $3; }
-	| CONTINUE ';' { alloc($$); $$->keyword = $1; $$->semicolon = $2; }
-	| BREAK ';' { alloc($$); $$->keyword = $1; $$->semicolon = $2; }
-	| RETURN ';' { alloc($$); $$->keyword = $1; $$->semicolon = $2; }
-	| RETURN expression ';' { alloc($$); $$->keyword = $1; $$->expression = $2; $$->semicolon = $3; }
+	: GOTO IDENTIFIER ';' { alloc($$); $$->keyword = t($1); $$->goto_identifier = NULL /*TODO*/; $$->semicolon = t($3); }
+	| CONTINUE ';' { alloc($$); $$->keyword = t($1); $$->semicolon = t($2); }
+	| BREAK ';' { alloc($$); $$->keyword = t($1); $$->semicolon = t($2); }
+	| RETURN ';' { alloc($$); $$->keyword = t($1); $$->semicolon = t($2); }
+	| RETURN expression ';' { alloc($$); $$->keyword = t($1); $$->expression = $2; $$->semicolon = t($3); }
 	;
 
 translation_unit

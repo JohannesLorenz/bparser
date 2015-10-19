@@ -37,7 +37,7 @@ void dumper_t::visit(token_t* e)
 void dumper_t::visit(expression_t* e)
 {
 	incr_depth_t x(&depth, stream);
-	stream << "expr, type: " << +e->type << std::endl;
+	stream << "expr, op 1: " << +e->op << std::endl;
 	e->accept_children(*this);
 }
 

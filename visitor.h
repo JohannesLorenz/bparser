@@ -26,6 +26,14 @@ public:
 	virtual void visit(external_declaration_t* e) {}
 	virtual void visit(translation_unit_t *e) {}
 	virtual void visit(token_t* t) {}
+	virtual void visit(declaration_t* ) {}
+	virtual void visit(constant_t* ) {}
+	virtual void visit(labeled_statement_t* ) {}
+	virtual void visit(expression_statement_t* ) {}
+	virtual void visit(selection_statement_t* ) {}
+	virtual void visit(iteration_statement_t* ) {}
+	virtual void visit(jump_statement_t* ) {}
+	virtual void visit(block_item_list_t* ) {}
 	virtual ~visitor_t() {}
 };
 
@@ -85,6 +93,7 @@ public:
 	void visit(external_declaration_t* n);
 	void visit(translation_unit_t* n);
 	void visit(declaration_t* n);
+	
 };
 
 struct cleaner_t : visitor_t

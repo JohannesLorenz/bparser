@@ -155,17 +155,31 @@ enum op_t
 
 struct expression_t : public node_t
 {
+	void accept_children(visitor_t& v);
 	virtual void accept(class visitor_t& v);
+	expression_t() {} // TODO?
 
 	op_t op;
 	token_t* op_token;
 	token_t* op_token_2; //!< ternary only
-	node_t* n1; // TODO: expression base class, including const?
+	node_t* n1; // TODO: expression base class, including const? // TODO: expression_t should suffice because of primary_expression_t
 	node_t* n2; //!< only binary and ternary ops	
 	node_t* n3; //!< only ternary ops
 	
 	expression_t(op_t op, token_t* op_token, token_t* op_token_2, node_t *n1, node_t* n2 = NULL, node_t* n3 = NULL) :
 		op(op), op_token(op_token), op_token_2(op_token_2), n1(n1), n2(n2), n3(n3) {}
+};
+
+struct constant_t : public node_t {
+	virtual void accept(class visitor_t& v);
+	int iconstant;
+};
+
+struct primary_expression_t : public expression_t
+{
+	virtual void accept(class visitor_t& v);
+	token_t* lbrace, *rbrace;
+	constant_t* constant;
 };
 
 struct type_specifier_t : public declaration_specifier_type {
@@ -208,7 +222,6 @@ struct enum_specifier_t : public type_specifier_complex_t {
 	virtual void accept(class visitor_t& v);
 };*/
 
-
 struct type_qualifier_t : public declaration_specifier_type
 {
 	virtual void accept(class visitor_t& v);
@@ -227,20 +240,16 @@ struct declaration_list_t : public node_t
 };
 
 
-struct block_item_t : public node_t {
-	virtual void accept(class visitor_t& v);
-};
+struct block_item_t : public node_t {};
 
-struct statement_t : public block_item_t {
-	virtual void accept(class visitor_t& v);
-};
+struct statement_t : public block_item_t {};
 
 struct identifier_t : public node_t {
 	std::string name;
 	virtual void accept(class visitor_t& v);
 };
 
-struct conditional_expression_t : public node_t
+struct conditional_expression_t : public expression_t
 {
 	virtual void accept(class visitor_t& v);
 };
@@ -252,11 +261,12 @@ struct labeled_statement_t : public statement_t
 	statement_t* statement;
 
 	// label:
-	identifier_t* identifier;
+	//identifier_t* identifier;
+	token_t* identifier;
 	
 	// case ...:
 	token_t* case_token;
-	conditional_expression_t constant_expression;
+	conditional_expression_t* expression;
 	
 	// default:
 	token_t* default_token;
@@ -333,10 +343,10 @@ struct iteration_statement_t : public statement_t
 	expression_statement_t* for_init_statement;
 
 	// 5, 6
-	expression_statement_t* for_init_declaration;
+	declaration_t* for_init_declaration;
 
 	// 4, 6
-	expression_statement_t* for_expression;
+	expression_t* for_expression;
 };
 
 struct init_declarator_list_t : public node_t
@@ -358,8 +368,8 @@ struct jump_statement_t : public statement_t
 
 	token_t* keyword;
 	token_t* semicolon;
-	identifier_t goto_identifier; //!< only GOTO IDENTIFIER ;
-	expression_t expression; //!< only RETURN expression ;
+	identifier_t* goto_identifier; //!< only GOTO IDENTIFIER ;
+	expression_t* expression; //!< only RETURN expression ;
 };
 
 struct declaration_t : public block_item_t
@@ -382,9 +392,9 @@ struct block_item_list_t : public node_t
 	std::list<block_item_t*> items;
 };
 
-struct compound_statement_t : public node_t
+struct compound_statement_t : public statement_t
 {
-	token_t* lbrack, rbrack;
+	token_t* lbrack, *rbrack;
 	block_item_list_t* block_item_list;
 	virtual void accept(class visitor_t& v);
 };

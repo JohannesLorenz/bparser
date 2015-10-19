@@ -17,7 +17,7 @@ std::ostream& operator<<(std::ostream& stream,
 
 template<>
 void type_specifier_simple_t::accept(visitor_t& v) { v.visit(this); }
-
+	
 void token_t::accept(visitor_t& v) { v.visit(this); }
 void number_t::accept(visitor_t& v) { v.visit(this); }
 void expression_t::accept(visitor_t& v) { v.visit(this); }
@@ -35,10 +35,20 @@ void declaration_specifiers_t::accept(visitor_t& v) { v.visit(this); }
 void function_definition_t::accept(visitor_t& v) { v.visit(this); }
 void external_declaration_t::accept(visitor_t& v) { v.visit(this); }
 void translation_unit_t::accept(visitor_t& v) { v.visit(this); }
+void declaration_t::accept(visitor_t& v) { v.visit(this); }
+void primary_expression_t::accept(visitor_t& v) { v.visit(this); }
+void constant_t::accept(visitor_t& v) { v.visit(this); }
+void labeled_statement_t::accept(visitor_t& v) { v.visit(this); }
+void expression_statement_t::accept(visitor_t& v) { v.visit(this); }
+void selection_statement_t::accept(visitor_t& v) { v.visit(this); }
+void iteration_statement_t::accept(visitor_t& v) { v.visit(this); }
+void jump_statement_t::accept(visitor_t& v) { v.visit(this); }
+void block_item_list_t::accept(visitor_t& v) { v.visit(this); }
+void type_specifier_t::accept(visitor_t& v) { v.visit(this); }
 
 void expression_t::accept_children(visitor_t& v)
 {
-	first->accept(v);
-	if(second) second->accept(v);
-	if(third) third->accept(v);
+	n1->accept(v);
+	if(n2) n2->accept(v);
+	if(n3) n3->accept(v);
 }
