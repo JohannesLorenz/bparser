@@ -73,7 +73,7 @@ class dumper_t : public visitor_t
 
 public:
 	dumper_t(std::ostream& stream = std::cout) : depth(0), stream(stream) {};
-	virtual void visit(type_specifier_simple_t* e);
+	void visit(type_specifier_simple_t* e);
 	void visit(number_t *e);
 	void visit(token_t* e);
 	void visit(expression_t *e);
@@ -93,6 +93,7 @@ public:
 	void visit(external_declaration_t* n);
 	void visit(translation_unit_t* n);
 	void visit(declaration_t* n);
+	void visit(iteration_statement_t* n);
 	
 };
 

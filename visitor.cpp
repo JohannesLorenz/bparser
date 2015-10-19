@@ -46,25 +46,48 @@ void dumper_t::visit(storage_class_specifier_t* n)
 	
 }
 
+void dumper_t::visit(iteration_statement_t* n) {
+	incr_depth_t x(&depth, stream);
+	stream << "iteration statement" << std::endl;
+}
+
 void dumper_t::visit(type_specifier_t* n)
 {
 	incr_depth_t x(&depth, stream);
 //	stream << "type specifier, id: " << +n->id << ", pos: " << n->span << std::endl;
 }
 
-void dumper_t::visit(type_qualifier_t* n) {}
-void dumper_t::visit(function_specifier_t* n) {}
-void dumper_t::visit(alignment_specifier_t* n) {}
-void dumper_t::visit(declaration_list_t* n) {}
+void dumper_t::visit(type_qualifier_t* n) {
+	incr_depth_t x(&depth, stream);
+	stream << "type qualifier" << std::endl;
+}
+void dumper_t::visit(function_specifier_t* n) {
+	incr_depth_t x(&depth, stream);
+	stream << "function specifier" << std::endl;
+}
+void dumper_t::visit(alignment_specifier_t* n) {
+	incr_depth_t x(&depth, stream);
+	stream << "alignment specifier" << std::endl;
+}
+void dumper_t::visit(declaration_list_t* n) {
+	incr_depth_t x(&depth, stream);
+	stream << "declaration list" << std::endl;
+}
 void dumper_t::visit(compound_statement_t* n)
 {
 	incr_depth_t x(&depth, stream);
 	stream << "compound statement" << std::endl;
+	
+	vaccept(*n->block_item_list);
 }
-void dumper_t::visit(pointer_t* n) {}
+void dumper_t::visit(pointer_t* n) {
+	incr_depth_t x(&depth, stream);
+	stream << "pointer" << std::endl;
+}
 void dumper_t::visit(direct_declarator_t* n)
 {
-	
+	incr_depth_t x(&depth, stream);
+	stream << "direct declarator" << std::endl;
 }
 void dumper_t::visit(declarator_t* n)
 {
@@ -106,7 +129,10 @@ void dumper_t::visit(translation_unit_t* n)
 	vvisit(n->v);
 }
 
-void dumper_t::visit(declaration_t* n) {}
+void dumper_t::visit(declaration_t* n) {
+	incr_depth_t x(&depth, stream);
+	stream << "declaration" << std::endl;
+}
 
 void cleaner_t::visit(expression_t* e)
 {

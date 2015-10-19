@@ -78,7 +78,9 @@ int main(void)
 		"return 42 + 0;"
 		"}\n";
 #else
-	char test[] = "\tint main() {}";
+	char test[] = "\tint main() {"
+		"for(;;) {;}"
+		"}";
 #endif
 	
 	int result = 0;
