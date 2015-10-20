@@ -68,7 +68,7 @@ template<class T> void app(T* elem) {
 
 int tmp_i;
 
-token_t* tok(int id, const char* text) {
+token_t* tk(int id, const char* text) {
 	cnt(text);
 	token_t* t = new token_t(get_pos(), id);
 	app(t);

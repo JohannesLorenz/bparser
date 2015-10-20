@@ -34,6 +34,29 @@ struct span_t
 	friend std::ostream& operator<<(std::ostream& stream, const span_t&);
 };
 
+
+//! class representing a child pointer
+//! only intend: set the pointer to 0
+template<class T>
+class ch
+{
+	T* ptr;
+public:
+	ch() : ptr(NULL) {}
+	explicit ch(T* ptr) : ptr(ptr) {}
+	ch& operator=(T* _ptr) { return ptr = _ptr, *this; }
+
+	operator T*() { return ptr; }
+	operator const T*() const { return ptr; }
+	
+	T& operator* () { return *ptr; }
+	const T& operator* () const { return *ptr; }
+	T* operator-> () { return ptr; }
+	const T* operator-> () const { return ptr; }
+
+	operator bool() const { return ptr; }
+};
+
 class node_t
 {
 public:
@@ -55,6 +78,8 @@ public:
 	token_t(const geom_t& pos, int value) : node_t(pos), value(value) {}
 	virtual void accept(class visitor_t& v);
 };
+
+typedef ch<token_t> tok;
 
 struct number_t : public node_t
 {
@@ -162,11 +187,11 @@ struct expression_t : public node_t
 	expression_t() {} // TODO?
 
 	op_t op;
-	token_t* op_token;
-	token_t* op_token_2; //!< ternary only
-	node_t* n1; // TODO: expression base class, including const? // TODO: expression_t should suffice because of primary_expression_t
-	node_t* n2; //!< only binary and ternary ops	
-	node_t* n3; //!< only ternary ops
+	tok op_token;
+	tok op_token_2; //!< ternary only
+	ch<node_t> n1; // TODO: expression base class, including const? // TODO: expression_t should suffice because of primary_expression_t
+	ch<node_t> n2; //!< only binary and ternary ops	
+	ch<node_t> n3; //!< only ternary ops
 	
 	expression_t(op_t op, token_t* op_token, token_t* op_token_2, node_t *n1, node_t* n2 = NULL, node_t* n3 = NULL) :
 		op(op), op_token(op_token), op_token_2(op_token_2), n1(n1), n2(n2), n3(n3) {}
@@ -180,8 +205,9 @@ struct constant_t : public node_t {
 struct primary_expression_t : public expression_t
 {
 	virtual void accept(class visitor_t& v);
-	token_t* lbrace, *rbrace;
-	constant_t* constant;
+	tok lbrace, rbrace;
+	ch<constant_t> constant;
+	char* identifier;
 };
 
 struct type_specifier_t : public declaration_specifier_type {
@@ -219,8 +245,8 @@ struct enum_specifier_t : public type_specifier_complex_t {
 
 /*struct type_specifier_t : public declaration_specifier_type
 {
-	type_specifier_simple_t* simple;
-	type_specifier_complex_t* complex;
+	ch<type_specifier_simple_t> simple;
+	ch<type_specifier_complex_t> complex;
 	virtual void accept(class visitor_t& v);
 };*/
 
@@ -262,18 +288,18 @@ struct conditional_expression_t : public expression_t
 struct labeled_statement_t : public statement_t
 {
 	// all
-	token_t* colon;
-	statement_t* statement;
+	ch<token_t> colon;
+	ch<statement_t> statement;
 
 	// label:
-	identifier_t* identifier;
+	ch<identifier_t> identifier;
 	
 	// case ...:
-	token_t* case_token;
-	expression_t* expression;
+	ch<token_t> case_token;
+	ch<expression_t> expression;
 	
 	// default:
-	token_t* default_token;
+	ch<token_t> default_token;
 
 	virtual void accept(class visitor_t& v);
 };
@@ -282,8 +308,8 @@ struct expression_statement_t : public statement_t
 {
 	virtual void accept(class visitor_t& v);
 	
-	expression_t* expression; // can be zero
-	token_t* semicolon;
+	ch<expression_t> expression; // can be zero
+	ch<token_t> semicolon;
 };
 
 /**
@@ -297,20 +323,20 @@ struct selection_statement_t : public statement_t
 	virtual void accept(class visitor_t& v);
 	
 	// all
-	expression_t* expression;
-	statement_t* statement;
-	token_t* lbrace;
-	token_t* rbrace;
+	ch<expression_t> expression;
+	ch<statement_t> statement;
+	ch<token_t> lbrace;
+	ch<token_t> rbrace;
 
 	// 1 + 2
-	token_t* if_token;
+	ch<token_t> if_token;
 
 	// 1
-	token_t* else_token;
-	statement_t* else_statement;
+	ch<token_t> else_token;
+	ch<statement_t> else_statement;
 	
 	// 3
-	token_t* switch_token;
+	ch<token_t> switch_token;
 };
 
 /**
@@ -327,30 +353,30 @@ struct iteration_statement_t : public statement_t
 	virtual void accept(class visitor_t& v);
 	
 	// all
-	statement_t* statement;
-	token_t* lbrace;
-	token_t* rbrace;
+	ch<statement_t> statement;
+	ch<token_t> lbrace;
+	ch<token_t> rbrace;
 	
 	// 1, 2
-	expression_t* while_condition;
-	token_t* while_token;
+	ch<expression_t> while_condition;
+	ch<token_t> while_token;
 
 	// 2
-	token_t* do_token;
-	token_t* semicolon;
+	ch<token_t> do_token;
+	ch<token_t> semicolon;
 
 	// 3 - 6
-	expression_statement_t* for_condition;
-	token_t* for_token;
+	ch<expression_statement_t> for_condition;
+	ch<token_t> for_token;
 	
 	// 3, 4
-	expression_statement_t* for_init_statement;
+	ch<expression_statement_t> for_init_statement;
 
 	// 5, 6
-	declaration_t* for_init_declaration;
+	ch<declaration_t> for_init_declaration;
 
 	// 4, 6
-	expression_t* for_expression;
+	ch<expression_t> for_expression;
 };
 
 struct init_declarator_list_t : public node_t
@@ -370,19 +396,18 @@ struct jump_statement_t : public statement_t
 {
 	virtual void accept(class visitor_t& v);
 
-	token_t* keyword;
-	token_t* semicolon;
-	identifier_t* goto_identifier; //!< only GOTO IDENTIFIER ;
-	expression_t* expression; //!< only RETURN expression ;
+	ch<token_t> keyword, semicolon;
+	ch<identifier_t> goto_identifier; //!< only GOTO IDENTIFIER ;
+	ch<expression_t> expression; //!< only RETURN expression ;
 };
 
 struct declaration_t : public block_item_t
 {
 	virtual void accept(class visitor_t& v);
 
-	struct declaration_specifiers_t* declaration_specifiers;
-	token_t* semicolon;
-	init_declarator_list_t* init_declarator_list; //!< optional
+	ch<struct declaration_specifiers_t> declaration_specifiers;
+	ch<token_t> semicolon;
+	ch<init_declarator_list_t> init_declarator_list; //!< optional
 };
 
 
@@ -398,7 +423,7 @@ struct block_item_list_t : public node_t
 
 struct compound_statement_t : public statement_t
 {
-	token_t* lbrack, *rbrack;
+	ch<token_t> lbrack, rbrack;
 	//block_item_list_t* block_item_list;
 	std::list<block_item_t*> block_items;
 	virtual void accept(class visitor_t& v);
@@ -418,8 +443,8 @@ struct direct_declarator_t : public node_t {
 struct declarator_t : public node_t
 {
 	virtual void accept(class visitor_t& v);
-	pointer_t* pointer;
-	direct_declarator_t* direct_declarator;
+	ch<pointer_t> pointer;
+	ch<direct_declarator_t> direct_declarator;
 };
 
 struct declaration_specifiers_t : public node_t
@@ -431,10 +456,10 @@ struct declaration_specifiers_t : public node_t
 struct function_definition_t : public node_t
 {
 	virtual void accept(class visitor_t& v);
-	declaration_specifiers_t* declaration_specifiers;
-	declarator_t* declarator;
-	declaration_list_t* declaration_list;
-	compound_statement_t* compound_statement;
+	ch<declaration_specifiers_t> declaration_specifiers;
+	ch<declarator_t> declarator;
+	ch<declaration_list_t> declaration_list;
+	ch<compound_statement_t> compound_statement;
 
 	function_definition_t(declaration_specifiers_t* declaration_specifiers,
 		declarator_t* declarator,
@@ -450,8 +475,8 @@ struct function_definition_t : public node_t
 struct external_declaration_t : public node_t
 {
 	virtual void accept(class visitor_t& v);
-	function_definition_t* function_definition;
-	declaration_t* declaration;
+	ch<function_definition_t> function_definition;
+	ch<declaration_t> declaration;
 	external_declaration_t(function_definition_t* f) : function_definition(f) {}
 	external_declaration_t(declaration_t* d) : declaration(d) {}
 };

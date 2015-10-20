@@ -66,6 +66,18 @@ void dumper_t::visit(iteration_statement_t* n)
 	       << std::endl;
 }
 
+void dumper_t::visit(primary_expression_t* n)
+{
+	incr_depth_t x(&depth, stream);
+	stream << "primary expression";
+	if(n->constant) {
+		stream << std::endl;
+		visit(n->constant);
+	}
+	else
+	 stream << ": string: " << n->identifier << std::endl;
+}
+
 void dumper_t::visit(identifier_t *n)
 {
 	incr_depth_t x(&depth, stream);

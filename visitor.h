@@ -36,6 +36,9 @@ public:
 	virtual void visit(block_item_list_t* ) {}
 	virtual void visit(block_item_t* ) {}
 	virtual void visit(identifier_t* ) {}
+	virtual void visit(primary_expression_t* ) {}
+	template<class T>
+	void visit(ch<T>& c) { visit((T*)c); }
 	virtual ~visitor_t() {}
 };
 
@@ -51,7 +54,7 @@ class dumper_t : public visitor_t
 	void handle_depth();
 
 	template<class T>
-	bool tvisit(T* ptr) { return ptr ? (visit(ptr), true) : false; }
+	bool tvisit(T ptr) { return ptr ? (visit(ptr), true) : false; }
 
 	template<class T>
 	void vvisit(const std::list<T*>& v)
@@ -98,7 +101,8 @@ public:
 	void visit(declaration_t* n);
 	void visit(iteration_statement_t* n);
 	void visit(identifier_t* n);
-	
+	void visit(primary_expression_t* n);
+	virtual void visit(constant_t* ) {}
 };
 
 struct cleaner_t : visitor_t

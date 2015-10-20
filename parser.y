@@ -5,6 +5,7 @@
  * To generate the parser run: "bison Parser.y"
  */
 
+#include <algorithm>
 #include <vector>
 #include <iostream>
 #include "node.h"
@@ -47,7 +48,7 @@ extern std::vector<token_t*>& get_token_vector();
 
 token_t* app_token() { return get_token_vector().back(); }
 
-template<class T> void alloc(T*& ptr_ref) { ptr_ref = new T(); }
+template<class T> void alloc(T*& ptr_ref) { ptr_ref = new T(); /* be C++03 conform */ }
 
 token_t* t(int token_id) { return new token_t(get_pos(), token_id); }
 
@@ -194,7 +195,7 @@ typedef void* yyscan_t;
 %%
 
 primary_expression
-	: IDENTIFIER
+	: IDENTIFIER { alloc($$); $$->identifier = $1; }
 	| constant { alloc($$); $$->constant = $1; }
 	| string
 	| '(' expression ')'
