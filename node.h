@@ -11,10 +11,10 @@
 
 struct geom_t
 {
-	std::size_t line;
-	std::size_t col;
-	geom_t(std::size_t line, std::size_t col) : line(line), col(col) {}
-	geom_t() {}
+	int line;
+	int col;
+	geom_t(int line, int col) : line(line), col(col) {}
+	geom_t() : line(-1), col(-1) {}
 
 	friend std::ostream& operator<<(std::ostream& stream, const geom_t&);
 };
@@ -23,7 +23,7 @@ struct span_t
 {
 	geom_t first;
 	geom_t second;
-	span_t(std::size_t line, std::size_t col, std::size_t width) :
+	span_t(int line, int col, std::size_t width) :
 		first(line, col),
 		second(line, col + width)
 	{
@@ -109,15 +109,6 @@ public:
 	virtual void accept(class visitor_t& v);
 };*/
 
-
-/*
-template<class T>
-struct ch
-{
-	T* child_ptr;
-};
-*/
-
 struct declaration_specifier_type : public node_t {
 	declaration_specifier_type(const geom_t& geom) : node_t(geom) {}
 };
@@ -163,8 +154,10 @@ enum op_t
 	op_neg,
 	op_compl,
 	op_not,
-	op_inc, //!< ++
-	op_dec, //!< --
+	op_inc_post, //!< ++
+	op_dec_post, //!< --
+	op_inc_pre,
+	op_dec_pre,
 
 	
 	op_asn,
@@ -178,6 +171,7 @@ enum op_t
 	op_asn_and,
 	op_asn_xor,
 	op_asn_or
+
 };
 
 struct expression_t : public node_t
@@ -197,17 +191,74 @@ struct expression_t : public node_t
 		op(op), op_token(op_token), op_token_2(op_token_2), n1(n1), n2(n2), n3(n3) {}
 };
 
-struct constant_t : public node_t {
+struct direct_abstract_declarator_t : public node_t {
+
+};
+struct abstract_declarator_t : public node_t {
+
+};
+
+struct specifier_qualifier_list_t : public node_t
+{
+	ch<struct pointer_t> pointer;
+	ch<direct_abstract_declarator_t> direct_abstract_declarator;
+};
+
+struct type_name_t : public node_t
+{
+	ch<specifier_qualifier_list_t> specifier_qualifier_list;
+	ch<abstract_declarator_t> abstract_declarator;
+};
+
+struct sizeof_expression_t : public expression_t
+{
+	void accept(class visitor_t& v);
+	tok sizeof_token, lbrace, rbrace;
+	ch<type_name_t> type_name;
+};
+
+struct identifier_t : public node_t {
+	std::string name;
 	virtual void accept(class visitor_t& v);
-	int iconstant;
+	identifier_t(const char* name) : name(name) {}
+};
+
+enum constant_type
+{
+	ct_int,
+	ct_float,
+	ct_enum
+};
+
+struct constant_t : public node_t
+{
+	virtual void accept(class visitor_t& v);
+	constant_type type;
+	union {
+		int i;
+		float f;
+	} value;
+	ch<identifier_t> enum_id;
+};
+
+enum primary_type
+{
+	pt_expression,
+	pt_constant,
+	pt_id,
+	pt_string
 };
 
 struct primary_expression_t : public expression_t
 {
 	virtual void accept(class visitor_t& v);
+	primary_type type;
+	
 	tok lbrace, rbrace;
 	ch<constant_t> constant;
-	char* identifier;
+	std::string identifier;
+	std::string string;
+	expression_t* expression;
 };
 
 struct type_specifier_t : public declaration_specifier_type {
@@ -274,12 +325,6 @@ struct block_item_t : public node_t {
 
 struct statement_t : public block_item_t {};
 
-struct identifier_t : public node_t {
-	std::string name;
-	virtual void accept(class visitor_t& v);
-	identifier_t(const char* name) : name(name) {}
-};
-
 struct conditional_expression_t : public expression_t
 {
 	virtual void accept(class visitor_t& v);
@@ -288,18 +333,18 @@ struct conditional_expression_t : public expression_t
 struct labeled_statement_t : public statement_t
 {
 	// all
-	ch<token_t> colon;
+	tok colon;
 	ch<statement_t> statement;
 
 	// label:
 	ch<identifier_t> identifier;
 	
 	// case ...:
-	ch<token_t> case_token;
+	tok case_token;
 	ch<expression_t> expression;
 	
 	// default:
-	ch<token_t> default_token;
+	tok default_token;
 
 	virtual void accept(class visitor_t& v);
 };
@@ -309,7 +354,7 @@ struct expression_statement_t : public statement_t
 	virtual void accept(class visitor_t& v);
 	
 	ch<expression_t> expression; // can be zero
-	ch<token_t> semicolon;
+	tok semicolon;
 };
 
 /**
@@ -325,18 +370,18 @@ struct selection_statement_t : public statement_t
 	// all
 	ch<expression_t> expression;
 	ch<statement_t> statement;
-	ch<token_t> lbrace;
-	ch<token_t> rbrace;
+	tok lbrace;
+	tok rbrace;
 
 	// 1 + 2
-	ch<token_t> if_token;
+	tok if_token;
 
 	// 1
-	ch<token_t> else_token;
+	tok else_token;
 	ch<statement_t> else_statement;
 	
 	// 3
-	ch<token_t> switch_token;
+	tok switch_token;
 };
 
 /**
@@ -354,20 +399,20 @@ struct iteration_statement_t : public statement_t
 	
 	// all
 	ch<statement_t> statement;
-	ch<token_t> lbrace;
-	ch<token_t> rbrace;
+	tok lbrace;
+	tok rbrace;
 	
 	// 1, 2
 	ch<expression_t> while_condition;
-	ch<token_t> while_token;
+	tok while_token;
 
 	// 2
-	ch<token_t> do_token;
-	ch<token_t> semicolon;
+	tok do_token;
+	tok semicolon;
 
 	// 3 - 6
 	ch<expression_statement_t> for_condition;
-	ch<token_t> for_token;
+	tok for_token;
 	
 	// 3, 4
 	ch<expression_statement_t> for_init_statement;
@@ -396,7 +441,7 @@ struct jump_statement_t : public statement_t
 {
 	virtual void accept(class visitor_t& v);
 
-	ch<token_t> keyword, semicolon;
+	tok keyword, semicolon;
 	ch<identifier_t> goto_identifier; //!< only GOTO IDENTIFIER ;
 	ch<expression_t> expression; //!< only RETURN expression ;
 };
@@ -406,8 +451,8 @@ struct declaration_t : public block_item_t
 	virtual void accept(class visitor_t& v);
 
 	ch<struct declaration_specifiers_t> declaration_specifiers;
-	ch<token_t> semicolon;
 	ch<init_declarator_list_t> init_declarator_list; //!< optional
+	tok semicolon;
 };
 
 
@@ -423,13 +468,16 @@ struct block_item_list_t : public node_t
 
 struct compound_statement_t : public statement_t
 {
-	ch<token_t> lbrack, rbrack;
+	tok lbrack, rbrack;
 	//block_item_list_t* block_item_list;
 	std::list<block_item_t*> block_items;
 	virtual void accept(class visitor_t& v);
 };
 
-struct pointer_t : public node_t {
+struct pointer_t : public node_t
+{
+	std::list<type_qualifier_t*> type_qualifier_list; // TODO: always pointers in list?
+	ch<pointer_t> pointer;
 	virtual void accept(class visitor_t& v);
 };
 struct direct_declarator_t : public node_t {
@@ -450,7 +498,7 @@ struct declarator_t : public node_t
 struct declaration_specifiers_t : public node_t
 {
 	virtual void accept(class visitor_t& v);
-	std::list<declaration_specifier_type*> specifiers;
+	std::list<node_t*> specifiers;
 };
 
 struct function_definition_t : public node_t

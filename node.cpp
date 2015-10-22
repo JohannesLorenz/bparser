@@ -12,7 +12,7 @@ std::ostream& operator<<(std::ostream& stream,
 std::ostream& operator<<(std::ostream& stream,
 	const span_t& s)
 {
-	return stream << "span(" << s.first << ", " << s.second << ")";
+	return stream << "l" << s.first.line << ", c" << s.first.col;
 }
 
 template<>
@@ -45,6 +45,7 @@ void iteration_statement_t::accept(visitor_t& v) { v.visit(this); }
 void jump_statement_t::accept(visitor_t& v) { v.visit(this); }
 void block_item_list_t::accept(visitor_t& v) { v.visit(this); }
 void type_specifier_t::accept(visitor_t& v) { v.visit(this); }
+void sizeof_expression_t::accept(visitor_t& v) { v.visit(this); }
 
 void expression_t::accept_children(visitor_t& v)
 {

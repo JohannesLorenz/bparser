@@ -78,14 +78,21 @@ int main(void)
 		"return 42 + 0;"
 		"}\n";
 #else
-	char test[] = "\tint main() {"
-		"for(;;) {;}"
-		"while(true) {;}"
-		"do {;} while (true);"
-		"int x = 3;"
-		"x++;"
+	char test[] = "\tint main() {\n"
+		"for(;;) {;}\n"
+		"while(true) {;}\n"
+		"do {;} while (true);\n"
+		"int x = 3;\n"
+		"x++;\n"
+		"42;\n"
+		"41.999f;\n"
+		"I_AM_AN_ENUM;\n"
+		"'c';\n"
+		"\"Hallo Welt!\";\n"
+		"sizeof(unsigned int);\n"
 		"}";
 #endif
+	std::cerr << test << std::endl;
 	
 	int result = 0;
 	

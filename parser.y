@@ -52,6 +52,11 @@ template<class T> void alloc(T*& ptr_ref) { ptr_ref = new T(); /* be C++03 confo
 
 token_t* t(int token_id) { return new token_t(get_pos(), token_id); }
 
+void move_str(std::string& str, const char* s) {
+	str = s; delete[] s;
+	// TODO: remove function, write non-POD char* pointer , and function (std::string, char*-ptr) { string = ptr; delete ptr; }
+}
+
 %}
 
 %code requires {
@@ -73,7 +78,9 @@ typedef void* yyscan_t;
 
 %union {
 	char* name;
-	int value;
+	float _float;
+	int _int;
+	token_t* token;
 	node_t* node;
 	op_t _operator;
 	type_specifier_id _type_specifier_id;
@@ -86,7 +93,6 @@ typedef void* yyscan_t;
 	function_definition_t* function_definition;
 	storage_class_specifier_t* storage_class_specifier;
 	type_specifier_t* type_specifier;
-	type_qualifier_t* type_qualifier;
 	alignment_specifier_t* alignment_specifier;
 	function_specifier_t* function_specifier;
 	pointer_t* pointer;
@@ -104,6 +110,7 @@ typedef void* yyscan_t;
 	statement_t* statement;
 	block_item_t* block_item;
 	constant_t* constant;
+	type_name_t* type_name;
 
 	primary_expression_t* primary_expression;
 }
@@ -126,11 +133,13 @@ typedef void* yyscan_t;
 %token	ALIGNAS ALIGNOF ATOMIC GENERIC NORETURN STATIC_ASSERT THREAD_LOCAL
 
 // TODO: identifier should not just return an int
-%type <name> IDENTIFIER
+%type <name> IDENTIFIER ENUMERATION_CONSTANT TYPEDEF_NAME string STRING_LITERAL enumeration_constant
 
-%type <value> I_CONSTANT struct_or_union ';' ':' CASE DEFAULT
+%type <_int> I_CONSTANT struct_or_union ';' ':' CASE DEFAULT
 	'{' '}' IF ELSE '(' ')' SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
-	INC_OP DEC_OP
+	INC_OP DEC_OP SIZEOF
+%type <_float> F_CONSTANT
+
 %type <node> translation_unit
 	static_assert_declaration
 
@@ -157,10 +166,11 @@ typedef void* yyscan_t;
 
 %type <block_item> block_item
 
+%type <type_name> type_name
 %type <declaration> declaration
 %type <statement> statement
 //%type <identifier> identifier
-%type <_type_specifier_id> type_specifier_simple
+%type <token> type_specifier_simple
 %type <_operator> unary_operator assignment_operator
 %type <declaration_specifiers> declaration_specifiers
 %type <compound_statement> compound_statement block_item_list
@@ -168,11 +178,10 @@ typedef void* yyscan_t;
 %type <declaration_list> declaration_list
 %type <function_definition> function_definition
 %type <external_declaration> external_declaration
-%type <storage_class_specifier> storage_class_specifier
-%type <type_specifier> type_specifier
-%type <type_qualifier> type_qualifier
-%type <alignment_specifier> alignment_specifier
-%type <function_specifier> function_specifier
+%type <token> storage_class_specifier
+%type <node> type_specifier
+%type <token> alignment_specifier
+%type <token> function_specifier
 %type <pointer> pointer
 %type <direct_declarator> direct_declarator
 %type <struct_or_union_specifier> struct_or_union_specifier
@@ -184,6 +193,8 @@ typedef void* yyscan_t;
 %type <labeled_statement> labeled_statement
 %type <jump_statement> jump_statement
 %type <expression> conditional_expression constant_expression
+%type <token> type_qualifier CONST RESTRICT VOLATILE ATOMIC TYPEDEF EXTERN STATIC AUTO REGISTER
+	VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED BOOL COMPLEX INLINE
 
 %start translation_unit
 
@@ -194,26 +205,26 @@ typedef void* yyscan_t;
 
 %%
 
-primary_expression
-	: IDENTIFIER { alloc($$); $$->identifier = $1; }
-	| constant { alloc($$); $$->constant = $1; }
-	| string
-	| '(' expression ')'
+primary_expression // parents: postfix_expression
+	: IDENTIFIER { alloc($$); move_str($$->identifier, $1); $$->type = pt_id; }
+	| constant { alloc($$); $$->constant = $1; $$->type = pt_constant; }
+	| string { alloc($$); move_str($$->string, $1); $$->type = pt_string; }
+	| '(' expression ')' { alloc($$); $$->lbrace = t($1); $$->expression = $2; $$->rbrace=t($3); $$->type = pt_expression; }
 	| generic_selection { c11(); }
 	;
 
-constant
-	: I_CONSTANT { alloc($$); $$->iconstant = $1; }		/* includes character_constant */
-	| F_CONSTANT
-	| ENUMERATION_CONSTANT	/* after it has been defined as such */
+constant // parents: primary expression
+	: I_CONSTANT { alloc($$); $$->value.i = $1; $$->type = ct_int; }		/* includes character_constant */
+	| F_CONSTANT { alloc($$); $$->value.f = $1; $$->type = ct_float; }
+	| ENUMERATION_CONSTANT{ alloc($$); $$->enum_id = new identifier_t($1); $$->type = ct_enum; }	/* after it has been defined as such */
 	;
 
 enumeration_constant		/* before it has been defined as such */
-	: IDENTIFIER
+	: IDENTIFIER { $$ = $1; }
 	;
 
 string
-	: STRING_LITERAL
+	: STRING_LITERAL { $$=$1; }
 	| FUNC_NAME { c11(); }
 	;
 
@@ -238,8 +249,8 @@ postfix_expression
 	| postfix_expression '(' argument_expression_list ')'
 	| postfix_expression '.' IDENTIFIER
 	| postfix_expression PTR_OP IDENTIFIER
-	| postfix_expression INC_OP { $$ = new expression_t(op_inc, t($2), NULL, $1); }
-	| postfix_expression DEC_OP
+	| postfix_expression INC_OP { $$ = new expression_t(op_inc_post, t($2), NULL, $1); }
+	| postfix_expression DEC_OP { $$ = new expression_t(op_dec_post, t($2), NULL, $1); }
 	| '(' type_name ')' '{' initializer_list '}'
 	| '(' type_name ')' '{' initializer_list ',' '}'
 	;
@@ -251,12 +262,12 @@ argument_expression_list
 
 unary_expression
 	: postfix_expression { $$=$1; }
-	| INC_OP unary_expression
-	| DEC_OP unary_expression
-	| unary_operator cast_expression
+	| INC_OP unary_expression { $$ = new expression_t(op_inc_pre, t($1), NULL, $2); }
+	| DEC_OP unary_expression { $$ = new expression_t(op_dec_pre, t($1), NULL, $2); }
+	| unary_operator cast_expression { $$ = new expression_t($1, t($1), NULL, $2); }
 	| SIZEOF unary_expression
-	| SIZEOF '(' type_name ')'
-	| ALIGNOF '(' type_name ')'
+	| SIZEOF '(' type_name ')' { sizeof_expression_t* e; alloc(e); e->sizeof_token=t($1); e->lbrace=t($2); e->type_name = $3; e->rbrace=t($4); $$=e; }
+	| ALIGNOF '(' type_name ')' { c11(); }
 	;
 
 unary_operator
@@ -374,7 +385,7 @@ declaration_specifiers
 	: storage_class_specifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
 	| storage_class_specifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); }
 	| type_specifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
-	| type_specifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); }
+	| type_specifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); } // TODO:
 	| type_qualifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
 	| type_qualifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); }
 	| function_specifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
@@ -394,31 +405,31 @@ init_declarator
 	;
 
 storage_class_specifier
-	: TYPEDEF	/* identifiers must be flagged as TYPEDEF_NAME */
-	| EXTERN
-	| STATIC
+	: TYPEDEF { $$=$1; }	/* identifiers must be flagged as TYPEDEF_NAME */
+	| EXTERN { $$=$1; }
+	| STATIC { $$=$1; }
 	| THREAD_LOCAL { c11(); }
-	| AUTO
-	| REGISTER
+	| AUTO { $$=$1; }
+	| REGISTER { $$=$1; }
 	;
 
 type_specifier_simple
-	: VOID { $$ = t_void; }
-	| CHAR { $$ = t_char; }
-	| SHORT { $$ = t_short; }
-	| INT { $$ = t_int; }
-	| LONG { $$ = t_long; }
-	| FLOAT { $$ = t_float; }
-	| DOUBLE { $$ = t_double; }
-	| SIGNED { $$ = t_signed; }
-	| UNSIGNED { $$ = t_unsigned; }
-	| BOOL { $$ = t_bool; }
-	| COMPLEX { $$ = t_complex; }
+	: VOID { $$ = $1; }
+	| CHAR { $$ = $1; }
+	| SHORT { $$ = $1; }
+	| INT { $$ = $1; }
+	| LONG { $$ = $1; }
+	| FLOAT { $$ = $1; }
+	| DOUBLE { $$ = $1; }
+	| SIGNED { $$ = $1; }
+	| UNSIGNED { $$ = $1; }
+	| BOOL { $$ = $1; }
+	| COMPLEX { $$ = $1; }
 	| IMAGINARY { c11(); }		/* non-mandated extension */
 	;
 
 type_specifier
-	: type_specifier_simple { $$ = new type_specifier_simple_t(get_pos(), $1); }
+	: type_specifier_simple { $$ = $1; }
 	| atomic_type_specifier { c11(); }
 	| struct_or_union_specifier { $$ = $1; }
 	| enum_specifier { $$ = $1; }
@@ -488,14 +499,14 @@ atomic_type_specifier
 	;
 
 type_qualifier
-	: CONST
-	| RESTRICT
-	| VOLATILE
-	| ATOMIC { c11(); }
+	: CONST { $$=$1; }
+	| RESTRICT { $$=$1; }
+	| VOLATILE { $$=$1; }
+	| ATOMIC { $$=$1; }
 	;
 
 function_specifier
-	: INLINE
+	: INLINE { $$=$1; }
 	| NORETURN { c11(); }
 	;
 
