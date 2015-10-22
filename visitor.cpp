@@ -162,10 +162,7 @@ void tree_visit_t::visit(translation_unit_t* n)
 }
 
 void tree_visit_t::visit(declaration_t* n)
-{
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "declaration" << std::endl;
-	
+{	
 	counter_t t(this);
 	visit(n->declaration_specifiers);
 	t.next();
@@ -175,7 +172,6 @@ void tree_visit_t::visit(declaration_t* n)
 
 void tree_visit_t::visit(constant_t* n)
 {
-	incr_depth_t x(&depth, stream, n->span);
 	switch(n->type)
 	{
 		case ct_int:
@@ -198,52 +194,52 @@ void tree_visit_t::visit(constant_t* n)
 
 
 
-void dumper_t::on(on_t id)
+void dumper_t::on(type_specifier_simple_t* e, on_t role, on_t idx)
 {
-	assert(!id);
+	assert(!role);
 	incr_depth_t x(&depth, stream, e->span);
 	stream << "simple type specifier, type: " << e->id << std::endl;
 }
 
-void dumper_t::on(on_t id)
+void dumper_t::on(number_t *e, on_t role, on_t idx)
 {
-	assert(!id);
+	assert(!role);
 	incr_depth_t x(&depth, stream, e->span);
 	stream << "number, value: " << e->value << std::endl;
 }
 
-void dumper_t::visit(on_t id)
+void dumper_t::on(token_t* e, on_t role, on_t idx)
 {
-	assert(!id);
+	assert(!role);
 	incr_depth_t x(&depth, stream, e->span);
 	stream << "token, value: " << e->value << std::endl;
 }
 
-void dumper_t::visit(on_t id)
+void dumper_t::on(expression_t *e, on_t role, on_t idx)
 {
-	if(!id)
+	if(!role)
 	{
 		incr_depth_t x(&depth, stream, e->span);
 		stream << "expr, op 1: " << +e->op << std::endl;
 	}
 }
 
-void dumper_t::visit(expression_statement_t *e)
+void dumper_t::on(expression_statement_t *e, on_t role, on_t idx)
 {
-	if(!id) {
+	if(!role) {
 		incr_depth_t x(&depth, stream, e->span);
 		stream << "expression statement" << std::endl;
 	}
 }
 
-void dumper_t::visit(storage_class_specifier_t* n)
+void dumper_t::on(storage_class_specifier_t* n, on_t role, on_t idx)
 {
-	assert(!id);
+	assert(!role);
 }
 
-void dumper_t::visit(iteration_statement_t* n)
+void dumper_t::on(iteration_statement_t* n, on_t role, on_t idx)
 {
-	if(!id)
+	if(!role)
 	{
 		incr_depth_t x(&depth, stream, n->span);
 		const char* loop_type =
@@ -257,9 +253,9 @@ void dumper_t::visit(iteration_statement_t* n)
 	}
 }
 
-void dumper_t::visit(primary_expression_t* n)
+void dumper_t::on(primary_expression_t* n, on_t role, on_t idx)
 {
-	if(!id)
+	if(!role)
 	{
 		incr_depth_t x(&depth, stream, n->span);
 		stream << "primary expression";
@@ -281,118 +277,118 @@ void dumper_t::visit(primary_expression_t* n)
 	}
 }
 
-void dumper_t::visit(sizeof_expression_t* n)
+void dumper_t::on(sizeof_expression_t* n, on_t role, on_t idx)
 {
-	assert(!id);
+	assert(!role);
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "sizeof ..." << std::endl;
 }
 
-void dumper_t::visit(identifier_t *n)
+void dumper_t::on(identifier_t *n, on_t role, on_t idx)
 {
-	assert(!id);
+	assert(!role);
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "identifier: " << n->name << std::endl;
 }
 
-void dumper_t::visit(type_specifier_t* n)
+void dumper_t::on(type_specifier_t* n, on_t role, on_t idx)
 {
-	assert(!id);
+	assert(!role);
 	incr_depth_t x(&depth, stream, n->span);
 //	stream << "type specifier, id: " << +n->id << ", pos: " << n->span << std::endl;
 }
 
-void dumper_t::visit(type_qualifier_t* n) {
-	assert(!id);
+void dumper_t::on(type_qualifier_t* n, on_t role, on_t idx) {
+	assert(!role);
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "type qualifier" << std::endl;
 }
-void dumper_t::visit(function_specifier_t* n) {
-	assert(!id);
+void dumper_t::on(function_specifier_t* n, on_t role, on_t idx) {
+	assert(!role);
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "function specifier" << std::endl;
 }
-void dumper_t::visit(alignment_specifier_t* n) {
-	assert(!id);
+void dumper_t::on(alignment_specifier_t* n, on_t role, on_t idx) {
+	assert(!role);
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "alignment specifier" << std::endl;
 }
-void dumper_t::visit(declaration_list_t* n) {
-	assert(!id);
+void dumper_t::on(declaration_list_t* n, on_t role, on_t idx) {
+	assert(!role);
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "declaration list" << std::endl;
 }
-void dumper_t::visit(compound_statement_t* n)
+void dumper_t::on(compound_statement_t* n, on_t role, on_t idx)
 {
-	if(!id) {
+	if(!role) {
 		incr_depth_t x(&depth, stream, n->span);
 		stream << "compound statement" << std::endl;
 	}
 }
-void dumper_t::visit(pointer_t* n) {
-	assert(!id);
+void dumper_t::on(pointer_t* n, on_t role, on_t idx) {
+	assert(!role);
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "pointer" << std::endl;
 }
-void dumper_t::visit(direct_declarator_t* n)
+void dumper_t::on(direct_declarator_t* n, on_t role, on_t idx)
 {
-	assert(!id);
+	assert(!role);
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "direct declarator" << std::endl;
 }
-void dumper_t::visit(declarator_t* n)
+void dumper_t::on(declarator_t* n, on_t role, on_t idx)
 {
-	assert(!id);
+	assert(!role);
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "declarator" << std::endl;
 }
 
-void dumper_t::visit(declaration_specifiers_t* n)
+void dumper_t::on(declaration_specifiers_t* n, on_t role, on_t idx)
 {
-	if(! id)
+	if(! role)
 	{
 		incr_depth_t x(&depth, stream, n->span);
 		stream << "declaration specifiers" << std::endl;
 	}
 }
-void dumper_t::visit(function_definition_t* n)
+void dumper_t::on(function_definition_t* n, on_t role, on_t idx)
 {
-	if(! id)
+	if(! role)
 	{
 		incr_depth_t x(&depth, stream, n->span);
 		stream << "function definition" << std::endl;
 	}
 }
-void dumper_t::visit(external_declaration_t* n)
+void dumper_t::on(external_declaration_t* n, on_t role, on_t idx)
 {
-	if(! id)
+	if(! role)
 	{
 		incr_depth_t x(&depth, stream, n->span);
 		stream << "external_declaration_t" << std::endl;
 	}
 }
 
-void dumper_t::visit(translation_unit_t* n)
+void dumper_t::on(translation_unit_t* n, on_t role, on_t idx)
 {
-	if(! id)
+	if(! role)
 	{
 		incr_depth_t x(&depth, stream, n->span);
 		stream << "translation unit" << std::endl;
 	}
 }
 
-void dumper_t::visit(declaration_t* n)
+void dumper_t::on(declaration_t* n, on_t role, on_t idx)
 {
-	if(! id)
+	if(! role)
 	{
 		incr_depth_t x(&depth, stream, n->span);
 		stream << "declaration" << std::endl;
 	}
 }
 
-void dumper_t::visit(constant_t* n)
+void dumper_t::on(constant_t* n, on_t role, on_t idx)
 {
-	if(! id)
+	if(! role)
 	{
 		incr_depth_t x(&depth, stream, n->span);
 		switch(n->type)

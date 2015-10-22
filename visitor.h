@@ -51,25 +51,23 @@ namespace std
 
 class tree_visit_t : public visitor_t
 {
-	std::size_t depth;
-
 	template<class T>
 	bool tvisit(T ptr) { return ptr ? (visit(ptr), true) : false; }
 
 	template<class T>
-	void vvisit(const std::list<T*>& v)
+	void vvisit(const std::list<T*>& v, std::size_t role)
 	{
 		std::size_t onv_id = 0;
 		for(typename std::list<T*>::const_iterator itr = v.begin();
 			itr != v.end(); ++itr, ++onv_id)
 		{
 			visit(*itr);
-			onv(onv_id);
+			on(*itr, role, onv_id);
 		}
 	}
 
 	template<class T>
-	void vaccept(const std::list<T*>& v)
+	void vaccept(const std::list<T*>& v, std::size_t role)
 	{
 		std::size_t onv_id = 0;
 		for(typename std::list<T*>::const_iterator itr = v.begin();
@@ -78,7 +76,7 @@ class tree_visit_t : public visitor_t
 			//if(!*itr)
 			// throw "list element is NULL, can not happen.";
 			(*itr)->accept(*this);
-			onv(onv_id);
+			on(*itr, role, onv_id);
 		}
 	}
 	
@@ -92,9 +90,37 @@ class tree_visit_t : public visitor_t
 	};
 	friend class counter_t;
 	
+protected:
+	std::size_t depth;
 	typedef std::size_t on_t;
-	virtual void on(on_t type_id) {};
-	virtual void onv(on_t type_id) {};
+public:
+	virtual void on(type_specifier_simple_t* e, on_t role, on_t idx);
+	virtual void on(number_t *e, on_t role, on_t idx);
+	virtual void on(token_t* e, on_t role, on_t idx);
+	virtual void on(expression_t *e, on_t role, on_t idx);
+	virtual void on(expression_statement_t *e, on_t role, on_t idx);
+	//void visit(node_t *e); //!< default
+	virtual void on(storage_class_specifier_t* n, on_t role, on_t idx);
+	virtual void on(type_specifier_t* n, on_t role, on_t idx);
+	virtual void on(type_qualifier_t* n, on_t role, on_t idx);
+	virtual void on(function_specifier_t* n, on_t role, on_t idx);
+	virtual void on(alignment_specifier_t* n, on_t role, on_t idx);
+	virtual void on(declaration_list_t* n, on_t role, on_t idx);
+	virtual void on(compound_statement_t* n, on_t role, on_t idx);
+	virtual void on(pointer_t* n, on_t role, on_t idx);
+	virtual void on(direct_declarator_t* n, on_t role, on_t idx);
+	virtual void on(declarator_t* n, on_t role, on_t idx);
+	virtual void on(declaration_specifiers_t* n, on_t role, on_t idx);
+	virtual void on(function_definition_t* n, on_t role, on_t idx);
+	virtual void on(external_declaration_t* n, on_t role, on_t idx);
+	virtual void on(translation_unit_t* n, on_t role, on_t idx);
+	virtual void on(declaration_t* n, on_t role, on_t idx);
+	virtual void on(iteration_statement_t* n, on_t role, on_t idx);
+	virtual void on(identifier_t* n, on_t role, on_t idx);
+	virtual void on(primary_expression_t* n, on_t role, on_t idx);
+	virtual void on(sizeof_expression_t* n, on_t role, on_t idx);
+	virtual void on(constant_t* , on_t role, on_t idx);
+	virtual void on(init_declarator_list_t* n, on_t role, on_t idx) {}
 
 public:
 	tree_visit_t(std::ostream& stream = std::cout) : depth(0), stream(stream) {};
@@ -134,33 +160,34 @@ class dumper_t : public tree_visit_t
 
 public:
 	tree_visit_t(std::ostream& stream = std::cout) : depth(0), stream(stream) {};
-	void on(type_specifier_simple_t* e, on_t id);
-	void visit(number_t *e, on_t id);
-	void visit(token_t* e, on_t id);
-	void visit(expression_t *e, on_t id);
-	void visit(expression_statement_t *e, on_t id);
+	
+	void on(type_specifier_simple_t* e, on_t role, on_t idx);
+	void on(number_t *e, on_t role, on_t idx);
+	void on(token_t* e, on_t role, on_t idx);
+	void on(expression_t *e, on_t role, on_t idx);
+	void on(expression_statement_t *e, on_t role, on_t idx);
 	//void visit(node_t *e); //!< default
-	void visit(storage_class_specifier_t* n, on_t id);
-	void visit(type_specifier_t* n, on_t id);
-	void visit(type_qualifier_t* n, on_t id);
-	void visit(function_specifier_t* n, on_t id);
-	void visit(alignment_specifier_t* n, on_t id);
-	void visit(declaration_list_t* n, on_t id);
-	void visit(compound_statement_t* n, on_t id);
-	void visit(pointer_t* n, on_t id);
-	void visit(direct_declarator_t* n, on_t id);
-	void visit(declarator_t* n, on_t id);
-	void visit(declaration_specifiers_t* n, on_t id);
-	void visit(function_definition_t* n, on_t id);
-	void visit(external_declaration_t* n, on_t id);
-	void visit(translation_unit_t* n, on_t id);
-	void visit(declaration_t* n, on_t id);
-	void visit(iteration_statement_t* n, on_t id);
-	void visit(identifier_t* n, on_t id);
-	void visit(primary_expression_t* n, on_t id);
-	void visit(sizeof_expression_t* n, on_t id);
-	void visit(constant_t* , on_t id);
-	void visit(init_declarator_list_t* n, on_t id) {}
+	void on(storage_class_specifier_t* n, on_t role, on_t idx);
+	void on(type_specifier_t* n, on_t role, on_t idx);
+	void on(type_qualifier_t* n, on_t role, on_t idx);
+	void on(function_specifier_t* n, on_t role, on_t idx);
+	void on(alignment_specifier_t* n, on_t role, on_t idx);
+	void on(declaration_list_t* n, on_t role, on_t idx);
+	void on(compound_statement_t* n, on_t role, on_t idx);
+	void on(pointer_t* n, on_t role, on_t idx);
+	void on(direct_declarator_t* n, on_t role, on_t idx);
+	void on(declarator_t* n, on_t role, on_t idx);
+	void on(declaration_specifiers_t* n, on_t role, on_t idx);
+	void on(function_definition_t* n, on_t role, on_t idx);
+	void on(external_declaration_t* n, on_t role, on_t idx);
+	void on(translation_unit_t* n, on_t role, on_t idx);
+	void on(declaration_t* n, on_t role, on_t idx);
+	void on(iteration_statement_t* n, on_t role, on_t idx);
+	void on(identifier_t* n, on_t role, on_t idx);
+	void on(primary_expression_t* n, on_t role, on_t idx);
+	void on(sizeof_expression_t* n, on_t role, on_t idx);
+	void on(constant_t* , on_t role, on_t idx);
+	void on(init_declarator_list_t* n, on_t role, on_t idx) {}
 };
 
 struct cleaner_t : visitor_t
