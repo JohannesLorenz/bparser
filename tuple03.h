@@ -43,9 +43,7 @@ public:
 		typedef typename type_at<self, Idx>::type c;
 	};
 
-	typedef const type reftype;
-
-	tpl(const reftype& e1,
+	tpl(const type& e1,
 		typename ar<1>::g e2 = typename ar<1>::c(),
 		typename ar<2>::g e3 = typename ar<2>::c(),
 		typename ar<3>::g e4 = typename ar<3>::c(),
@@ -141,7 +139,7 @@ public:
 		typedef c g;
 	};
 
-	pt(const T* e1,
+	pt(T* const& e1,
 		typename ar<1>::g e2 = typename ar<1>::c(),
 		typename ar<2>::g e3 = typename ar<2>::c(),
 		typename ar<3>::g e4 = typename ar<3>::c(),
@@ -154,7 +152,7 @@ public:
 	{
 	}
 };
-struct test{};
+
 template<class T, class Next = null_type>
 class ptn : public pt<T, Next>
 {
@@ -168,11 +166,10 @@ public:
 		typedef c g;
 	};
 
-	static test test2;
-	ptn() : base(&test2) {}
+	ptn() : base(NULL) {}
 	ptn(T* value) : base(value) {}
 
-	ptn(const T* e1,
+	ptn(T* const& e1,
 		typename ar<1>::g e2 = typename ar<1>::c(),
 		typename ar<2>::g e3 = typename ar<2>::c(),
 		typename ar<3>::g e4 = typename ar<3>::c(),
@@ -181,7 +178,7 @@ public:
 		typename ar<6>::g e7 = typename ar<6>::c(),
 		typename ar<7>::g e8 = typename ar<7>::c()
 		) :
-		pt<T*, Next>(e1, e2, e3, e4, e5, e6, e7, e8)
+		pt<T, Next>(e1, e2, e3, e4, e5, e6, e7, e8)
 	{
 	}
 };

@@ -17,8 +17,7 @@ int main()
 	assert(value_at<0>(t) == 42);
 	assert(value_at<1>(t).size() == 1);
 
-	int ft = 42;
-	ptn< test, ptn < std::vector<int> > > t2;
+	ptn< int, ptn < std::vector<int> > > t2;
 	assert(value_at<0>(t2) == NULL);
 	assert(value_at<1>(t2) == NULL);
 

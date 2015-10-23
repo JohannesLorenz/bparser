@@ -191,10 +191,10 @@ typedef ptn<token_t> end_token;
 
 struct expression_t : public node_t {};
 
-template<class >
 struct unary_expression_t : public expression_t
 {
-
+	ptn<	token_t,
+		ptn<	node_t> > c;
 
 	virtual void accept(class visitor_t& v);
 };
