@@ -57,6 +57,19 @@ public:
 	{
 	}
 
+	void fill(const type& e1,
+		typename ar<1>::g e2 = typename ar<1>::c(),
+		typename ar<2>::g e3 = typename ar<2>::c(),
+		typename ar<3>::g e4 = typename ar<3>::c(),
+		typename ar<4>::g e5 = typename ar<4>::c(),
+		typename ar<5>::g e6 = typename ar<5>::c(),
+		typename ar<6>::g e7 = typename ar<6>::c(),
+		typename ar<7>::g e8 = typename ar<7>::c()
+		) {
+		value = e1;
+		Next::fill(e2, e3, e4, e5, e6, e7, e8, null_type());
+	}
+
 
 	Next& set(const type& _value) { return value = _value, *this; }
 
@@ -120,8 +133,15 @@ public:
 
 	void set(const type& _value) { value = _value; }
 
-	template<class T1>
-	void fill(const T1& e1) { set(e1); }
+	void fill(const type& _value, const null_type&, const null_type&,
+		const null_type&, const null_type&, const null_type&,
+		const null_type&, const null_type&)
+	{
+		value = _value;
+	}
+
+//	template<class T1>
+//	void fill(const T1& e1) { set(e1); }
 };
 
 template<class T, class Next = null_type>

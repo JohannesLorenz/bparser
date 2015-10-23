@@ -42,6 +42,12 @@ public:
 	template<class T>
 	void visit(ch<T>& c) { visit((T*)c); }
 	virtual ~visitor_t() {}
+
+	template<class T, class Next>
+	void accept_all(const tpl<T, Next>& t) { t.value->accept(*this); accept_all(t.Next); }
+
+	template<class T>
+	void accept_all(const tpl<T, null_type>& t) { t.value->accept(*this); }
 };
 
 namespace std
@@ -130,7 +136,10 @@ public:
 	void visit(type_specifier_simple_t* e);
 	void visit(number_t *e);
 	void visit(token_t* e);
-	void visit(expression_t *e);
+	void visit(unary_expression_l *e);
+	void visit(unary_expression_r *e);
+	void visit(ternary_expression_t *e);
+	void visit(binary_expression_t *e);
 	void visit(expression_statement_t *e);
 	//void visit(node_t *e); //!< default
 	void visit(storage_class_specifier_t* n);
@@ -196,7 +205,7 @@ public:
 struct cleaner_t : visitor_t
 {
 	void visit(number_t *e) { delete e; }
-	void visit(expression_t *e);
+	void visit(binary_expression_t *e);
 };
 
 template<class T>

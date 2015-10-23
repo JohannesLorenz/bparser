@@ -48,7 +48,7 @@ extern std::vector<token_t*>& get_token_vector();
 
 token_t* app_token() { return get_token_vector().back(); }
 
-template<class T> void alloc(T*& ptr_ref) { ptr_ref = new T(); /* be C++03 conform */ }
+template<class T> T* alloc(T*& ptr_ref) { return ptr_ref = new T(); /* be C++03 conform */ }
 
 token_t* t(int token_id) { return new token_t(get_pos(), token_id); }
 
@@ -249,8 +249,8 @@ postfix_expression
 	| postfix_expression '(' argument_expression_list ')'
 	| postfix_expression '.' IDENTIFIER
 	| postfix_expression PTR_OP IDENTIFIER
-	| postfix_expression INC_OP { $$ = new unary_expression_t(op_inc_post, t($2), NULL, $1); }
-	| postfix_expression DEC_OP { $$ = new unary_expression_t(op_dec_post, t($2), NULL, $1); }
+	| postfix_expression INC_OP { unary_expression_r* u; $$=alloc(u); u->c.fill($1, t($2)); u->op_id = op_inc_post; }
+	| postfix_expression DEC_OP { unary_expression_r* u; $$=alloc(u); u->c.fill($1, t($2)); u->op_id = op_dec_post; }
 	| '(' type_name ')' '{' initializer_list '}'
 	| '(' type_name ')' '{' initializer_list ',' '}'
 	;
@@ -262,9 +262,9 @@ argument_expression_list
 
 unary_expression
 	: postfix_expression { $$=$1; }
-	| INC_OP unary_expression { $$ = new expression_t(op_inc_pre, t($1), NULL, $2); }
-	| DEC_OP unary_expression { $$ = new expression_t(op_dec_pre, t($1), NULL, $2); }
-	| unary_operator cast_expression { $$ = new expression_t($1, t($1), NULL, $2); }
+	| INC_OP unary_expression { unary_expression_l* u; $$=alloc(u); u->c.fill(t($1), $2); u->op_id = op_inc_pre; }
+	| DEC_OP unary_expression { unary_expression_l* u; $$=alloc(u); u->c.fill(t($1), $2); u->op_id = op_dec_pre; }
+	| unary_operator cast_expression { unary_expression_l* u; $$=alloc(u); u->c.fill(t($1), $2); u->op_id = $1; }
 	| SIZEOF unary_expression
 	| SIZEOF '(' type_name ')' { sizeof_expression_t* e; alloc(e); e->c.set(t($1)).set(t($2)).set($3).set(t($4)); $$=e; }
 	| ALIGNOF '(' type_name ')' { c11(); }

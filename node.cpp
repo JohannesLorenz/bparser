@@ -21,7 +21,13 @@ void type_specifier_simple_t::accept(visitor_t& v) { v.visit(this); }
 	
 void token_t::accept(visitor_t& v) { v.visit(this); }
 void number_t::accept(visitor_t& v) { v.visit(this); }
-void expression_t::accept(visitor_t& v) { v.visit(this); }
+//void expression_t::accept(visitor_t& v) { v.visit(this); }
+void unary_expression_l::accept(visitor_t& v) { v.visit(this); }
+void unary_expression_r::accept(visitor_t& v) { v.visit(this); }
+void binary_expression_t::accept(visitor_t& v) { v.visit(this); }
+void ternary_expression_t::accept(visitor_t& v) { v.visit(this); }
+
+
 void storage_class_specifier_t::accept(visitor_t& v) { v.visit(this); }
 //void type_specifier_t::accept(visitor_t& v) { v.visit(this); }
 void type_qualifier_t::accept(visitor_t& v) { v.visit(this); }
@@ -48,12 +54,12 @@ void block_item_list_t::accept(visitor_t& v) { v.visit(this); }
 void type_specifier_t::accept(visitor_t& v) { v.visit(this); }
 void sizeof_expression_t::accept(visitor_t& v) { v.visit(this); }
 
-void expression_t::accept_children(visitor_t& v)
+/*void expression_t::accept_children(visitor_t& v)
 {
 	n1->accept(v);
 	if(n2) n2->accept(v);
 	if(n3) n3->accept(v);
-}
+}*/
 
 
 void block_item_t::accept(visitor_t &v) { v.visit(this); }

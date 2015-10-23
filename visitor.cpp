@@ -44,13 +44,29 @@ void tree_visit_t::visit(token_t* e)
 	on(e);
 }
 
-void tree_visit_t::visit(expression_t* e)
+void tree_visit_t::visit(unary_expression_l *e)
 {
-	on(e);
+	accept_all(e->c);
+}
+
+void tree_visit_t::visit(unary_expression_r *e)
+{
+	accept_all(e->c);
+}
+
+void tree_visit_t::visit(binary_expression_t *e)
+{
+	accept_all(e->c);
+}
+
+void tree_visit_t::visit(ternary_expression_t *e)
+{
+/*	on(e);
 	e->n1->accept(*this);
 	on(e, 1);
 	if(e->n2) { e->n2->accept(*this); on(e, 2); }
-	if(e->n3) { e->n3->accept(*this); on(e, 3); }
+	if(e->n3) { e->n3->accept(*this); on(e, 3); }*/
+	accept_all(e->c);
 }
 
 void tree_visit_t::visit(expression_statement_t *e)
@@ -76,11 +92,11 @@ void tree_visit_t::visit(primary_expression_t* n)
 	switch(n->type)
 	{
 		case pt_expression:
-			visit(n->expression);
+			n->expression->accept(*this);
 			on(n, 1);
 			break;
 		case pt_constant:
-			visit(n->constant);
+			n->constant->accept(*this);
 			on(n, 1);
 			break;
 		case pt_id:
@@ -226,7 +242,7 @@ void dumper_t::on(expression_t *e, on_t role, on_t)
 	if(!role)
 	{
 		incr_depth_t x(&depth, stream, e->span);
-		stream << "expr, op 1: " << +e->op;
+		stream << "expr, op 1: " << +e->op_id;
 	}
 }
 
@@ -409,9 +425,10 @@ void dumper_t::on(constant_t* n, on_t role, on_t)
 	}
 }
 
-void cleaner_t::visit(expression_t* e)
+void cleaner_t::visit(binary_expression_t* e)
 {
-	e->accept_children(*this);
+	//e->accept_children(*this);
+	accept_all(e->c);
 	delete e;
 }
 

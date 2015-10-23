@@ -189,9 +189,19 @@ enum op_t
 
 typedef ptn<token_t> end_token;
 
-struct expression_t : public node_t {};
+struct expression_t : public node_t {
+	op_t op_id;
+};
 
-struct unary_expression_t : public expression_t
+struct unary_expression_r : public expression_t
+{
+	ptn<	node_t,
+		end_token > c;
+
+	virtual void accept(class visitor_t& v);
+};
+
+struct unary_expression_l : public expression_t
 {
 	ptn<	token_t,
 		ptn<	node_t> > c;
@@ -218,7 +228,6 @@ struct ternary_expression_t : public expression_t
 				ptn<	token_t,
 					ptn<	node_t > > > > > c;
 
-	
 //	expression_t(op_t op, token_t* op_token, token_t* op_token_2, node_t *n1, node_t* n2 = NULL, node_t* n3 = NULL) :
 //		op(op), op_token(op_token), op_token_2(op_token_2), n1(n1), n2(n2), n3(n3) {}
 };
@@ -239,8 +248,7 @@ struct specifier_qualifier_list_t : public node_t
 
 struct type_name_t : public node_t
 {
-	ch<specifier_qualifier_list_t> specifier_qualifier_list;
-	ch<abstract_declarator_t> abstract_declarator;
+	ptn<specifier_qualifier_list_t, ptn< abstract_declarator_t > > abstract_declarator;
 };
 
 template<class Next>
