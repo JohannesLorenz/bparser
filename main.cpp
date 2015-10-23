@@ -49,7 +49,7 @@ translation_unit_t *getAST(const char *expr)
 	return expression;
 }
  
-int evaluate(node_t *e)
+int evaluate(node_t */*e*/)
 {/*
 	switch (e->type) {
 		case eVALUE:
@@ -78,7 +78,7 @@ int main(void)
 		"return 42 + 0;"
 		"}\n";
 #else
-	char test[] = "\tint main() {\n"
+	char test[] = "\tint main(int) {\n"
 		"for(;;) {;}\n"
 		"while(true) {;}\n"
 		"do {;} while (true);\n"

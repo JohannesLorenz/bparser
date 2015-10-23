@@ -13,7 +13,7 @@
 #include "lexer.h"
 #include "visitor.h"
 
-int yyerror(node_t **expression, yyscan_t scanner, const char *msg) {
+int yyerror(node_t **/*expression*/, yyscan_t scanner, const char *msg) {
 	fprintf(stderr,"At: %s,\n  line %d, column %d: Error:%s\n", yyget_text(scanner), yyget_lineno(scanner), yyget_column(scanner), msg); return 0;
 	// Add error handling routine as needed
 }
@@ -249,8 +249,8 @@ postfix_expression
 	| postfix_expression '(' argument_expression_list ')'
 	| postfix_expression '.' IDENTIFIER
 	| postfix_expression PTR_OP IDENTIFIER
-	| postfix_expression INC_OP { $$ = new expression_t(op_inc_post, t($2), NULL, $1); }
-	| postfix_expression DEC_OP { $$ = new expression_t(op_dec_post, t($2), NULL, $1); }
+	| postfix_expression INC_OP { $$ = new unary_expression_t(op_inc_post, t($2), NULL, $1); }
+	| postfix_expression DEC_OP { $$ = new unary_expression_t(op_dec_post, t($2), NULL, $1); }
 	| '(' type_name ')' '{' initializer_list '}'
 	| '(' type_name ')' '{' initializer_list ',' '}'
 	;
@@ -266,7 +266,7 @@ unary_expression
 	| DEC_OP unary_expression { $$ = new expression_t(op_dec_pre, t($1), NULL, $2); }
 	| unary_operator cast_expression { $$ = new expression_t($1, t($1), NULL, $2); }
 	| SIZEOF unary_expression
-	| SIZEOF '(' type_name ')' { sizeof_expression_t* e; alloc(e); e->sizeof_token=t($1); e->lbrace=t($2); e->type_name = $3; e->rbrace=t($4); $$=e; }
+	| SIZEOF '(' type_name ')' { sizeof_expression_t* e; alloc(e); e->c.set(t($1)).set(t($2)).set($3).set(t($4)); $$=e; }
 	| ALIGNOF '(' type_name ')' { c11(); }
 	;
 
@@ -383,7 +383,7 @@ declaration
 
 declaration_specifiers
 	: storage_class_specifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
-	| storage_class_specifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); }
+	| storage_class_specifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); } // TODO: alloc($$)?
 	| type_specifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
 	| type_specifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); } // TODO:
 	| type_qualifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }

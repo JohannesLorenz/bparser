@@ -8,6 +8,7 @@
 #include <cstddef>
 #include <list>
 #include <string>
+#include "tuple03.h"
 
 struct geom_t
 {
@@ -69,6 +70,18 @@ public:
 	node_t(const geom_t& geom) : span(geom, geom_t()) {}
 
 	virtual ~node_t() {}
+};
+
+template<class First, class Next = null_type>
+class node_ch : public node_t
+{
+	ptn<First, Next> c;
+public:
+	node_ch() {}
+	node_ch(const geom_t& geom) : node_t(geom) {}
+
+	virtual ~node_ch() {}
+	void accept_children(visitor_t& v); // TODO
 };
 
 struct token_t : public node_t
@@ -174,21 +187,40 @@ enum op_t
 
 };
 
-struct expression_t : public node_t
+typedef ptn<token_t> end_token;
+
+struct expression_t : public node_t {};
+
+template<class >
+struct unary_expression_t : public expression_t
+{
+
+
+	virtual void accept(class visitor_t& v);
+};
+
+struct binary_expression_t : public expression_t
+{
+	ptn<	node_t,
+		ptn<	token_t,
+			ptn<	node_t> > > c;
+	virtual void accept(class visitor_t& v);
+};
+
+struct ternary_expression_t : public expression_t
 {
 	void accept_children(visitor_t& v);
 	virtual void accept(class visitor_t& v);
-	expression_t() {} // TODO?
 
-	op_t op;
-	tok op_token;
-	tok op_token_2; //!< ternary only
-	ch<node_t> n1; // TODO: expression base class, including const? // TODO: expression_t should suffice because of primary_expression_t
-	ch<node_t> n2; //!< only binary and ternary ops	
-	ch<node_t> n3; //!< only ternary ops
+	ptn<	node_t,
+		ptn<	token_t,
+			ptn<	node_t,
+				ptn<	token_t,
+					ptn<	node_t > > > > > c;
+
 	
-	expression_t(op_t op, token_t* op_token, token_t* op_token_2, node_t *n1, node_t* n2 = NULL, node_t* n3 = NULL) :
-		op(op), op_token(op_token), op_token_2(op_token_2), n1(n1), n2(n2), n3(n3) {}
+//	expression_t(op_t op, token_t* op_token, token_t* op_token_2, node_t *n1, node_t* n2 = NULL, node_t* n3 = NULL) :
+//		op(op), op_token(op_token), op_token_2(op_token_2), n1(n1), n2(n2), n3(n3) {}
 };
 
 struct direct_abstract_declarator_t : public node_t {
@@ -200,8 +232,9 @@ struct abstract_declarator_t : public node_t {
 
 struct specifier_qualifier_list_t : public node_t
 {
-	ch<struct pointer_t> pointer;
-	ch<direct_abstract_declarator_t> direct_abstract_declarator;
+/*	ch<struct pointer_t> pointer;
+	ch<direct_abstract_declarator_t> direct_abstract_declarator;*/
+	ptn<struct pointer_t, ptn< direct_abstract_declarator_t > > c;
 };
 
 struct type_name_t : public node_t
@@ -210,14 +243,25 @@ struct type_name_t : public node_t
 	ch<abstract_declarator_t> abstract_declarator;
 };
 
+template<class Next>
+struct to
+{
+	typedef ptn<token_t, Next> type;
+};
+
 struct sizeof_expression_t : public expression_t
 {
 	void accept(class visitor_t& v);
-	tok sizeof_token, lbrace, rbrace;
-	ch<type_name_t> type_name;
+	/*tok sizeof_token, lbrace, rbrace;
+	ch<type_name_t> type_name;*/
+	//to< ptn< type_name_t, end_token > >::type c;
+	ptn<	token_t,
+		ptn <	token_t,
+			ptn <	type_name_t, end_token > > > c;
 };
 
-struct identifier_t : public node_t {
+struct identifier_t : public node_t
+{
 	std::string name;
 	virtual void accept(class visitor_t& v);
 	identifier_t(const char* name) : name(name) {}
