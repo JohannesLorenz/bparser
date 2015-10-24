@@ -137,7 +137,7 @@ typedef void* yyscan_t;
 
 %type <_int> I_CONSTANT struct_or_union ';' ':' CASE DEFAULT
 	'{' '}' IF ELSE '(' ')' SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
-	INC_OP DEC_OP SIZEOF
+	INC_OP DEC_OP SIZEOF ','
 %type <_float> F_CONSTANT
 
 %type <node> translation_unit
@@ -265,7 +265,7 @@ unary_expression
 	| INC_OP unary_expression { unary_expression_l* u; $$=alloc(u); u->c.fill(t($1), $2); u->op_id = op_inc_pre; }
 	| DEC_OP unary_expression { unary_expression_l* u; $$=alloc(u); u->c.fill(t($1), $2); u->op_id = op_dec_pre; }
 	| unary_operator cast_expression { unary_expression_l* u; $$=alloc(u); u->c.fill(t($1), $2); u->op_id = $1; }
-	| SIZEOF unary_expression
+	| SIZEOF unary_expression { not_yet(); }
 	| SIZEOF '(' type_name ')' { sizeof_expression_t* e; alloc(e); e->c.set(t($1)).set(t($2)).set($3).set(t($4)); $$=e; }
 	| ALIGNOF '(' type_name ')' { c11(); }
 	;
@@ -368,7 +368,7 @@ assignment_operator
 
 expression
 	: assignment_expression { $$=$1; }
-	| expression ',' assignment_expression
+	| expression ',' assignment_expression { binary_expression_t* e; alloc(e)->op_id = op_asn; e->c.fill($1, t($2), $3); }
 	;
 
 constant_expression
