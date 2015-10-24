@@ -64,3 +64,9 @@ void sizeof_expression_t::accept(visitor_t& v) { v.visit(this); }
 
 void block_item_t::accept(visitor_t &v) { v.visit(this); }
 void identifier_t::accept(visitor_t &v) { v.visit(this); }
+
+
+void init_declarator_t::accept(visitor_t &v) { v.visit(this); }
+
+
+void init_declarator_list_t::accept(visitor_t &v) { v.visit(this); }

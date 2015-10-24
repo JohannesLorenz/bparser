@@ -11,6 +11,9 @@ public:
 		no_fill, no_fill, no_fill, no_fill) {}
 };
 
+// FEATURE: allow last type to be not of null_type, but custom? e.g.
+// ptn< a, ptn < b, c> > instead of ptn< a, ptn <b, ptn < c > > >
+
 template<class Tpl, std::size_t Idx>
 struct type_at
 {
@@ -23,13 +26,33 @@ struct type_at<Tpl, 0>
 	typedef typename Tpl::type type;
 };
 
-template<class T, class Next = null_type>
-class tpl : public Next
+template<class Tpl, std::size_t Idx>
+struct _value_at
 {
+	static typename type_at<Tpl, Idx>::type& get(Tpl& tpl) { return _value_at<typename Tpl::next, Idx-1>::get(tpl.get_next()); }
+};
+
+template<class Tpl>
+struct _value_at<Tpl, 0>
+{
+	static typename type_at<Tpl, 0>::type& get(Tpl& tpl) { return tpl.value; }
+};
+
+template<std::size_t Idx, class Tpl>
+typename type_at<Tpl, Idx>::type& value_at(Tpl& tpl) { return _value_at<Tpl, Idx>::get(tpl); }
+
+// FEATURE: inherit from Next, if it's possible and makes sense
+template<class T, class Next = null_type>
+class tpl // : private Next
+{
+	template<class Tpl, std::size_t Idx>
+	friend struct _value_at;
+
 	typedef tpl<T, Next> self;
 public:
 	typedef T type;
 	typedef Next next;
+	Next _next;
 	type value;
 
 	tpl() {}
@@ -52,7 +75,7 @@ public:
 		typename ar<6>::g e7 = typename ar<6>::c(),
 		typename ar<7>::g e8 = typename ar<7>::c()
 		) :
-		Next(e2, e3, e4, e5, e6, e7, e8, null_type()),
+		/*Next*/_next(e2, e3, e4, e5, e6, e7, e8, null_type()),
 		value(e1)
 	{
 	}
@@ -67,53 +90,13 @@ public:
 		typename ar<7>::g e8 = typename ar<7>::c()
 		) {
 		value = e1;
-		Next::fill(e2, e3, e4, e5, e6, e7, e8, null_type());
+		get_next().fill(e2, e3, e4, e5, e6, e7, e8, null_type());
 	}
 
+	Next& get_next() { return /* *this;*/ _next; }
+	const Next& get_next() const { return /* *this; */ _next; }
 
-	Next& set(const type& _value) { return value = _value, *this; }
-
-#if 0
-	template<class T2> void fill(const T& e1, const T2& e2)
-		{ set(e1).fill(e2); }
-
-	template<class T2, class T3>
-	void fill(const T& e1, const T2& e2, const T3& e3) {
-		set(e1).fill(e2, e3);
-	}
-
-	template<class T2, class T3, class T4>
-	void fill(const T& e1, const T2& e2, const T3& e3, const T4& e4) {
-		set(e1).fill(e2, e3, e4);
-	}
-
-	template<class T2, class T3, class T4, class T5>
-	void fill(const T& e1, const T2& e2, const T3& e3, const T4& e4,
-		const T5& e5) {
-		set(e1).fill(e2, e3, e4, e5);
-	}
-
-	template<class T2, class T3, class T4,
-		class T5, class T6>
-	void fill(const T& e1, const T2& e2, const T3& e3, const T4& e4,
-		const T5& e5, const T6& e6) {
-		set(e1).fill(e2, e3, e4, e5, e6);
-	}
-
-	template<class T2, class T3, class T4,
-		class T5, class T6, class T7>
-	void fill(const T& e1, const T2& e2, const T3& e3, const T4& e4,
-		const T5& e5, const T6& e6, const T7& e7) {
-		set(e1).fill(e2, e3, e4, e5, e6, e7);
-	}
-
-	template<class T2, class T3, class T4,
-		class T5, class T6, class T7, class T8>
-	void fill(const T& e1, const T2& e2, const T3& e3, const T4& e4,
-		const T5& e5, const T6& e6, const T7& e7, const T8& e8) {
-		set(e1).fill(e2, e3, e4, e5, e6, e7, e8);
-	}
-#endif
+	Next& set(const type& _value) { return value = _value, get_next(); }
 };
 
 template<class T>
@@ -202,20 +185,5 @@ public:
 	{
 	}
 };
-
-template<class Tpl, std::size_t Idx>
-struct _value_at
-{
-	static typename type_at<Tpl, Idx>::type& get(Tpl& tpl) { return _value_at<typename Tpl::next, Idx-1>::get(tpl); }
-};
-
-template<class Tpl>
-struct _value_at<Tpl, 0>
-{
-	static typename type_at<Tpl, 0>::type& get(Tpl& tpl) { return tpl.value; }
-};
-
-template<std::size_t Idx, class Tpl>
-typename type_at<Tpl, Idx>::type& value_at(Tpl& tpl) { return _value_at<Tpl, Idx>::get(tpl); }
 
 

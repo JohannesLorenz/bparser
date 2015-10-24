@@ -105,7 +105,9 @@ typedef void* yyscan_t;
 	jump_statement_t* jump_statement;
 	selection_statement_t* selection_statement;
 	iteration_statement_t* iteration_statement;
+	init_declarator_t* init_declarator;
 	init_declarator_list_t* init_declarator_list;
+	initializer_t* initializer;
 	identifier_t* identifier;
 	statement_t* statement;
 	block_item_t* block_item;
@@ -137,7 +139,8 @@ typedef void* yyscan_t;
 
 %type <_int> I_CONSTANT struct_or_union ';' ':' CASE DEFAULT
 	'{' '}' IF ELSE '(' ')' SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
-	INC_OP DEC_OP SIZEOF ','
+	INC_OP DEC_OP SIZEOF ',' '*' '/' '%' '+' '-' LEFT_OP RIGHT_OP '<' '>'
+	LE_OP GE_OP EQ_OP NE_OP '&' '^' '|' AND_OP OR_OP '='
 %type <_float> F_CONSTANT
 
 %type <node> translation_unit
@@ -189,7 +192,9 @@ typedef void* yyscan_t;
 %type <iteration_statement> iteration_statement
 %type <selection_statement> selection_statement
 %type <expression_statement> expression_statement
+%type <init_declarator> init_declarator
 %type <init_declarator_list> init_declarator_list
+%type <initializer> initializer
 %type <labeled_statement> labeled_statement
 %type <jump_statement> jump_statement
 %type <expression> conditional_expression constant_expression
@@ -286,60 +291,60 @@ cast_expression
 
 multiplicative_expression
 	: cast_expression { $$=$1; }
-	| multiplicative_expression '*' cast_expression
-	| multiplicative_expression '/' cast_expression
-	| multiplicative_expression '%' cast_expression
+	| multiplicative_expression '*' cast_expression { binary_expression_t* e; alloc(e)->op_id = op_mult; e->c.fill($1, t($2), $3); }
+	| multiplicative_expression '/' cast_expression { binary_expression_t* e; alloc(e)->op_id = op_div; e->c.fill($1, t($2), $3); }
+	| multiplicative_expression '%' cast_expression { binary_expression_t* e; alloc(e)->op_id = op_mod; e->c.fill($1, t($2), $3); }
 	;
 
 additive_expression
 	: multiplicative_expression { $$=$1; }
-	| additive_expression '+' multiplicative_expression
-	| additive_expression '-' multiplicative_expression
+	| additive_expression '+' multiplicative_expression { binary_expression_t* e; alloc(e)->op_id = op_plus; e->c.fill($1, t($2), $3); }
+	| additive_expression '-' multiplicative_expression { binary_expression_t* e; alloc(e)->op_id = op_minus; e->c.fill($1, t($2), $3); }
 	;
 
 shift_expression
 	: additive_expression { $$=$1; }
-	| shift_expression LEFT_OP additive_expression
-	| shift_expression RIGHT_OP additive_expression
+	| shift_expression LEFT_OP additive_expression { binary_expression_t* e; alloc(e)->op_id = op_lshift; e->c.fill($1, t($2), $3); }
+	| shift_expression RIGHT_OP additive_expression { binary_expression_t* e; alloc(e)->op_id = op_rshift; e->c.fill($1, t($2), $3); }
 	;
 
 relational_expression
 	: shift_expression { $$=$1; }
-	| relational_expression '<' shift_expression
-	| relational_expression '>' shift_expression
-	| relational_expression LE_OP shift_expression
-	| relational_expression GE_OP shift_expression
+	| relational_expression '<' shift_expression { binary_expression_t* e; alloc(e)->op_id = op_lt; e->c.fill($1, t($2), $3); }
+	| relational_expression '>' shift_expression { binary_expression_t* e; alloc(e)->op_id = op_gt; e->c.fill($1, t($2), $3); }
+	| relational_expression LE_OP shift_expression { binary_expression_t* e; alloc(e)->op_id = op_le; e->c.fill($1, t($2), $3); }
+	| relational_expression GE_OP shift_expression { binary_expression_t* e; alloc(e)->op_id = op_ge; e->c.fill($1, t($2), $3); }
 	;
 
 equality_expression
 	: relational_expression { $$=$1; }
-	| equality_expression EQ_OP relational_expression
-	| equality_expression NE_OP relational_expression
+	| equality_expression EQ_OP relational_expression { binary_expression_t* e; alloc(e)->op_id = op_eq; e->c.fill($1, t($2), $3); }
+	| equality_expression NE_OP relational_expression { binary_expression_t* e; alloc(e)->op_id = op_ne; e->c.fill($1, t($2), $3); }
 	;
 
 and_expression
 	: equality_expression { $$=$1; }
-	| and_expression '&' equality_expression
+	| and_expression '&' equality_expression { binary_expression_t* e; alloc(e)->op_id = op_band; e->c.fill($1, t($2), $3); }
 	;
 
 exclusive_or_expression
 	: and_expression { $$=$1; }
-	| exclusive_or_expression '^' and_expression
+	| exclusive_or_expression '^' and_expression { binary_expression_t* e; alloc(e)->op_id = op_xor; e->c.fill($1, t($2), $3); }
 	;
 
 inclusive_or_expression
 	: exclusive_or_expression { $$=$1; }
-	| inclusive_or_expression '|' exclusive_or_expression
+	| inclusive_or_expression '|' exclusive_or_expression { binary_expression_t* e; alloc(e)->op_id = op_bor; e->c.fill($1, t($2), $3); }
 	;
 
 logical_and_expression
 	: inclusive_or_expression { $$=$1; }
-	| logical_and_expression AND_OP inclusive_or_expression
+	| logical_and_expression AND_OP inclusive_or_expression { binary_expression_t* e; alloc(e)->op_id = op_and; e->c.fill($1, t($2), $3); }
 	;
 
 logical_or_expression
 	: logical_and_expression { $$=$1; }
-	| logical_or_expression OR_OP logical_and_expression
+	| logical_or_expression OR_OP logical_and_expression { binary_expression_t* e; alloc(e)->op_id = op_or; e->c.fill($1, t($2), $3); }
 	;
 
 conditional_expression
@@ -395,13 +400,13 @@ declaration_specifiers
 	;
 
 init_declarator_list
-	: init_declarator
-	| init_declarator_list ',' init_declarator
+	: init_declarator { alloc($$); $$->c.fill(NULL, NULL, $1); }
+	| init_declarator_list ',' init_declarator { alloc($$); $$->c.fill($1, t($2), $3); }
 	;
 
 init_declarator
-	: declarator '=' initializer
-	| declarator
+	: declarator '=' initializer { alloc($$); $$->c.fill($1, t($2), $3); }
+	| declarator { alloc($$); $$->c.set($1); }
 	;
 
 storage_class_specifier

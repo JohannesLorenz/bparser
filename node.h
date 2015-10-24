@@ -183,8 +183,28 @@ enum op_t
 	op_asn_right,
 	op_asn_and,
 	op_asn_xor,
-	op_asn_or
+	op_asn_or,
 
+	op_or,
+	op_and,
+	op_bor,
+	op_band,
+	op_xor,
+	op_lshift,
+	op_rshift,
+
+	op_lt,
+	op_gt,
+	op_le,
+	op_ge,
+	op_eq,
+	op_ne,
+
+	op_plus,
+	op_minus,
+	op_mult,
+	op_div,
+	op_mod
 };
 
 typedef ptn<token_t> end_token;
@@ -476,8 +496,26 @@ struct iteration_statement_t : public statement_t
 	ch<expression_t> for_expression;
 };
 
+struct initializer_t : public node_t
+{
+	virtual void accept(class visitor_t& v);
+};
+
+struct init_declarator_t : public node_t
+{
+	ptn<	struct declarator_t,
+		ptn<	token_t,
+			ptn<	initializer_t > > > c;
+
+	virtual void accept(class visitor_t& v);
+};
+
 struct init_declarator_list_t : public node_t
 {
+	ptn<	init_declarator_list_t,
+		ptn<	token_t,
+			ptn<	init_declarator_t > > > c;
+
 	virtual void accept(class visitor_t& v);
 };
 

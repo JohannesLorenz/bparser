@@ -69,7 +69,7 @@ void dumper_t::visit(unary_expression_r *e)
 void dumper_t::visit(binary_expression_t *e)
 {
 	incr_depth_t x(&depth, stream, e->span);
-	stream << "binary_expression, op 1: TODO" << std::endl;
+	stream << "binary_expression " << e->op_id << std::endl;
 	accept_all(e->c);
 }
 
@@ -273,6 +273,20 @@ void dumper_t::visit(constant_t* n)
 			visit(n->enum_id);
 			break;
 	}
+}
+
+void dumper_t::visit(init_declarator_t *i)
+{
+	incr_depth_t x(&depth, stream, i->span);
+	stream << "init_declarator" << std::endl;
+	visit_all(i->c);
+}
+
+void dumper_t::visit(init_declarator_list_t *i)
+{
+	incr_depth_t x(&depth, stream, i->span);
+	stream << "init_declarator_list" << std::endl;
+	visit_all(i->c);
 }
 
 

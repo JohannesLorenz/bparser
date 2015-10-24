@@ -39,32 +39,13 @@ public:
 	virtual void visit(primary_expression_t* ) {}
 	virtual void visit(sizeof_expression_t* ) {}
 	virtual void visit(init_declarator_list_t* ) {}
+	virtual void visit(init_declarator_t* ) {}
+	virtual void visit(initializer_t* ) {}
 	template<class T>
 	void visit(ch<T>& c) { visit((T*)c); }
 	virtual ~visitor_t() {}
 
-	template<class T>
-	void accept_if_nontoken(const T& non_token) {
-		non_token->accept(*this);
-	}
 
-	void accept_if_nontoken(const token_t& ) {}
-
-
-	template<class T, class Next>
-	void accept_all(const tpl<T, Next>& t) { accept_if_nontoken(t.value); accept_all(t.Next); }
-
-	template<class T>
-	void accept_all(const tpl<T, null_type>& t) { accept_if_nontoken(t.value); }
-};
-
-namespace std
-{
-	extern ostream cout;
-}
-
-class dumper_t : public visitor_t
-{
 	template<class T>
 	bool tvisit(T ptr) { return ptr ? (visit(ptr), true) : false; }
 
@@ -91,7 +72,43 @@ class dumper_t : public visitor_t
 			(*itr)->accept(*this);
 		}
 	}
-	
+
+	template<class T>
+	void accept_if_nontoken(const T& non_token) {
+		if(non_token) non_token->accept(*this);
+	}
+
+	void accept_if_nontoken(const token_t& ) {}
+
+
+	template<class T, class Next>
+	void accept_all(const tpl<T, Next>& t) { accept_if_nontoken(t.value); accept_all(t.get_next()); }
+
+	template<class T>
+	void accept_all(const tpl<T, null_type>& t) { accept_if_nontoken(t.value); }
+
+	template<class T>
+	void visit_if_nontoken(const T& non_token) {
+		if(non_token)
+		 visit(non_token);
+	}
+
+	void visit_if_nontoken(const token_t& ) {}
+
+	template<class T, class Next>
+	void visit_all(const tpl<T, Next>& t) { visit_if_nontoken(t.value); visit_all(t.get_next()); }
+
+	template<class T>
+	void visit_all(const tpl<T, null_type>& t) { visit_if_nontoken(t.value); }
+};
+
+namespace std
+{
+	extern ostream cout;
+}
+
+class dumper_t : public visitor_t
+{
 protected:
 	std::size_t depth;
 	typedef std::size_t on_t;
@@ -132,7 +149,8 @@ public:
 	void visit(primary_expression_t* n);
 	void visit(sizeof_expression_t* n);
 	void visit(constant_t* );
-	void visit(init_declarator_list_t* ) {}
+	void visit(init_declarator_t* );
+	void visit(init_declarator_list_t* );
 };
 
 struct cleaner_t : visitor_t
