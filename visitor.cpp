@@ -190,15 +190,12 @@ void dumper_t::visit(pointer_t* n) {
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "pointer" << std::endl;
 }
-void dumper_t::visit(direct_declarator_t* n)
-{
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "direct declarator" << std::endl;
-}
+
 void dumper_t::visit(declarator_t* n)
 {
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "declarator" << std::endl;
+	accept_all(n->c);
 }
 
 void dumper_t::visit(declaration_specifiers_t* n)
@@ -278,15 +275,94 @@ void dumper_t::visit(constant_t* n)
 void dumper_t::visit(init_declarator_t *i)
 {
 	incr_depth_t x(&depth, stream, i->span);
-	stream << "init_declarator" << std::endl;
+	stream << "init declarator" << std::endl;
 	visit_all(i->c);
 }
 
 void dumper_t::visit(init_declarator_list_t *i)
 {
 	incr_depth_t x(&depth, stream, i->span);
-	stream << "init_declarator_list" << std::endl;
+	stream << "init declarator list" << std::endl;
 	visit_all(i->c);
+}
+
+void dumper_t::visit(initializer_t *i)
+{
+	incr_depth_t x(&depth, stream, i->span);
+	stream << "initializer" << std::endl;
+	accept_all(i->c);
+}
+
+void dumper_t::visit(initializer_list_t *i)
+{
+	incr_depth_t x(&depth, stream, i->span);
+	stream << "initializer list" << std::endl;
+	//visit_all(i->c);
+}
+
+
+
+void dumper_t::visit(abstract_declarator_t *n)
+{
+	incr_depth_t x(&depth, stream, n->span);
+	stream << "abstract declarator" << std::endl;
+	// visit ... - TODO
+}
+
+
+
+void dumper_t::visit(direct_declarator_id *d)
+{
+	incr_depth_t x(&depth, stream, d->span);
+	stream << "direct declarator 1 (TODO: specify?)" << std::endl;
+	visit(d->value);
+}
+
+void dumper_t::visit(direct_declarator_decl *d)
+{
+	incr_depth_t x(&depth, stream, d->span);
+	stream << "direct declarator 2 (TODO: specify?)" << std::endl;
+	visit_all(d->c);
+}
+
+void dumper_t::visit(direct_declarator_arr *d)
+{
+	incr_depth_t x(&depth, stream, d->span);
+	stream << "direct declarator 3 (TODO: specify?)" << std::endl;
+	accept_all(d->c);
+}
+
+void dumper_t::visit(parameter_type_list_t *)
+{
+	// TODO
+}
+
+void dumper_t::visit(direct_declarator_func *d)
+{
+	incr_depth_t x(&depth, stream, d->span);
+	stream << "direct declarator 4 (TODO: specify?)" << std::endl;
+	visit_all(d->c);
+}
+
+void dumper_t::visit(direct_abstract_declarator_decl *d)
+{
+	incr_depth_t x(&depth, stream, d->span);
+	stream << "direct abstract declarator (TODO: specify?)" << std::endl;
+	visit_all(d->c);
+}
+
+void dumper_t::visit(direct_abstract_declarator_arr *d)
+{
+	incr_depth_t x(&depth, stream, d->span);
+	stream << "direct abstract declarator (TODO: specify?)" << std::endl;
+	accept_all(d->c);
+}
+
+void dumper_t::visit(direct_abstract_declarator_func *d)
+{
+	incr_depth_t x(&depth, stream, d->span);
+	stream << "direct abstract declarator (TODO: specify?)" << std::endl;
+	visit_all(d->c);
 }
 
 

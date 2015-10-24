@@ -82,7 +82,7 @@ int main(void)
 		"for(;;) {;}\n"
 		"while(true) {;}\n"
 		"do {;} while (true);\n"
-		"int x = 3;\n"
+		"int x = 3 + 0 * 4;\n"
 		"x++;\n"
 		"42;\n"
 		"41.999f;\n"

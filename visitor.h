@@ -19,7 +19,6 @@ public:
 	virtual void visit(declaration_list_t* ) {}
 	virtual void visit(compound_statement_t* ) {}
 	virtual void visit(pointer_t* ) {}
-	virtual void visit(direct_declarator_t* ) {}
 	virtual void visit(declarator_t* ) {}
 	virtual void visit(declaration_specifiers_t* ) {}
 	virtual void visit(function_definition_t* ) {}
@@ -41,6 +40,21 @@ public:
 	virtual void visit(init_declarator_list_t* ) {}
 	virtual void visit(init_declarator_t* ) {}
 	virtual void visit(initializer_t* ) {}
+	virtual void visit(initializer_list_t* ) {}
+
+	virtual void visit(abstract_declarator_t* ) {}
+
+	virtual void visit(direct_declarator_id* ) {}
+	virtual void visit(direct_declarator_decl* ) {}
+	virtual void visit(direct_declarator_arr* ) {}
+	virtual void visit(parameter_type_list_t* ) {}
+	virtual void visit(direct_declarator_func* ) {}
+	virtual void visit(direct_abstract_declarator_t* ) {}
+	virtual void visit(direct_abstract_declarator_decl* ) {}
+	virtual void visit(direct_abstract_declarator_arr* ) {}
+	virtual void visit(direct_abstract_declarator_func* ) {}
+	virtual void visit(direct_declarator_t* ) {}
+
 	template<class T>
 	void visit(ch<T>& c) { visit((T*)c); }
 	virtual ~visitor_t() {}
@@ -74,11 +88,11 @@ public:
 	}
 
 	template<class T>
-	void accept_if_nontoken(const T& non_token) {
+	void accept_if_nontoken(T* const& non_token) {
 		if(non_token) non_token->accept(*this);
 	}
 
-	void accept_if_nontoken(const token_t& ) {}
+	void accept_if_nontoken(token_t* const & ) {}
 
 
 	template<class T, class Next>
@@ -88,12 +102,12 @@ public:
 	void accept_all(const tpl<T, null_type>& t) { accept_if_nontoken(t.value); }
 
 	template<class T>
-	void visit_if_nontoken(const T& non_token) {
+	void visit_if_nontoken(T* const& non_token) {
 		if(non_token)
 		 visit(non_token);
 	}
 
-	void visit_if_nontoken(const token_t& ) {}
+	void visit_if_nontoken(token_t* const& ) {}
 
 	template<class T, class Next>
 	void visit_all(const tpl<T, Next>& t) { visit_if_nontoken(t.value); visit_all(t.get_next()); }
@@ -137,7 +151,6 @@ public:
 	void visit(declaration_list_t* n);
 	void visit(compound_statement_t* n);
 	void visit(pointer_t* n);
-	void visit(direct_declarator_t* n);
 	void visit(declarator_t* n);
 	void visit(declaration_specifiers_t* n);
 	void visit(function_definition_t* n);
@@ -151,7 +164,25 @@ public:
 	void visit(constant_t* );
 	void visit(init_declarator_t* );
 	void visit(init_declarator_list_t* );
-};
+	void visit(initializer_t* );
+	void visit(initializer_list_t* );
+
+	void visit(abstract_declarator_t* );
+
+	void visit(direct_declarator_id* );
+	void visit(direct_declarator_decl* );
+	void visit(direct_declarator_arr* );
+	void visit(parameter_type_list_t* );
+	void visit(direct_declarator_func* );
+	void visit(direct_abstract_declarator_decl* );
+	void visit(direct_abstract_declarator_arr* );
+	void visit(direct_abstract_declarator_func* );
+
+
+}; // TODO: identifier...
+
+
+
 
 struct cleaner_t : visitor_t
 {

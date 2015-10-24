@@ -252,9 +252,6 @@ struct ternary_expression_t : public expression_t
 //		op(op), op_token(op_token), op_token_2(op_token_2), n1(n1), n2(n2), n3(n3) {}
 };
 
-struct direct_abstract_declarator_t : public node_t {
-
-};
 struct abstract_declarator_t : public node_t {
 
 };
@@ -263,7 +260,7 @@ struct specifier_qualifier_list_t : public node_t
 {
 /*	ch<struct pointer_t> pointer;
 	ch<direct_abstract_declarator_t> direct_abstract_declarator;*/
-	ptn<struct pointer_t, ptn< direct_abstract_declarator_t > > c;
+	ptn<struct pointer_t, ptn< struct direct_abstract_declarator_t > > c;
 };
 
 struct type_name_t : public node_t
@@ -496,8 +493,34 @@ struct iteration_statement_t : public statement_t
 	ch<expression_t> for_expression;
 };
 
+struct designation_t : public node_t
+{
+	virtual void accept(class visitor_t& v);
+};
+
+/*
+designation initializer
+	| initializer
+	| initializer_list ',' designation initializer
+	| initializer_list ',' initializer
+*/
+struct initializer_list_t : public node_t
+{
+
+	virtual void accept(class visitor_t& v);
+};
+
 struct initializer_t : public node_t
 {
+	//	assignment_expr
+	//		{	init list
+	//				,	}
+	ptn<	expression_t,
+		ptn<	token_t,
+			ptn<	initializer_list_t,
+				ptn<	token_t,
+						end_token > > > > c;
+
 	virtual void accept(class visitor_t& v);
 };
 
@@ -547,7 +570,11 @@ struct declaration_t : public block_item_t
 
 
 
-
+struct type_qualifier_list_t
+{
+	std::list<type_qualifier_t*> value;
+	virtual void accept(class visitor_t& v);
+};
 
 
 struct block_item_list_t : public node_t
@@ -566,23 +593,116 @@ struct compound_statement_t : public statement_t
 
 struct pointer_t : public node_t
 {
-	std::list<type_qualifier_t*> type_qualifier_list; // TODO: always pointers in list?
-	ch<pointer_t> pointer;
+	ptn<	token_t,
+		ptn<	type_qualifier_list_t,
+			ptn<	pointer_t > > > c;
 	virtual void accept(class visitor_t& v);
 };
 struct direct_declarator_t : public node_t {
-	id_t identifier;
+	/*id_t identifier;
 	bool bracktype;
-	id_t lbrack, rbrack;
+	id_t lbrack, rbrack;*/
 
 	virtual void accept(class visitor_t& v);
 }; // TODO: identifier...
 
+struct direct_declarator_id : public direct_declarator_t {
+	identifier_t* value;
+	virtual void accept(class visitor_t& v);
+};
+
+struct direct_declarator_decl : public direct_declarator_t
+{
+	ptn<	token_t,
+		ptn<	declarator_t,
+				end_token > > c;
+	virtual void accept(class visitor_t& v);
+};
+
+//! number of args: 7
+struct direct_declarator_arr : public direct_declarator_t
+{
+	// careful, order can differ,
+	// however, it won't matter much
+	// also, first and last token are like in the tuple
+	ptn<	direct_declarator_t,
+		ptn<	token_t, // [
+			ptn<	token_t, // static kw
+				ptn<	type_qualifier_list_t,
+					ptn<	expression_t,
+						ptn<	token_t, // *
+								end_token // ]
+		> > > > > > c;
+	virtual void accept(class visitor_t& v);
+};
+
+struct parameter_type_list_t : public node_t {
+	virtual void accept(class visitor_t& v);
+};
+
+struct direct_declarator_func : public direct_declarator_t
+{
+	ptn<	direct_declarator_t,
+		ptn<	token_t, // (
+			ptn<	parameter_type_list_t,
+					end_token > > > c;
+
+	virtual void accept(class visitor_t& v);
+};
+
+
+
+
+
+
+
+struct direct_abstract_declarator_t : public node_t {
+	/*id_t identifier;
+	bool bracktype;
+	id_t lbrack, rbrack;*/
+
+	virtual void accept(class visitor_t& v);
+}; // TODO: identifier...
+
+struct direct_abstract_declarator_decl : public direct_abstract_declarator_t
+{
+	ptn<	token_t,
+		ptn<	abstract_declarator_t,
+				end_token > > c;
+	virtual void accept(class visitor_t& v);
+};
+
+//! number of args: 7
+struct direct_abstract_declarator_arr : public direct_abstract_declarator_t
+{
+	// careful, order can differ,
+	// however, it won't matter much
+	// also, first and last token are like in the tuple
+	ptn<	direct_declarator_t,
+		ptn<	token_t, // [
+			ptn<	expression_t,
+				ptn<	token_t, // *
+						end_token // ]
+		> > > > c;
+
+	virtual void accept(class visitor_t& v);
+};
+
+struct direct_abstract_declarator_func : public direct_abstract_declarator_t
+{
+	ptn<	direct_declarator_t,
+		ptn<	token_t, // (
+			ptn<	parameter_type_list_t,
+					end_token > > > c;
+
+	virtual void accept(class visitor_t& v);
+};
+
+
 struct declarator_t : public node_t
 {
 	virtual void accept(class visitor_t& v);
-	ch<pointer_t> pointer;
-	ch<direct_declarator_t> direct_declarator;
+	ptn<pointer_t, ptn< direct_declarator_t > > c;
 };
 
 struct declaration_specifiers_t : public node_t

@@ -13,6 +13,8 @@
 #include "lexer.h"
 #include "visitor.h"
 
+// TODO: check for no returns anywhere!!
+
 int yyerror(node_t **/*expression*/, yyscan_t scanner, const char *msg) {
 	fprintf(stderr,"At: %s,\n  line %d, column %d: Error:%s\n", yyget_text(scanner), yyget_lineno(scanner), yyget_column(scanner), msg); return 0;
 	// Add error handling routine as needed
@@ -108,11 +110,16 @@ typedef void* yyscan_t;
 	init_declarator_t* init_declarator;
 	init_declarator_list_t* init_declarator_list;
 	initializer_t* initializer;
+	initializer_list_t* initializer_list;
 	identifier_t* identifier;
 	statement_t* statement;
 	block_item_t* block_item;
 	constant_t* constant;
 	type_name_t* type_name;
+	parameter_type_list_t* parameter_type_list;
+	type_qualifier_list_t* type_qualifier_list;
+	direct_abstract_declarator_t* direct_abstract_declarator;
+	abstract_declarator_t* abstract_declarator;
 
 	primary_expression_t* primary_expression;
 }
@@ -140,7 +147,7 @@ typedef void* yyscan_t;
 %type <_int> I_CONSTANT struct_or_union ';' ':' CASE DEFAULT
 	'{' '}' IF ELSE '(' ')' SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 	INC_OP DEC_OP SIZEOF ',' '*' '/' '%' '+' '-' LEFT_OP RIGHT_OP '<' '>'
-	LE_OP GE_OP EQ_OP NE_OP '&' '^' '|' AND_OP OR_OP '='
+	LE_OP GE_OP EQ_OP NE_OP '&' '^' '|' AND_OP OR_OP '=' '[' ']'
 %type <_float> F_CONSTANT
 
 %type <node> translation_unit
@@ -195,9 +202,15 @@ typedef void* yyscan_t;
 %type <init_declarator> init_declarator
 %type <init_declarator_list> init_declarator_list
 %type <initializer> initializer
+%type <initializer_list> initializer_list
 %type <labeled_statement> labeled_statement
 %type <jump_statement> jump_statement
 %type <expression> conditional_expression constant_expression
+%type <parameter_type_list> parameter_type_list
+%type <type_qualifier_list> type_qualifier_list
+%type <direct_abstract_declarator> direct_abstract_declarator
+%type <abstract_declarator> abstract_declarator
+
 %type <token> type_qualifier CONST RESTRICT VOLATILE ATOMIC TYPEDEF EXTERN STATIC AUTO REGISTER
 	VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED BOOL COMPLEX INLINE
 
@@ -521,25 +534,49 @@ alignment_specifier
 	;
 
 declarator
-	: pointer direct_declarator { $$ = new declarator_t; $$->pointer = $1; $$->direct_declarator = $2; }
-	| direct_declarator { $$ = new declarator_t; $$->direct_declarator = $1; }
+	: pointer direct_declarator { alloc($$); $$->c.fill($1, $2); }
+	| direct_declarator { alloc($$); $$->c.get_next().set($1); }
 	;
 
+// NOTE: static etc in [] can only appear in function parameter declarations
+// direct_declarator_id
+// direct_declarator_decl
+// direct_declarator_arr_expr
+// direct_declarator_func
+
 direct_declarator
-	: IDENTIFIER
-	| '(' declarator ')' { $$->bracktype = 0; }
-	| direct_declarator '[' ']'
-	| direct_declarator '[' '*' ']'
-	| direct_declarator '[' STATIC type_qualifier_list assignment_expression ']'
-	| direct_declarator '[' STATIC assignment_expression ']'
-	| direct_declarator '[' type_qualifier_list '*' ']'
-	| direct_declarator '[' type_qualifier_list STATIC assignment_expression ']'
-	| direct_declarator '[' type_qualifier_list assignment_expression ']'
-	| direct_declarator '[' type_qualifier_list ']'
-	| direct_declarator '[' assignment_expression ']'
-	| direct_declarator '(' parameter_type_list ')'
-	| direct_declarator '(' ')'
-	| direct_declarator '(' identifier_list ')'
+	: IDENTIFIER { direct_declarator_id* d; $$ = alloc(d); d->value = new identifier_t($1); }
+	| '(' declarator ')' { direct_declarator_decl* d; $$ = alloc(d); d->c.fill(t($1), $2, t($3)); }
+	| direct_declarator '[' ']' { direct_declarator_arr* d; $$ = alloc(d);
+		d->c.fill($1, t($2), NULL, NULL, NULL, NULL, t($3)); }
+	| direct_declarator '[' '*' ']' { direct_declarator_arr* d; $$ = alloc(d);
+		d->c.fill($1, t($2), NULL, NULL, NULL, t($3), t($4)); }
+	| direct_declarator '[' STATIC type_qualifier_list assignment_expression ']' {
+		direct_declarator_arr* d; $$ = alloc(d);
+		d->c.fill($1, t($2), $3, $4, $5, NULL, t($6)); }
+	| direct_declarator '[' STATIC assignment_expression ']' { c11(); }
+	| direct_declarator '[' type_qualifier_list '*' ']' { direct_declarator_arr* d; $$ = alloc(d);
+		// TODO: autoptr that converts to pointer in assignment to $$?
+		d->c.fill($1, t($2), NULL, $3, NULL, t($4), t($5)); }
+	| direct_declarator '[' type_qualifier_list STATIC assignment_expression ']' {
+		direct_declarator_arr* d; $$ = alloc(d);
+		d->c.fill($1, t($2), $4, $3, $5, NULL, t($6)); }
+	| direct_declarator '[' type_qualifier_list assignment_expression ']' {
+		direct_declarator_arr* d; $$ = alloc(d);
+		d->c.fill($1, t($2), NULL, $3, $4, NULL, t($5)); }
+	| direct_declarator '[' type_qualifier_list ']' {
+		direct_declarator_arr* d; $$ = alloc(d);
+		d->c.fill($1, t($2), NULL, $3, NULL, NULL, t($4)); }
+	| direct_declarator '[' assignment_expression ']' {
+		direct_declarator_arr* d; $$ = alloc(d);
+		d->c.fill($1, t($2), NULL, NULL, $3, NULL, t($4)); }
+	| direct_declarator '(' parameter_type_list ')' {
+		direct_declarator_func* d; $$ = alloc(d);
+		d->c.fill($1, t($2), $3, t($4)); }
+	| direct_declarator '(' ')' {
+		direct_declarator_func* d; $$ = alloc(d);
+		d->c.fill($1, t($2), NULL, t($3)); }
+	| direct_declarator '(' identifier_list ')' { not_yet(); }
 	;
 
 pointer // should actually be named: "pointers"
@@ -588,22 +625,22 @@ abstract_declarator
 	;
 
 direct_abstract_declarator
-	: '(' abstract_declarator ')'
-	| '[' ']'
+	: '(' abstract_declarator ')' { direct_abstract_declarator_decl* d; $$ = alloc(d); d->c.fill(t($1), $2, t($3)); }
+	| '[' ']' { direct_abstract_declarator_arr* d; $$ = alloc(d); d->c.fill( NULL, t($1), NULL, NULL, t($2)); }
 	| '[' '*' ']'
-	| '[' STATIC type_qualifier_list assignment_expression ']'
-	| '[' STATIC assignment_expression ']'
-	| '[' type_qualifier_list STATIC assignment_expression ']'
-	| '[' type_qualifier_list assignment_expression ']'
-	| '[' type_qualifier_list ']'
+	| '[' STATIC type_qualifier_list assignment_expression ']' { c11(); }
+	| '[' STATIC assignment_expression ']' { c11(); }
+	| '[' type_qualifier_list STATIC assignment_expression ']' { c11(); }
+	| '[' type_qualifier_list assignment_expression ']' { c11(); }
+	| '[' type_qualifier_list ']' { c11(); }
 	| '[' assignment_expression ']'
 	| direct_abstract_declarator '[' ']'
 	| direct_abstract_declarator '[' '*' ']'
-	| direct_abstract_declarator '[' STATIC type_qualifier_list assignment_expression ']'
-	| direct_abstract_declarator '[' STATIC assignment_expression ']'
-	| direct_abstract_declarator '[' type_qualifier_list assignment_expression ']'
-	| direct_abstract_declarator '[' type_qualifier_list STATIC assignment_expression ']'
-	| direct_abstract_declarator '[' type_qualifier_list ']'
+	| direct_abstract_declarator '[' STATIC type_qualifier_list assignment_expression ']' { c11(); }
+	| direct_abstract_declarator '[' STATIC assignment_expression ']' { c11(); }
+	| direct_abstract_declarator '[' type_qualifier_list assignment_expression ']' { c11(); }
+	| direct_abstract_declarator '[' type_qualifier_list STATIC assignment_expression ']' { c11(); }
+	| direct_abstract_declarator '[' type_qualifier_list ']' { c11(); }
 	| direct_abstract_declarator '[' assignment_expression ']'
 	| '(' ')'
 	| '(' parameter_type_list ')'
@@ -612,9 +649,9 @@ direct_abstract_declarator
 	;
 
 initializer
-	: '{' initializer_list '}'
-	| '{' initializer_list ',' '}'
-	| assignment_expression
+	: '{' initializer_list '}' { alloc($$); $$->c.fill(NULL, t($1), $2, NULL, t($3)); }
+	| '{' initializer_list ',' '}'{ alloc($$); $$->c.fill(NULL, t($1), $2, t($3), t($4)); }
+	| assignment_expression { alloc($$); $$->c.set($1); }
 	;
 
 initializer_list

@@ -65,8 +65,17 @@ void sizeof_expression_t::accept(visitor_t& v) { v.visit(this); }
 void block_item_t::accept(visitor_t &v) { v.visit(this); }
 void identifier_t::accept(visitor_t &v) { v.visit(this); }
 
-
 void init_declarator_t::accept(visitor_t &v) { v.visit(this); }
-
-
 void init_declarator_list_t::accept(visitor_t &v) { v.visit(this); }
+void initializer_list_t::accept(visitor_t &v) { v.visit(this); }
+void initializer_t::accept(visitor_t &v) { v.visit(this); }
+
+void direct_declarator_id::accept(visitor_t &v) { v.visit(this); }
+void direct_declarator_decl::accept(visitor_t &v) { v.visit(this); }
+void direct_declarator_arr::accept(visitor_t &v) { v.visit(this); }
+void parameter_type_list_t::accept(visitor_t &v) { v.visit(this); }
+void direct_declarator_func::accept(visitor_t &v) { v.visit(this); }
+
+void direct_abstract_declarator_t::accept(visitor_t &v) { v.visit(this); }
+void direct_abstract_declarator_decl::accept(visitor_t &v) { v.visit(this); }
+void direct_abstract_declarator_arr::accept(visitor_t &v) { v.visit(this); }

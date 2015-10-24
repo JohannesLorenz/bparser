@@ -51,7 +51,7 @@ class tpl // : private Next
 	typedef tpl<T, Next> self;
 public:
 	typedef T type;
-	typedef Next next;
+	typedef Next next; // FEATURE: -> next_t
 	Next _next;
 	type value;
 
@@ -93,7 +93,7 @@ public:
 		get_next().fill(e2, e3, e4, e5, e6, e7, e8, null_type());
 	}
 
-	Next& get_next() { return /* *this;*/ _next; }
+	Next& get_next() { return /* *this;*/ _next; } // FEATURE: -> next()
 	const Next& get_next() const { return /* *this; */ _next; }
 
 	Next& set(const type& _value) { return value = _value, get_next(); }
