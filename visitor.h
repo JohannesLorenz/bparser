@@ -43,11 +43,19 @@ public:
 	void visit(ch<T>& c) { visit((T*)c); }
 	virtual ~visitor_t() {}
 
+	template<class T>
+	void accept_if_nontoken(const T& non_token) {
+		non_token->accept(*this);
+	}
+
+	void accept_if_nontoken(const token_t& ) {}
+
+
 	template<class T, class Next>
-	void accept_all(const tpl<T, Next>& t) { t.value->accept(*this); accept_all(t.Next); }
+	void accept_all(const tpl<T, Next>& t) { accept_if_nontoken(t.value); accept_all(t.Next); }
 
 	template<class T>
-	void accept_all(const tpl<T, null_type>& t) { t.value->accept(*this); }
+	void accept_all(const tpl<T, null_type>& t) { accept_if_nontoken(t.value); }
 };
 
 namespace std
@@ -55,25 +63,24 @@ namespace std
 	extern ostream cout;
 }
 
-class tree_visit_t : public visitor_t
+class dumper_t : public visitor_t
 {
 	template<class T>
 	bool tvisit(T ptr) { return ptr ? (visit(ptr), true) : false; }
 
-	template<class Self, class T>
-	void vvisit(Self* s, const std::list<T*>& v, std::size_t role)
+	template<class T>
+	void vvisit(const std::list<T*>& v)
 	{
 		std::size_t onv_id = 1; // on says: after that edge
 		for(typename std::list<T*>::const_iterator itr = v.begin();
 			itr != v.end(); ++itr, ++onv_id)
 		{
 			visit(*itr);
-			on(s, role, onv_id);
 		}
 	}
 
-	template<class Self, class T>
-	void vaccept(Self* s, const std::list<T*>& v, std::size_t role)
+	template<class T>
+	void vaccept(const std::list<T*>& v)
 	{
 		std::size_t onv_id = 1; // on says: after that edge
 		for(typename std::list<T*>::const_iterator itr = v.begin();
@@ -82,57 +89,20 @@ class tree_visit_t : public visitor_t
 			//if(!*itr)
 			// throw "list element is NULL, can not happen.";
 			(*itr)->accept(*this);
-			on(s, role, onv_id);
 		}
 	}
-	
-	template<class T>
-	class counter_t
-	{
-		T* node;
-		tree_visit_t* tv;
-		std::size_t time;
-	public:
-		counter_t(tree_visit_t* tv, T* node) : node(node), tv(tv), time(0) {}
-		void next() { tv->on(node, ++time); }
-	};
-	template<class T>
-	friend class counter_t;
 	
 protected:
 	std::size_t depth;
 	typedef std::size_t on_t;
-public:
-	virtual void on(type_specifier_simple_t* , on_t = 0, on_t = 0) {}
-	virtual void on(number_t *, on_t = 0, on_t = 0) {}
-	virtual void on(token_t* , on_t = 0, on_t = 0) {}
-	virtual void on(expression_t *, on_t = 0, on_t = 0) {}
-	virtual void on(expression_statement_t *, on_t = 0, on_t = 0) {}
-	//void visit(node_t *e); //!< default
-	virtual void on(storage_class_specifier_t*, on_t = 0, on_t = 0) {}
-	virtual void on(type_specifier_t*, on_t = 0, on_t = 0) {}
-	virtual void on(type_qualifier_t*, on_t = 0, on_t = 0) {}
-	virtual void on(function_specifier_t*, on_t = 0, on_t = 0) {}
-	virtual void on(alignment_specifier_t*, on_t = 0, on_t = 0) {}
-	virtual void on(declaration_list_t*, on_t = 0, on_t = 0) {}
-	virtual void on(compound_statement_t*, on_t = 0, on_t = 0) {}
-	virtual void on(pointer_t*, on_t = 0, on_t = 0) {}
-	virtual void on(direct_declarator_t*, on_t = 0, on_t = 0) {}
-	virtual void on(declarator_t*, on_t = 0, on_t = 0) {}
-	virtual void on(declaration_specifiers_t*, on_t = 0, on_t = 0) {}
-	virtual void on(function_definition_t*, on_t = 0, on_t = 0) {}
-	virtual void on(external_declaration_t*, on_t = 0, on_t = 0) {}
-	virtual void on(translation_unit_t*, on_t = 0, on_t = 0) {}
-	virtual void on(declaration_t*, on_t = 0, on_t = 0) {}
-	virtual void on(iteration_statement_t*, on_t = 0, on_t = 0) {}
-	virtual void on(identifier_t*, on_t = 0, on_t = 0) {}
-	virtual void on(primary_expression_t*, on_t = 0, on_t = 0) {}
-	virtual void on(sizeof_expression_t*, on_t = 0, on_t = 0) {}
-	virtual void on(constant_t* , on_t = 0, on_t = 0) {}
-	virtual void on(init_declarator_list_t*, on_t = 0, on_t = 0) {}
+
+	std::ostream& stream;
+	void handle_depth();
 
 public:
-	tree_visit_t() : depth(0) {}
+	dumper_t(std::ostream& stream = std::cout) : depth(0), stream(stream) {}
+	virtual ~dumper_t() {}
+
 	void visit(type_specifier_simple_t* e);
 	void visit(number_t *e);
 	void visit(token_t* e);
@@ -163,43 +133,6 @@ public:
 	void visit(sizeof_expression_t* n);
 	void visit(constant_t* );
 	void visit(init_declarator_list_t* ) {}
-};
-
-class dumper_t : public tree_visit_t
-{
-	std::ostream& stream;
-	void handle_depth();
-
-public:
-	dumper_t(std::ostream& stream = std::cout) : stream(stream) {}
-	
-	void on(type_specifier_simple_t* e, on_t role, on_t idx);
-	void on(number_t *e, on_t role, on_t idx);
-	void on(token_t* e, on_t role, on_t idx);
-	void on(expression_t *e, on_t role, on_t idx);
-	void on(expression_statement_t *e, on_t role, on_t idx);
-	//void visit(node_t *e); //!< default
-	void on(storage_class_specifier_t* n, on_t role, on_t idx);
-	void on(type_specifier_t* n, on_t role, on_t idx);
-	void on(type_qualifier_t* n, on_t role, on_t idx);
-	void on(function_specifier_t* n, on_t role, on_t idx);
-	void on(alignment_specifier_t* n, on_t role, on_t idx);
-	void on(declaration_list_t* n, on_t role, on_t idx);
-	void on(compound_statement_t* n, on_t role, on_t idx);
-	void on(pointer_t* n, on_t role, on_t idx);
-	void on(direct_declarator_t* n, on_t role, on_t idx);
-	void on(declarator_t* n, on_t role, on_t idx);
-	void on(declaration_specifiers_t* n, on_t role, on_t idx);
-	void on(function_definition_t* n, on_t role, on_t idx);
-	void on(external_declaration_t* n, on_t role, on_t idx);
-	void on(translation_unit_t* n, on_t role, on_t idx);
-	void on(declaration_t* n, on_t role, on_t idx);
-	void on(iteration_statement_t* n, on_t role, on_t idx);
-	void on(identifier_t* n, on_t role, on_t idx);
-	void on(primary_expression_t* n, on_t role, on_t idx);
-	void on(sizeof_expression_t* n, on_t role, on_t idx);
-	void on(constant_t* , on_t role, on_t idx);
-	void on(init_declarator_list_t* , on_t, on_t) {}
 };
 
 struct cleaner_t : visitor_t
