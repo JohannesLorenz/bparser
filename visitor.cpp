@@ -34,6 +34,62 @@ public:
 
 
 
+void dumper_t::visit(type_name_t *t)
+{
+	incr_depth_t x(&depth, stream, t->span);
+	stream << "type name" << std::endl;
+	visit_all(t->c);
+}
+
+void dumper_t::visit(specifier_qualifier_list_t *s)
+{
+	incr_depth_t x(&depth, stream, s->span);
+	stream << "specifier-qualifier-list" << std::endl;
+	vaccept(s->c);
+}
+
+void dumper_t::visit(array_access_expression_t *e)
+{
+	incr_depth_t x(&depth, stream, e->span);
+	stream << "array access op" << std::endl;
+	accept_all(e->c);
+}
+
+void dumper_t::visit(argument_expression_list_t *e)
+{
+	incr_depth_t x(&depth, stream, e->span);
+	stream << "argument expression list" << std::endl;
+	accept_all(e->c);
+}
+
+void dumper_t::visit(function_call_expression_t *e)
+{
+	incr_depth_t x(&depth, stream, e->span);
+	stream << "function call" << std::endl;
+	accept_all(e->c);
+}
+
+void dumper_t::visit(struct_access_expression_t *e)
+{
+	incr_depth_t x(&depth, stream, e->span);
+	stream << "struct access" << std::endl;
+	accept_all(e->c);
+}
+
+void dumper_t::visit(cast_postfix_expression_t *e)
+{
+	incr_depth_t x(&depth, stream, e->span);
+	stream << "cast postfix expression (what is that?)" << std::endl;
+	accept_all(e->c);
+}
+
+void dumper_t::visit(cast_expression_t *e)
+{
+	incr_depth_t x(&depth, stream, e->span);
+	stream << "cast" << std::endl;
+	accept_all(e->c);
+}
+
 void dumper_t::visit(type_specifier_simple_t* e)
 {
 	incr_depth_t x(&depth, stream, e->span);
@@ -69,7 +125,7 @@ void dumper_t::visit(unary_expression_r *e)
 void dumper_t::visit(binary_expression_t *e)
 {
 	incr_depth_t x(&depth, stream, e->span);
-	stream << "binary_expression " << e->op_id << std::endl;
+	stream << "binary expression " << e->op_id << std::endl;
 	accept_all(e->c);
 }
 
@@ -82,7 +138,7 @@ void dumper_t::visit(ternary_expression_t *e)
 	if(e->n3) { e->n3->accept(*this); on(e, 3); }*/
 
 	incr_depth_t x(&depth, stream, e->span);
-	stream << "ternary_expression, op 1: TODO" << std::endl;
+	stream << "ternary expression, op 1: TODO" << std::endl;
 	accept_all(e->c);
 }
 
@@ -148,6 +204,7 @@ void dumper_t::visit(sizeof_expression_t* n)
 {
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "sizeof ..." << std::endl;
+	visit_all(n->c);
 }
 
 void dumper_t::visit(identifier_t *n)
@@ -156,10 +213,17 @@ void dumper_t::visit(identifier_t *n)
 	stream << "identifier: " << n->name << std::endl;
 }
 
-void dumper_t::visit(type_specifier_t* n)
+void dumper_t::visit(type_specifier_token *t)
 {
-	incr_depth_t x(&depth, stream, n->span);
-//	stream << "type specifier, id: " << +n->id << ", pos: " << n->span << std::endl;
+	incr_depth_t x(&depth, stream, t->span);
+	stream << "type specifier, id: " << t->c->value << std::endl;
+	//	stream << "type specifier, id: " << +n->id << ", pos: " << n->span << std::endl;
+}
+
+void dumper_t::visit(type_identifier *t)
+{
+	incr_depth_t x(&depth, stream, t->span);
+	stream << "type identifier: " << t->c->name << std::endl;
 }
 
 void dumper_t::visit(type_qualifier_t* n) {
@@ -298,6 +362,23 @@ void dumper_t::visit(initializer_list_t *i)
 	incr_depth_t x(&depth, stream, i->span);
 	stream << "initializer list" << std::endl;
 	//visit_all(i->c);
+}
+
+
+void dumper_t::visit(designator_list_t* d) {
+	incr_depth_t x(&depth, stream, d->span);
+	stream << "designator list" << std::endl;
+	vaccept(d->c);
+}
+
+void dumper_t::visit(designator_id* d) {
+	incr_depth_t x(&depth, stream, d->span);
+	stream << "designator: ." << d->c.get_next().value << std::endl;
+}
+
+void dumper_t::visit(designator_constant_expr* d) {
+	incr_depth_t x(&depth, stream, d->span);
+	stream << "designator: [" << d->c.get_next().value << ']' << std::endl;
 }
 
 

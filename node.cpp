@@ -79,3 +79,26 @@ void direct_declarator_func::accept(visitor_t &v) { v.visit(this); }
 void direct_abstract_declarator_t::accept(visitor_t &v) { v.visit(this); }
 void direct_abstract_declarator_decl::accept(visitor_t &v) { v.visit(this); }
 void direct_abstract_declarator_arr::accept(visitor_t &v) { v.visit(this); }
+
+
+void designator_id::accept(visitor_t &v) { v.visit(this); }
+void designator_constant_expr::accept(visitor_t &v) { v.visit(this); }
+void designator_list_t::accept(visitor_t &v) { v.visit(this); }
+void direct_abstract_declarator_func::accept(visitor_t &v) { v.visit(this); }
+
+
+
+void array_access_expression_t::accept(visitor_t &v) { v.visit(this); }
+void argument_expression_list_t::accept(visitor_t &v) { v.visit(this); }
+void function_call_expression_t::accept(visitor_t &v) { v.visit(this); }
+void struct_access_expression_t::accept(visitor_t &v) { v.visit(this); }
+void cast_postfix_expression_t::accept(visitor_t &v) { v.visit(this); }
+void cast_expression_t::accept(visitor_t &v) { v.visit(this); }
+
+
+void type_name_t::accept(visitor_t &v) { v.visit(this); }
+void type_specifier_token::accept(visitor_t &v) { v.visit(this); }
+void type_identifier::accept(visitor_t &v) { v.visit(this); }
+void abstract_declarator_t::accept(visitor_t &v) { v.visit(this); }
+void specifier_qualifier_list_t::accept(visitor_t &v) { v.visit(this); }
+

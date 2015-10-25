@@ -8,10 +8,26 @@
 class visitor_t
 {
 public:
+	virtual void visit(type_name_t *) {}
+	virtual void visit(specifier_qualifier_list_t* ) {}
+
+	virtual void visit(array_access_expression_t* ) {}
+	virtual void visit(argument_expression_list_t* ) {}
+	virtual void visit(function_call_expression_t* ) {}
+	virtual void visit(struct_access_expression_t* ) {}
+	virtual void visit(cast_postfix_expression_t* ) {}
+	virtual void visit(cast_expression_t* ) {}
+
 	virtual void visit(type_specifier_simple_t* ) {}
 	virtual void visit(number_t *) {}
-	virtual void visit(expression_t *) {}
+	//virtual void visit(expression_t *) {}
+	virtual void visit(unary_expression_l* ) {}
+	virtual void visit(unary_expression_r* ) {}
+	virtual void visit(ternary_expression_t* ) {}
+	virtual void visit(binary_expression_t* ) {}
 	virtual void visit(storage_class_specifier_t* ) {}
+	virtual void visit(type_specifier_token* ) {}
+	virtual void visit(type_identifier* ) {}
 	virtual void visit(type_specifier_t* ) {}
 	virtual void visit(type_qualifier_t* ) {}
 	virtual void visit(function_specifier_t* ) {}
@@ -41,6 +57,9 @@ public:
 	virtual void visit(init_declarator_t* ) {}
 	virtual void visit(initializer_t* ) {}
 	virtual void visit(initializer_list_t* ) {}
+	virtual void visit(designator_list_t* ) {}
+	virtual void visit(designator_id* ) {}
+	virtual void visit(designator_constant_expr* ) {}
 
 	virtual void visit(abstract_declarator_t* ) {}
 
@@ -66,9 +85,8 @@ public:
 	template<class T>
 	void vvisit(const std::list<T*>& v)
 	{
-		std::size_t onv_id = 1; // on says: after that edge
 		for(typename std::list<T*>::const_iterator itr = v.begin();
-			itr != v.end(); ++itr, ++onv_id)
+			itr != v.end(); ++itr)
 		{
 			visit(*itr);
 		}
@@ -77,9 +95,8 @@ public:
 	template<class T>
 	void vaccept(const std::list<T*>& v)
 	{
-		std::size_t onv_id = 1; // on says: after that edge
 		for(typename std::list<T*>::const_iterator itr = v.begin();
-			itr != v.end(); ++itr, ++onv_id)
+			itr != v.end(); ++itr)
 		{
 			//if(!*itr)
 			// throw "list element is NULL, can not happen.";
@@ -134,6 +151,14 @@ public:
 	dumper_t(std::ostream& stream = std::cout) : depth(0), stream(stream) {}
 	virtual ~dumper_t() {}
 
+	void visit(type_name_t *t);
+	void visit(specifier_qualifier_list_t* );
+	void visit(array_access_expression_t* e);
+	void visit(argument_expression_list_t* e);
+	void visit(function_call_expression_t* e);
+	void visit(struct_access_expression_t* e);
+	void visit(cast_postfix_expression_t* e);
+	void visit(cast_expression_t* e);
 	void visit(type_specifier_simple_t* e);
 	void visit(number_t *e);
 	void visit(token_t* e);
@@ -144,7 +169,8 @@ public:
 	void visit(expression_statement_t *e);
 	//void visit(node_t *e); //!< default
 	void visit(storage_class_specifier_t* n);
-	void visit(type_specifier_t* n);
+	void visit(type_specifier_token* t);
+	void visit(type_identifier* );
 	void visit(type_qualifier_t* n);
 	void visit(function_specifier_t* n);
 	void visit(alignment_specifier_t* n);
@@ -166,6 +192,9 @@ public:
 	void visit(init_declarator_list_t* );
 	void visit(initializer_t* );
 	void visit(initializer_list_t* );
+	void visit(designator_list_t* );
+	void visit(designator_id* );
+	void visit(designator_constant_expr* );
 
 	void visit(abstract_declarator_t* );
 

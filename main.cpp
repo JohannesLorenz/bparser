@@ -9,7 +9,7 @@
 extern int yydebug;
 extern std::vector<token_t*>& get_token_vector();
 
-int yyparse(node_t **expression, yyscan_t scanner);
+int yyparse(translation_unit_t **expression, yyscan_t scanner);
 
 translation_unit_t *getAST(const char *expr)
 {	
@@ -27,20 +27,20 @@ translation_unit_t *getAST(const char *expr)
 	
 	std::cerr << "text: " << yyget_text(scanner) << std::endl;
 
-	if (yyparse((node_t**)&expression, scanner)) { // TODO bad cast??
+	if (yyparse(&expression, scanner)) { // TODO bad cast??
 		// error parsing
 		return NULL;
 	}
 	std::cerr << "text: " << yyget_text(scanner) << std::endl;
 
-	std::cout << "token vector: " << std::endl;
+/*	std::cout << "token vector: " << std::endl;
 	dumper_t dumper;
 	std::vector<token_t*>& tokens = get_token_vector();
 	for(std::vector<token_t*>::const_iterator itr = tokens.begin();
 		itr != tokens.end(); ++itr) 
 	{
 		(*itr)->accept(dumper);
-	}
+	}*/
 
 	yy_delete_buffer(state, scanner);
 	

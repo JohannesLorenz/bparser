@@ -123,6 +123,7 @@ public:
 };*/
 
 struct declaration_specifier_type : public node_t {
+	declaration_specifier_type() {}
 	declaration_specifier_type(const geom_t& geom) : node_t(geom) {}
 };
 
@@ -204,13 +205,22 @@ enum op_t
 	op_minus,
 	op_mult,
 	op_div,
-	op_mod
+	op_mod,
+	op_tern,
+
+	op_arr_acc,
+	op_func_call,
+	op_struct_access_ref,
+	op_struct_access_ptr,
+	op_cast_postfix,
+	op_cast
 };
 
 typedef ptn<token_t> end_token;
 
 struct expression_t : public node_t {
 	op_t op_id;
+//	virtual void accept(class visitor_t& v);
 };
 
 struct unary_expression_r : public expression_t
@@ -252,20 +262,24 @@ struct ternary_expression_t : public expression_t
 //		op(op), op_token(op_token), op_token_2(op_token_2), n1(n1), n2(n2), n3(n3) {}
 };
 
-struct abstract_declarator_t : public node_t {
-
+struct abstract_declarator_t : public node_t
+{
+	ptn<	struct pointer_t,
+		ptn<	struct direct_abstract_declarator_t > > c;
+	void accept(class visitor_t& v);
 };
 
 struct specifier_qualifier_list_t : public node_t
 {
-/*	ch<struct pointer_t> pointer;
-	ch<direct_abstract_declarator_t> direct_abstract_declarator;*/
-	ptn<struct pointer_t, ptn< struct direct_abstract_declarator_t > > c;
+	std::list<declaration_specifier_type*> c;
+	void accept(class visitor_t& v);
 };
 
 struct type_name_t : public node_t
 {
-	ptn<specifier_qualifier_list_t, ptn< abstract_declarator_t > > abstract_declarator;
+	ptn<	specifier_qualifier_list_t,
+		ptn<	abstract_declarator_t > > c;
+	void accept(class visitor_t& v);
 };
 
 template<class Next>
@@ -330,10 +344,83 @@ struct primary_expression_t : public expression_t
 	expression_t* expression;
 };
 
-struct type_specifier_t : public declaration_specifier_type {
+struct array_access_expression_t : public expression_t
+{
+	ptn<	expression_t,
+		ptn<	token_t,
+			ptn<	expression_t,
+					end_token > > > c;
 	virtual void accept(class visitor_t& v);
-	type_specifier_t(const geom_t& geom) : declaration_specifier_type(geom) {}
 };
+
+struct argument_expression_list_t : public node_t
+{
+	ptn<	argument_expression_list_t,
+		ptn<	token_t,
+			ptn<	expression_t> > > c;
+
+	virtual void accept(class visitor_t& v);
+};
+
+struct function_call_expression_t : public expression_t
+{
+	ptn<	expression_t,
+		ptn<	token_t,
+			ptn<	argument_expression_list_t,
+					end_token > > > c;
+	virtual void accept(class visitor_t& v);
+};
+
+// TODO: no op_id here, does this make sense?
+struct struct_access_expression_t : public expression_t
+{
+	ptn<	expression_t,
+		ptn<	token_t,	// . or ->
+			ptn<	identifier_t > > > c;
+	virtual void accept(class visitor_t& v);
+};
+
+// TODO: what is this??
+struct cast_postfix_expression_t : public expression_t
+{
+	ptn<	token_t,
+		ptn<	type_name_t,
+			ptn<	token_t,
+				ptn<	token_t,
+					ptn<	struct initializer_list_t,
+						ptn<	token_t,
+								end_token
+		> > > > > > c;
+	virtual void accept(class visitor_t& v);
+};
+
+struct cast_expression_t : public expression_t
+{
+	ptn<	token_t,
+		ptn<	type_name_t,
+			ptn<	token_t,
+				ptn<	expression_t
+					> > > > c;
+	virtual void accept(class visitor_t& v);
+};
+
+struct type_specifier_t : public declaration_specifier_type
+{
+	virtual void accept(class visitor_t& v);
+};
+
+struct type_specifier_token : public type_specifier_t
+{
+	token_t* c;
+	virtual void accept(class visitor_t& v);
+};
+
+struct type_identifier : public type_specifier_t
+{
+	identifier_t* c;
+	virtual void accept(class visitor_t& v);
+};
+
 
 template<class IdType, class Base = node_t>
 struct token_base : public Base
@@ -372,6 +459,7 @@ struct enum_specifier_t : public type_specifier_complex_t {
 
 struct type_qualifier_t : public declaration_specifier_type
 {
+	token_t* c;
 	virtual void accept(class visitor_t& v);
 };
 struct function_specifier_t : public declaration_specifier_type {
@@ -493,20 +581,37 @@ struct iteration_statement_t : public statement_t
 	ch<expression_t> for_expression;
 };
 
-struct designation_t : public node_t
+struct designator_t : public node_t {};
+
+struct designator_id : public designator_t
 {
+	ptn<	token_t,
+		ptn<	identifier_t > > c;
 	virtual void accept(class visitor_t& v);
 };
 
-/*
-designation initializer
-	| initializer
-	| initializer_list ',' designation initializer
-	| initializer_list ',' initializer
-*/
+struct designator_constant_expr : public designator_t
+{
+	ptn<	token_t,
+		ptn<	expression_t,
+			end_token > > c;
+	virtual void accept(class visitor_t& v);
+};
+
+struct designator_list_t : public node_t
+{
+	std::list<designator_t*> c;
+	virtual void accept(class visitor_t& v);
+};
+
 struct initializer_list_t : public node_t
 {
-
+	ptn<	initializer_list_t,
+		ptn<	token_t, // ,
+			ptn<	designator_list_t,
+				ptn<	token_t, // =
+					ptn<	struct initializer_t
+		> > > > > c;
 	virtual void accept(class visitor_t& v);
 };
 
@@ -678,7 +783,7 @@ struct direct_abstract_declarator_arr : public direct_abstract_declarator_t
 	// careful, order can differ,
 	// however, it won't matter much
 	// also, first and last token are like in the tuple
-	ptn<	direct_declarator_t,
+	ptn<	direct_abstract_declarator_t,
 		ptn<	token_t, // [
 			ptn<	expression_t,
 				ptn<	token_t, // *
@@ -690,7 +795,7 @@ struct direct_abstract_declarator_arr : public direct_abstract_declarator_t
 
 struct direct_abstract_declarator_func : public direct_abstract_declarator_t
 {
-	ptn<	direct_declarator_t,
+	ptn<	direct_abstract_declarator_t,
 		ptn<	token_t, // (
 			ptn<	parameter_type_list_t,
 					end_token > > > c;
