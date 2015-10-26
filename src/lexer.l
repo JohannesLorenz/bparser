@@ -9,8 +9,6 @@
 #include "parser.h"
 
 #include <cctype>
-#include <cassert>
-#include <cstdio> // TODO: remove?
 #include <iostream>
 #include <vector>
 #include <cstring>
@@ -39,9 +37,9 @@ public:
 	static geom_t pos() { return geom_t(last_line, last_col); }
 };
 
-std::size_t int = 0;
-std::size_t int = 0;
-std::size_t int = 1;
+int pos_counter::last_line = 0;
+int pos_counter::last_col = 0;
+int pos_counter::last_mult = 1;
 
 span_t cnt(const char* text_pos, std::size_t mult = 1) {
 	return pos_counter::count(text_pos, mult); }
@@ -56,17 +54,6 @@ struct token_str
 std::vector<node_t*> token_str::value;
 
 std::vector<node_t*>& get_token_vector() { return token_str::value; }
-
-int app(int token_id, const char* text, int mult = 1) {
-	cnt(text, mult);
-	return token_str::value.push_back(new token_t(get_pos(), token_id)), token_id;
-}
-
-token_t* app2(int token_id, const char* text, int mult = 1) {
-	cnt(text, mult);
-	token_t* rval = new token_t(get_pos(), token_id);
-	return token_str::value.push_back(rval), rval;
-}
 
 int app3(token_t*& token, int token_id, const char* text, int mult = 1)
 {
@@ -83,17 +70,6 @@ int app_num(int value) {
 template<class T> void app(T* elem) {
 	token_str::value.push_back(elem);
 }
-
-int tmp_i;
-
-token_t* tk(int id, const char* text) {
-	cnt(text);
-	token_t* t = new token_t(get_pos(), id);
-	app(t);
-	return t;
-}
-
-
 
 %}
 
@@ -141,7 +117,7 @@ static int check_type(void);
 "/*"					{ comment(); }
 "//".*					{ /* consume //-comment */ }
 
-"auto"					{ yylval->token = app2(AUTO, yytext); return(AUTO); } // TODO: 2x AUTO
+"auto"					{ return app3(yylval->token, AUTO, yytext); } // TODO: 2x AUTO
 "break"					{ return app3(yylval->token, BREAK, yytext); }
 "case"					{ return app3(yylval->token, CASE, yytext); }
 "char"					{ return app3(yylval->token, CHAR, yytext); }
@@ -159,41 +135,41 @@ static int check_type(void);
 "if"					{ return app3(yylval->token, IF, yytext); }
 "inline"				{ return app3(yylval->token, INLINE, yytext); }
 "int"					{ return app3(yylval->token, INT, yytext); }
-"long"					{ return(LONG); }
-"register"				{ yylval->token = app2(REGISTER, yytext); return(REGISTER); }
-"restrict"				{ return(RESTRICT); }
-"return"				{ return(RETURN); }
-"short"					{ return(SHORT); }
-"signed"				{ return(SIGNED); }
-"sizeof"				{ return(SIZEOF); }
-"static"				{ yylval->token = app2(STATIC, yytext); return(STATIC); }
-"struct"				{ return(STRUCT); }
-"switch"				{ return(SWITCH); }
-"typedef"				{ yylval->token = app2(TYPEDEF, yytext); return(TYPEDEF); }
-"union"					{ return(UNION); }
-"unsigned"				{ yylval->token = app2(UNSIGNED, yytext); return(UNSIGNED); }
-"void"					{ return(VOID); }
-"volatile"				{ return(VOLATILE); }
-"while"					{ return(WHILE); }
-"_Alignas"                              { return ALIGNAS; }
-"_Alignof"                              { return ALIGNOF; }
-"_Atomic"                               { return ATOMIC; }
+"long"					{ return app3(yylval->token, LONG, yytext); }
+"register"				{ return app3(yylval->token, REGISTER, yytext); }
+"restrict"				{ return app3(yylval->token, RESTRICT, yytext); }
+"return"				{ return app3(yylval->token, RETURN, yytext); }
+"short"					{ return app3(yylval->token, SHORT, yytext); }
+"signed"				{ return app3(yylval->token, SIGNED, yytext); }
+"sizeof"				{ return app3(yylval->token, SIZEOF, yytext); }
+"static"				{ return app3(yylval->token, STATIC, yytext); }
+"struct"				{ return app3(yylval->token, STRUCT, yytext); }
+"switch"				{ return app3(yylval->token, SWITCH, yytext); }
+"typedef"				{ return app3(yylval->token, TYPEDEF, yytext); }
+"union"					{ return app3(yylval->token, UNION, yytext); }
+"unsigned"				{ return app3(yylval->token, UNSIGNED, yytext); }
+"void"					{ return app3(yylval->token, VOID, yytext); }
+"volatile"				{ return app3(yylval->token, VOLATILE, yytext); }
+"while"					{ return app3(yylval->token, WHILE, yytext); }
+"_Alignas"                              { return app3(yylval->token, ALIGNAS, yytext); }
+"_Alignof"                              { return app3(yylval->token, ALIGNOF, yytext); }
+"_Atomic"                               { return app3(yylval->token, ATOMIC, yytext); }
 "_Bool"                                 { return app3(yylval->token, BOOL, yytext); }
-"_Complex"                              { return COMPLEX; }
-"_Generic"                              { return GENERIC; }
-"_Imaginary"                            { return IMAGINARY; }
-"_Noreturn"                             { return NORETURN; }
-"_Static_assert"                        { return STATIC_ASSERT; }
-"_Thread_local"                         { return THREAD_LOCAL; }
-"__func__"                              { return FUNC_NAME; }
+"_Complex"                              { return app3(yylval->token, COMPLEX, yytext); }
+"_Generic"                              { return app3(yylval->token, GENERIC, yytext); }
+"_Imaginary"                            { return app3(yylval->token, IMAGINARY, yytext); }
+"_Noreturn"                             { return app3(yylval->token, NORETURN, yytext); }
+"_Static_assert"                        { return app3(yylval->token, STATIC_ASSERT, yytext); }
+"_Thread_local"                         { return app3(yylval->token, THREAD_LOCAL, yytext); }
+"__func__"                              { return app3(yylval->token, FUNC_NAME, yytext); }
 
 {L}{A}*					{ const char* end = yytext + 1; // TODO: TEST ALL TERMINALS...
 						for(; isalnum(*end) || *end == '_'; ++end) ;
 						std::size_t length = end - yytext;
 						yylval->name = new char[length + 1]; yylval->name[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(yylval->name, yytext, length);
-						return app(check_type(), yytext); }
+						return app3(yylval->token, check_type(), yytext); }
 
-{HP}{H}+{IS}?				{ sscanf(yytext, "%x", &yylval->_int); return I_CONSTANT; }
+{HP}{H}+{IS}?				{ sscanf(yytext, "%x", &yylval->_int); return I_CONSTANT; } // TODO: position
 {NZ}{D}*{IS}?				{ sscanf(yytext, "%d", &yylval->_int); return I_CONSTANT; }
 "0"{O}*{IS}?				{ sscanf(yytext, "%o", &yylval->_int); return I_CONSTANT; }
 {CP}?"'"([^'\\\n]|{ES})+"'"		{ const char* pars = yytext; if(*pars == 'u' || *pars == 'U' || *pars == 'L') ++pars; ++pars;
@@ -217,58 +193,58 @@ static int check_type(void);
 						// TODO: common routine with identifier
 						return STRING_LITERAL; }
 
-"..."					{ return ELLIPSIS; }
-">>="					{ return RIGHT_ASSIGN; }
-"<<="					{ return LEFT_ASSIGN; }
-"+="					{ return ADD_ASSIGN; }
-"-="					{ return SUB_ASSIGN; }
-"*="					{ return MUL_ASSIGN; }
-"/="					{ return DIV_ASSIGN; }
-"%="					{ return MOD_ASSIGN; }
-"&="					{ return AND_ASSIGN; }
-"^="					{ return XOR_ASSIGN; }
-"|="					{ return OR_ASSIGN; }
-">>"					{ return RIGHT_OP; }
-"<<"					{ return LEFT_OP; }
-"++"					{ return INC_OP; }
-"--"					{ return DEC_OP; }
-"->"					{ return PTR_OP; }
-"&&"					{ return AND_OP; }
-"||"					{ return OR_OP; }
-"<="					{ return LE_OP; }
-">="					{ return GE_OP; }
-"=="					{ return EQ_OP; }
-"!="					{ return NE_OP; }
-";"					{ return ';'; }
-("{"|"<%")				{ return app('{', yytext); }
-("}"|"%>")				{ return app('}', yytext); }
-","					{ return ','; }
-":"					{ return ':'; }
-"="					{ return '='; }
-"("					{ return app('(', yytext); }
-")"					{ return app(')', yytext); }
-("["|"<:")				{ return '['; }
-("]"|":>")				{ return ']'; }
-"."					{ return '.'; }
-"&"					{ return '&'; }
-"!"					{ return '!'; }
-"~"					{ return '~'; }
-"-"					{ return '-'; }
-"+"					{ return '+'; }
-"*"					{ return '*'; }
-"/"					{ return '/'; }
-"%"					{ return '%'; }
-"<"					{ return '<'; }
-">"					{ return '>'; }
-"^"					{ return '^'; }
-"|"					{ return '|'; }
-"?"					{ return '?'; }
+"..."					{ return app3(yylval->token, ELLIPSIS, yytext); }
+">>="					{ return app3(yylval->token, RIGHT_ASSIGN, yytext); }
+"<<="					{ return app3(yylval->token, LEFT_ASSIGN, yytext); }
+"+="					{ return app3(yylval->token, ADD_ASSIGN, yytext); }
+"-="					{ return app3(yylval->token, SUB_ASSIGN, yytext); }
+"*="					{ return app3(yylval->token, MUL_ASSIGN, yytext); }
+"/="					{ return app3(yylval->token, DIV_ASSIGN, yytext); }
+"%="					{ return app3(yylval->token, MOD_ASSIGN, yytext); }
+"&="					{ return app3(yylval->token, AND_ASSIGN, yytext); }
+"^="					{ return app3(yylval->token, XOR_ASSIGN, yytext); }
+"|="					{ return app3(yylval->token, OR_ASSIGN, yytext); }
+">>"					{ return app3(yylval->token, RIGHT_OP, yytext); }
+"<<"					{ return app3(yylval->token, LEFT_OP, yytext); }
+"++"					{ return app3(yylval->token, INC_OP, yytext); }
+"--"					{ return app3(yylval->token, DEC_OP, yytext); }
+"->"					{ return app3(yylval->token, PTR_OP, yytext); }
+"&&"					{ return app3(yylval->token, AND_OP, yytext); }
+"||"					{ return app3(yylval->token, OR_OP, yytext); }
+"<="					{ return app3(yylval->token, LE_OP, yytext); }
+">="					{ return app3(yylval->token, GE_OP, yytext); }
+"=="					{ return app3(yylval->token, EQ_OP, yytext); }
+"!="					{ return app3(yylval->token, NE_OP, yytext); }
+";"					{ return app3(yylval->token, ';', yytext); }
+("{"|"<%")				{ return app3(yylval->token, '{', yytext); }
+("}"|"%>")				{ return app3(yylval->token, '}', yytext); }
+","					{ return app3(yylval->token, ',', yytext); }
+":"					{ return app3(yylval->token, ':', yytext); }
+"="					{ return app3(yylval->token, '=', yytext); }
+"("					{ return app3(yylval->token, '(', yytext); }
+")"					{ return app3(yylval->token, ')', yytext); }
+("["|"<:")				{ return app3(yylval->token, '[', yytext); }
+("]"|":>")				{ return app3(yylval->token, ']', yytext); }
+"."					{ return app3(yylval->token, '.', yytext); }
+"&"					{ return app3(yylval->token, '&', yytext); }
+"!"					{ return app3(yylval->token, '!', yytext); }
+"~"					{ return app3(yylval->token, '~', yytext); }
+"-"					{ return app3(yylval->token, '-', yytext); }
+"+"					{ return app3(yylval->token, '+', yytext); }
+"*"					{ return app3(yylval->token, '*', yytext); }
+"/"					{ return app3(yylval->token, '/', yytext); }
+"%"					{ return app3(yylval->token, '%', yytext); }
+"<"					{ return app3(yylval->token, '<', yytext); }
+">"					{ return app3(yylval->token, '>', yytext); }
+"^"					{ return app3(yylval->token, '^', yytext); }
+"|"					{ return app3(yylval->token, '|', yytext); }
+"?"					{ return app3(yylval->token, '?', yytext); }
 
-"\t"					{ app('\t', yytext, 8); /* whitespace separates tokens */ }
-"\n"					{ app('\n', yytext); pos_counter::newline(); /* whitespace separates tokens */ }
+"\t"					{ app3(yylval->token, '\t', yytext, 8); }
+"\n"					{ app3(yylval->token, '\n', yytext); pos_counter::newline(); }
 "\v"					{ throw "non-supported sign \\v"; }
 "\f"					{ throw "non-supported sign \\f"; }
-" "					{ cnt(yytext); app(' ', yytext); }
+" "					{ app3(yylval->token, ' ', yytext); }
 .					{ std::cerr << "At: " << yytext << std::endl; throw "bad character"; /* discard bad characters */ }
 
 %%

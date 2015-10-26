@@ -1,0 +1,20 @@
+# Makefile
+
+FILES	= lexer.o parser.o node.o visitor.o
+#CC	= gcc
+#CXX	= g++
+# -Werror -Wno-unused ?
+FLAGS	= -Wall -Wextra -Wno-unused -Wno-overloaded-virtual  -g -ggdb -ansi -DYYDEBUG=1 -pipe
+CFLAGS	= -I../src
+LFLAGS	= -L../src -lbparser
+
+all: test
+test: test.o
+	$(CXX) $(FLAGS) $(LFLAGS) test.o -o test
+
+# test.cpp has no header file:
+test.o: test.cpp
+	$(CXX) $(FLAGS) $(CFLAGS) -c $< -o $@
+clean:
+	rm -f test
+rebuild: clean all

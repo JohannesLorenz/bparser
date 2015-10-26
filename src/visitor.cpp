@@ -18,7 +18,7 @@ public:
 		char tmp[32];
 		snprintf(tmp, 32, "(l%4d c%4d) (l%4d c%4d)", span.first.line,
 			span.first.col, span.second.line, span.second.col);
-
+		stream << tmp;
 		for(std::size_t i = 0; i < *depth; ++i)
 		 stream << "  ";
 		++*depth;
