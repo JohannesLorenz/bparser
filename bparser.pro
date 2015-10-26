@@ -8,8 +8,9 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += lexer.h node.h visitor.h tuple03.h
-LEXSOURCES += lexer.l
-YACCSOURCES += parser.y
-SOURCES += lexer.c main.cpp node.cpp visitor.cpp tuple03.cpp
-OTHER_FILES += Makefile
+HEADERS += src/lexer.h src/node.h src/visitor.h src/tuple03.h
+LEXSOURCES += src/lexer.l
+YACCSOURCES += src/parser.y
+SOURCES += src/lexer.c test/test.cpp src/node.cpp src/visitor.cpp
+OTHER_FILES += Makefile src/Makefile test/Makefile
+

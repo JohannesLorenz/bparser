@@ -161,7 +161,7 @@ static int check_type(void);
 "switch"				{ return(SWITCH); }
 "typedef"				{ yylval->token = app2(TYPEDEF, yytext); return(TYPEDEF); }
 "union"					{ return(UNION); }
-"unsigned"				{ return(UNSIGNED); }
+"unsigned"				{ yylval->token = app2(UNSIGNED, yytext); return(UNSIGNED); }
 "void"					{ return(VOID); }
 "volatile"				{ return(VOLATILE); }
 "while"					{ return(WHILE); }
