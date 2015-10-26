@@ -41,6 +41,24 @@ struct _value_at<Tpl, 0>
 template<std::size_t Idx, class Tpl>
 typename type_at<Tpl, Idx>::type& value_at(Tpl& tpl) { return _value_at<Tpl, Idx>::get(tpl); }
 
+// FEATURE: const versions for both args
+template<class Tpl>
+struct _foreach {
+	template<class F>
+	void exec(Tpl& tpl, F& f) {
+		f(tpl.value), foreach(tpl.get_next(), f);
+	}
+};
+
+template<>
+struct _foreach<null_type> {
+	template<class F>
+	void exec(const null_type& , F&) {}
+};
+
+template<class Tpl, class F>
+void foreach(Tpl& tpl, F& f) { _foreach<Tpl>::exec(tpl, f); }
+
 // FEATURE: inherit from Next, if it's possible and makes sense
 template<class T, class Next = null_type>
 class tpl // : private Next
@@ -122,7 +140,7 @@ public:
 	{
 		value = _value;
 	}
-
+	
 //	template<class T1>
 //	void fill(const T1& e1) { set(e1); }
 };

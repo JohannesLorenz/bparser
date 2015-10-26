@@ -17,13 +17,14 @@
 
 class pos_counter
 {
-	static std::size_t last_line;
-	static std::size_t last_col;
-	static std::size_t last_mult;
+	static int last_line;
+	static int last_col;
+	static int last_mult;
 public:
 	static span_t count(const char* text_pos, std::size_t mult = 1) {
 		static const char* last_text = text_pos;
 		last_col += ((text_pos - last_text) * last_mult);
+		std::cout << "text: " << text_pos << std::endl;
 		std::cout << "last_col: " << last_col << ", mult: " << mult << std::endl;
 		last_text = text_pos;
 		last_mult = mult;
@@ -32,14 +33,15 @@ public:
 		return span_t();
 	}
 
-	static void newline() { ++last_col; last_line=0; }
+	// -1 because we are before char -1 respective to the new line
+	static void newline() { ++last_line; last_col=-1; }
 
 	static geom_t pos() { return geom_t(last_line, last_col); }
 };
 
-std::size_t pos_counter::last_line = 0;
-std::size_t pos_counter::last_col = 0;
-std::size_t pos_counter::last_mult = 1;
+std::size_t int = 0;
+std::size_t int = 0;
+std::size_t int = 1;
 
 span_t cnt(const char* text_pos, std::size_t mult = 1) {
 	return pos_counter::count(text_pos, mult); }
@@ -64,6 +66,14 @@ token_t* app2(int token_id, const char* text, int mult = 1) {
 	cnt(text, mult);
 	token_t* rval = new token_t(get_pos(), token_id);
 	return token_str::value.push_back(rval), rval;
+}
+
+int app3(token_t*& token, int token_id, const char* text, int mult = 1)
+{
+	cnt(text, mult);
+	token = new token_t(get_pos(), token_id);
+	token_str::value.push_back(token);
+	return token_id;
 }
 
 int app_num(int value) {
@@ -132,23 +142,23 @@ static int check_type(void);
 "//".*					{ /* consume //-comment */ }
 
 "auto"					{ yylval->token = app2(AUTO, yytext); return(AUTO); } // TODO: 2x AUTO
-"break"					{ return(BREAK); }
-"case"					{ return(CASE); }
-"char"					{ return(CHAR); }
-"const"					{ return(CONST); }
-"continue"				{ return(CONTINUE); }
-"default"				{ return(DEFAULT); }
-"do"					{ return(DO); }
-"double"				{ return(DOUBLE); }
-"else"					{ return(ELSE); }
-"enum"					{ return(ENUM); }
-"extern"				{ yylval->token = app2(EXTERN, yytext); return(EXTERN); }
-"float"					{ return(FLOAT); }
-"for"					{ return(FOR); }
-"goto"					{ return(GOTO); }
-"if"					{ return(IF); }
-"inline"				{ return(INLINE); }
-"int"					{ yylval->token = app2(INT, yytext); return(INT); }
+"break"					{ return app3(yylval->token, BREAK, yytext); }
+"case"					{ return app3(yylval->token, CASE, yytext); }
+"char"					{ return app3(yylval->token, CHAR, yytext); }
+"const"					{ return app3(yylval->token, CONST, yytext); }
+"continue"				{ return app3(yylval->token, CONTINUE, yytext); }
+"default"				{ return app3(yylval->token, DEFAULT, yytext); }
+"do"					{ return app3(yylval->token, DO, yytext); }
+"double"				{ return app3(yylval->token, DOUBLE, yytext); }
+"else"					{ return app3(yylval->token, ELSE, yytext); }
+"enum"					{ return app3(yylval->token, ENUM, yytext); }
+"extern"				{ return app3(yylval->token, EXTERN, yytext); }
+"float"					{ return app3(yylval->token, FLOAT, yytext); }
+"for"					{ return app3(yylval->token, FOR, yytext); }
+"goto"					{ return app3(yylval->token, GOTO, yytext); }
+"if"					{ return app3(yylval->token, IF, yytext); }
+"inline"				{ return app3(yylval->token, INLINE, yytext); }
+"int"					{ return app3(yylval->token, INT, yytext); }
 "long"					{ return(LONG); }
 "register"				{ yylval->token = app2(REGISTER, yytext); return(REGISTER); }
 "restrict"				{ return(RESTRICT); }
@@ -168,7 +178,7 @@ static int check_type(void);
 "_Alignas"                              { return ALIGNAS; }
 "_Alignof"                              { return ALIGNOF; }
 "_Atomic"                               { return ATOMIC; }
-"_Bool"                                 { return BOOL; }
+"_Bool"                                 { return app3(yylval->token, BOOL, yytext); }
 "_Complex"                              { return COMPLEX; }
 "_Generic"                              { return GENERIC; }
 "_Imaginary"                            { return IMAGINARY; }
@@ -255,7 +265,7 @@ static int check_type(void);
 "?"					{ return '?'; }
 
 "\t"					{ app('\t', yytext, 8); /* whitespace separates tokens */ }
-"\n"					{ pos_counter::newline(); app('\n', yytext); /* whitespace separates tokens */ }
+"\n"					{ app('\n', yytext); pos_counter::newline(); /* whitespace separates tokens */ }
 "\v"					{ throw "non-supported sign \\v"; }
 "\f"					{ throw "non-supported sign \\f"; }
 " "					{ cnt(yytext); app(' ', yytext); }

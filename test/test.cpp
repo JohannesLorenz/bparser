@@ -27,7 +27,7 @@ translation_unit_t *getAST(const char *expr)
 	
 	std::cerr << "text: " << yyget_text(scanner) << std::endl;
 
-	if (yyparse(&expression, scanner)) { // TODO bad cast??
+	if (yyparse(&expression, scanner)) {
 		// error parsing
 		return NULL;
 	}
