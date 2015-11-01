@@ -178,10 +178,10 @@ void dumper_t::visit(primary_expression_t* n)
 			stream << std::endl;
 			break;
 		case pt_id:
-			stream << ": identifier: " << n->identifier << std::endl;
+			stream << ": identifier: " << n->identifier->name << std::endl;
 			break;
 		case pt_string:
-			stream << ": string constant: " << n->string << std::endl;
+			stream << ": string constant: " << n->string->name << std::endl;
 			break;
 	}
 

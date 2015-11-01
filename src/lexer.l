@@ -56,7 +56,7 @@ std::vector<node_base*> token_str::value;
 std::vector<node_base*>& get_token_vector() { return token_str::value; }
 
 int app3(token_t*& token, int token_id, const char* text, int mult = 1)
-{
+{ // TODO: call app()
 	cnt(text, mult);
 	token = new token_t(get_pos(), token_id);
 	token_str::value.push_back(token);
@@ -67,8 +67,11 @@ int app3(token_t*& token, int token_id, const char* text, int mult = 1)
 	return token_str::value.push_back(new number_t(value)), I_CONSTANT;
 }*/
 
-template<class T> void app(T* elem) {
+template<class T> int app(T* elem, int lex_id/*, const char* text, int mult = 1*/)
+{
+	//cnt(text, mult);
 	token_str::value.push_back(elem);
+	return lex_id;
 }
 
 %}
@@ -166,8 +169,10 @@ static int check_type(void);
 {L}{A}*					{ const char* end = yytext + 1; // TODO: TEST ALL TERMINALS...
 						for(; isalnum(*end) || *end == '_'; ++end) ;
 						std::size_t length = end - yytext;
-						yylval->name = new char[length + 1]; yylval->name[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(yylval->name, yytext, length);
-						return app3(yylval->token, check_type(), yytext); }
+						cnt(yytext);
+						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, yytext, length);
+						
+						return app(yylval->name = new identifier_t(res, get_pos()), check_type()); }
 
 {HP}{H}+{IS}?				{ sscanf(yytext, "%x", &yylval->_int); return I_CONSTANT; } // TODO: position
 {NZ}{D}*{IS}?				{ sscanf(yytext, "%d", &yylval->_int); return I_CONSTANT; }
@@ -187,11 +192,12 @@ static int check_type(void);
 						for(; *end != '"'; ++end) ;
 						--end;
 						std::size_t length = end - yytext;
+						cnt(yytext);
 						std::cout << "LENGTH: " << length << std::endl;
-						yylval->name = new char[length + 1]; yylval->name[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(yylval->name, pars, length);
-						std::cout << "STR: " << pars << std::endl;
+						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, pars, length);
+						std::cout << "STR: " << res << std::endl;
 						// TODO: common routine with identifier
-						return STRING_LITERAL; }
+						return app(yylval->name = new identifier_t(res, get_pos()), STRING_LITERAL); }
 
 "..."					{ return app3(yylval->token, ELLIPSIS, yytext); }
 ">>="					{ return app3(yylval->token, RIGHT_ASSIGN, yytext); }

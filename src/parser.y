@@ -79,7 +79,7 @@ typedef void* yyscan_t;
 %parse-param { yyscan_t scanner }
 
 %union {
-	char* name;
+	identifier_t* name;
 	float _float;
 	int _int;
 	token_t* token;
@@ -237,9 +237,9 @@ typedef void* yyscan_t;
 %%
 
 primary_expression // parents: postfix_expression
-	: IDENTIFIER { alloc($$); move_str($$->identifier, $1); $$->type = pt_id; }
+	: IDENTIFIER { alloc($$); $$->identifier = $1; $$->type = pt_id; }
 	| constant { alloc($$); $$->constant = $1; $$->type = pt_constant; }
-	| string { alloc($$); move_str($$->string, $1); $$->type = pt_string; }
+	| string { alloc($$); $$->string = $1; $$->type = pt_string; }
 	| '(' expression ')' { alloc($$); $$->lbrace = t($1); $$->expression = $2; $$->rbrace=t($3); $$->type = pt_expression; }
 	| generic_selection { c11(); }
 	;
@@ -247,7 +247,7 @@ primary_expression // parents: postfix_expression
 constant // parents: primary expression
 	: I_CONSTANT { alloc($$); $$->value.i = $1; $$->type = ct_int; }		/* includes character_constant */
 	| F_CONSTANT { alloc($$); $$->value.f = $1; $$->type = ct_float; }
-	| ENUMERATION_CONSTANT{ alloc($$); $$->enum_id = new identifier_t($1); $$->type = ct_enum; }	/* after it has been defined as such */
+	| ENUMERATION_CONSTANT{ alloc($$); $$->enum_id = $1; $$->type = ct_enum; }	/* after it has been defined as such */
 	;
 
 enumeration_constant		/* before it has been defined as such */
@@ -279,8 +279,8 @@ postfix_expression
 	| postfix_expression '[' expression ']' { array_access_expression_t* u; $$=alloc(u); u->c.fill($1, t($2), $3, t($4)); u->op_id = op_arr_acc; }
 	| postfix_expression '(' ')' { function_call_expression_t* u; $$=alloc(u); u->c.fill($1, t($2), NULL, t($3)); u->op_id = op_func_call; }
 	| postfix_expression '(' argument_expression_list ')' { function_call_expression_t* u; $$=alloc(u); u->c.fill($1, t($2), $3, t($4)); u->op_id = op_func_call; }
-	| postfix_expression '.' IDENTIFIER { struct_access_expression_t* e; $$=alloc(e); e->c.fill($1, t($2), new identifier_t($3)); e->op_id = op_struct_access_ref; }
-	| postfix_expression PTR_OP IDENTIFIER { struct_access_expression_t* e; $$=alloc(e); e->c.fill($1, t($2), new identifier_t($3)); e->op_id = op_struct_access_ptr; }
+	| postfix_expression '.' IDENTIFIER { struct_access_expression_t* e; $$=alloc(e); e->c.fill($1, t($2), $3); e->op_id = op_struct_access_ref; }
+	| postfix_expression PTR_OP IDENTIFIER { struct_access_expression_t* e; $$=alloc(e); e->c.fill($1, t($2), $3); e->op_id = op_struct_access_ptr; }
 	| postfix_expression INC_OP { unary_expression_r* u; $$=alloc(u); u->c.fill($1, t($2)); u->op_id = op_inc_post; }
 	| postfix_expression DEC_OP { unary_expression_r* u; $$=alloc(u); u->c.fill($1, t($2)); u->op_id = op_dec_post; }
 	| '(' type_name ')' '{' initializer_list '}' { cast_postfix_expression_t* e; $$=alloc(e); e->c.fill(t($1), $2, t($3), t($4), $5, NULL, t($6)); e->op_id = op_cast_postfix; }
@@ -466,7 +466,7 @@ type_specifier
 	| atomic_type_specifier { c11(); }
 	| struct_or_union_specifier { /*alloc($$); $$->c.set($1);*/ not_yet(); }
 	| enum_specifier { /*alloc($$); $$->c.set($1);*/ not_yet() }
-	| TYPEDEF_NAME { type_identifier* t; $$ = alloc(t); t->c = new identifier_t($1); }	/* after it has been defined as such */
+	| TYPEDEF_NAME { type_identifier* t; $$ = alloc(t); t->c = $1; }	/* after it has been defined as such */
 	;
 
 struct_or_union_specifier
@@ -560,7 +560,7 @@ declarator
 // direct_declarator_func
 
 direct_declarator
-	: IDENTIFIER { direct_declarator_id* d; $$ = alloc(d); d->value = new identifier_t($1); }
+	: IDENTIFIER { direct_declarator_id* d; $$ = alloc(d); d->value = $1; }
 	| '(' declarator ')' { direct_declarator_decl* d; $$ = alloc(d); d->c.fill(t($1), $2, t($3)); }
 	| direct_declarator '[' ']' { direct_declarator_arr* d; $$ = alloc(d);
 		d->c.fill($1, t($2), NULL, NULL, NULL, NULL, t($3)); }
@@ -696,7 +696,7 @@ designator_list
 
 designator
 	: '[' constant_expression ']' { designator_constant_expr* d; $$ = alloc(d); d->c.fill(t($1), $2, t($3)); }
-	| '.' IDENTIFIER { designator_id* d; $$ = alloc(d); d->c.fill(t($1), new identifier_t($2)); }
+	| '.' IDENTIFIER { designator_id* d; $$ = alloc(d); d->c.fill(t($1), $2); }
 	;
 
 static_assert_declaration
@@ -715,7 +715,7 @@ statement
 
 
 labeled_statement
-	: IDENTIFIER ':' statement { alloc($$); $$->identifier = new identifier_t($1); $$->colon = t($2); $$->statement = $3; }
+	: IDENTIFIER ':' statement { alloc($$); $$->identifier = $1; $$->colon = t($2); $$->statement = $3; }
 	| CASE constant_expression ':' statement { alloc($$); $$->case_token = t($1); $$->expression = $2; $$->colon = t($3); $$->statement = $4; }
 	| DEFAULT ':' statement { alloc($$); $$->default_token = t($1); $$->colon = t($2); $$->statement = $3; }
 	;
@@ -756,7 +756,7 @@ iteration_statement
 	;	
 
 jump_statement
-	: GOTO IDENTIFIER ';' { alloc($$); $$->keyword = t($1); $$->goto_identifier = NULL /*TODO*/; $$->semicolon = t($3); }
+	: GOTO IDENTIFIER ';' { alloc($$); $$->keyword = t($1); $$->goto_identifier = $2; $$->semicolon = t($3); }
 	| CONTINUE ';' { alloc($$); $$->keyword = t($1); $$->semicolon = t($2); }
 	| BREAK ';' { alloc($$); $$->keyword = t($1); $$->semicolon = t($2); }
 	| RETURN ';' { alloc($$); $$->keyword = t($1); $$->semicolon = t($2); }

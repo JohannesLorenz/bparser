@@ -314,7 +314,7 @@ struct identifier_t : public node_t<>
 {
 	std::string name;
 	virtual void accept(class visitor_t& v);
-	identifier_t(const char* name) : name(name) {}
+	identifier_t(const char* name, geom_t geom) : node_t(geom), name(name) {}
 };
 
 enum constant_type
@@ -350,8 +350,8 @@ struct primary_expression_t : public expression_t
 	
 	tok lbrace, rbrace;
 	ch<constant_t> constant;
-	std::string identifier;
-	std::string string;
+	identifier_t* identifier;
+	identifier_t* string;
 	expression_t* expression;
 };
 
