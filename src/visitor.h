@@ -18,8 +18,8 @@ public:
 	virtual void visit(cast_postfix_expression_t* ) {}
 	virtual void visit(cast_expression_t* ) {}
 
-	virtual void visit(type_specifier_simple_t* ) {}
-	virtual void visit(number_t *) {}
+	//virtual void visit(type_specifier_simple_t* ) {}
+	//virtual void visit(number_t *) {}
 	//virtual void visit(expression_t *) {}
 	virtual void visit(unary_expression_l* ) {}
 	virtual void visit(unary_expression_r* ) {}
@@ -48,7 +48,7 @@ public:
 	virtual void visit(selection_statement_t* ) {}
 	virtual void visit(iteration_statement_t* ) {}
 	virtual void visit(jump_statement_t* ) {}
-	virtual void visit(block_item_list_t* ) {}
+	//virtual void visit(block_item_list_t* ) {}
 	virtual void visit(block_item_t* ) {}
 	virtual void visit(identifier_t* ) {}
 	virtual void visit(primary_expression_t* ) {}
@@ -159,8 +159,8 @@ public:
 	void visit(struct_access_expression_t* e);
 	void visit(cast_postfix_expression_t* e);
 	void visit(cast_expression_t* e);
-	void visit(type_specifier_simple_t* e);
-	void visit(number_t *e);
+	//void visit(type_specifier_simple_t* e);
+	//void visit(number_t *e);
 	void visit(token_t* e);
 	void visit(unary_expression_l *e);
 	void visit(unary_expression_r *e);
@@ -215,7 +215,7 @@ public:
 
 struct cleaner_t : visitor_t
 {
-	void visit(number_t *e) { delete e; }
+	//void visit(number_t *e) { delete e; }
 	void visit(binary_expression_t *e);
 };
 
@@ -225,7 +225,7 @@ struct append_t : public visitor_t
 	T* node; // TODO: const everywhere?
 	append_t(T* node) : node(node) {}
 	void visit(translation_unit_t* t) { t->v.push_back(node); }
-	void visit(node_t* ) { assert(false); }
+	void visit(node_base* ) { assert(false); }
 };
 
 template<class T>

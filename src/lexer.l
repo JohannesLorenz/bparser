@@ -48,12 +48,12 @@ geom_t get_pos() { return pos_counter::pos(); } // TODO: common header instead o
 
 struct token_str
 {
-	static std::vector<node_t*> value;
+	static std::vector<node_base*> value;
 };
 
-std::vector<node_t*> token_str::value;
+std::vector<node_base*> token_str::value;
 
-std::vector<node_t*>& get_token_vector() { return token_str::value; }
+std::vector<node_base*>& get_token_vector() { return token_str::value; }
 
 int app3(token_t*& token, int token_id, const char* text, int mult = 1)
 {
@@ -63,9 +63,9 @@ int app3(token_t*& token, int token_id, const char* text, int mult = 1)
 	return token_id;
 }
 
-int app_num(int value) {
+/*int app_num(int value) {
 	return token_str::value.push_back(new number_t(value)), I_CONSTANT;
-}
+}*/
 
 template<class T> void app(T* elem) {
 	token_str::value.push_back(elem);

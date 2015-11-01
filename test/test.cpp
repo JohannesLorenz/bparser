@@ -49,7 +49,7 @@ translation_unit_t *getAST(const char *expr)
 	return expression;
 }
  
-int evaluate(node_t */*e*/)
+int evaluate(node_base* /*e*/)
 {/*
 	switch (e->type) {
 		case eVALUE:

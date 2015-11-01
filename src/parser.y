@@ -83,7 +83,7 @@ typedef void* yyscan_t;
 	float _float;
 	int _int;
 	token_t* token;
-	node_t* node;
+	node_base* node;
 	op_t _operator;
 
 	type_specifier_t* type_specifier;
@@ -720,10 +720,9 @@ labeled_statement
 	| DEFAULT ':' statement { alloc($$); $$->default_token = t($1); $$->colon = t($2); $$->statement = $3; }
 	;
 
-// TODO: alloc($$) -> template<class T> alloc(T*& ptr_ref) { ptr_ref = new T*(); }
 compound_statement
 	: '{' '}' { alloc($$); $$->lbrack = t($1); $$->rbrack = t($2); }
-	| '{'  block_item_list '}'  { alloc($$); $$->lbrack = t($1); $$=$2; $$->rbrack=t($3); }
+	| '{'  block_item_list '}'  { /* extend $2 by brackets */ $$=$2; $$->lbrack = t($1); $$->rbrack=t($3); }
 	;
 
 block_item_list
@@ -766,7 +765,7 @@ jump_statement
 
 translation_unit
 	: external_declaration { *expression = new translation_unit_t(); dynamic_cast<translation_unit_t*>(*expression)->v.push_back($1); }
-	| translation_unit external_declaration { dynamic_cast<translation_unit_t*>(*expression)->v.push_back($2); /* append_t<external_declaration_t> a($2); (*expression)->accept(a); (*expression)->append($2);*/ } // TODO: this case hopefully never happens?
+	| translation_unit external_declaration { dynamic_cast<translation_unit_t*>(*expression)->v.push_back($2); /* append_t<external_declaration_t> a($2); (*expression)->accept(a); (*expression)->append($2);*/ }
 	;
 
 external_declaration // TODO: this class is not needed (->virtual)

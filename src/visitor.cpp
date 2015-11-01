@@ -90,7 +90,7 @@ void dumper_t::visit(cast_expression_t *e)
 	accept_all(e->c);
 }
 
-void dumper_t::visit(type_specifier_simple_t* e)
+/*void dumper_t::visit(type_specifier_simple_t* e)
 {
 	incr_depth_t x(&depth, stream, e->span);
 	stream << "simple type specifier, type: " << e->id << std::endl;
@@ -100,7 +100,7 @@ void dumper_t::visit(number_t* e)
 {
 	incr_depth_t x(&depth, stream, e->span);
 	stream << "number, value: " << e->value << std::endl;
-}
+}*/
 
 void dumper_t::visit(token_t* e)
 {

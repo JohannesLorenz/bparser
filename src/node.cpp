@@ -16,11 +16,11 @@ std::ostream& operator<<(std::ostream& stream,
 	return stream << "l" << s.first.line << ", c" << s.first.col;
 }
 
-template<>
-void type_specifier_simple_t::accept(visitor_t& v) { v.visit(this); }
+//template<>
+//void type_specifier_simple_t::accept(visitor_t& v) { v.visit(this); }
 	
 void token_t::accept(visitor_t& v) { v.visit(this); }
-void number_t::accept(visitor_t& v) { v.visit(this); }
+//void number_t::accept(visitor_t& v) { v.visit(this); }
 //void expression_t::accept(visitor_t& v) { v.visit(this); }
 void unary_expression_l::accept(visitor_t& v) { v.visit(this); }
 void unary_expression_r::accept(visitor_t& v) { v.visit(this); }
@@ -50,7 +50,7 @@ void expression_statement_t::accept(visitor_t& v) { v.visit(this); }
 void selection_statement_t::accept(visitor_t& v) { v.visit(this); }
 void iteration_statement_t::accept(visitor_t& v) { v.visit(this); }
 void jump_statement_t::accept(visitor_t& v) { v.visit(this); }
-void block_item_list_t::accept(visitor_t& v) { v.visit(this); }
+//void block_item_list_t::accept(visitor_t& v) { v.visit(this); }
 void type_specifier_t::accept(visitor_t& v) { v.visit(this); }
 void sizeof_expression_t::accept(visitor_t& v) { v.visit(this); }
 
