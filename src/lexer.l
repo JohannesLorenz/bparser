@@ -44,7 +44,7 @@ int pos_counter::last_mult = 1;
 span_t cnt(const char* text_pos, std::size_t mult = 1) {
 	return pos_counter::count(text_pos, mult); }
 
-geom_t get_pos() { return pos_counter::pos(); } // TODO: common header instead of extern?
+geom_t get_pos() { return pos_counter::pos(); } // FEATURE: common header instead of extern?
 
 struct token_str
 {
@@ -55,8 +55,9 @@ std::vector<node_base*> token_str::value;
 
 std::vector<node_base*>& get_token_vector() { return token_str::value; }
 
+//! creates a new token and appends it
 int app3(token_t*& token, int token_id, const char* text, int mult = 1)
-{ // TODO: call app()
+{ // FEATURE: rename to app() or app_token()
 	cnt(text, mult);
 	token = new token_t(get_pos(), token_id);
 	token_str::value.push_back(token);
@@ -67,6 +68,7 @@ int app3(token_t*& token, int token_id, const char* text, int mult = 1)
 	return token_str::value.push_back(new number_t(value)), I_CONSTANT;
 }*/
 
+//! appends an already created terminal
 template<class T> int app(T* elem, int lex_id/*, const char* text, int mult = 1*/)
 {
 	//cnt(text, mult);
@@ -166,7 +168,7 @@ static int check_type(void);
 "_Thread_local"                         { return app3(yylval->token, THREAD_LOCAL, yytext); }
 "__func__"                              { return app3(yylval->token, FUNC_NAME, yytext); }
 
-{L}{A}*					{ const char* end = yytext + 1; // TODO: TEST ALL TERMINALS...
+{L}{A}*					{ const char* end = yytext + 1; // TODO: write TESTS for ALL TERMINALS...
 						for(; isalnum(*end) || *end == '_'; ++end) ;
 						std::size_t length = end - yytext;
 						cnt(yytext);
@@ -196,7 +198,7 @@ static int check_type(void);
 						std::cout << "LENGTH: " << length << std::endl;
 						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, pars, length);
 						std::cout << "STR: " << res << std::endl;
-						// TODO: common routine with identifier
+						// FEATURE: common routine with identifier
 						return app(yylval->name = new identifier_t(res, get_pos()), STRING_LITERAL); }
 
 "..."					{ return app3(yylval->token, ELLIPSIS, yytext); }
@@ -251,7 +253,7 @@ static int check_type(void);
 "\v"					{ throw "non-supported sign \\v"; }
 "\f"					{ throw "non-supported sign \\f"; }
 " "					{ app3(yylval->token, ' ', yytext); }
-.					{ std::cerr << "At: " << yytext << std::endl; throw "bad character"; /* discard bad characters */ }
+.					{ std::cerr << "At: " << yytext << std::endl; throw "bad character"; }
 
 %%
 

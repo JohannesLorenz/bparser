@@ -76,7 +76,7 @@ public:
 	tpl() {}
 	//tpl(const type& value) : value(value) {}
 
-	// TODO: const ... & -> one new typedef-struc
+	// FEATURE: const ... & -> one new typedef-struc
 
 	template<std::size_t Idx>
 	struct ar {

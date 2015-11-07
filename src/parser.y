@@ -13,7 +13,7 @@
 #include "lexer.h"
 #include "visitor.h"
 
-// TODO: check for no returns anywhere!!
+// TODO: check for no returns anywhere!!, i.e. no return keyword in any rule!!
 
 int yyerror(translation_unit_t ** /*expression*/, yyscan_t scanner, const char *msg) {
 	fprintf(stderr,"At: %s,\n  line %d, column %d: Error:%s\n", yyget_text(scanner), yyget_lineno(scanner), yyget_column(scanner), msg); return 0;
@@ -54,11 +54,6 @@ template<class T> T* alloc(T*& ptr_ref) { return ptr_ref = new T(); /* be C++03 
 
 token_t* t(int token_id) { return new token_t(get_pos(), token_id); }
 
-void move_str(std::string& str, const char* s) {
-	str = s; delete[] s;
-	// TODO: remove function, write non-POD char* pointer , and function (std::string, char*-ptr) { string = ptr; delete ptr; }
-}
-
 %}
 
 %code requires {
@@ -96,9 +91,9 @@ typedef void* yyscan_t;
 	compound_statement_t* compound_statement;
 	external_declaration_t* external_declaration;
 	function_definition_t* function_definition;
-	storage_class_specifier_t* storage_class_specifier;
+/*	storage_class_specifier_t* storage_class_specifier;
 	alignment_specifier_t* alignment_specifier;
-	function_specifier_t* function_specifier;
+	function_specifier_t* function_specifier;*/
 	pointer_t* pointer;
 	direct_declarator_t* direct_declarator;
 	struct_or_union_specifier_t* struct_or_union_specifier;
@@ -147,7 +142,6 @@ typedef void* yyscan_t;
 
 %token	ALIGNAS ALIGNOF ATOMIC GENERIC NORETURN STATIC_ASSERT THREAD_LOCAL
 
-// TODO: identifier should not just return an int
 %type <name> IDENTIFIER ENUMERATION_CONSTANT TYPEDEF_NAME string STRING_LITERAL enumeration_constant
 
 %type <_int> I_CONSTANT struct_or_union ';' ':' CASE DEFAULT
@@ -156,7 +150,7 @@ typedef void* yyscan_t;
 	LE_OP GE_OP EQ_OP NE_OP '&' '^' '|' AND_OP OR_OP '=' '[' ']' '.' '?' PTR_OP
 %type <_float> F_CONSTANT
 
-// TODO: wrong: translation_unit?
+// FEATURE: wrong: translation_unit_t?
 %type <node> translation_unit
 	static_assert_declaration
 
@@ -191,14 +185,14 @@ typedef void* yyscan_t;
 %type <_operator> unary_operator assignment_operator
 %type <declaration_specifiers> declaration_specifiers
 %type <compound_statement> compound_statement block_item_list
-%type <declarator > declarator
+%type <declarator> declarator
 %type <declaration_list> declaration_list
 %type <function_definition> function_definition
 %type <external_declaration> external_declaration
-%type <token> storage_class_specifier // TODO? token type?
+%type <token> storage_class_specifier
 %type <type_specifier> type_specifier
-%type <token> alignment_specifier // TODO? token type?
-%type <token> function_specifier // TODO? token type?
+%type <token> alignment_specifier
+%type <token> function_specifier
 %type <pointer> pointer
 %type <direct_declarator> direct_declarator
 %type <struct_or_union_specifier> struct_or_union_specifier
@@ -416,15 +410,15 @@ declaration
 
 declaration_specifiers
 	: storage_class_specifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
-	| storage_class_specifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); } // TODO: alloc($$)?
+	| storage_class_specifier { alloc($$); app_left($$, $$->specifiers, $1); }
 	| type_specifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
-	| type_specifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); } // TODO: -> ???
+	| type_specifier { alloc($$); app_left($$, $$->specifiers, $1); } // TODO: -> better return type than node_t?
 	| type_qualifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
-	| type_qualifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); }
+	| type_qualifier { alloc($$); app_left($$, $$->specifiers, $1); }
 	| function_specifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
-	| function_specifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); }
+	| function_specifier { alloc($$); app_left($$, $$->specifiers, $1); }
 	| alignment_specifier declaration_specifiers { $$ = app_left($2, $2->specifiers, $1); }
-	| alignment_specifier { $$ = new declaration_specifiers_t; app_left($$, $$->specifiers, $1); }
+	| alignment_specifier { alloc($$); app_left($$, $$->specifiers, $1); }
 	;
 
 init_declarator_list
@@ -571,7 +565,7 @@ direct_declarator
 		d->c.fill($1, t($2), $3, $4, $5, NULL, t($6)); }
 	| direct_declarator '[' STATIC assignment_expression ']' { c11(); }
 	| direct_declarator '[' type_qualifier_list '*' ']' { direct_declarator_arr* d; $$ = alloc(d);
-		// TODO: autoptr that converts to pointer in assignment to $$?
+		// FEATURE: autoptr that converts to pointer in assignment to $$?
 		d->c.fill($1, t($2), NULL, $3, NULL, t($4), t($5)); }
 	| direct_declarator '[' type_qualifier_list STATIC assignment_expression ']' {
 		direct_declarator_arr* d; $$ = alloc(d);

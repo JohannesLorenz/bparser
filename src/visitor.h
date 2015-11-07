@@ -138,17 +138,84 @@ namespace std
 	extern ostream cout;
 }
 
-class dumper_t : public visitor_t
+class fwd : public visitor_t
 {
 protected:
 	std::size_t depth;
-	typedef std::size_t on_t;
 
-	std::ostream& stream;
 	void handle_depth();
 
 public:
-	dumper_t(std::ostream& stream = std::cout) : depth(0), stream(stream) {}
+	fwd() : depth(0) {}
+	virtual ~fwd() {}
+
+	void visit(type_name_t *t);
+	void visit(specifier_qualifier_list_t* );
+	void visit(array_access_expression_t* e);
+	void visit(argument_expression_list_t* e);
+	void visit(function_call_expression_t* e);
+	void visit(struct_access_expression_t* e);
+	void visit(cast_postfix_expression_t* e);
+	void visit(cast_expression_t* e);
+	//void visit(type_specifier_simple_t* e);
+	//void visit(number_t *e);
+	void visit(token_t* e);
+	void visit(unary_expression_l *e);
+	void visit(unary_expression_r *e);
+	void visit(ternary_expression_t *e);
+	void visit(binary_expression_t *e);
+	void visit(expression_statement_t *e);
+	//void visit(node_t *e); //!< default
+	void visit(storage_class_specifier_t* n);
+	void visit(type_specifier_token* t);
+	void visit(type_identifier* );
+	void visit(type_qualifier_t* n);
+	void visit(function_specifier_t* n);
+	void visit(alignment_specifier_t* n);
+	void visit(declaration_list_t* n);
+	void visit(compound_statement_t* n);
+	void visit(pointer_t* n);
+	void visit(declarator_t* n);
+	void visit(declaration_specifiers_t* n);
+	void visit(function_definition_t* n);
+	void visit(external_declaration_t* n);
+	void visit(translation_unit_t* n);
+	void visit(declaration_t* n);
+	void visit(iteration_statement_t* n);
+	void visit(identifier_t* n);
+	void visit(primary_expression_t* n);
+	void visit(sizeof_expression_t* n);
+	void visit(constant_t* );
+	void visit(init_declarator_t* );
+	void visit(init_declarator_list_t* );
+	void visit(initializer_t* );
+	void visit(initializer_list_t* );
+	void visit(designator_list_t* );
+	void visit(designator_id* );
+	void visit(designator_constant_expr* );
+
+	void visit(abstract_declarator_t* );
+
+	void visit(direct_declarator_id* );
+	void visit(direct_declarator_decl* );
+	void visit(direct_declarator_arr* );
+	void visit(parameter_type_list_t* );
+	void visit(direct_declarator_func* );
+	void visit(direct_abstract_declarator_decl* );
+	void visit(direct_abstract_declarator_arr* );
+	void visit(direct_abstract_declarator_func* );
+
+
+}; // TODO: identifier...
+
+
+class dumper_t : public fwd
+{
+protected:
+	std::ostream& stream;
+
+public:
+	dumper_t(std::ostream& stream = std::cout) : stream(stream) {}
 	virtual ~dumper_t() {}
 
 	void visit(type_name_t *t);
