@@ -3,6 +3,7 @@
 
 #include "node.h"
 #include "visitor.h"
+#include "parser.h"
 
 std::ostream& operator<<(std::ostream& stream,
 	const geom_t& g)

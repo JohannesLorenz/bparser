@@ -4,6 +4,7 @@
 #include "node.h"
 #include "visitor.h"
 
+#include "token.h"
 
 
 
@@ -18,8 +19,7 @@
 
 
 
-
-
+// TODO: fwd does not visit tokens!
 
 
 
@@ -106,31 +106,16 @@ void fwd::visit(ternary_expression_t *e)
 
 void fwd::visit(expression_statement_t *e)
 {
-	e->expression->accept(*this);
+	accept_all(e->c);
 }
 
-void fwd::visit(storage_class_specifier_t* ) {}
+void fwd::visit(storage_class_specifier_t* ) { /* TODO... (when structs are made) */ }
 
-void fwd::visit(iteration_statement_t* )
-{
-	// TODO
-}
+void fwd::visit(iteration_statement_t* i) { accept_all(i->c); }
 
-void fwd::visit(primary_expression_t* n)
+void fwd::visit(primary_expression_t* p)
 {
-	switch(n->type)
-	{
-		case pt_expression:
-			n->expression->accept(*this);
-			break;
-		case pt_constant:
-			n->constant->accept(*this);
-			break;
-		case pt_id:
-			break;
-		case pt_string:
-			break; 
-	}
+	accept_all(p->c);
 }
 
 void fwd::visit(sizeof_expression_t* n)
@@ -139,74 +124,52 @@ void fwd::visit(sizeof_expression_t* n)
 }
 
 void fwd::visit(identifier_t *) {}
+void fwd::visit(type_specifier_token *t) { visit_all(t->c); }
+void fwd::visit(type_identifier *t) { visit_all(t->c); }
+void fwd::visit(type_qualifier_t *t) { visit_all(t->c); }
 
-void fwd::visit(type_specifier_token *)
-{ // TODO
-}
-
-void fwd::visit(type_identifier *)
-{ // TODO
-}
-
-void fwd::visit(type_qualifier_t* ) { // TODO
+void fwd::visit(type_qualifier_list_t *n)
+{
+	vvisit(n->value);
 }
 void fwd::visit(function_specifier_t* ) { // TODO
 }
 void fwd::visit(alignment_specifier_t* ) { // TODO
 }
-void fwd::visit(declaration_list_t* ) { // TODO
-}
-void fwd::visit(compound_statement_t* n)
-{
-	vaccept(n->block_items);
-}
+void fwd::visit(declaration_list_t* d) { vvisit(d->declarations); }
+void fwd::visit(compound_statement_t* n) {
+		tvisit(n->c.value);
+		vaccept(*n->c.get_next().value);
+		tvisit(n->c.get_next().get_next().value);
+		}
 
-void fwd::visit(pointer_t* ) { // TODO
-}
+void fwd::visit(pointer_t* p) { visit_all(p->c); }
 
-void fwd::visit(declarator_t* n) // TODO
-{
-	accept_all(n->c);
-}
+void fwd::visit(declarator_t* n) { accept_all(n->c); }
 
 void fwd::visit(declaration_specifiers_t* n)
 {
-	vaccept(n->specifiers);
+	vaccept(n->c);
 }
 void fwd::visit(function_definition_t* n)
 {
-	visit(n->declaration_specifiers);
-	visit(n->declarator);
-	tvisit(n->declaration_list);
-	visit(n->compound_statement);
+	visit_all(n->c);
 }
 void fwd::visit(external_declaration_t* n)
 {
-	tvisit(n->function_definition) || tvisit(n->declaration);
+	visit_all(n->c);
 }
 
 void fwd::visit(translation_unit_t* n)
 {
-	vvisit(n->v);
+	vvisit(n->c);
 }
 
-void fwd::visit(declaration_t* n)
-{	
-	visit(n->declaration_specifiers);
-	visit(n->init_declarator_list);
-}
+void fwd::visit(declaration_t* n) { visit_all(n->c); }
 
 void fwd::visit(constant_t* n)
 {
-	switch(n->type)
-	{
-		case ct_int:
-		case ct_float:
-			break;
-		case ct_enum:
-			visit(n->enum_id);
-			break;
-	}
+	visit_all(n->c);
 }
 
 void fwd::visit(init_declarator_t *i)
@@ -224,9 +187,8 @@ void fwd::visit(initializer_t *i)
 	accept_all(i->c);
 }
 
-void fwd::visit(initializer_list_t *)
-{
-	//visit_all(i->c); // TODO?
+void fwd::visit(initializer_list_t *i)
+{ visit_all(i->c);
 }
 
 
@@ -234,22 +196,22 @@ void fwd::visit(designator_list_t* d) {
 	vaccept(d->c);
 }
 
-void fwd::visit(designator_id* ) {
-	// TODO
+void fwd::visit(designator_id* d) {
+	visit_all(d->c);
 }
 
-void fwd::visit(designator_constant_expr* ) {}
+void fwd::visit(designator_constant_expr* d) { accept_all(d->c); }
 
-void fwd::visit(abstract_declarator_t *)
+void fwd::visit(abstract_declarator_t *d)
 {
-	// visit ... - TODO
+	accept_all(d->c);
 }
 
 
 
 void fwd::visit(direct_declarator_id *d)
 {
-	visit(d->value);
+	visit_all(d->c);
 }
 
 void fwd::visit(direct_declarator_decl *d)
@@ -264,7 +226,7 @@ void fwd::visit(direct_declarator_arr *d)
 
 void fwd::visit(parameter_type_list_t *)
 {
-	// TODO
+	// TODO when continued
 }
 
 void fwd::visit(direct_declarator_func *d)
@@ -408,7 +370,14 @@ void dumper_t::visit(number_t* e)
 void dumper_t::visit(token_t* e)
 {
 	incr_depth_t x(&depth, stream, e->span);
-	stream << "token, value: " << e->value << std::endl;
+
+	stream << "token, value: ";
+	int value = e->value;
+	if(value <= 255)
+		stream << (char)value;
+	else
+		stream << name_of(value);
+	stream << std::endl;
 }
 
 void dumper_t::visit(unary_expression_l *e)
@@ -461,9 +430,9 @@ void dumper_t::visit(iteration_statement_t* n)
 {
 	incr_depth_t x(&depth, stream, n->span);
 	const char* loop_type =
-		n->for_token
+		n->type == iteration_statement_t::for_type
 			? "for"
-			: (n->do_token
+			: (n->type == iteration_statement_t::do_type
 				? "do-while"
 				: "while");
 	stream << "iteration statement (type " << loop_type << ")" << std::endl;
@@ -483,10 +452,10 @@ void dumper_t::visit(primary_expression_t* n)
 			stream << std::endl;
 			break;
 		case pt_id:
-			stream << ": identifier: " << n->identifier->name << std::endl;
+			stream << ": identifier: " << n->c.value->name << std::endl;
 			break;
 		case pt_string:
-			stream << ": string constant: " << n->string->name << std::endl;
+			stream << ": string constant: " << n->c.get_next().value->name << std::endl;
 			break;
 	}
 
@@ -510,13 +479,13 @@ void dumper_t::visit(identifier_t *n)
 void dumper_t::visit(type_specifier_token *t)
 {
 	incr_depth_t x(&depth, stream, t->span);
-	stream << "type specifier, id: " << t->c->value << std::endl;
+	stream << "type specifier, id: " << t->c.value << std::endl;
 }
 
 void dumper_t::visit(type_identifier *t)
 {
 	incr_depth_t x(&depth, stream, t->span);
-	stream << "type identifier: " << t->c->name << std::endl;
+	stream << "type identifier: " << t->c.value->name << std::endl;
 }
 
 void dumper_t::visit(type_qualifier_t* n) {
@@ -747,3 +716,58 @@ node_t* echo(node_t* e)
 	return e;
 }
 */
+
+
+
+void type_completor::operator()(iteration_statement_t& i)
+{
+	i.type =
+		i.c.get<iteration_statement_t::for_cond>()
+			? iteration_statement_t::for_type // FEATURE: better ("global") names: for_loop ?
+			: (i.c.get<iteration_statement_t::do_keyword>()
+				? iteration_statement_t::do_type
+				: iteration_statement_t::while_type);
+
+	bool for_type_iter = i.c.get<iteration_statement_t::for_iter>();
+
+	i._for_type =
+		i.c.get<iteration_statement_t::for_init>()
+			? (for_type_iter
+				? iteration_statement_t::for_type_init_iter
+				: iteration_statement_t::for_type_init_niter)
+			: (for_type_iter
+				? iteration_statement_t::for_type_decl_iter
+				: iteration_statement_t::for_type_decl_niter);
+
+	xaccept(i.c);
+}
+
+void type_completor::operator()(labeled_statement_t& l)
+{
+	l.type =
+		l.c.get<labeled_statement_t::keyword>()
+			? (l.c.get<labeled_statement_t::case_expr>()
+				? labeled_statement_t::case_label
+				: labeled_statement_t::default_label)
+			: labeled_statement_t::jump_label;
+	xaccept(l.c);
+}
+
+void type_completor::operator()(jump_statement_t& j)
+{
+	const int keyword = j.c.get<jump_statement_t::keyword>()->value;
+	j.type =
+		(keyword == t_return)
+			? (j.c.get<jump_statement_t::expression>()
+				? jump_statement_t::return_type
+				: jump_statement_t::return_void)
+			: ((keyword == t_break)
+				? jump_statement_t::break_type
+				: ((keyword == t_continue)
+					? jump_statement_t::continue_type
+					: jump_statement_t::goto_type
+				)
+			);
+	xaccept(j.c);
+}
+

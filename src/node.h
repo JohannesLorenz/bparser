@@ -35,7 +35,7 @@ struct span_t
 	friend std::ostream& operator<<(std::ostream& stream, const span_t&);
 };
 
-
+/*
 //! class representing a child pointer
 //! only intend: set the pointer to 0
 template<class T>
@@ -56,7 +56,7 @@ public:
 	const T* operator-> () const { return ptr; }
 
 	operator bool() const { return ptr; }
-};
+};*/
 
 class node_base
 {
@@ -76,6 +76,8 @@ template<class ParType = node_base>
 class node_t : public node_base
 {
 public:
+	null_type c; //!< base case, overwrite this
+
 	ParType* parent;
 	node_t() {}
 	node_t(const geom_t& geom) : node_base(geom) {}
@@ -95,15 +97,19 @@ public:
 	void accept_children(visitor_t& v); // TODO
 };
 
-struct token_t : public node_t<>
+struct terminal_t : public node_t<> {
+	terminal_t(const geom_t& geom) : node_t<>(geom) {}
+};
+
+struct token_t : public terminal_t
 {
 	int value;
 public:
-	token_t(const geom_t& pos, int value) : node_t(pos), value(value) {}
+	token_t(const geom_t& pos, int value) : terminal_t(pos), value(value) {}
 	virtual void accept(class visitor_t& v);
 };
 
-typedef ch<token_t> tok;
+//typedef ch<token_t> tok;
 /*
 struct number_t : public node_t
 {
@@ -142,6 +148,7 @@ struct storage_class_specifier_t : public declaration_specifier_type {
 	virtual void accept(class visitor_t& v);
 };
 
+#if 0
 enum type_specifier_id
 {
 	t_void,
@@ -170,6 +177,7 @@ enum type_qualifier_id
 	t_volatile,
 	t_atomic
 };
+#endif
 
 enum op_t
 {
@@ -230,13 +238,13 @@ enum op_t
 typedef ptn<token_t> end_token;
 
 struct expression_t : public node_t<> {
-	op_t op_id;
+	op_t op_id; // TODO: reliable? redundant?
 //	virtual void accept(class visitor_t& v);
 };
 
 struct unary_expression_r : public expression_t
 {
-	ptn<	node_t,
+	ptn<	node_t, // FEATURE: more exactly?
 		end_token > c;
 
 	virtual void accept(class visitor_t& v);
@@ -293,11 +301,13 @@ struct type_name_t : public node_t<>
 	void accept(class visitor_t& v);
 };
 
+#if 0
 template<class Next>
 struct to
 {
 	typedef ptn<token_t, Next> type;
 };
+#endif
 
 struct sizeof_expression_t : public expression_t
 {
@@ -310,11 +320,11 @@ struct sizeof_expression_t : public expression_t
 			ptn <	type_name_t, end_token > > > c;
 };
 
-struct identifier_t : public node_t<>
+struct identifier_t : public terminal_t
 {
 	std::string name;
 	virtual void accept(class visitor_t& v);
-	identifier_t(const char* name, geom_t geom) : node_t(geom), name(name) {}
+	identifier_t(const char* name, geom_t geom) : terminal_t(geom), name(name) {}
 };
 
 enum constant_type
@@ -332,7 +342,7 @@ struct constant_t : public node_t<struct primary_expression>
 		int i;
 		float f;
 	} value;
-	ch<identifier_t> enum_id;
+	ptn<identifier_t> c; //!< enumeration id
 };
 
 enum primary_type
@@ -348,11 +358,18 @@ struct primary_expression_t : public expression_t
 	virtual void accept(class visitor_t& v);
 	primary_type type;
 	
-	tok lbrace, rbrace;
+/*	tok lbrace, rbrace;
 	ch<constant_t> constant;
 	identifier_t* identifier;
 	identifier_t* string;
-	expression_t* expression;
+	expression_t* expression;*/
+	ptn<	identifier_t,	// identifier
+		ptn<	identifier_t,	// string literal
+			ptn<	constant_t,
+				ptn<	token_t,	// left brace
+					ptn<	expression_t,
+							end_token
+			> > > > > c;
 };
 
 struct array_access_expression_t : public expression_t
@@ -422,13 +439,13 @@ struct type_specifier_t : public declaration_specifier_type
 
 struct type_specifier_token : public type_specifier_t
 {
-	token_t* c;
+	ptn<token_t> c;
 	virtual void accept(class visitor_t& v);
 };
 
 struct type_identifier : public type_specifier_t
 {
-	identifier_t* c;
+	ptn<identifier_t> c;
 	virtual void accept(class visitor_t& v);
 };
 
@@ -471,13 +488,15 @@ struct enum_specifier_t : public type_specifier_complex_t {
 
 struct type_qualifier_t : public declaration_specifier_type
 {
-	token_t* c;
+	ptn<token_t> c;
 	virtual void accept(class visitor_t& v);
 };
+// TODO: needed?
 struct function_specifier_t : public declaration_specifier_type {
 	
 	virtual void accept(class visitor_t& v);
 };
+// TODO: needed?
 struct alignment_specifier_t : public declaration_specifier_type {
 	virtual void accept(class visitor_t& v);
 };
@@ -501,19 +520,28 @@ struct conditional_expression_t : public expression_t
 
 struct labeled_statement_t : public statement_t
 {
-	// all
-	tok colon;
-	ch<statement_t> statement;
+	enum type_t {
+		case_label,
+		default_label,
+		jump_label
+	};
 
-	// label:
-	ch<identifier_t> identifier;
-	
-	// case ...:
-	tok case_token;
-	ch<expression_t> expression;
-	
-	// default:
-	tok default_token;
+	type_t type;
+
+	enum access {
+		keyword,
+			identifier,
+				case_expr,
+					colon,
+						statement
+	};
+
+	ptn<	token_t, // keyword: case, default
+		ptn<	identifier_t, // label: jump
+			ptn<	expression_t, // case
+				ptn<	token_t, // colon: all
+					ptn<	statement_t // all
+		> > > > > c;
 
 	virtual void accept(class visitor_t& v);
 };
@@ -522,8 +550,8 @@ struct expression_statement_t : public statement_t
 {
 	virtual void accept(class visitor_t& v);
 	
-	ch<expression_t> expression; // can be zero
-	tok semicolon;
+	ptn<	expression_t, // can be zero
+			end_token > c;
 };
 
 /**
@@ -536,21 +564,14 @@ struct selection_statement_t : public statement_t
 {
 	virtual void accept(class visitor_t& v);
 	
-	// all
-	ch<expression_t> expression;
-	ch<statement_t> statement;
-	tok lbrace;
-	tok rbrace;
-
-	// 1 + 2
-	tok if_token;
-
-	// 1
-	tok else_token;
-	ch<statement_t> else_statement;
-	
-	// 3
-	tok switch_token;
+	ptn<	token_t, // 1st keyword token
+		ptn<	token_t, // (
+			ptn<	expression_t,
+				ptn<	token_t, // )
+					ptn<	statement_t, // all
+						ptn<	token_t, // else
+							ptn<	statement_t
+		> > > > > > > c;
 };
 
 /**
@@ -566,31 +587,50 @@ struct iteration_statement_t : public statement_t
 {
 	virtual void accept(class visitor_t& v);
 	
-	// all
-	ch<statement_t> statement;
-	tok lbrace;
-	tok rbrace;
-	
-	// 1, 2
-	ch<expression_t> while_condition;
-	tok while_token;
+	// careful! order of statement can differ!
 
-	// 2
-	tok do_token;
-	tok semicolon;
+	enum type_t {
+		while_type,
+		do_type,
+		for_type
+	} type;
 
-	// 3 - 6
-	ch<expression_statement_t> for_condition;
-	tok for_token;
-	
-	// 3, 4
-	ch<expression_statement_t> for_init_statement;
+	enum for_type_t
+	{
+		for_type_init_niter,
+		for_type_init_iter,
+		for_type_decl_niter,
+		for_type_decl_iter
+	} _for_type;
 
-	// 5, 6
-	ch<declaration_t> for_init_declaration;
+	enum access {
+		do_keyword, // 2
+			keyword,
+				lbrace,
+					while_cond, // 1, 2
+						for_init, // 3, 4
+							for_decl, // 5, 6
+			for_cond, // 3-6
+				for_iter, // 4, 6
+					rbrace,
+						statement,
+							semicolon // 2
 
-	// 4, 6
-	ch<expression_t> for_expression;
+	};
+
+	ptn<	token_t,
+		ptn<	token_t,
+			ptn<	token_t,
+				ptn<	expression_t,
+					ptn<	expression_statement_t,
+						ptn<	declaration_t,
+
+		ptn<	expression_statement_t,
+			ptn<	expression_t,
+				ptn<	token_t,
+					ptn<	statement_t,
+							end_token
+		> > > > > > > > > > c;
 };
 
 struct designator_t : public node_t<struct designator_list_t> {};
@@ -671,21 +711,35 @@ struct jump_statement_t : public statement_t
 {
 	virtual void accept(class visitor_t& v);
 
-	tok keyword, semicolon;
-	ch<identifier_t> goto_identifier; //!< only GOTO IDENTIFIER ;
-	ch<expression_t> expression; //!< only RETURN expression ;
+	enum type_t {
+		goto_type,
+		continue_type,
+		break_type,
+		return_void,
+		return_type
+	} type;
+
+	enum {
+		keyword,
+			goto_id, // only goto_type
+				expression, // only return_type
+					semicolon
+	} access;
+
+	ptn<	token_t,
+		ptn<	identifier_t,
+			ptn<	expression_t,
+					end_token> > > c;
 };
 
 struct declaration_t : public block_item_t
 {
 	virtual void accept(class visitor_t& v);
 
-	ch<struct declaration_specifiers_t> declaration_specifiers;
-	ch<init_declarator_list_t> init_declarator_list; //!< optional
-	tok semicolon;
+	ptn<	struct declaration_specifiers_t,
+		ptn<	init_declarator_list_t, // optional
+			end_token> > c; // semicolon
 };
-
-
 
 struct type_qualifier_list_t : public node_t<>
 {
@@ -694,7 +748,7 @@ struct type_qualifier_list_t : public node_t<>
 };
 
 #if 0
-struct block_item_list_t : public node_t // TODO: define inside compound statement_t?
+struct block_item_list_t : public node_t // TODO: define inside compound_statement_t?
 {
 	virtual void accept(class visitor_t& v);
 	std::list<block_item_t*> items;
@@ -704,9 +758,10 @@ struct block_item_list_t : public node_t // TODO: define inside compound stateme
 // TODO: rename all child members to 'c'
 struct compound_statement_t : public statement_t
 {
-	tok lbrack, rbrack;
-	//block_item_list_t* block_item_list;
-	std::list<block_item_t*> block_items;
+	ptn<	token_t, // left bracket
+		ptn<	std::list<block_item_t*>,
+				end_token> > c; // right bracket
+
 	virtual void accept(class visitor_t& v);
 };
 
@@ -726,7 +781,7 @@ struct direct_declarator_t : public node_t<> { // FEATURE: node<base class of ..
 }; // TODO: identifier...
 
 struct direct_declarator_id : public direct_declarator_t {
-	identifier_t* value;
+	ptn<identifier_t> c;
 	virtual void accept(class visitor_t& v);
 };
 
@@ -827,40 +882,40 @@ struct declarator_t : public node_t<>
 struct declaration_specifiers_t : public node_t<>
 {
 	virtual void accept(class visitor_t& v);
-	std::list<node_t*> specifiers;
+	std::list<node_t*> c;
 };
 
 struct function_definition_t : public node_t<struct external_declaration_t>
 {
 	virtual void accept(class visitor_t& v);
-	ch<declaration_specifiers_t> declaration_specifiers;
-	ch<declarator_t> declarator;
-	ch<declaration_list_t> declaration_list;
-	ch<compound_statement_t> compound_statement;
+	ptn<	declaration_specifiers_t,
+		ptn<	declarator_t,
+			ptn<	declaration_list_t,
+				ptn<	compound_statement_t > > > > c;
+
+
 
 	function_definition_t(declaration_specifiers_t* declaration_specifiers,
 		declarator_t* declarator,
 		declaration_list_t* declaration_list,
 		compound_statement_t* compound_statement) :
-		declaration_specifiers(declaration_specifiers),
-		declarator(declarator),
-		declaration_list(declaration_list),
-		compound_statement(compound_statement)
+			c(declaration_specifiers, declarator,
+				declaration_list, compound_statement)
 	{}
 };
 
 struct external_declaration_t : public node_t<struct translation_unit_t>
 {
 	virtual void accept(class visitor_t& v);
-	ch<function_definition_t> function_definition;
-	ch<declaration_t> declaration;
-	external_declaration_t(function_definition_t* f) : function_definition(f) {}
-	external_declaration_t(declaration_t* d) : declaration(d) {}
+	ptn<	function_definition_t,
+		ptn<	declaration_t> > c;
+	external_declaration_t(function_definition_t* f) : c(f) {}
+	external_declaration_t(declaration_t* d) : c(NULL, d) {}
 };
 
 struct translation_unit_t : public node_t<translation_unit_t> // FEATURE: inherit from node_base?
 {
-	std::list<external_declaration_t*> v;
+	std::list<external_declaration_t*> c;
 	virtual void accept(class visitor_t& v);
 };
 

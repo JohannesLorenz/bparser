@@ -1,7 +1,7 @@
 #include <vector>
 #include <cassert>
 
-#include "tuple03.h"
+#include "src/tuple03.h"
 
 int main()
 {
@@ -24,6 +24,16 @@ int main()
 	value_at<1>(t2) = &v;
 
 	assert(value_at<1>(t2)->size() == 1);
+
+	tpl< int, tpl< int > > two_ints;
+	two_ints.fill(42, 1);
+	
+	assert(value_at<0>(two_ints) == 42);
+	assert(value_at<1>(two_ints) == 1);
+
+	two_ints.set(skip()).set(0);
+	assert(value_at<0>(two_ints) == 42);
+	assert(value_at<1>(two_ints) == 0);
 
 	return 0;
 }

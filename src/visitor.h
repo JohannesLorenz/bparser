@@ -30,6 +30,7 @@ public:
 	virtual void visit(type_identifier* ) {}
 	virtual void visit(type_specifier_t* ) {}
 	virtual void visit(type_qualifier_t* ) {}
+	virtual void visit(type_qualifier_list_t* ) {}
 	virtual void visit(function_specifier_t* ) {}
 	virtual void visit(alignment_specifier_t* ) {}
 	virtual void visit(declaration_list_t* ) {}
@@ -74,8 +75,8 @@ public:
 	virtual void visit(direct_abstract_declarator_func* ) {}
 	virtual void visit(direct_declarator_t* ) {}
 
-	template<class T>
-	void visit(ch<T>& c) { visit((T*)c); }
+/*	template<class T>
+	void visit(ptn<T>& c) { visit((T*)c); }*/
 	virtual ~visitor_t() {}
 
 
@@ -104,12 +105,12 @@ public:
 		}
 	}
 
-	template<class T>
+	template<class T> // TODO: remove this func?!
 	void accept_if_nontoken(T* const& non_token) {
 		if(non_token) non_token->accept(*this);
 	}
 
-	void accept_if_nontoken(token_t* const & ) {}
+	//void accept_if_nontoken(token_t* const & ) {}
 
 
 	template<class T, class Next>
@@ -131,12 +132,112 @@ public:
 
 	template<class T>
 	void visit_all(const tpl<T, null_type>& t) { visit_if_nontoken(t.value); }
+
+	template<class T>
+	void xaccept(const std::list<T*>& v) { vaccept(v); }
+
+	template<class T, class Next>
+	void xaccept(const tpl<T, Next>& t) { accept_all(t); }
+
+	void xaccept(const null_type& ) {}
+
+	/*template<class T>
+	void xaccept(const ch<T>& c) { if(c) (T* c)->accept(*this); }*/
+
+	// terminals, nothing to do... // TODO: remove?
+	/*void xaccept(const int&) {}
+	void xaccept(const float&) {}
+	void xaccept(const std::string&) {}*/
+
+	// other case: non-terminal -> node ?
+	//void xaccept(node_base* node) { node->accept(*this); } // TODO: const version?
 };
 
 namespace std
 {
 	extern ostream cout;
 }
+
+template<class Functor>
+class func_visitor : public visitor_t
+{
+protected:
+	Functor ftor;
+private:
+	template<class T>
+	void f(T* n) { ftor(*n); }
+public:
+	func_visitor() : ftor(this) {}
+	func_visitor(const Functor& ftor) : ftor(ftor) {}
+
+
+	void visit(type_name_t *n) { f(n); }
+	void visit(specifier_qualifier_list_t* n) { f(n); }
+
+	void visit(array_access_expression_t* n) { f(n); }
+	void visit(argument_expression_list_t* n) { f(n); }
+	void visit(function_call_expression_t* n) { f(n); }
+	void visit(struct_access_expression_t* n) { f(n); }
+	void visit(cast_postfix_expression_t* n) { f(n); }
+	void visit(cast_expression_t* n) { f(n); }
+
+	//void visit(type_specifier_simple_t* n) { f(n); }
+	//void visit(number_t *n) { f(n); }
+	//void visit(expression_t *n) { f(n); }
+	void visit(unary_expression_l* n) { f(n); }
+	void visit(unary_expression_r* n) { f(n); }
+	void visit(ternary_expression_t* n) { f(n); }
+	void visit(binary_expression_t* n) { f(n); }
+	void visit(storage_class_specifier_t* n) { f(n); }
+	void visit(type_specifier_token* n) { f(n); }
+	void visit(type_identifier* n) { f(n); }
+	void visit(type_specifier_t* n) { f(n); }
+	void visit(type_qualifier_t* n) { f(n); }
+	void visit(type_qualifier_list_t* n) { f(n); }
+	void visit(function_specifier_t* n) { f(n); }
+	void visit(alignment_specifier_t* n) { f(n); }
+	void visit(declaration_list_t* n) { f(n); }
+	void visit(compound_statement_t* n) { f(n); }
+	void visit(pointer_t* n) { f(n); }
+	void visit(declarator_t* n) { f(n); }
+	void visit(declaration_specifiers_t* n) { f(n); }
+	void visit(function_definition_t* n) { f(n); }
+	void visit(external_declaration_t* n) { f(n); }
+	void visit(translation_unit_t *n) { f(n); }
+	void visit(token_t* n) { f(n); }
+	void visit(declaration_t* n) { f(n); }
+	void visit(constant_t* n) { f(n); }
+	void visit(labeled_statement_t* n) { f(n); }
+	void visit(expression_statement_t* n) { f(n); }
+	void visit(selection_statement_t* n) { f(n); }
+	void visit(iteration_statement_t* n) { f(n); }
+	void visit(jump_statement_t* n) { f(n); }
+	//void visit(block_item_list_t* n) { f(n); }
+	void visit(block_item_t* n) { f(n); }
+	void visit(identifier_t* n) { f(n); }
+	void visit(primary_expression_t* n) { f(n); }
+	void visit(sizeof_expression_t* n) { f(n); }
+	void visit(init_declarator_list_t* n) { f(n); }
+	void visit(init_declarator_t* n) { f(n); }
+	void visit(initializer_t* n) { f(n); }
+	void visit(initializer_list_t* n) { f(n); }
+	void visit(designator_list_t* n) { f(n); }
+	void visit(designator_id* n) { f(n); }
+	void visit(designator_constant_expr* n) { f(n); }
+
+	void visit(abstract_declarator_t* n) { f(n); }
+
+	void visit(direct_declarator_id* n) { f(n); }
+	void visit(direct_declarator_decl* n) { f(n); }
+	void visit(direct_declarator_arr* n) { f(n); }
+	void visit(parameter_type_list_t* n) { f(n); }
+	void visit(direct_declarator_func* n) { f(n); }
+	void visit(direct_abstract_declarator_t* n) { f(n); }
+	void visit(direct_abstract_declarator_decl* n) { f(n); }
+	void visit(direct_abstract_declarator_arr* n) { f(n); }
+	void visit(direct_abstract_declarator_func* n) { f(n); }
+	void visit(direct_declarator_t* n) { f(n); }
+};
 
 class fwd : public visitor_t
 {
@@ -170,6 +271,7 @@ public:
 	void visit(type_specifier_token* t);
 	void visit(type_identifier* );
 	void visit(type_qualifier_t* n);
+	void visit(type_qualifier_list_t* n);
 	void visit(function_specifier_t* n);
 	void visit(alignment_specifier_t* n);
 	void visit(declaration_list_t* n);
@@ -208,6 +310,113 @@ public:
 
 }; // TODO: identifier...
 
+class ftor_base
+{
+	visitor_t* vref; // FEATURE: this can not be avoided?
+			// required for the accept() calls?
+
+protected:
+	template<class T>
+	void vvisit(const std::list<T*>& v)
+	{
+		for(typename std::list<T*>::const_iterator itr = v.begin();
+			itr != v.end(); ++itr)
+		{
+			visit(*itr);
+		}
+	}
+
+	template<class T>
+	void vaccept(const std::list<T*>& v)
+	{
+		for(typename std::list<T*>::const_iterator itr = v.begin();
+			itr != v.end(); ++itr)
+		{
+			//if(!*itr)
+			// throw "list element is NULL, can not happen.";
+			(*itr)->accept(*vref);
+		}
+	}
+
+	template<class T> // TODO: remove this func?!
+	void accept_if_nontoken(T* const& non_token) {
+		if(non_token) non_token->accept(*vref);
+	}
+
+	template<class T> // TODO: remove this func?!
+	void accept_if_nontoken(std::list<T*>* const& list) {
+		vaccept(*list);
+	}
+
+	//void accept_if_nontoken(token_t* const & ) {}
+
+
+	template<class T, class Next>
+	void accept_all(const tpl<T, Next>& t) { accept_if_nontoken(t.value); accept_all(t.get_next()); }
+
+	template<class T>
+	void accept_all(const tpl<T, null_type>& t) { accept_if_nontoken(t.value); }
+
+	template<class T>
+	void visit_if_nontoken(T* const& non_token) {
+		if(non_token)
+		 visit(non_token);
+	}
+
+	void visit_if_nontoken(token_t* const& ) {}
+
+	template<class T, class Next>
+	void visit_all(const tpl<T, Next>& t) { visit_if_nontoken(t.value); visit_all(t.get_next()); }
+
+	template<class T>
+	void visit_all(const tpl<T, null_type>& t) { visit_if_nontoken(t.value); }
+
+	template<class T>
+	void xaccept(const std::list<T*>& v) { vaccept(v); }
+
+	template<class T, class Next>
+	void xaccept(const tpl<T, Next>& t) { accept_all(t); }
+
+	void xaccept(const null_type& ) {}
+public:
+	ftor_base(visitor_t* vref) : vref(vref) {}
+};
+
+class fwd_functor : ftor_base
+{
+	std::size_t depth;
+
+public:
+	fwd_functor(visitor_t* vref) : ftor_base(vref), depth(0) {}
+
+	template<class NodeType>
+	void operator()(const NodeType& nt) { ++depth; xaccept(nt.c); --depth; }
+};
+
+class type_completor : ftor_base
+{
+public:
+	type_completor(visitor_t* vref) : ftor_base(vref) {}
+
+	// unary op_id
+	// binary op_id
+	// TODO: if impl: struct_or_union
+
+
+	// statements...
+	void operator()(iteration_statement_t& );
+	void operator()(labeled_statement_t& );
+	void operator()(jump_statement_t& );
+
+
+	// default case
+	template<class NodeType>
+	void operator()(/*const*/ NodeType& nt) { xaccept(nt.c); }
+};
+
+class ffwd : public func_visitor< fwd_functor >
+{
+};
 
 class dumper_t : public fwd
 {
@@ -291,7 +500,7 @@ struct append_t : public visitor_t
 {
 	T* node; // TODO: const everywhere?
 	append_t(T* node) : node(node) {}
-	void visit(translation_unit_t* t) { t->v.push_back(node); }
+	void visit(translation_unit_t* t) { t->c.push_back(node); }
 	void visit(node_base* ) { assert(false); }
 };
 

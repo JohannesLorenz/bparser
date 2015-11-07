@@ -46,6 +46,9 @@ translation_unit_t *getAST(const char *expr)
 	
 	yylex_destroy(scanner);
 	
+	func_visitor<type_completor> f;
+	expression->accept(f);
+
 	return expression;
 }
  
