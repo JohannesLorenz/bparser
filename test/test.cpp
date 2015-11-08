@@ -49,6 +49,9 @@ translation_unit_t *getAST(const char *expr)
 	func_visitor<type_completor> f;
 	expression->accept(f);
 
+	func_visitor<geom_completor> g;
+	expression->accept(g);
+
 	return expression;
 }
  

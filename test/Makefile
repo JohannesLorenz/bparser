@@ -9,12 +9,12 @@ CFLAGS	= -I../src
 LFLAGS	= -L../src -lbparser
 
 all: test
-test: test.o
+test: test.o ../src/libbparser.so
 	$(CXX) $(FLAGS) $(LFLAGS) test.o -o test
 
 # test.cpp has no header file:
 test.o: test.cpp
 	$(CXX) $(FLAGS) $(CFLAGS) -c $< -o $@
 clean:
-	rm -f test
+	rm -f test.o test
 rebuild: clean all

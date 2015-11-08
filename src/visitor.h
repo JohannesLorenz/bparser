@@ -2,6 +2,9 @@
 #include <iosfwd>
 #include <cassert>
 
+#include <cstdlib> // TODO
+#include <limits>
+
 #ifndef VISITOR_H
 #define VISITOR_H
 
@@ -338,14 +341,14 @@ protected:
 		}
 	}
 
-	template<class T> // TODO: remove this func?!
+	template<class T> // TODO: remove this func?! non_token: wrong name
 	void accept_if_nontoken(T* const& non_token) {
 		if(non_token) non_token->accept(*vref);
 	}
 
-	template<class T> // TODO: remove this func?!
+	template<class T>
 	void accept_if_nontoken(std::list<T*>* const& list) {
-		vaccept(*list);
+		if(list) vaccept(*list);
 	}
 
 	//void accept_if_nontoken(token_t* const & ) {}
@@ -411,8 +414,74 @@ public:
 
 	// default case
 	template<class NodeType>
-	void operator()(/*const*/ NodeType& nt) { xaccept(nt.c); }
+	void operator()(/*const*/ NodeType& n) { xaccept(n.c); }
 };
+
+template<class T>
+inline geom_t get_geom_min(const ptn<T, null_type>& c) {
+
+	return c.value ? c.value->span.first : geom_t(std::numeric_limits<int>::max(),
+		std::numeric_limits<int>::max());
+}
+
+template<class T, class N>
+inline geom_t get_geom_min(const ptn<T, N>& c)
+{
+	geom_t next_geom = get_geom_min(c.get_next());
+	std::cout << "VALUE: " << c.value << std::endl;
+	return c.value
+		? std::min(c.value->span.first, next_geom)
+		: next_geom;
+}
+
+template<class T, class N>
+inline geom_t get_geom_min(const ptn<std::list<T*>, N>& c)
+{
+	geom_t next_geom = get_geom_min(c.get_next());
+	std::cout << "VALUE: " << c.value << std::endl;
+	return c.value
+		? std::min(get_geom_min(*c.value), next_geom)
+		: next_geom;
+}
+
+template<class T>
+inline geom_t get_geom_min(const std::list<T*>& c) {
+	return c.front()->span.first;
+}
+
+template<class T>
+inline span_t get_span(const T& c) {
+	return span_t(get_geom_min(c), geom_t());
+}
+
+template<class T>
+inline span_t get_span(const std::list<T*>& c) {
+	return span_t(c.front()->span.first, geom_t());
+}
+
+inline span_t get_span(const null_type&) { // TODO: remove if finished grammar
+	std::cout << "SPAN: " << std::endl;
+	return span_t();
+}
+
+class geom_completor : ftor_base
+{
+public:
+	geom_completor(visitor_t* vref) : ftor_base(vref) {}
+
+	// default case
+	template<class NodeType>
+	void operator()(/*const*/ NodeType& n) {
+		xaccept(n.c);
+		n.span = get_span(n.c);
+	}
+
+	// token_t and identifier_t have no
+	template<class NodeType>
+	void operator()(/*const*/ token_t& t) {
+	}
+};
+
 
 class ffwd : public func_visitor< fwd_functor >
 {
