@@ -34,6 +34,75 @@ void fwd::visit(specifier_qualifier_list_t *s)
 	vaccept(s->c);
 }
 
+void fwd::visit(struct_declaration_list_t* n)
+{
+	vvisit(n->c);
+}
+
+void fwd::visit(struct_declaration_t* n)
+{
+	visit_all(n->c);
+}
+
+void fwd::visit(struct_declarator_list_t* n)
+{
+	visit_all(n->c);
+}
+
+void fwd::visit(struct_declarator_t* n)
+{
+	accept_all(n->c);
+}
+
+void fwd::visit(enum_specifier_t* n)
+{
+	visit_all(n->c);
+}
+
+void fwd::visit(enumerator_list_t* n)
+{
+	visit_all(n->c);
+}
+
+void fwd::visit(enumerator_t* n)
+{
+	accept_all(n->c);
+}
+
+void fwd::visit(parameter_type_list_t* n)
+{
+	visit_all(n->c);
+}
+
+void fwd::visit(parameter_list_t* n)
+{
+	visit_all(n->c);
+}
+
+void fwd::visit(parameter_declaration_t* n)
+{
+	visit_all(n->c);
+}
+
+void fwd::visit(identifier_list_t* n)
+{
+	visit_all(n->c);
+}
+
+void fwd::visit(primary_expression_t* p) {
+	accept_all(p->c);
+}
+
+/*void fwd::visit(primary_identifier_t* n)
+{
+	visit_all(n->c);
+}
+
+void fwd::visit(primary_expression_expression_t* n)
+{
+	accept_all(n->c);
+}*/
+
 void fwd::visit(array_access_expression_t *e)
 {
 	accept_all(e->c);
@@ -113,10 +182,10 @@ void fwd::visit(storage_class_specifier_t* ) { /* TODO... (when structs are made
 
 void fwd::visit(iteration_statement_t* i) { accept_all(i->c); }
 
-void fwd::visit(primary_expression_t* p)
+/*void fwd::visit(primary_expression_t* p)
 {
 	accept_all(p->c);
-}
+}*/
 
 void fwd::visit(sizeof_expression_t* n)
 {
@@ -130,7 +199,7 @@ void fwd::visit(type_qualifier_t *t) { visit_all(t->c); }
 
 void fwd::visit(type_qualifier_list_t *n)
 {
-	vvisit(n->value);
+	vvisit(n->c);
 }
 void fwd::visit(function_specifier_t* ) { // TODO
 }
@@ -167,10 +236,10 @@ void fwd::visit(translation_unit_t* n)
 
 void fwd::visit(declaration_t* n) { visit_all(n->c); }
 
-void fwd::visit(constant_t* n)
+/*void fwd::visit(constant_t* n)
 {
 	visit_all(n->c);
-}
+}*/
 
 void fwd::visit(init_declarator_t *i)
 {
@@ -222,11 +291,6 @@ void fwd::visit(direct_declarator_decl *d)
 void fwd::visit(direct_declarator_arr *d)
 {
 	accept_all(d->c);
-}
-
-void fwd::visit(parameter_type_list_t *)
-{
-	// TODO when continued
 }
 
 void fwd::visit(direct_declarator_func *d)
@@ -312,6 +376,121 @@ void dumper_t::visit(specifier_qualifier_list_t *s)
 	stream << "specifier-qualifier-list" << std::endl;
 	fwd::visit(s);
 }
+
+void dumper_t::visit(struct_declaration_t* n)
+{
+	incr_depth_t x(&depth, stream, n->span);
+	stream << "struct declaration" << std::endl; // TODO: good name?
+	fwd::visit(n);
+}
+
+void dumper_t::visit(struct_declaration_list_t* n)
+{
+	incr_depth_t x(&depth, stream, n->span);
+	stream << "struct declaration list" << std::endl; // TODO: good name?
+	fwd::visit(n);
+}
+
+void dumper_t::visit(struct_declarator_list_t* n)
+{
+	incr_depth_t x(&depth, stream, n->span);
+	stream << "struct declarator list" << std::endl; // TODO: endl autom?
+	fwd::visit(n);
+}
+
+void dumper_t::visit(struct_declarator_t* n)
+{
+	incr_depth_t x(&depth, stream, n->span);
+	stream << "struct declarator" << std::endl;
+	fwd::visit(n);
+}
+
+void dumper_t::visit(enum_specifier_t* n)
+{
+	incr_depth_t x(&depth, stream, n->span);
+	stream << "enum specifier" << std::endl;
+	fwd::visit(n);
+}
+
+void dumper_t::visit(enumerator_list_t* n)
+{
+	incr_depth_t x(&depth, stream, n->span);
+	stream << "enumerator list" << std::endl;
+	fwd::visit(n);
+}
+
+void dumper_t::visit(enumerator_t* n)
+{
+	incr_depth_t x(&depth, stream, n->span);
+	stream << "enumerator" << std::endl;
+	fwd::visit(n);
+}
+
+void dumper_t::visit(parameter_type_list_t* n)
+{
+	incr_depth_t x(&depth, stream, n->span);
+	stream << "parameter type list" << std::endl; // FEATURE: better description?
+	fwd::visit(n);
+}
+
+void dumper_t::visit(parameter_list_t* n)
+{
+	incr_depth_t x(&depth, stream, n->span);
+	stream << "parameter list" << std::endl;
+	fwd::visit(n);
+}
+
+void dumper_t::visit(parameter_declaration_t* n)
+{
+	incr_depth_t x(&depth, stream, n->span);
+	stream << "parameter declaration" << std::endl;
+	fwd::visit(n);
+}
+
+void dumper_t::visit(identifier_list_t* n)
+{
+	incr_depth_t x(&depth, stream, n->span);
+	stream << "identifier list" << std::endl;
+	fwd::visit(n);
+}
+
+void dumper_t::visit(primary_expression_t* p) {
+	incr_depth_t x(&depth, stream, p->span);
+	stream << "primary expression" << std::endl;
+	fwd::visit(p);
+}
+
+void dumper_t::visit(constant_t<int>* c)
+{
+	incr_depth_t x(&depth, stream, c->span);
+	stream << "int constant: " << c->value << std::endl;
+}
+
+void dumper_t::visit(constant_t<float>* c)
+{
+	incr_depth_t x(&depth, stream, c->span);
+	stream << "float constant: " << c->value << std::endl;
+}
+
+void dumper_t::visit(constant_t<std::string>* c)
+{
+	incr_depth_t x(&depth, stream, c->span);
+	stream << "string constant: " << c->value << std::endl;
+}
+
+/*void dumper_t::visit(primary_identifier_t* p)
+{
+	incr_depth_t x(&depth, stream, p->span);
+	stream << "primary expression" << std::endl;
+	fwd::visit(p);
+}
+
+void dumper_t::visit(primary_expression_expression_t* p)
+{
+	incr_depth_t x(&depth, stream, p->span);
+	stream << "primary expression" << std::endl;
+	fwd::visit(p);
+}*/
 
 void dumper_t::visit(array_access_expression_t *e)
 {
@@ -439,7 +618,7 @@ void dumper_t::visit(iteration_statement_t* n)
 	fwd::visit(n);
 }
 
-void dumper_t::visit(primary_expression_t* n)
+/*void dumper_t::visit(primary_expression_t* n)
 {
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "primary expression";
@@ -460,7 +639,7 @@ void dumper_t::visit(primary_expression_t* n)
 	}
 
 	fwd::visit(n);
-}
+}*/
 
 void dumper_t::visit(sizeof_expression_t* n)
 {
@@ -568,7 +747,7 @@ void dumper_t::visit(declaration_t* n)
 	fwd::visit(n);
 }
 
-void dumper_t::visit(constant_t* n)
+/*void dumper_t::visit(constant_t* n)
 {
 	incr_depth_t x(&depth, stream, n->span);
 	switch(n->type)
@@ -585,7 +764,7 @@ void dumper_t::visit(constant_t* n)
 	}
 
 	fwd::visit(n);
-}
+}*/
 
 void dumper_t::visit(init_declarator_t *i)
 {
@@ -664,11 +843,6 @@ void dumper_t::visit(direct_declarator_arr *d)
 	incr_depth_t x(&depth, stream, d->span);
 	stream << "direct declarator 3 (TODO: specify?)" << std::endl;
 	fwd::visit(d);
-}
-
-void dumper_t::visit(parameter_type_list_t *n)
-{
-	fwd::visit(n);
 }
 
 void dumper_t::visit(direct_declarator_func *d)

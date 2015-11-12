@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 
+#include "token.h"
 #include "node.h"
 #include "visitor.h"
 #include "parser.h"
@@ -19,7 +20,11 @@ std::ostream& operator<<(std::ostream& stream,
 
 //template<>
 //void type_specifier_simple_t::accept(visitor_t& v) { v.visit(this); }
-	
+
+identifier_t::identifier_t(const char* name, geom_t geom) :
+	terminal_t(geom, t_identifier),
+	name(name) {}
+
 void token_t::accept(visitor_t& v) { v.visit(this); }
 //void number_t::accept(visitor_t& v) { v.visit(this); }
 //void expression_t::accept(visitor_t& v) { v.visit(this); }
@@ -44,8 +49,17 @@ void function_definition_t::accept(visitor_t& v) { v.visit(this); }
 void external_declaration_t::accept(visitor_t& v) { v.visit(this); }
 void translation_unit_t::accept(visitor_t& v) { v.visit(this); }
 void declaration_t::accept(visitor_t& v) { v.visit(this); }
-void primary_expression_t::accept(visitor_t& v) { v.visit(this); }
-void constant_t::accept(visitor_t& v) { v.visit(this); }
+void type_qualifier_list_t::accept(visitor_t& v) { v.visit(this); }
+void primary_expression_t::accept(visitor_t &v) { v.visit(this); }
+template<>
+void constant_t<int>::accept(visitor_t& v) { v.visit(this); }
+template<>
+void constant_t<float>::accept(visitor_t& v) { v.visit(this); }
+template<>
+void constant_t<std::string>::accept(visitor_t& v) { v.visit(this); }
+//void primary_identifier_t::accept(visitor_t& v) { v.visit(this); }
+//void primary_expression_expression_t::accept(visitor_t& v) { v.visit(this); }
+//void constant_t::accept(visitor_t& v) { v.visit(this); }
 void labeled_statement_t::accept(visitor_t& v) { v.visit(this); }
 void expression_statement_t::accept(visitor_t& v) { v.visit(this); }
 void selection_statement_t::accept(visitor_t& v) { v.visit(this); }
@@ -74,7 +88,6 @@ void initializer_t::accept(visitor_t &v) { v.visit(this); }
 void direct_declarator_id::accept(visitor_t &v) { v.visit(this); }
 void direct_declarator_decl::accept(visitor_t &v) { v.visit(this); }
 void direct_declarator_arr::accept(visitor_t &v) { v.visit(this); }
-void parameter_type_list_t::accept(visitor_t &v) { v.visit(this); }
 void direct_declarator_func::accept(visitor_t &v) { v.visit(this); }
 
 void direct_abstract_declarator_t::accept(visitor_t &v) { v.visit(this); }
@@ -102,4 +115,18 @@ void type_specifier_token::accept(visitor_t &v) { v.visit(this); }
 void type_identifier::accept(visitor_t &v) { v.visit(this); }
 void abstract_declarator_t::accept(visitor_t &v) { v.visit(this); }
 void specifier_qualifier_list_t::accept(visitor_t &v) { v.visit(this); }
+
+void struct_or_union_specifier_t::accept(visitor_t &v) { v.visit(this); }
+void struct_declaration_list_t::accept(visitor_t &v) { v.visit(this); }
+void struct_declarator_list_t::accept(visitor_t &v) { v.visit(this); }
+void struct_declarator_t::accept(visitor_t &v) { v.visit(this); }
+void enum_specifier_t::accept(visitor_t &v) { v.visit(this); }
+void enumerator_list_t::accept(visitor_t &v) { v.visit(this); }
+void enumerator_t::accept(visitor_t &v) { v.visit(this); }
+void parameter_type_list_t::accept(visitor_t &v) { v.visit(this); }
+void parameter_list_t::accept(visitor_t &v) { v.visit(this); }
+void parameter_declaration_t::accept(visitor_t &v) { v.visit(this); }
+void identifier_list_t::accept(visitor_t &v) { v.visit(this); }
+
+
 

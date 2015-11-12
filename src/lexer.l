@@ -76,6 +76,15 @@ template<class T> int app(T* elem, int lex_id/*, const char* text, int mult = 1*
 	return lex_id;
 }
 
+template<class T>
+int app_with_string(T*& token, int lex_id, const char* text, const char* end) {
+	std::size_t length = end - text;
+	cnt(text);
+	char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, text, length);
+
+	return app(token = new T(res, get_pos()), lex_id);
+}
+
 %}
 
 %option outfile="lexer.c" header-file="lexer.h"
@@ -177,7 +186,7 @@ static int check_type(void);
 						return app(yylval->name = new identifier_t(res, get_pos()), check_type()); }
 
 {HP}{H}+{IS}?				{ sscanf(yytext, "%x", &yylval->_int); return I_CONSTANT; } // TODO: position
-{NZ}{D}*{IS}?				{ sscanf(yytext, "%d", &yylval->_int); return I_CONSTANT; }
+{NZ}{D}*{IS}?				{ /*int i; sscanf(yytext, "%d", &i); return new cireturn I_CONSTANT;*/ sscanf(yytext, "%x", &yylval->_int); return I_CONSTANT; }
 "0"{O}*{IS}?				{ sscanf(yytext, "%o", &yylval->_int); return I_CONSTANT; }
 {CP}?"'"([^'\\\n]|{ES})+"'"		{ const char* pars = yytext; if(*pars == 'u' || *pars == 'U' || *pars == 'L') ++pars; ++pars;
 						char tmp_c; sscanf(pars, "%c", &tmp_c); yylval->_int = tmp_c; return I_CONSTANT; }

@@ -8,11 +8,31 @@
 #ifndef VISITOR_H
 #define VISITOR_H
 
+// TODO: pointers->refs?
 class visitor_t
 {
 public:
 	virtual void visit(type_name_t *) {}
 	virtual void visit(specifier_qualifier_list_t* ) {}
+
+	virtual void visit(struct_declaration_list_t* ) {}
+	virtual void visit(struct_declaration_t* ) {}
+	virtual void visit(struct_declarator_list_t* ) {}
+	virtual void visit(struct_declarator_t* ) {}
+	virtual void visit(enum_specifier_t* ) {}
+	virtual void visit(enumerator_list_t* ) {}
+	virtual void visit(enumerator_t* ) {}
+	virtual void visit(parameter_type_list_t* ) {}
+	virtual void visit(parameter_list_t* ) {}
+	virtual void visit(parameter_declaration_t* ) {}
+	virtual void visit(identifier_list_t* ) {}
+
+	virtual void visit(primary_expression_t* ) {}
+	virtual void visit(constant_t<int>* ) {}
+	virtual void visit(constant_t<float>* ) {}
+	virtual void visit(constant_t<std::string>* ) {}
+//	virtual void visit(primary_identifier_t* ) {}
+//	virtual void visit(primary_expression_expression_t* ) {}
 
 	virtual void visit(array_access_expression_t* ) {}
 	virtual void visit(argument_expression_list_t* ) {}
@@ -46,7 +66,7 @@ public:
 	virtual void visit(translation_unit_t *) {}
 	virtual void visit(token_t* ) {}
 	virtual void visit(declaration_t* ) {}
-	virtual void visit(constant_t* ) {}
+//	virtual void visit(constant_t* ) {}
 	virtual void visit(labeled_statement_t* ) {}
 	virtual void visit(expression_statement_t* ) {}
 	virtual void visit(selection_statement_t* ) {}
@@ -55,7 +75,6 @@ public:
 	//virtual void visit(block_item_list_t* ) {}
 	virtual void visit(block_item_t* ) {}
 	virtual void visit(identifier_t* ) {}
-	virtual void visit(primary_expression_t* ) {}
 	virtual void visit(sizeof_expression_t* ) {}
 	virtual void visit(init_declarator_list_t* ) {}
 	virtual void visit(init_declarator_t* ) {}
@@ -70,7 +89,6 @@ public:
 	virtual void visit(direct_declarator_id* ) {}
 	virtual void visit(direct_declarator_decl* ) {}
 	virtual void visit(direct_declarator_arr* ) {}
-	virtual void visit(parameter_type_list_t* ) {}
 	virtual void visit(direct_declarator_func* ) {}
 	virtual void visit(direct_abstract_declarator_t* ) {}
 	virtual void visit(direct_abstract_declarator_decl* ) {}
@@ -177,6 +195,25 @@ public:
 	void visit(type_name_t *n) { f(n); }
 	void visit(specifier_qualifier_list_t* n) { f(n); }
 
+	void visit(struct_declaration_list_t* n) { f(n); }
+	void visit(struct_declaration_t* n) { f(n); }
+	void visit(struct_declarator_list_t* n) { f(n); }
+	void visit(struct_declarator_t* n) { f(n); }
+	void visit(enum_specifier_t* n) { f(n); }
+	void visit(enumerator_list_t* n) { f(n); }
+	void visit(enumerator_t* n) { f(n); }
+	void visit(parameter_type_list_t* n) { f(n); }
+	void visit(parameter_list_t* n) { f(n); }
+	void visit(parameter_declaration_t* n) { f(n); }
+	void visit(identifier_list_t* n) { f(n); }
+
+	void visit(primary_expression_t* n) { f(n); }
+	void visit(constant_t<int>* n) { f(n); }
+	void visit(constant_t<float>* n) { f(n); }
+	void visit(constant_t<std::string>* n) { f(n); }
+//	void visit(primary_identifier_t* n) { f(n); }
+//	void visit(primary_expression_expression_t* n) { f(n); }
+
 	void visit(array_access_expression_t* n) { f(n); }
 	void visit(argument_expression_list_t* n) { f(n); }
 	void visit(function_call_expression_t* n) { f(n); }
@@ -209,7 +246,7 @@ public:
 	void visit(translation_unit_t *n) { f(n); }
 	void visit(token_t* n) { f(n); }
 	void visit(declaration_t* n) { f(n); }
-	void visit(constant_t* n) { f(n); }
+//	void visit(constant_t* n) { f(n); }
 	void visit(labeled_statement_t* n) { f(n); }
 	void visit(expression_statement_t* n) { f(n); }
 	void visit(selection_statement_t* n) { f(n); }
@@ -218,7 +255,6 @@ public:
 	//void visit(block_item_list_t* n) { f(n); }
 	void visit(block_item_t* n) { f(n); }
 	void visit(identifier_t* n) { f(n); }
-	void visit(primary_expression_t* n) { f(n); }
 	void visit(sizeof_expression_t* n) { f(n); }
 	void visit(init_declarator_list_t* n) { f(n); }
 	void visit(init_declarator_t* n) { f(n); }
@@ -233,7 +269,6 @@ public:
 	void visit(direct_declarator_id* n) { f(n); }
 	void visit(direct_declarator_decl* n) { f(n); }
 	void visit(direct_declarator_arr* n) { f(n); }
-	void visit(parameter_type_list_t* n) { f(n); }
 	void visit(direct_declarator_func* n) { f(n); }
 	void visit(direct_abstract_declarator_t* n) { f(n); }
 	void visit(direct_abstract_declarator_decl* n) { f(n); }
@@ -255,6 +290,26 @@ public:
 
 	void visit(type_name_t *t);
 	void visit(specifier_qualifier_list_t* );
+
+	void visit(struct_declaration_list_t* );
+	void visit(struct_declaration_t* );
+	void visit(struct_declarator_list_t* );
+	void visit(struct_declarator_t* );
+	void visit(enum_specifier_t* );
+	void visit(enumerator_list_t* );
+	void visit(enumerator_t* );
+	void visit(parameter_type_list_t* );
+	void visit(parameter_list_t* );
+	void visit(parameter_declaration_t* );
+	void visit(identifier_list_t* );
+
+	void visit(primary_expression_t* );
+	void visit(constant_t<int>* ) {}
+	void visit(constant_t<float>* ) {}
+	void visit(constant_t<std::string>* ) {}
+//	void visit(primary_identifier_t* n);
+//	void visit(primary_expression_expression_t* n);
+
 	void visit(array_access_expression_t* e);
 	void visit(argument_expression_list_t* e);
 	void visit(function_call_expression_t* e);
@@ -288,9 +343,8 @@ public:
 	void visit(declaration_t* n);
 	void visit(iteration_statement_t* n);
 	void visit(identifier_t* n);
-	void visit(primary_expression_t* n);
 	void visit(sizeof_expression_t* n);
-	void visit(constant_t* );
+//	void visit(constant_t* );
 	void visit(init_declarator_t* );
 	void visit(init_declarator_list_t* );
 	void visit(initializer_t* );
@@ -304,7 +358,6 @@ public:
 	void visit(direct_declarator_id* );
 	void visit(direct_declarator_decl* );
 	void visit(direct_declarator_arr* );
-	void visit(parameter_type_list_t* );
 	void visit(direct_declarator_func* );
 	void visit(direct_abstract_declarator_decl* );
 	void visit(direct_abstract_declarator_arr* );
@@ -405,6 +458,7 @@ public:
 	// binary op_id
 	// TODO: if impl: struct_or_union
 
+	// TODO: float, int
 
 	// statements...
 	void operator()(iteration_statement_t& );
@@ -476,10 +530,11 @@ public:
 		n.span = get_span(n.c);
 	}
 
-	// token_t and identifier_t have no
-	template<class NodeType>
-	void operator()(/*const*/ token_t& t) {
-	}
+	// token_t and identifier_t have no children
+	//  -> get geom directly from them
+
+	void operator()(/*const*/ token_t& t) {}
+	void operator()(/*const*/ identifier_t& t) {}
 };
 
 
@@ -498,6 +553,26 @@ public:
 
 	void visit(type_name_t *t);
 	void visit(specifier_qualifier_list_t* );
+
+	void visit(struct_declaration_list_t* );
+	void visit(struct_declaration_t* );
+	void visit(struct_declarator_list_t* );
+	void visit(struct_declarator_t* );
+	void visit(enum_specifier_t* );
+	void visit(enumerator_list_t* );
+	void visit(enumerator_t* );
+	void visit(parameter_type_list_t* );
+	void visit(parameter_list_t* );
+	void visit(parameter_declaration_t* );
+	void visit(identifier_list_t* );
+
+	void visit(constant_t<int>* );
+	void visit(constant_t<float>* );
+	void visit(constant_t<std::string>* );
+	void visit(primary_expression_t* );
+//	void visit(primary_identifier_t* );
+//	void visit(primary_expression_expression_t* );
+
 	void visit(array_access_expression_t* e);
 	void visit(argument_expression_list_t* e);
 	void visit(function_call_expression_t* e);
@@ -530,9 +605,8 @@ public:
 	void visit(declaration_t* n);
 	void visit(iteration_statement_t* n);
 	void visit(identifier_t* n);
-	void visit(primary_expression_t* n);
 	void visit(sizeof_expression_t* n);
-	void visit(constant_t* );
+//	void visit(constant_t* );
 	void visit(init_declarator_t* );
 	void visit(init_declarator_list_t* );
 	void visit(initializer_t* );
@@ -546,7 +620,6 @@ public:
 	void visit(direct_declarator_id* );
 	void visit(direct_declarator_decl* );
 	void visit(direct_declarator_arr* );
-	void visit(parameter_type_list_t* );
 	void visit(direct_declarator_func* );
 	void visit(direct_abstract_declarator_decl* );
 	void visit(direct_abstract_declarator_arr* );

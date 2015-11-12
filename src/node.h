@@ -103,16 +103,24 @@ public:
 	void accept_children(visitor_t& v); // TODO
 };
 
-struct terminal_t : public node_t<> {
-	terminal_t(const geom_t& geom) : node_t<>(geom) {}
+struct terminal_t : public node_t<> { // TODO: class
+	int value;
+public:
+	terminal_t(const geom_t& geom, int value) : node_t<>(geom), value(value) {}
 };
 
 struct token_t : public terminal_t
 {
-	int value;
 public:
-	token_t(const geom_t& pos, int value) : terminal_t(pos), value(value) {}
+	token_t(const geom_t& pos, int value) : terminal_t(pos, value) {}
 	virtual void accept(class visitor_t& v);
+};
+
+struct identifier_t : public terminal_t
+{
+	std::string name;
+	virtual void accept(class visitor_t& v);
+	identifier_t(const char* name, geom_t geom);
 };
 
 //typedef ch<token_t> tok;
@@ -294,9 +302,145 @@ struct abstract_declarator_t : public node_t<>
 	void accept(class visitor_t& v);
 };
 
+struct type_specifier_t : public declaration_specifier_type
+{
+	virtual void accept(class visitor_t& v);
+};
+
+struct type_specifier_complex_t : public type_specifier_t {
+	//virtual void accept(class visitor_t& v);
+};
+
+struct struct_or_union_specifier_t : public type_specifier_complex_t
+{
+	bool is_union_type; // TODO: completor
+
+	enum access_t {
+		keyword,
+			identifier,
+				lbrack,
+					declaration_list,
+						rbrack
+	};
+
+	ptn<	token_t,
+		ptn<	identifier_t,
+			ptn<	token_t,
+				ptn<	struct struct_declaration_list_t,
+					end_token
+		> > > > c;
+
+	virtual void accept(class visitor_t& v);
+};
+
+struct struct_declaration_list_t : public node_t<> // FEATURE: when alt list
+{
+	std::list<struct struct_declaration_t*> c;
+	void accept(class visitor_t& v);
+};
+
+struct struct_declaration_t : public node_t<struct_declaration_list_t>
+{
+	ptn<	struct specifier_qualifier_list_t,
+		ptn<	struct struct_declarator_list_t,
+				end_token > > c;
+	void accept(class visitor_t& v);
+};
+
 struct specifier_qualifier_list_t : public node_t<>
 {
 	std::list<declaration_specifier_type*> c;
+	void accept(class visitor_t& v);
+};
+
+struct struct_declarator_list_t : public node_t<> // FEATURE: when alt list
+{
+	ptn<	struct struct_declarator_list_t,
+		ptn<	token_t, // :
+			ptn<	struct struct_declarator_t
+			> > > c;
+	void accept(class visitor_t& v);
+};
+
+struct struct_declarator_t : public node_t<struct_declarator_list_t>
+{
+	ptn<	struct declarator_t,
+		ptn<	token_t, // :
+			ptn<	expression_t
+		> > > c;
+	void accept(class visitor_t& v);
+};
+
+struct enum_specifier_t : public type_specifier_complex_t
+{
+	enum access_t {
+		enum_keyword,
+			identifier,
+				lbrack,
+					enum_list,
+						comma,
+							rbrack
+	};
+
+	ptn<	token_t,
+		ptn<	identifier_t,
+			ptn<	token_t,
+				ptn<	struct enumerator_list_t,
+					ptn<	token_t,
+							end_token
+		> > > > > c;
+	void accept(class visitor_t& v);
+};
+
+struct enumerator_list_t : public node_t<> // FEATURE: when alt list
+{
+	ptn<	enumerator_list_t,
+		ptn<	token_t,
+			ptn<	struct enumerator_t > > > c;
+	void accept(class visitor_t& v);
+};
+
+struct enumerator_t : public node_t<enumerator_list_t>
+{
+	ptn<	identifier_t, // TODO
+		ptn<	token_t, // =, optional
+			ptn<	expression_t // optional
+		> > > c;
+	void accept(class visitor_t& v);
+};
+
+struct parameter_type_list_t : public node_t<> // FEATURE: declar. or abstr. declar.
+{
+	ptn<	struct parameter_list_t,
+		ptn<	token_t,
+				end_token > > c;
+	void accept(class visitor_t& v);
+};
+
+struct parameter_list_t : public node_t<> // TODO: when alt list
+{
+	ptn<	parameter_list_t,
+		ptn<	token_t,
+			ptn<	struct parameter_declaration_t
+		> > > c;
+	void accept(class visitor_t& v);
+};
+
+struct parameter_declaration_t : public node_t<parameter_list_t>
+{
+	ptn<	struct declaration_specifiers_t,
+		ptn<	declarator_t, // TODO: declarator base, and remove below
+			ptn<	abstract_declarator_t
+		> > > c;
+	void accept(class visitor_t& v);
+};
+
+struct identifier_list_t : public node_t<> // TODO: when alt list
+{
+	ptn<	identifier_list_t,
+		ptn<	token_t,
+			ptn<	identifier_t
+		> > > c;
 	void accept(class visitor_t& v);
 };
 
@@ -326,13 +470,6 @@ struct sizeof_expression_t : public expression_t
 			ptn <	type_name_t, end_token > > > c;
 };
 
-struct identifier_t : public terminal_t
-{
-	std::string name;
-	virtual void accept(class visitor_t& v);
-	identifier_t(const char* name, geom_t geom) : terminal_t(geom), name(name) {}
-};
-
 enum constant_type
 {
 	ct_int,
@@ -340,6 +477,7 @@ enum constant_type
 	ct_enum
 };
 
+#if 0
 struct constant_t : public node_t<struct primary_expression>
 {
 	virtual void accept(class visitor_t& v);
@@ -350,6 +488,7 @@ struct constant_t : public node_t<struct primary_expression>
 	} value;
 	ptn<identifier_t> c; //!< enumeration id
 };
+#endif
 
 enum primary_type
 {
@@ -359,6 +498,48 @@ enum primary_type
 	pt_string
 };
 
+// strings, ints, floats
+// TODO: keep strings of original values? e.g. ...f, ...lf ?
+template<class T>
+struct constant_t : public terminal_t
+{
+	std::string value;
+//	ptn<token_t> c;
+//	constant_t() {}
+	constant_t(const char* value, geom_t geom) : terminal_t(geom, 0/*TODO*/), value(value) {}
+
+	virtual void accept(class visitor_t& v);
+};
+
+struct primary_expression_t : public expression_t {
+	ptn<	terminal_t,	// TODO: constant_base
+		//ptn<	constant_t<float>,
+			ptn<	struct identifier_t,
+				ptn<	token_t,
+					ptn<	expression_t,
+							end_token
+		> > > > c;
+	
+	virtual void accept(class visitor_t& v);
+};
+// TODO: currently no difference between enum_constant and identifier
+#if 0
+struct primary_identifier_t : public node_t
+{
+	ptn<identifier_t> c;
+	virtual void accept(class visitor_t& v);
+};
+
+struct primary_expression_expression_t : public node_t // TODO: put this all into primary_expression_t?
+{
+	ptn<	token_t,	// left brace
+		ptn<	expression_t,
+				end_token
+			> > c;
+	virtual void accept(class visitor_t& v);
+};
+#endif
+#if 0
 struct primary_expression_t : public expression_t
 {
 	virtual void accept(class visitor_t& v);
@@ -377,6 +558,7 @@ struct primary_expression_t : public expression_t
 							end_token
 			> > > > > c;
 };
+#endif
 
 struct array_access_expression_t : public expression_t
 {
@@ -438,11 +620,6 @@ struct cast_expression_t : public expression_t
 	virtual void accept(class visitor_t& v);
 };
 
-struct type_specifier_t : public declaration_specifier_type
-{
-	virtual void accept(class visitor_t& v);
-};
-
 struct type_specifier_token : public type_specifier_t
 {
 	ptn<token_t> c;
@@ -472,18 +649,6 @@ typedef token_base<type_specifier_id, type_specifier_t> type_specifier_simple_t;
 	type_specifier_id id;
 	virtual void accept(class visitor_t& v);
 };*/
-
-struct type_specifier_complex_t : public type_specifier_t {
-	virtual void accept(class visitor_t& v);
-};
-
-struct struct_or_union_specifier_t : public type_specifier_complex_t
-{
-	virtual void accept(class visitor_t& v);
-};
-struct enum_specifier_t : public type_specifier_complex_t {
-	virtual void accept(class visitor_t& v);
-};
 
 /*struct type_specifier_t : public declaration_specifier_type
 {
@@ -749,7 +914,7 @@ struct declaration_t : public block_item_t
 
 struct type_qualifier_list_t : public node_t<>
 {
-	std::list<type_qualifier_t*> value;
+	std::list<type_qualifier_t*> c;
 	virtual void accept(class visitor_t& v);
 };
 
@@ -813,10 +978,6 @@ struct direct_declarator_arr : public direct_declarator_t
 						ptn<	token_t, // *
 								end_token // ]
 		> > > > > > c;
-	virtual void accept(class visitor_t& v);
-};
-
-struct parameter_type_list_t : public node_t<> { // FEATURE: base class of ...?
 	virtual void accept(class visitor_t& v);
 };
 

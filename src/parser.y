@@ -11,7 +11,7 @@
 #include "node.h"
 #include "parser.h"
 #include "lexer.h"
-#include "visitor.h"
+//#include "visitor.h"
 
 // TODO: check for no returns anywhere!!, i.e. no return keyword in any rule!!
 
@@ -109,8 +109,19 @@ typedef void* yyscan_t;
 	identifier_t* identifier;
 	struct statement_t* statement;
 	struct block_item_t* block_item;
-	struct constant_t* constant;
+//	struct constant_t* constant;
 	struct type_name_t* type_name;
+
+	struct struct_declaration_t* struct_declaration;
+	struct struct_declaration_list_t* struct_declaration_list;
+	struct struct_declarator_list_t* struct_declarator_list;
+	struct struct_declarator_t* struct_declarator;
+	struct enumerator_list_t* enumerator_list;
+	struct enumerator_t* enumerator;
+	struct parameter_list_t* parameter_list;
+	struct parameter_declaration_t* parameter_declaration;
+	struct identifier_list_t* identifier_list;
+
 	struct parameter_type_list_t* parameter_type_list;
 	struct type_qualifier_list_t* type_qualifier_list;
 	struct type_qualifier_t* type_qualifier;
@@ -121,6 +132,7 @@ typedef void* yyscan_t;
 	struct argument_expression_list_t* argument_expression_list;
 
 	struct primary_expression_t* primary_expression;
+	struct terminal_t* terminal;
 }
 
 %token	IDENTIFIER I_CONSTANT F_CONSTANT STRING_LITERAL FUNC_NAME SIZEOF
@@ -140,16 +152,13 @@ typedef void* yyscan_t;
 
 %token	ALIGNAS ALIGNOF ATOMIC GENERIC NORETURN STATIC_ASSERT THREAD_LOCAL
 
-%type <name> IDENTIFIER ENUMERATION_CONSTANT TYPEDEF_NAME string STRING_LITERAL enumeration_constant
+%type <name> IDENTIFIER ENUMERATION_CONSTANT TYPEDEF_NAME
 
-%type <_int> I_CONSTANT
-%type <_float> F_CONSTANT
+%type <token> I_CONSTANT F_CONSTANT STRING_LITERAL
 
 // FEATURE: wrong: translation_unit_t?
 %type <node> translation_unit
 	static_assert_declaration
-
-%type<constant> constant
 
 %type<expression> postfix_expression
 	unary_expression
@@ -169,13 +178,14 @@ typedef void* yyscan_t;
 %type <expression> expression
 
 %type <primary_expression> primary_expression
+%type <terminal> constant string
 
 %type <block_item> block_item
  // TODO: _operator unused?
 %type <type_name> type_name
 %type <declaration> declaration
 %type <statement> statement
-//%type <identifier> identifier
+%type <identifier> enumeration_constant
 %type <token> type_specifier_simple unary_operator assignment_operator
 %type <declaration_specifiers> declaration_specifiers
 %type <compound_statement> compound_statement block_item_list
@@ -202,6 +212,17 @@ typedef void* yyscan_t;
 %type <jump_statement> jump_statement
 %type <expression> conditional_expression constant_expression
 %type <parameter_type_list> parameter_type_list
+
+%type <struct_declaration_list> struct_declaration_list
+%type <struct_declaration> struct_declaration
+%type <struct_declarator_list> struct_declarator_list
+%type <struct_declarator> struct_declarator
+%type <enumerator_list> enumerator_list
+%type <enumerator> enumerator
+%type <parameter_list> parameter_list
+%type <parameter_declaration> parameter_declaration
+%type <identifier_list> identifier_list
+
 %type <type_qualifier_list> type_qualifier_list
 %type <direct_abstract_declarator> direct_abstract_declarator
 %type <abstract_declarator> abstract_declarator
@@ -220,7 +241,7 @@ typedef void* yyscan_t;
 	LE_OP GE_OP EQ_OP NE_OP '&' '^' '|' AND_OP OR_OP '=' '[' ']' '.' '?' PTR_OP
 	'~' '!' MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN SUB_ASSIGN
 	LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
-	STRUCT UNION
+	STRUCT UNION ENUM ELLIPSIS
 
 %start translation_unit
 
@@ -232,17 +253,17 @@ typedef void* yyscan_t;
 %%
 
 primary_expression // parents: postfix_expression
-	: IDENTIFIER { alloc($$); $$->c.set($1); $$->type = pt_id; }
-	| constant { alloc($$); $$->c.fill(NULL, NULL, $1); $$->type = pt_constant; }
-	| string { alloc($$); $$->c.fill(NULL, $1); $$->type = pt_string; }
-	| '(' expression ')' { alloc($$); $$->c.fill(NULL, NULL, NULL, $1, $2, $3); $$->type = pt_expression; }
+	: IDENTIFIER { alloc($$); $$->c.fill(NULL, $1); }
+	| constant { $$->c.set($1); }
+	| string { /*$$=$1;*/ not_yet(); }
+	| '(' expression ')' { alloc($$); $$->c.fill(NULL, NULL, $1, $2, $3); }
 	| generic_selection { c11(); }
 	;
 
 constant // parents: primary expression
-	: I_CONSTANT { alloc($$); $$->value.i = $1; $$->type = ct_int; }		/* includes character_constant */
-	| F_CONSTANT { alloc($$); $$->value.f = $1; $$->type = ct_float; }
-	| ENUMERATION_CONSTANT{ alloc($$); $$->c.set($1); $$->type = ct_enum; }	/* after it has been defined as such */
+	: I_CONSTANT { $$=$1; }		/* includes character_constant */
+	| F_CONSTANT { $$=$1; }
+	| ENUMERATION_CONSTANT{ not_yet(); }	/* after it has been defined as such */
 	;
 
 enumeration_constant		/* before it has been defined as such */
@@ -250,7 +271,7 @@ enumeration_constant		/* before it has been defined as such */
 	;
 
 string
-	: STRING_LITERAL { $$=$1; }
+	: STRING_LITERAL { $$=$1; /*c->c.set($1);*/ }
 	| FUNC_NAME { c11(); }
 	;
 
@@ -465,9 +486,9 @@ type_specifier
 	;
 
 struct_or_union_specifier
-	: struct_or_union '{' struct_declaration_list '}'
-	| struct_or_union IDENTIFIER '{' struct_declaration_list '}'
-	| struct_or_union IDENTIFIER
+	: struct_or_union '{' struct_declaration_list '}' { alloc($$); $$->c.fill($1, NULL, $2, $3, $4); }
+	| struct_or_union IDENTIFIER '{' struct_declaration_list '}' { alloc($$); $$->c.fill($1, $2, $3, $4, $5); }
+	| struct_or_union IDENTIFIER { alloc($$); $$->c.fill($1, $2); }
 	;
 
 struct_or_union
@@ -476,8 +497,8 @@ struct_or_union
 	;
 
 struct_declaration_list
-	: struct_declaration
-	| struct_declaration_list struct_declaration
+	: struct_declaration { alloc($$); app_first($$->c, $1); }
+	| struct_declaration_list struct_declaration { app_right($1, $1->c, $2); }
 	;
 
 struct_declaration
@@ -494,32 +515,32 @@ specifier_qualifier_list
 	;
 
 struct_declarator_list
-	: struct_declarator
-	| struct_declarator_list ',' struct_declarator
+	: struct_declarator { alloc($$); $$->c.fill(NULL, NULL, $1); }
+	| struct_declarator_list ',' struct_declarator { alloc($$); $$->c.fill($1, $2, $3); }
 	;
 
 struct_declarator
-	: ':' constant_expression
-	| declarator ':' constant_expression
-	| declarator
+	: ':' constant_expression { alloc($$); $$->c.fill(NULL, $1, $2); }
+	| declarator ':' constant_expression { alloc($$); $$->c.fill($1, $2, $3); }
+	| declarator { alloc($$); $$->c.set($1); }
 	;
 
 enum_specifier
-	: ENUM '{' enumerator_list '}'
-	| ENUM '{' enumerator_list ',' '}'
-	| ENUM IDENTIFIER '{' enumerator_list '}'
-	| ENUM IDENTIFIER '{' enumerator_list ',' '}'
-	| ENUM IDENTIFIER
+	: ENUM '{' enumerator_list '}' { alloc($$); $$->c.fill($1, NULL, $2, $3, NULL, $4); }
+	| ENUM '{' enumerator_list ',' '}' { alloc($$); $$->c.fill($1, NULL, $2, $3, $4, $5); }
+	| ENUM IDENTIFIER '{' enumerator_list '}' { alloc($$); $$->c.fill($1, $2, $3, $4, NULL, $5); }
+	| ENUM IDENTIFIER '{' enumerator_list ',' '}' { alloc($$); $$->c.fill($1, $2, $3, $4, $5, $6); }
+	| ENUM IDENTIFIER { alloc($$); $$->c.fill($1, $2); }
 	;
 
 enumerator_list
-	: enumerator
-	| enumerator_list ',' enumerator
+	: enumerator { alloc($$); $$->c.fill(NULL, NULL, $1); }
+	| enumerator_list ',' enumerator { alloc($$); $$->c.fill($1, $2, $3); }
 	;
 
 enumerator	/* identifiers must be flagged as ENUMERATION_CONSTANT */
-	: enumeration_constant '=' constant_expression
-	| enumeration_constant
+	: enumeration_constant '=' constant_expression { alloc($$); $$->c.fill($1, $2, $3); }
+	| enumeration_constant { alloc($$); $$->c.set($1); }
 	;
 
 atomic_type_specifier
@@ -597,30 +618,29 @@ pointer // should actually be named: "pointers"
 	;
 
 type_qualifier_list
-	: type_qualifier
-	| type_qualifier_list type_qualifier
+	: type_qualifier { alloc($$); app_first($$->c, $1); }
+	| type_qualifier_list type_qualifier { app_right($1, $1->c, $2); }
 	;
 
-
 parameter_type_list
-	: parameter_list ',' ELLIPSIS
-	| parameter_list
+	: parameter_list ',' ELLIPSIS { alloc($$); $$->c.fill($1, $2, $3); }
+	| parameter_list { alloc($$); $$->c.set($1); }
 	;
 
 parameter_list
-	: parameter_declaration
-	| parameter_list ',' parameter_declaration
+	: parameter_declaration { alloc($$); $$->c.fill(NULL, NULL, $1); }
+	| parameter_list ',' parameter_declaration { alloc($$); $$->c.fill($1, $2, $3); }
 	;
 
 parameter_declaration
-	: declaration_specifiers declarator
-	| declaration_specifiers abstract_declarator
-	| declaration_specifiers
+	: declaration_specifiers declarator { alloc($$); $$->c.fill($1, $2); }
+	| declaration_specifiers abstract_declarator { alloc($$); $$->c.fill($1, NULL, $2); }
+	| declaration_specifiers { alloc($$); $$->c.set($1); }
 	;
 
 identifier_list
-	: IDENTIFIER
-	| identifier_list ',' IDENTIFIER
+	: IDENTIFIER { alloc($$); $$->c.fill(NULL, NULL, $1); }
+	| identifier_list ',' IDENTIFIER { alloc($$); $$->c.fill($1, $2, $3); }
 	;
 
 type_name
