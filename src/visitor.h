@@ -28,6 +28,7 @@ public:
 	virtual void visit(identifier_list_t* ) {}
 
 	virtual void visit(primary_expression_t* ) {}
+	virtual void visit(iconstant_t* ) {}
 	virtual void visit(constant_t<int>* ) {}
 	virtual void visit(constant_t<float>* ) {}
 	virtual void visit(constant_t<std::string>* ) {}
@@ -75,6 +76,7 @@ public:
 	//virtual void visit(block_item_list_t* ) {}
 	virtual void visit(block_item_t* ) {}
 	virtual void visit(identifier_t* ) {}
+	virtual void visit(string_literal_t* ) {}
 	virtual void visit(sizeof_expression_t* ) {}
 	virtual void visit(init_declarator_list_t* ) {}
 	virtual void visit(init_declarator_t* ) {}
@@ -191,6 +193,7 @@ public:
 	func_visitor() : ftor(this) {}
 	func_visitor(const Functor& ftor) : ftor(ftor) {}
 
+	void visit(iconstant_t* n) { f(n); }
 
 	void visit(type_name_t *n) { f(n); }
 	void visit(specifier_qualifier_list_t* n) { f(n); }
@@ -255,6 +258,7 @@ public:
 	//void visit(block_item_list_t* n) { f(n); }
 	void visit(block_item_t* n) { f(n); }
 	void visit(identifier_t* n) { f(n); }
+	void visit(string_literal_t* n) { f(n); }
 	void visit(sizeof_expression_t* n) { f(n); }
 	void visit(init_declarator_list_t* n) { f(n); }
 	void visit(init_declarator_t* n) { f(n); }
@@ -304,6 +308,7 @@ public:
 	void visit(identifier_list_t* );
 
 	void visit(primary_expression_t* );
+	void visit(iconstant_t* ) {}
 	void visit(constant_t<int>* ) {}
 	void visit(constant_t<float>* ) {}
 	void visit(constant_t<std::string>* ) {}
@@ -343,6 +348,7 @@ public:
 	void visit(declaration_t* n);
 	void visit(iteration_statement_t* n);
 	void visit(identifier_t* n);
+	void visit(string_literal_t* ) {}
 	void visit(sizeof_expression_t* n);
 //	void visit(constant_t* );
 	void visit(init_declarator_t* );
@@ -471,10 +477,10 @@ public:
 	void operator()(/*const*/ NodeType& n) { xaccept(n.c); }
 };
 
-template<class T>
+template<class T> // TODO: also send file via parameter?
 inline geom_t get_geom_min(const ptn<T, null_type>& c) {
 
-	return c.value ? c.value->span.first : geom_t(std::numeric_limits<int>::max(),
+	return c.value ? c.value->span.first : geom_t(0, std::numeric_limits<int>::max(),
 		std::numeric_limits<int>::max());
 }
 
@@ -482,7 +488,7 @@ template<class T, class N>
 inline geom_t get_geom_min(const ptn<T, N>& c)
 {
 	geom_t next_geom = get_geom_min(c.get_next());
-	std::cout << "VALUE: " << c.value << std::endl;
+	//std::cout << "VALUE: " << c.value << std::endl;
 	return c.value
 		? std::min(c.value->span.first, next_geom)
 		: next_geom;
@@ -492,7 +498,7 @@ template<class T, class N>
 inline geom_t get_geom_min(const ptn<std::list<T*>, N>& c)
 {
 	geom_t next_geom = get_geom_min(c.get_next());
-	std::cout << "VALUE: " << c.value << std::endl;
+	//std::cout << "VALUE: " << c.value << std::endl;
 	return c.value
 		? std::min(get_geom_min(*c.value), next_geom)
 		: next_geom;
@@ -533,8 +539,9 @@ public:
 	// token_t and identifier_t have no children
 	//  -> get geom directly from them
 
-	void operator()(/*const*/ token_t& t) {}
-	void operator()(/*const*/ identifier_t& t) {}
+	void operator()(/*const*/ token_t& ) {}
+	void operator()(/*const*/ iconstant_t& ) {}
+	void operator()(/*const*/ identifier_t& ) {}
 };
 
 
@@ -566,6 +573,7 @@ public:
 	void visit(parameter_declaration_t* );
 	void visit(identifier_list_t* );
 
+	void visit(iconstant_t* c);
 	void visit(constant_t<int>* );
 	void visit(constant_t<float>* );
 	void visit(constant_t<std::string>* );
@@ -605,6 +613,7 @@ public:
 	void visit(declaration_t* n);
 	void visit(iteration_statement_t* n);
 	void visit(identifier_t* n);
+	void visit(string_literal_t* s);
 	void visit(sizeof_expression_t* n);
 //	void visit(constant_t* );
 	void visit(init_declarator_t* );

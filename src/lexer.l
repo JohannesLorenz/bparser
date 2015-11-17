@@ -4,7 +4,7 @@
  * @file lexer.l
  * To generate the lexical analyzer run: "flex lexer.l"
  */
- 
+
 #include "node.h"
 #include "parser.h"
 
@@ -13,60 +13,155 @@
 #include <vector>
 #include <cstring>
 
+std::vector<std::string>& get_files();
+
+//const int FIRST_COL = 1;
+
+struct token_str
+{
+	static std::vector<terminal_t*> value;
+};
+
+std::vector<terminal_t*> token_str::value;
+
+std::vector<terminal_t*>& get_token_vector() { return token_str::value; }
+
 class pos_counter
 {
+	static int last_file;
 	static int last_line;
+	//static int last_col;
+	static const char* last_linebreak;
+	static const char* last_text_pos;
 	static int last_col;
-	static int last_mult;
+	//static int last_mult;
 public:
-	static span_t count(const char* text_pos, std::size_t mult = 1) {
-		static const char* last_text = text_pos;
-		last_col += ((text_pos - last_text) * last_mult);
+	static span_t count(const char* text_pos/*, std::size_t mult = 1*/) {
+		if(get_token_vector().size())
+		{
+			terminal_t* prev = get_token_vector().back();
+
+			std::size_t newlines = prev->newlines(),
+				length = prev->length();
+			std::cout << "counting: " << newlines << " newlines, "
+				<< length << " length" << std::endl;
+
+			if(newlines)
+			{
+				last_line += newlines;
+				last_col = 1 + length;
+			}
+			else
+			{
+				last_col += length;
+			}
+		}
+#if 0
+		last_text_pos = text_pos;
+
+		if(!last_linebreak)
+		{
+			// if it is not initialized yet,
+			// we are at the first token of the file,
+			// so set it to this position
+			// (-1 because column 1 is the first column)
+			last_linebreak = text_pos - 1;
+		}
+
+		//static const char* last_text = text_pos;
+		//last_col += ((text_pos - last_text) * last_mult);
 		std::cout << "text: " << text_pos << std::endl;
-		std::cout << "last_col: " << last_col << ", mult: " << mult << std::endl;
-		last_text = text_pos;
-		last_mult = mult;
+		//std::cout << "last_col: " << last_col << ", mult: " << mult << std::endl;
+		//last_text = text_pos;
+		//last_mult = mult;
 		
 		//geom_t geom(last_pos::value.line, yytext - last_text) last_span::value =  }
+		return span_t();
+#endif
 		return span_t();
 	}
 
 	// -1 because we are before char -1 respective to the new line
-	static void newline() { ++last_line; last_col=-1; }
+	static void newline(const char* text_pos) {
+#if 0
+	++last_line; /*last_col=FIRST_COL-1;*/
+		/*
+		we are actually before the first char of the next line,
+		since this is the newline. this is already correct, since the first
+		char of the next line must be counted as column 1.
+		*/
+		last_linebreak = text_pos;
+#endif
+}
 
-	static geom_t pos() { return geom_t(last_line, last_col); }
+	static geom_t pos() {
+		//std::cout << "pos call, last_linebreak was: " << *last_linebreak << std::endl;
+		return geom_t(last_file, last_line,
+		last_col); }
+
+	static void parse_ppline(const char* p)
+	{
+		++p; // skip #
+		for(; *p==' '; ++p) ;
+		//last_col = 1;
+		p += sscanf(p, "%d", &last_line);
+		for(; *p==' '; ++p) ;
+		std::string fname;
+		for(; *p!=' '; ++p) fname += *p;
+		int v_id = -1, count = 0;
+		for(std::vector<std::string>::const_iterator
+			itr = get_files().begin();
+			itr != get_files().end();
+			++itr, ++count)
+		{
+			if(*itr == fname)
+			{
+				v_id = count;
+				break;
+			}
+		}
+		if(v_id == -1)
+		{
+			v_id = get_files().size();
+			get_files().push_back(fname);
+		}
+		last_file = v_id;
+		for(; *p!='\n'; ++p) ;
+		// for explanation, see @a pos_counter::newline
+		last_linebreak = p;
+	}
 };
 
-int pos_counter::last_line = 0;
-int pos_counter::last_col = 0;
-int pos_counter::last_mult = 1;
+int pos_counter::last_file = 0; // default file
+// we start at 1, 1 (typical convention)
+int pos_counter::last_line = 1;
+const char* pos_counter::last_linebreak = NULL;
+const char* pos_counter::last_text_pos;
+int pos_counter::last_col = 1;
+//int pos_counter::last_mult = 1;
 
-span_t cnt(const char* text_pos, std::size_t mult = 1) {
-	return pos_counter::count(text_pos, mult); }
+span_t cnt(const char* text_pos) {
+	return pos_counter::count(text_pos); }
 
 geom_t get_pos() { return pos_counter::pos(); } // FEATURE: common header instead of extern?
 
-struct token_str
+struct file_map
 {
-	static std::vector<node_base*> value;
+	static std::vector<std::string> files;
 };
 
-std::vector<node_base*> token_str::value;
+std::vector<std::string> file_map::files;
 
-std::vector<node_base*>& get_token_vector() { return token_str::value; }
+std::vector<std::string>& get_files() { return file_map::files; }
 
 //! creates a new token and appends it
-int app3(token_t*& token, int token_id, const char* text, int mult = 1)
+int app3(token_t*& token, int token_id, const char* text)
 { // FEATURE: rename to app() or app_token()
-	cnt(text, mult);
+	cnt(text);
 	token = new token_t(get_pos(), token_id);
 	token_str::value.push_back(token);
 	return token_id;
 }
-
-/*int app_num(int value) {
-	return token_str::value.push_back(new number_t(value)), I_CONSTANT;
-}*/
 
 //! appends an already created terminal
 template<class T> int app(T* elem, int lex_id/*, const char* text, int mult = 1*/)
@@ -83,6 +178,67 @@ int app_with_string(T*& token, int lex_id, const char* text, const char* end) {
 	char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, text, length);
 
 	return app(token = new T(res, get_pos()), lex_id);
+}
+
+enum int_suffix_type
+{
+	no_suffix,
+	suf_u,
+	suf_ul,
+	suf_ull,
+	suf_l,
+	suf_ll,
+};
+
+bool icmp(const char* p, char c) {
+	return tolower(*p) == tolower(c);
+}
+
+const char* skip_suffix(const char*& p)
+{
+	int_suffix_type suf;
+	// (((u|U)(l|L|ll|LL)?)|((l|L|ll|LL)(u|U)?))
+	if(icmp(p, 'u')) // TODO: ?:
+	{
+		if(icmp(p+1,'l'))
+		{
+			if(*(p+1)==*(p+2))
+			 suf=suf_ull;
+			else
+			 suf=suf_ul;
+		}
+		else
+		 suf=suf_u;
+	}
+	else if(icmp(p, 'l'))
+	{
+		if(*(p+1) == (*p)) // ll or LL
+		{
+			suf = icmp(p+2, 'u') ? suf_ull : suf_ll;
+		}
+		else
+		{
+			suf = icmp(p+1, 'u') ? suf_ul : suf_l;
+		}
+	}
+	else
+	 suf = no_suffix;
+
+	switch(suf)
+	{
+		case suf_ull:
+			++p;
+		case suf_ll:
+		case suf_ul:
+			++p;
+		case suf_l:
+		case suf_u:
+			++p;
+		default:
+			;
+	}
+
+	return p;
 }
 
 %}
@@ -185,9 +341,16 @@ static int check_type(void);
 						
 						return app(yylval->name = new identifier_t(res, get_pos()), check_type()); }
 
-{HP}{H}+{IS}?				{ sscanf(yytext, "%x", &yylval->_int); return I_CONSTANT; } // TODO: position
-{NZ}{D}*{IS}?				{ /*int i; sscanf(yytext, "%d", &i); return new cireturn I_CONSTANT;*/ sscanf(yytext, "%x", &yylval->_int); return I_CONSTANT; }
-"0"{O}*{IS}?				{ sscanf(yytext, "%o", &yylval->_int); return I_CONSTANT; }
+{HP}{H}+{IS}?				{
+						const char* p = yytext + sscanf(yytext, "%x", &yylval->_int);
+						skip_suffix(p);
+						return app_with_string(yylval->iconstant, I_CONSTANT, yytext, p); }
+{NZ}{D}*{IS}?				{ 	const char* p = yytext + sscanf(yytext, "%d", &yylval->_int); // TODO: common func for ints
+						skip_suffix(p);
+						return app_with_string(yylval->iconstant, I_CONSTANT, yytext, p); }
+"0"{O}*{IS}?				{ 	const char* p = yytext + sscanf(yytext, "%o", &yylval->_int); // TODO: common func for ints
+						skip_suffix(p);
+						return app_with_string(yylval->iconstant, I_CONSTANT, yytext, p); }
 {CP}?"'"([^'\\\n]|{ES})+"'"		{ const char* pars = yytext; if(*pars == 'u' || *pars == 'U' || *pars == 'L') ++pars; ++pars;
 						char tmp_c; sscanf(pars, "%c", &tmp_c); yylval->_int = tmp_c; return I_CONSTANT; }
 
@@ -208,7 +371,7 @@ static int check_type(void);
 						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, pars, length);
 						std::cout << "STR: " << res << std::endl;
 						// FEATURE: common routine with identifier
-						return app(yylval->name = new identifier_t(res, get_pos()), STRING_LITERAL); }
+						return app(yylval->string_literal = new string_literal_t(res, get_pos()), STRING_LITERAL); }
 
 "..."					{ return app3(yylval->token, ELLIPSIS, yytext); }
 ">>="					{ return app3(yylval->token, RIGHT_ASSIGN, yytext); }
@@ -257,11 +420,16 @@ static int check_type(void);
 "|"					{ return app3(yylval->token, '|', yytext); }
 "?"					{ return app3(yylval->token, '?', yytext); }
 
-"\t"					{ app3(yylval->token, '\t', yytext, 8); }
-"\n"					{ app3(yylval->token, '\n', yytext); pos_counter::newline(); }
+"\t"					{ app3(yylval->token, '\t', yytext); }
+"\n"					{ app3(yylval->token, '\n', yytext); pos_counter::newline(yytext); }
 "\v"					{ throw "non-supported sign \\v"; }
 "\f"					{ throw "non-supported sign \\f"; }
 " "					{ app3(yylval->token, ' ', yytext); }
+"#"([^\\\n])*"\n"			{ std::cout << "preprocessor line" << std::endl;
+						std::cout << pos_counter::pos() << std::endl;
+						pos_counter::parse_ppline(yytext);
+						std::cout << pos_counter::pos() << std::endl;
+						}
 .					{ std::cerr << "At: " << yytext << std::endl; throw "bad character"; }
 
 %%

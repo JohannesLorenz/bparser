@@ -1,10 +1,19 @@
 #include <iostream>
 #include <iomanip>
+#include <vector>
 
 #include "token.h"
 #include "node.h"
 #include "visitor.h"
 #include "parser.h"
+
+extern std::vector<std::string>& get_files();
+
+void init_files()
+{
+	// init default file
+	get_files().push_back("default.c");
+}
 
 std::ostream& operator<<(std::ostream& stream,
 	const geom_t& g)
@@ -15,15 +24,56 @@ std::ostream& operator<<(std::ostream& stream,
 std::ostream& operator<<(std::ostream& stream,
 	const span_t& s)
 {
-	return stream << "l" << s.first.line << ", c" << s.first.col;
+	return stream << get_files().at(s.first.file_id) << ": "
+		<< "l" << s.first.line << ", c" << s.first.col;
 }
 
 //template<>
 //void type_specifier_simple_t::accept(visitor_t& v) { v.visit(this); }
 
+/*geom_t noconst_terminal_t::get_length() const { // TODO: rename: length
+	
+}*/
+
 identifier_t::identifier_t(const char* name, geom_t geom) :
-	terminal_t(geom, t_identifier),
-	name(name) {}
+	noconst_1line_terminal_t(geom, t_identifier, name) {}
+
+std::size_t token_t::length() const
+{
+	return (value <= std::numeric_limits<signed char>::max())
+		? ((value == '\n') ? 0 : 1)
+		: token_length((token_id)value);
+}
+
+std::size_t token_t::newlines() const
+{
+	return (std::size_t)(value == '\n');
+}
+
+std::size_t string_literal_t::length() const { return _length; }
+std::size_t string_literal_t::newlines() const { return _newlines; }
+
+const char* next_0_or_n(const char* p)
+{
+	for(; p && (*p != '\n'); ++p) ;
+	return p;
+}
+
+string_literal_t::string_literal_t(const char* value, geom_t geom) :
+	noconst_terminal_t(geom, t_string_literal, value),
+	_newlines(0)
+{
+	const char *p = value, *last_linestart = value;
+	for(; p; p = next_0_or_n(p+1))
+	{
+		last_linestart = p+1;
+		++_newlines;
+	}
+	_length = p - last_linestart;
+}
+
+std::size_t noconst_1line_terminal_t::length() const { return raw.length(); }
+std::size_t noconst_1line_terminal_t::newlines() const { return 0; }
 
 void token_t::accept(visitor_t& v) { v.visit(this); }
 //void number_t::accept(visitor_t& v) { v.visit(this); }
@@ -79,6 +129,7 @@ void sizeof_expression_t::accept(visitor_t& v) { v.visit(this); }
 
 void block_item_t::accept(visitor_t &v) { v.visit(this); }
 void identifier_t::accept(visitor_t &v) { v.visit(this); }
+void string_literal_t::accept(visitor_t &v) { v.visit(this); }
 
 void init_declarator_t::accept(visitor_t &v) { v.visit(this); }
 void init_declarator_list_t::accept(visitor_t &v) { v.visit(this); }
@@ -118,6 +169,7 @@ void specifier_qualifier_list_t::accept(visitor_t &v) { v.visit(this); }
 
 void struct_or_union_specifier_t::accept(visitor_t &v) { v.visit(this); }
 void struct_declaration_list_t::accept(visitor_t &v) { v.visit(this); }
+void struct_declaration_t::accept(visitor_t& v) { v.visit(this); }
 void struct_declarator_list_t::accept(visitor_t &v) { v.visit(this); }
 void struct_declarator_t::accept(visitor_t &v) { v.visit(this); }
 void enum_specifier_t::accept(visitor_t &v) { v.visit(this); }
@@ -129,4 +181,6 @@ void parameter_declaration_t::accept(visitor_t &v) { v.visit(this); }
 void identifier_list_t::accept(visitor_t &v) { v.visit(this); }
 
 
+
+void iconstant_t::accept(visitor_t &v) { v.visit(this); }
 

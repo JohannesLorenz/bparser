@@ -46,9 +46,9 @@ R* app_right(R* cur, S& stor, Right* left) {
 void c11() { throw "This C11 extension is not implemented yet."; }
 void not_yet() { throw "This extension is to be done."; }
 
-extern std::vector<token_t*>& get_token_vector();
+extern std::vector<terminal_t*>& get_token_vector();
 
-token_t* app_token() { return get_token_vector().back(); }
+//terminal_t* app_token() { return get_token_vector().back(); }
 
 template<class T> T* alloc(T*& ptr_ref) { return ptr_ref = new T(); /* be C++03 conform */ }
 
@@ -133,6 +133,11 @@ typedef void* yyscan_t;
 
 	struct primary_expression_t* primary_expression;
 	struct terminal_t* terminal;
+	struct iconstant_t* iconstant;
+
+	struct string_literal_t* string_literal;
+
+	struct translation_unit_t* translation_unit;
 }
 
 %token	IDENTIFIER I_CONSTANT F_CONSTANT STRING_LITERAL FUNC_NAME SIZEOF
@@ -154,11 +159,12 @@ typedef void* yyscan_t;
 
 %type <name> IDENTIFIER ENUMERATION_CONSTANT TYPEDEF_NAME
 
-%type <token> I_CONSTANT F_CONSTANT STRING_LITERAL
+%type <string_literal> STRING_LITERAL
+%type <token> I_CONSTANT F_CONSTANT
 
 // FEATURE: wrong: translation_unit_t?
-%type <node> translation_unit
-	static_assert_declaration
+%type <translation_unit> translation_unit
+%type <node> static_assert_declaration
 
 %type<expression> postfix_expression
 	unary_expression
@@ -254,8 +260,8 @@ typedef void* yyscan_t;
 
 primary_expression // parents: postfix_expression
 	: IDENTIFIER { alloc($$); $$->c.fill(NULL, $1); }
-	| constant { $$->c.set($1); }
-	| string { /*$$=$1;*/ not_yet(); }
+	| constant { alloc($$); $$->c.set($1); }
+	| string { alloc($$); $$->c.set($1); }
 	| '(' expression ')' { alloc($$); $$->c.fill(NULL, NULL, $1, $2, $3); }
 	| generic_selection { c11(); }
 	;
@@ -502,8 +508,8 @@ struct_declaration_list
 	;
 
 struct_declaration
-	: specifier_qualifier_list ';'	/* for anonymous struct/union */
-	| specifier_qualifier_list struct_declarator_list ';'
+	: specifier_qualifier_list ';' { alloc($$); $$->c.fill($1, NULL, $2); } /* for anonymous struct/union */
+	| specifier_qualifier_list struct_declarator_list ';' { alloc($$); $$->c.fill($1, $2, $3); }
 	| static_assert_declaration { c11(); }
 	;
 
@@ -715,7 +721,7 @@ designator
 	;
 
 static_assert_declaration
-	: STATIC_ASSERT '(' constant_expression ',' STRING_LITERAL ')' ';'
+	: STATIC_ASSERT '(' constant_expression ',' STRING_LITERAL ')' ';' { c11(); }
 	;
 
 statement

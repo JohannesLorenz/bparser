@@ -1,6 +1,8 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
+#include <cstddef>
+
 // TODO: remove this include,
 //	make enum independent (other values),
 //	and show conversion only to parser.c
@@ -88,5 +90,6 @@ enum token_id
 };
 
 const char* name_of(int token_id);
+std::size_t token_length(token_id t);
 
 #endif // TOKEN_H

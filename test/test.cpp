@@ -7,12 +7,14 @@
 #include "lexer.h"
 
 extern int yydebug;
-extern std::vector<token_t*>& get_token_vector();
+extern std::vector<terminal_t*>& get_token_vector();
 
 int yyparse(translation_unit_t **expression, yyscan_t scanner);
 
 translation_unit_t *getAST(const char *expr)
-{	
+{
+	init_files();
+
 	translation_unit_t *expression;
 	yyscan_t scanner;
 	YY_BUFFER_STATE state;
@@ -41,11 +43,21 @@ translation_unit_t *getAST(const char *expr)
 	{
 		(*itr)->accept(dumper);
 	}*/
+#if 0
+	std::cout << "comparing input buffer with token string..." << std::endl;
+	dumper_t dumper;
+	std::vector<token_t*>& tokens = get_token_vector();
+	for(std::vector<token_t*>::const_iterator itr = tokens.begin();
+		itr != tokens.end(); ++itr)
+	{
+		(*itr)->accept(dumper);
+	}
+#endif
 
 	yy_delete_buffer(state, scanner);
 	
 	yylex_destroy(scanner);
-	
+
 	func_visitor<type_completor> f;
 	expression->accept(f);
 
@@ -85,18 +97,22 @@ int main(void)
 		"}\n";
 #else
 	char test[] = "\tint main(int) {\n"
-		"for(;;) {;}\n"
-		"while(true) {;}\n"
-		"do {;} while (true);\n"
-		"int x = 3 + 0 * 4;\n"
-		"x++;\n"
-		"42;\n"
-		"41.999f;\n"
-		"I_AM_AN_ENUM;\n"
-		"'c';\n"
-		"\"Hallo Welt!\";\n"
-		"sizeof(unsigned int);\n"
-		"}";
+		"\t\tfor(;;) {;}\n"
+		"\t\twhile(true) {;}\n"
+		"\t\tdo {;} while (true);\n"
+//		"\t\tint x = 3 + 0 * 4;\n"
+		"\t\tx++;\n"
+		"# 4 test.c 3 2\n"
+		"# 7 test.c 3 2\n"
+//		"\t\t42;\n"
+		"\t\t0xDEADBEEF;\n"
+//		"\t\t41.999f;\n"
+		"# 6 test.c 5 4\n"
+		"\t\tI_AM_AN_ENUM;\n"
+//		"\t\t'c';\n"
+//		"\t\t\"Hallo Welt!\";\n"
+		"\t\tsizeof(unsigned int);\n"
+		"\t}";
 #endif
 	std::cerr << test << std::endl;
 	
@@ -109,7 +125,7 @@ int main(void)
 	//    printf("Result of '%s' is %d\n", test, result);
 	puts("Result:");
 	dumper_t dumper;
-		e->accept(dumper);
+	e->accept(dumper);
 	cleaner_t cleaner;
 	e->accept(cleaner);
 	

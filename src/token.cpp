@@ -96,3 +96,65 @@ const char* name_of(int token_id)
 	throw "name for invalid token id requested";
 }
 
+std::size_t token_length(token_id t)
+{
+	switch(t)
+	{
+		case t_static_assert:
+			return 13;
+		case t_thread_local:
+			return 12;
+		case t_imaginary:
+			return 9;
+		case t_register:
+		case t_restrict:
+		case t_volatile:
+		case t_unsigned:
+		case t_continue:
+		case t_noreturn:
+			return 8;
+		case t_typedef:
+		case t_complex:
+		case t_default:
+		case t_alignas:
+		case t_alignof:
+		case t_generic:
+			return 7;
+		case t_extern:
+		case t_static:
+		case t_sizeof:
+		case t_inline:
+		case t_signed:
+		case t_double:
+		case t_struct:
+		case t_switch:
+		case t_return:
+		case t_atomic:
+			return 6;
+		case t_const:
+		case t_short:
+		case t_float:
+		case t_union:
+		case t_while:
+		case t_break:
+			return 5;
+		case t_auto:
+		case t_bool:
+		case t_char:
+		case t_long:
+		case t_void:
+		case t_enum:
+		case t_case:
+		case t_else:
+		case t_goto:
+			return 4;
+		case t_left_assign:
+		case t_right_assign:
+		case t_int:
+		case t_ellipsis:
+		case t_for:
+			return 3;
+		default:
+			return 2;
+	}
+}

@@ -1,11 +1,14 @@
 #include <cassert>
 #include <iostream>
 #include <cstdio>
+#include <vector>
+#include <string>
 #include "node.h"
 #include "visitor.h"
 
 #include "token.h"
 
+extern std::vector<std::string>& get_files();
 
 
 
@@ -344,8 +347,10 @@ public:
 		stream(stream),
 		span(span)
 	{
-		char tmp[32];
-		snprintf(tmp, 32, "(l%4d c%4d) (l%4d c%4d)", span.first.line,
+		char tmp[64];
+		snprintf(tmp, 64, "%32s (l%4d c%4d) (l%4d c%4d)",
+			get_files().at(span.first.file_id).c_str(),
+			span.first.line,
 			span.first.col, span.second.line, span.second.col);
 		stream << tmp;
 		for(std::size_t i = 0; i < *depth; ++i)
@@ -464,6 +469,11 @@ void dumper_t::visit(constant_t<int>* c)
 {
 	incr_depth_t x(&depth, stream, c->span);
 	stream << "int constant: " << c->value << std::endl;
+}
+
+void dumper_t::visit(iconstant_t* c) {
+	incr_depth_t x(&depth, stream, c->span);
+	stream << "int constant: (TODO)" << std::endl;
 }
 
 void dumper_t::visit(constant_t<float>* c)
@@ -651,8 +661,15 @@ void dumper_t::visit(sizeof_expression_t* n)
 void dumper_t::visit(identifier_t *n)
 {
 	incr_depth_t x(&depth, stream, n->span);
-	stream << "identifier: " << n->name << std::endl;
+	stream << "identifier: " << n->raw << std::endl;
 	fwd::visit(n);
+}
+
+void dumper_t::visit(string_literal_t *s)
+{
+	incr_depth_t x(&depth, stream, s->span);
+	stream << "string literal: " << s->raw << std::endl;
+	fwd::visit(s);
 }
 
 void dumper_t::visit(type_specifier_token *t)
@@ -664,7 +681,7 @@ void dumper_t::visit(type_specifier_token *t)
 void dumper_t::visit(type_identifier *t)
 {
 	incr_depth_t x(&depth, stream, t->span);
-	stream << "type identifier: " << t->c.value->name << std::endl;
+	stream << "type identifier: " << t->c.value->raw << std::endl;
 }
 
 void dumper_t::visit(type_qualifier_t* n) {

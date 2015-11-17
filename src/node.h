@@ -10,11 +10,15 @@
 #include <string>
 #include "tuple03.h"
 
+void init_files();
+
 struct geom_t
 {
+	int file_id;
 	int line;
 	int col;
-	geom_t(int line, int col) : line(line), col(col) {}
+	geom_t(int file_id, int line, int col) :
+		file_id(file_id), line(line), col(col) {}
 	geom_t() : line(-1), col(-1) {}
 
 	friend std::ostream& operator<<(std::ostream& stream, const geom_t&);
@@ -30,9 +34,9 @@ struct span_t
 {
 	geom_t first;
 	geom_t second;
-	span_t(int line, int col, std::size_t width) :
-		first(line, col),
-		second(line, col + width)
+	span_t(int file_id, int line, int col, std::size_t width) :
+		first(file_id, line, col),
+		second(file_id, line, col + width)
 	{
 	}
 	span_t(geom_t first, geom_t second) : first(first), second(second) {}
@@ -105,6 +109,8 @@ public:
 
 struct terminal_t : public node_t<> { // TODO: class
 	int value;
+	virtual std::size_t length() const = 0;
+	virtual std::size_t newlines() const = 0;
 public:
 	terminal_t(const geom_t& geom, int value) : node_t<>(geom), value(value) {}
 };
@@ -114,13 +120,42 @@ struct token_t : public terminal_t
 public:
 	token_t(const geom_t& pos, int value) : terminal_t(pos, value) {}
 	virtual void accept(class visitor_t& v);
+	std::size_t length() const;
+	std::size_t newlines() const;
 };
 
-struct identifier_t : public terminal_t
+struct noconst_terminal_t : public terminal_t
 {
-	std::string name;
+	std::string raw;
+	noconst_terminal_t(const geom_t& geom, int value, const char* raw) :
+		terminal_t(geom, value),
+		raw(raw) {}
+};
+
+struct noconst_1line_terminal_t : public noconst_terminal_t
+{
+	std::size_t length() const;
+	std::size_t newlines() const;
+public:
+	noconst_1line_terminal_t(const geom_t& geom, int value,
+		const char* raw) :
+		noconst_terminal_t(geom, value, raw) {}
+};
+
+struct identifier_t : public noconst_1line_terminal_t
+{
 	virtual void accept(class visitor_t& v);
 	identifier_t(const char* name, geom_t geom);
+};
+
+struct string_literal_t : public noconst_terminal_t
+{
+	std::size_t _length, _newlines;
+	std::size_t length() const;
+	std::size_t newlines() const;
+public:
+	virtual void accept(class visitor_t& v);
+	string_literal_t(const char* value, geom_t geom);
 };
 
 //typedef ch<token_t> tok;
@@ -510,6 +545,16 @@ struct constant_t : public terminal_t
 
 	virtual void accept(class visitor_t& v);
 };
+
+struct iconstant_t : public noconst_1line_terminal_t
+{
+	int suf_type; // TODO
+	iconstant_t(const char* value, geom_t geom) :
+		noconst_1line_terminal_t(geom, 0, value) {}
+
+	virtual void accept(class visitor_t& v);
+};
+
 
 struct primary_expression_t : public expression_t {
 	ptn<	terminal_t,	// TODO: constant_base
