@@ -13,7 +13,7 @@ test: test.o ../src/libbparser.so
 	$(CXX) $(FLAGS) $(LFLAGS) test.o -o test
 
 # test.cpp has no header file:
-test.o: test.cpp ../*.h
+test.o: test.cpp ../src/*.h
 	$(CXX) $(FLAGS) $(CFLAGS) -c $< -o $@
 clean:
 	rm -f test.o test

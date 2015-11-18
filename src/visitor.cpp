@@ -37,6 +37,11 @@ void fwd::visit(specifier_qualifier_list_t *s)
 	vaccept(s->c);
 }
 
+void fwd::visit(struct_or_union_specifier_t *s)
+{
+	visit_all(s->c);
+}
+
 void fwd::visit(struct_declaration_list_t* n)
 {
 	vvisit(n->c);
@@ -196,8 +201,8 @@ void fwd::visit(sizeof_expression_t* n)
 }
 
 void fwd::visit(identifier_t *) {}
-void fwd::visit(type_specifier_token *t) { visit_all(t->c); }
-void fwd::visit(type_identifier *t) { visit_all(t->c); }
+void fwd::visit(type_specifier_t *t) { accept_all(t->c); }
+//void fwd::visit(type_identifier *t) { visit_all(t->c); }
 void fwd::visit(type_qualifier_t *t) { visit_all(t->c); }
 
 void fwd::visit(type_qualifier_list_t *n)
@@ -379,6 +384,16 @@ void dumper_t::visit(specifier_qualifier_list_t *s)
 {
 	incr_depth_t x(&depth, stream, s->span);
 	stream << "specifier-qualifier-list" << std::endl;
+	fwd::visit(s);
+}
+
+void dumper_t::visit(struct_or_union_specifier_t *s)
+{
+	incr_depth_t x(&depth, stream, s->span);
+	stream << (s->is_union_type
+		? "union specifier"
+		: "struct specifier")
+		<< std::endl;
 	fwd::visit(s);
 }
 
@@ -672,17 +687,18 @@ void dumper_t::visit(string_literal_t *s)
 	fwd::visit(s);
 }
 
-void dumper_t::visit(type_specifier_token *t)
+void dumper_t::visit(type_specifier_t *t)
 {
 	incr_depth_t x(&depth, stream, t->span);
-	stream << "type specifier, id: " << t->c.value << std::endl;
+	stream << "type specifier" << std::endl;
+	fwd::visit(t);
 }
 
-void dumper_t::visit(type_identifier *t)
+/*void dumper_t::visit(type_identifier *t)
 {
 	incr_depth_t x(&depth, stream, t->span);
 	stream << "type identifier: " << t->c.value->raw << std::endl;
-}
+}*/
 
 void dumper_t::visit(type_qualifier_t* n) {
 	incr_depth_t x(&depth, stream, n->span);
@@ -960,5 +976,12 @@ void type_completor::operator()(jump_statement_t& j)
 				)
 			);
 	xaccept(j.c);
+}
+
+void type_completor::operator()(struct_or_union_specifier_t& s)
+{
+	const int keyword = s.c.get<struct_or_union_specifier_t::keyword>()->value;
+	s.is_union_type = (keyword == t_union);
+	xaccept(s.c);
 }
 

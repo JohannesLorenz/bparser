@@ -55,7 +55,7 @@ std::size_t string_literal_t::newlines() const { return _newlines; }
 
 const char* next_0_or_n(const char* p)
 {
-	for(; p && (*p != '\n'); ++p) ;
+	for(; *p && (*p != '\n'); ++p) ;
 	return p;
 }
 
@@ -64,7 +64,7 @@ string_literal_t::string_literal_t(const char* value, geom_t geom) :
 	_newlines(0)
 {
 	const char *p = value, *last_linestart = value;
-	for(; p; p = next_0_or_n(p+1))
+	for(; *p; p = next_0_or_n(p+1))
 	{
 		last_linestart = p+1;
 		++_newlines;
@@ -162,8 +162,8 @@ void cast_expression_t::accept(visitor_t &v) { v.visit(this); }
 
 
 void type_name_t::accept(visitor_t &v) { v.visit(this); }
-void type_specifier_token::accept(visitor_t &v) { v.visit(this); }
-void type_identifier::accept(visitor_t &v) { v.visit(this); }
+//void type_specifier_token::accept(visitor_t &v) { v.visit(this); }
+//void type_identifier::accept(visitor_t &v) { v.visit(this); }
 void abstract_declarator_t::accept(visitor_t &v) { v.visit(this); }
 void specifier_qualifier_list_t::accept(visitor_t &v) { v.visit(this); }
 

@@ -82,7 +82,16 @@ int evaluate(node_base* /*e*/)
 	}*/
 	return 0;
 }
- 
+
+void run_test(const char* str)
+{
+	std::cout << "code: " << std::endl << str << std::endl;
+	translation_unit_t *e = getAST(str);
+
+	dumper_t dumper;
+	e->accept(dumper);
+}
+
 int main(void)
 {
 	translation_unit_t *e = NULL;
@@ -110,12 +119,12 @@ int main(void)
 		"# 6 test.c 5 4\n"
 		"\t\tI_AM_AN_ENUM;\n"
 //		"\t\t'c';\n"
-//		"\t\t\"Hallo Welt!\";\n"
+		"\t\t\"Hallo Welt!\";\n"
 		"\t\tsizeof(unsigned int);\n"
 		"\t}";
 #endif
 	std::cerr << test << std::endl;
-	
+
 	int result = 0;
 	
 	e = getAST(test);
@@ -128,6 +137,9 @@ int main(void)
 	e->accept(dumper);
 	cleaner_t cleaner;
 	e->accept(cleaner);
+
+	run_test("typedef struct s { int x; };\n"
+		"typedef union u { int x; };");
 	
 	return 0;
 }

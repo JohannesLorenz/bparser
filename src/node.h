@@ -339,6 +339,7 @@ struct abstract_declarator_t : public node_t<>
 
 struct type_specifier_t : public declaration_specifier_type
 {
+	ptn<	node_t> c; // FEATURE: more granular?
 	virtual void accept(class visitor_t& v);
 };
 
@@ -348,7 +349,7 @@ struct type_specifier_complex_t : public type_specifier_t {
 
 struct struct_or_union_specifier_t : public type_specifier_complex_t
 {
-	bool is_union_type; // TODO: completor
+	bool is_union_type;
 
 	enum access_t {
 		keyword,
@@ -665,7 +666,7 @@ struct cast_expression_t : public expression_t
 	virtual void accept(class visitor_t& v);
 };
 
-struct type_specifier_token : public type_specifier_t
+/*struct type_specifier_token : public type_specifier_t
 {
 	ptn<token_t> c;
 	virtual void accept(class visitor_t& v);
@@ -675,7 +676,7 @@ struct type_identifier : public type_specifier_t
 {
 	ptn<identifier_t> c;
 	virtual void accept(class visitor_t& v);
-};
+};*/
 
 #if 0
 template<class IdType, class Base = node_t>

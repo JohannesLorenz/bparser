@@ -7,6 +7,7 @@
 
 #include "node.h"
 #include "parser.h"
+#include "token.h" // TODO
 
 #include <cctype>
 #include <iostream>
@@ -30,11 +31,7 @@ class pos_counter
 {
 	static int last_file;
 	static int last_line;
-	//static int last_col;
-	static const char* last_linebreak;
-	static const char* last_text_pos;
 	static int last_col;
-	//static int last_mult;
 public:
 	static span_t count(const char* text_pos/*, std::size_t mult = 1*/) {
 		if(get_token_vector().size())
@@ -43,8 +40,12 @@ public:
 
 			std::size_t newlines = prev->newlines(),
 				length = prev->length();
+		/*	if(prev->value <= 255)
+			 std::cout << "at: " << prev->value << std::endl;
+			else
+			 std::cout << "at (name): " << name_of(prev->value) << std::endl;
 			std::cout << "counting: " << newlines << " newlines, "
-				<< length << " length" << std::endl;
+				<< length << " length" << std::endl;*/
 
 			if(newlines)
 			{
@@ -57,8 +58,6 @@ public:
 			}
 		}
 #if 0
-		last_text_pos = text_pos;
-
 		if(!last_linebreak)
 		{
 			// if it is not initialized yet,
@@ -103,8 +102,11 @@ public:
 	{
 		++p; // skip #
 		for(; *p==' '; ++p) ;
-		//last_col = 1;
+		last_col = 1;
 		p += sscanf(p, "%d", &last_line);
+		// the last token in the token vector is \n,
+		// so we add a decrement manually:
+		--last_line;
 		for(; *p==' '; ++p) ;
 		std::string fname;
 		for(; *p!=' '; ++p) fname += *p;
@@ -128,15 +130,12 @@ public:
 		last_file = v_id;
 		for(; *p!='\n'; ++p) ;
 		// for explanation, see @a pos_counter::newline
-		last_linebreak = p;
 	}
 };
 
 int pos_counter::last_file = 0; // default file
 // we start at 1, 1 (typical convention)
 int pos_counter::last_line = 1;
-const char* pos_counter::last_linebreak = NULL;
-const char* pos_counter::last_text_pos;
 int pos_counter::last_col = 1;
 //int pos_counter::last_mult = 1;
 
@@ -421,7 +420,7 @@ static int check_type(void);
 "?"					{ return app3(yylval->token, '?', yytext); }
 
 "\t"					{ app3(yylval->token, '\t', yytext); }
-"\n"					{ app3(yylval->token, '\n', yytext); pos_counter::newline(yytext); }
+"\n"					{ std::cout << "NEWLINE TOKEN" << std::endl; app3(yylval->token, '\n', yytext); pos_counter::newline(yytext); }
 "\v"					{ throw "non-supported sign \\v"; }
 "\f"					{ throw "non-supported sign \\f"; }
 " "					{ app3(yylval->token, ' ', yytext); }

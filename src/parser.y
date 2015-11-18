@@ -484,11 +484,11 @@ type_specifier_simple
 	;
 
 type_specifier
-	: type_specifier_simple { type_specifier_token* t; $$ = alloc(t); t->c = $1; }
+	: type_specifier_simple { $$ = alloc($$); $$->c.set($1); }
 	| atomic_type_specifier { c11(); }
-	| struct_or_union_specifier { /*alloc($$); $$->c.set($1);*/ not_yet(); }
-	| enum_specifier { /*alloc($$); $$->c.set($1);*/ not_yet() }
-	| TYPEDEF_NAME { type_identifier* t; $$ = alloc(t); t->c = $1; }	/* after it has been defined as such */
+	| struct_or_union_specifier { $$ = alloc($$); $$->c.set($1); }
+	| enum_specifier { $$ = alloc($$); $$->c.set($1); }
+	| TYPEDEF_NAME { $$ = alloc($$); $$->c.set($1); }	/* after it has been defined as such */
 	;
 
 struct_or_union_specifier

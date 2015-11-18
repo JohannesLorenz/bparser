@@ -15,6 +15,7 @@ public:
 	virtual void visit(type_name_t *) {}
 	virtual void visit(specifier_qualifier_list_t* ) {}
 
+	virtual void visit(struct_or_union_specifier_t* ) {}
 	virtual void visit(struct_declaration_list_t* ) {}
 	virtual void visit(struct_declaration_t* ) {}
 	virtual void visit(struct_declarator_list_t* ) {}
@@ -50,8 +51,8 @@ public:
 	virtual void visit(ternary_expression_t* ) {}
 	virtual void visit(binary_expression_t* ) {}
 	virtual void visit(storage_class_specifier_t* ) {}
-	virtual void visit(type_specifier_token* ) {}
-	virtual void visit(type_identifier* ) {}
+	//virtual void visit(type_specifier_token* ) {}
+	//virtual void visit(type_identifier* ) {}
 	virtual void visit(type_specifier_t* ) {}
 	virtual void visit(type_qualifier_t* ) {}
 	virtual void visit(type_qualifier_list_t* ) {}
@@ -198,6 +199,7 @@ public:
 	void visit(type_name_t *n) { f(n); }
 	void visit(specifier_qualifier_list_t* n) { f(n); }
 
+	void visit(struct_or_union_specifier_t* n) { f(n); }
 	void visit(struct_declaration_list_t* n) { f(n); }
 	void visit(struct_declaration_t* n) { f(n); }
 	void visit(struct_declarator_list_t* n) { f(n); }
@@ -232,8 +234,8 @@ public:
 	void visit(ternary_expression_t* n) { f(n); }
 	void visit(binary_expression_t* n) { f(n); }
 	void visit(storage_class_specifier_t* n) { f(n); }
-	void visit(type_specifier_token* n) { f(n); }
-	void visit(type_identifier* n) { f(n); }
+	//void visit(type_specifier_token* n) { f(n); }
+	//void visit(type_identifier* n) { f(n); }
 	void visit(type_specifier_t* n) { f(n); }
 	void visit(type_qualifier_t* n) { f(n); }
 	void visit(type_qualifier_list_t* n) { f(n); }
@@ -280,97 +282,6 @@ public:
 	void visit(direct_abstract_declarator_func* n) { f(n); }
 	void visit(direct_declarator_t* n) { f(n); }
 };
-
-class fwd : public visitor_t
-{
-protected:
-	std::size_t depth;
-
-	void handle_depth();
-
-public:
-	fwd() : depth(0) {}
-	virtual ~fwd() {}
-
-	void visit(type_name_t *t);
-	void visit(specifier_qualifier_list_t* );
-
-	void visit(struct_declaration_list_t* );
-	void visit(struct_declaration_t* );
-	void visit(struct_declarator_list_t* );
-	void visit(struct_declarator_t* );
-	void visit(enum_specifier_t* );
-	void visit(enumerator_list_t* );
-	void visit(enumerator_t* );
-	void visit(parameter_type_list_t* );
-	void visit(parameter_list_t* );
-	void visit(parameter_declaration_t* );
-	void visit(identifier_list_t* );
-
-	void visit(primary_expression_t* );
-	void visit(iconstant_t* ) {}
-	void visit(constant_t<int>* ) {}
-	void visit(constant_t<float>* ) {}
-	void visit(constant_t<std::string>* ) {}
-//	void visit(primary_identifier_t* n);
-//	void visit(primary_expression_expression_t* n);
-
-	void visit(array_access_expression_t* e);
-	void visit(argument_expression_list_t* e);
-	void visit(function_call_expression_t* e);
-	void visit(struct_access_expression_t* e);
-	void visit(cast_postfix_expression_t* e);
-	void visit(cast_expression_t* e);
-	//void visit(type_specifier_simple_t* e);
-	//void visit(number_t *e);
-	void visit(token_t* e);
-	void visit(unary_expression_l *e);
-	void visit(unary_expression_r *e);
-	void visit(ternary_expression_t *e);
-	void visit(binary_expression_t *e);
-	void visit(expression_statement_t *e);
-	//void visit(node_t *e); //!< default
-	void visit(storage_class_specifier_t* n);
-	void visit(type_specifier_token* t);
-	void visit(type_identifier* );
-	void visit(type_qualifier_t* n);
-	void visit(type_qualifier_list_t* n);
-	void visit(function_specifier_t* n);
-	void visit(alignment_specifier_t* n);
-	void visit(declaration_list_t* n);
-	void visit(compound_statement_t* n);
-	void visit(pointer_t* n);
-	void visit(declarator_t* n);
-	void visit(declaration_specifiers_t* n);
-	void visit(function_definition_t* n);
-	void visit(external_declaration_t* n);
-	void visit(translation_unit_t* n);
-	void visit(declaration_t* n);
-	void visit(iteration_statement_t* n);
-	void visit(identifier_t* n);
-	void visit(string_literal_t* ) {}
-	void visit(sizeof_expression_t* n);
-//	void visit(constant_t* );
-	void visit(init_declarator_t* );
-	void visit(init_declarator_list_t* );
-	void visit(initializer_t* );
-	void visit(initializer_list_t* );
-	void visit(designator_list_t* );
-	void visit(designator_id* );
-	void visit(designator_constant_expr* );
-
-	void visit(abstract_declarator_t* );
-
-	void visit(direct_declarator_id* );
-	void visit(direct_declarator_decl* );
-	void visit(direct_declarator_arr* );
-	void visit(direct_declarator_func* );
-	void visit(direct_abstract_declarator_decl* );
-	void visit(direct_abstract_declarator_arr* );
-	void visit(direct_abstract_declarator_func* );
-
-
-}; // TODO: identifier...
 
 class ftor_base
 {
@@ -444,6 +355,136 @@ public:
 	ftor_base(visitor_t* vref) : vref(vref) {}
 };
 
+struct enter {};
+struct leave {};
+
+template<class Functor2>
+class io_visitor;
+
+template<class Functor2>
+class io_functor : ftor_base
+{
+	Functor2 f;
+	io_functor(io_visitor<Functor2>* vref, const Functor2& f) :
+		ftor_base(vref),
+		f(f) {}
+	io_functor(io_visitor<Functor2>* vref) :
+		ftor_base(vref),
+		f(vref) {}
+	template<class T>
+	void operator()(T& n) {
+		f(n, enter());
+		xaccept(n.c);
+		f(n, leave());
+	}
+};
+
+template<class Functor2>
+class io_visitor : public func_visitor< io_functor<Functor2> >
+{
+protected:
+	io_functor<Functor2> iof;
+public:
+	io_visitor() : iof(this) {}
+	io_visitor(const Functor2& ftor) : iof(this, ftor) {}
+
+	template<class NodeType>
+	void operator()(NodeType& n) { iof(n); }
+};
+
+class fwd : public visitor_t
+{
+protected:
+	std::size_t depth;
+
+	void handle_depth();
+
+public:
+	fwd() : depth(0) {}
+	virtual ~fwd() {}
+
+	void visit(type_name_t *t);
+	void visit(specifier_qualifier_list_t* );
+
+	void visit(struct_or_union_specifier_t* );
+	void visit(struct_declaration_list_t* );
+	void visit(struct_declaration_t* );
+	void visit(struct_declarator_list_t* );
+	void visit(struct_declarator_t* );
+	void visit(enum_specifier_t* );
+	void visit(enumerator_list_t* );
+	void visit(enumerator_t* );
+	void visit(parameter_type_list_t* );
+	void visit(parameter_list_t* );
+	void visit(parameter_declaration_t* );
+	void visit(identifier_list_t* );
+
+	void visit(primary_expression_t* );
+	void visit(iconstant_t* ) {}
+	void visit(constant_t<int>* ) {}
+	void visit(constant_t<float>* ) {}
+	void visit(constant_t<std::string>* ) {}
+//	void visit(primary_identifier_t* n);
+//	void visit(primary_expression_expression_t* n);
+
+	void visit(array_access_expression_t* e);
+	void visit(argument_expression_list_t* e);
+	void visit(function_call_expression_t* e);
+	void visit(struct_access_expression_t* e);
+	void visit(cast_postfix_expression_t* e);
+	void visit(cast_expression_t* e);
+	//void visit(type_specifier_simple_t* e);
+	//void visit(number_t *e);
+	void visit(token_t* e);
+	void visit(unary_expression_l *e);
+	void visit(unary_expression_r *e);
+	void visit(ternary_expression_t *e);
+	void visit(binary_expression_t *e);
+	void visit(expression_statement_t *e);
+	//void visit(node_t *e); //!< default
+	void visit(storage_class_specifier_t* n);
+	//void visit(type_specifier_token* t);
+	//void visit(type_identifier* );
+	void visit(type_specifier_t* t);
+	void visit(type_qualifier_t* n);
+	void visit(type_qualifier_list_t* n);
+	void visit(function_specifier_t* n);
+	void visit(alignment_specifier_t* n);
+	void visit(declaration_list_t* n);
+	void visit(compound_statement_t* n);
+	void visit(pointer_t* n);
+	void visit(declarator_t* n);
+	void visit(declaration_specifiers_t* n);
+	void visit(function_definition_t* n);
+	void visit(external_declaration_t* n);
+	void visit(translation_unit_t* n);
+	void visit(declaration_t* n);
+	void visit(iteration_statement_t* n);
+	void visit(identifier_t* n);
+	void visit(string_literal_t* ) {}
+	void visit(sizeof_expression_t* n);
+//	void visit(constant_t* );
+	void visit(init_declarator_t* );
+	void visit(init_declarator_list_t* );
+	void visit(initializer_t* );
+	void visit(initializer_list_t* );
+	void visit(designator_list_t* );
+	void visit(designator_id* );
+	void visit(designator_constant_expr* );
+
+	void visit(abstract_declarator_t* );
+
+	void visit(direct_declarator_id* );
+	void visit(direct_declarator_decl* );
+	void visit(direct_declarator_arr* );
+	void visit(direct_declarator_func* );
+	void visit(direct_abstract_declarator_decl* );
+	void visit(direct_abstract_declarator_arr* );
+	void visit(direct_abstract_declarator_func* );
+
+
+}; // TODO: identifier...
+
 class fwd_functor : ftor_base
 {
 	std::size_t depth;
@@ -462,7 +503,6 @@ public:
 
 	// unary op_id
 	// binary op_id
-	// TODO: if impl: struct_or_union
 
 	// TODO: float, int
 
@@ -470,6 +510,7 @@ public:
 	void operator()(iteration_statement_t& );
 	void operator()(labeled_statement_t& );
 	void operator()(jump_statement_t& );
+	void operator()(struct_or_union_specifier_t& );
 
 
 	// default case
@@ -536,12 +577,13 @@ public:
 		n.span = get_span(n.c);
 	}
 
-	// token_t and identifier_t have no children
+	// terminals have no children
 	//  -> get geom directly from them
 
 	void operator()(/*const*/ token_t& ) {}
 	void operator()(/*const*/ iconstant_t& ) {}
 	void operator()(/*const*/ identifier_t& ) {}
+	void operator()(/*const*/ string_literal_t& ) {}
 };
 
 
@@ -561,6 +603,7 @@ public:
 	void visit(type_name_t *t);
 	void visit(specifier_qualifier_list_t* );
 
+	void visit(struct_or_union_specifier_t* );
 	void visit(struct_declaration_list_t* );
 	void visit(struct_declaration_t* );
 	void visit(struct_declarator_list_t* );
@@ -597,8 +640,9 @@ public:
 	void visit(expression_statement_t *e);
 	//void visit(node_t *e); //!< default
 	void visit(storage_class_specifier_t* n);
-	void visit(type_specifier_token* t);
-	void visit(type_identifier* );
+	//void visit(type_specifier_token* t);
+	//void visit(type_identifier* );
+	void visit(type_specifier_t* t);
 	void visit(type_qualifier_t* n);
 	void visit(function_specifier_t* n);
 	void visit(alignment_specifier_t* n);
