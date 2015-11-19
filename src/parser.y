@@ -298,15 +298,15 @@ generic_association
 // FEATURE: base class: nary_expression_t?
 postfix_expression
 	: primary_expression { $$=$1; }
-	| postfix_expression '[' expression ']' { array_access_expression_t* u; $$=alloc(u); u->c.fill($1, $2, $3, $4); u->op_id = op_arr_acc; }
-	| postfix_expression '(' ')' { function_call_expression_t* u; $$=alloc(u); u->c.fill($1, $2, NULL, $3); u->op_id = op_func_call; }
-	| postfix_expression '(' argument_expression_list ')' { function_call_expression_t* u; $$=alloc(u); u->c.fill($1, $2, $3, $4); u->op_id = op_func_call; }
-	| postfix_expression '.' IDENTIFIER { struct_access_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3); e->op_id = op_struct_access_ref; }
-	| postfix_expression PTR_OP IDENTIFIER { struct_access_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3); e->op_id = op_struct_access_ptr; }
-	| postfix_expression INC_OP { unary_expression_r* u; $$=alloc(u); u->c.fill($1, $2); u->op_id = op_inc_post; }
-	| postfix_expression DEC_OP { unary_expression_r* u; $$=alloc(u); u->c.fill($1, $2); u->op_id = op_dec_post; }
-	| '(' type_name ')' '{' initializer_list '}' { cast_postfix_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3, $4, $5, NULL, $6); e->op_id = op_cast_postfix; }
-	| '(' type_name ')' '{' initializer_list ',' '}' { cast_postfix_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3, $4, $5, $6, $7); e->op_id = op_cast_postfix; }
+	| postfix_expression '[' expression ']' { array_access_expression_t* u; $$=alloc(u); u->c.fill($1, $2, $3, $4); }
+	| postfix_expression '(' ')' { function_call_expression_t* u; $$=alloc(u); u->c.fill($1, $2, NULL, $3); }
+	| postfix_expression '(' argument_expression_list ')' { function_call_expression_t* u; $$=alloc(u); u->c.fill($1, $2, $3, $4); }
+	| postfix_expression '.' IDENTIFIER { struct_access_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3); } // FEATURE: bool if with pointer?
+	| postfix_expression PTR_OP IDENTIFIER { struct_access_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3); }
+	| postfix_expression INC_OP { unary_expression_r* u; $$=alloc(u); u->c.fill($1, $2); }
+	| postfix_expression DEC_OP { unary_expression_r* u; $$=alloc(u); u->c.fill($1, $2); }
+	| '(' type_name ')' '{' initializer_list '}' { cast_postfix_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3, $4, $5, NULL, $6); }
+	| '(' type_name ')' '{' initializer_list ',' '}' { cast_postfix_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3, $4, $5, $6, $7); }
 	;
 
 // FEATURE: alternate list<token_t, assignment_exp>
@@ -317,8 +317,8 @@ argument_expression_list
 
 unary_expression
 	: postfix_expression { $$=$1; }
-	| INC_OP unary_expression { unary_expression_l* u; $$=alloc(u); u->c.fill($1, $2); u->op_id = op_inc_pre; }
-	| DEC_OP unary_expression { unary_expression_l* u; $$=alloc(u); u->c.fill($1, $2); u->op_id = op_dec_pre; }
+	| INC_OP unary_expression { unary_expression_l* u; $$=alloc(u); u->c.fill($1, $2); }
+	| DEC_OP unary_expression { unary_expression_l* u; $$=alloc(u); u->c.fill($1, $2); }
 	| unary_operator cast_expression { unary_expression_l* u; $$=alloc(u); u->c.fill($1, $2); /*u->op_id = $1;*/ }
 	| SIZEOF unary_expression { not_yet(); }
 	| SIZEOF '(' type_name ')' { sizeof_expression_t* e; alloc(e); e->c.fill($1,$2,$3,$4); $$=e; }
@@ -336,7 +336,7 @@ unary_operator
 
 cast_expression
 	: unary_expression { $$=$1; }
-	| '(' type_name ')' cast_expression { cast_expression_t* c; ($$=alloc(c))->op_id = op_cast; c->c.fill($1, $2, $3, $4); }
+	| '(' type_name ')' cast_expression { cast_expression_t* c; $$=alloc(c); c->c.fill($1, $2, $3, $4); }
 	;
 
 multiplicative_expression
@@ -399,7 +399,7 @@ logical_or_expression
 
 conditional_expression
 	: logical_or_expression { $$=$1; }
-	| logical_or_expression '?' expression ':' conditional_expression { ternary_expression_t* e; $$=alloc(e); e->op_id = op_tern; e->c.fill($1, $2, $3, $4, $5); }
+	| logical_or_expression '?' expression ':' conditional_expression { ternary_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3, $4, $5); }
 	;
 
 assignment_expression

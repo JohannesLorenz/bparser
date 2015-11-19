@@ -15,19 +15,6 @@ void init_files()
 	get_files().push_back("default.c");
 }
 
-std::ostream& operator<<(std::ostream& stream,
-	const geom_t& g)
-{
-	return stream << "geometry(line: " << g.line << ", col: " << g.col << ")";
-}
-
-std::ostream& operator<<(std::ostream& stream,
-	const span_t& s)
-{
-	return stream << get_files().at(s.first.file_id) << ": "
-		<< "l" << s.first.line << ", c" << s.first.col;
-}
-
 //template<>
 //void type_specifier_simple_t::accept(visitor_t& v) { v.visit(this); }
 

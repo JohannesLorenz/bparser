@@ -2,8 +2,14 @@
 #include <iosfwd>
 #include <cassert>
 
+#include <list>
 #include <cstdlib> // TODO
 #include <limits>
+
+#include "tuple03.h"
+#include "node_fwd.h"
+#include "node.h" // FEATURE: can this be omitted?
+#include "geom.h"
 
 #ifndef VISITOR_H
 #define VISITOR_H
@@ -12,7 +18,7 @@
 class visitor_t
 {
 public:
-	virtual void visit(type_name_t *) {}
+	virtual void visit(type_name_t *) {} // TODO: use refs?
 	virtual void visit(specifier_qualifier_list_t* ) {}
 
 	virtual void visit(struct_or_union_specifier_t* ) {}
@@ -192,7 +198,9 @@ private:
 	void f(T* n) { ftor(*n); }
 public:
 	func_visitor() : ftor(this) {}
-	func_visitor(const Functor& ftor) : ftor(ftor) {}
+
+	template<class FConstrPar>
+	func_visitor(const FConstrPar& constr) : ftor(this, constr) {}
 
 	void visit(iconstant_t* n) { f(n); }
 
@@ -360,19 +368,22 @@ struct leave {};
 
 template<class Functor2>
 class io_visitor;
-
+//#include <typeinfo>
 template<class Functor2>
 class io_functor : ftor_base
 {
 	Functor2 f;
-	io_functor(io_visitor<Functor2>* vref, const Functor2& f) :
+public:
+	template<class F2Constr> // FEATURE: solution with variable args
+	io_functor(visitor_t* vref, const F2Constr& constr) :
 		ftor_base(vref),
-		f(f) {}
-	io_functor(io_visitor<Functor2>* vref) :
+		f(vref, constr) {}
+	io_functor(visitor_t* vref) :
 		ftor_base(vref),
 		f(vref) {}
 	template<class T>
 	void operator()(T& n) {
+	//	std::cout << n.span << ": io: " << typeid(n).name() << std::endl; 
 		f(n, enter());
 		xaccept(n.c);
 		f(n, leave());
@@ -382,14 +393,14 @@ class io_functor : ftor_base
 template<class Functor2>
 class io_visitor : public func_visitor< io_functor<Functor2> >
 {
-protected:
-	io_functor<Functor2> iof;
 public:
-	io_visitor() : iof(this) {}
-	io_visitor(const Functor2& ftor) : iof(this, ftor) {}
+	//io_visitor() : iof(this) {}
+	template<class F2Constr> // FEATURE: solution with variable args
+	io_visitor(const F2Constr& constr)
+		: func_visitor< io_functor<Functor2> >(constr) {}
 
-	template<class NodeType>
-	void operator()(NodeType& n) { iof(n); }
+	/*template<class NodeType>
+	void operator()(NodeType& n) { iof(n); }*/
 };
 
 class fwd : public visitor_t
@@ -501,6 +512,10 @@ class type_completor : ftor_base
 public:
 	type_completor(visitor_t* vref) : ftor_base(vref) {}
 
+	void operator()(unary_expression_l& );
+	void operator()(unary_expression_r& );
+	void operator()(binary_expression_t& );
+	
 	// unary op_id
 	// binary op_id
 
@@ -518,6 +533,7 @@ public:
 	void operator()(/*const*/ NodeType& n) { xaccept(n.c); }
 };
 
+// TODO: all private functions?
 template<class T> // TODO: also send file via parameter?
 inline geom_t get_geom_min(const ptn<T, null_type>& c) {
 
@@ -561,7 +577,7 @@ inline span_t get_span(const std::list<T*>& c) {
 }
 
 inline span_t get_span(const null_type&) { // TODO: remove if finished grammar
-	std::cout << "SPAN: " << std::endl;
+//	std::cout << "SPAN: " << std::endl;
 	return span_t();
 }
 
@@ -690,6 +706,7 @@ struct cleaner_t : visitor_t
 	void visit(binary_expression_t *e);
 };
 
+/*
 template<class T>
 struct append_t : public visitor_t
 {
@@ -701,6 +718,7 @@ struct append_t : public visitor_t
 
 template<class T>
 append_t<T> mk_append(T* node) { return append_t<T>(node); }
+*/
 
 #endif // VISITOR_H
 

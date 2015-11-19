@@ -9,41 +9,11 @@
 #include <list>
 #include <string>
 #include "tuple03.h"
+#include "geom.h"
+
+// TODO: include and *use* node_fwd.h
 
 void init_files();
-
-struct geom_t
-{
-	int file_id;
-	int line;
-	int col;
-	geom_t(int file_id, int line, int col) :
-		file_id(file_id), line(line), col(col) {}
-	geom_t() : line(-1), col(-1) {}
-
-	friend std::ostream& operator<<(std::ostream& stream, const geom_t&);
-};
-
-inline bool operator<(const geom_t& g1, const geom_t& g2) {
-	return (g1.line == g2.line)
-			? g1.col < g2.col
-			: g1.line < g2.line;
-}
-
-struct span_t
-{
-	geom_t first;
-	geom_t second;
-	span_t(int file_id, int line, int col, std::size_t width) :
-		first(file_id, line, col),
-		second(file_id, line, col + width)
-	{
-	}
-	span_t(geom_t first, geom_t second) : first(first), second(second) {}
-	span_t() {}
-
-	friend std::ostream& operator<<(std::ostream& stream, const span_t&);
-};
 
 /*
 //! class representing a child pointer
@@ -101,7 +71,7 @@ class node_ch : public node_t<>
 	ptn<First, Next> c;
 public:
 	node_ch() {}
-	node_ch(const geom_t& geom) : node_t(geom) {}
+	node_ch(const geom_t& geom) : node_t<>(geom) {}
 
 	virtual ~node_ch() {}
 	void accept_children(visitor_t& v); // TODO
@@ -190,7 +160,7 @@ public:
 
 struct declaration_specifier_type : public node_t<> {
 	declaration_specifier_type() {}
-	declaration_specifier_type(const geom_t& geom) : node_t(geom) {}
+	declaration_specifier_type(const geom_t& geom) : node_t<>(geom) {}
 };
 
 struct storage_class_specifier_t : public declaration_specifier_type {
@@ -228,7 +198,7 @@ enum type_qualifier_id
 };
 #endif
 
-enum op_t
+enum unary_op_t
 {
 	op_addr,
 	op_ptr,
@@ -236,12 +206,14 @@ enum op_t
 	op_neg,
 	op_compl,
 	op_not,
-	op_inc_post, //!< ++
-	op_dec_post, //!< --
+	op_inc_post,
+	op_dec_post,
 	op_inc_pre,
 	op_dec_pre,
+};
 
-	
+enum binary_op_t
+{
 	op_asn,
 	op_asn_mul,
 	op_asn_div,
@@ -274,44 +246,41 @@ enum op_t
 	op_mult,
 	op_div,
 	op_mod,
-	op_tern,
 
-	op_arr_acc,
-	op_func_call,
-	op_struct_access_ref,
-	op_struct_access_ptr,
-	op_cast_postfix,
-	op_cast
+	op_com
 };
 
 typedef ptn<token_t> end_token;
 
 struct expression_t : public node_t<> {
-	op_t op_id; // TODO: reliable? redundant?
+//	op_t op_id; // TODO: reliable? redundant?
 //	virtual void accept(class visitor_t& v);
 };
 
 struct unary_expression_r : public expression_t
 {
-	ptn<	node_t, // FEATURE: more exactly?
-		end_token > c;
+	unary_op_t op_id;
+	ptn<	node_base, // FEATURE: more exactly?
+			end_token > c;
 
 	virtual void accept(class visitor_t& v);
 };
 
 struct unary_expression_l : public expression_t
 {
+	unary_op_t op_id;
 	ptn<	token_t,
-		ptn<	node_t> > c;
+		ptn<	node_base> > c;
 
 	virtual void accept(class visitor_t& v);
 };
 
 struct binary_expression_t : public expression_t
 {
-	ptn<	node_t,
+	binary_op_t op_id;
+	ptn<	node_base,
 		ptn<	token_t,
-			ptn<	node_t> > > c;
+			ptn<	node_base> > > c;
 	virtual void accept(class visitor_t& v);
 };
 
@@ -320,11 +289,11 @@ struct ternary_expression_t : public expression_t
 	void accept_children(visitor_t& v);
 	virtual void accept(class visitor_t& v);
 
-	ptn<	node_t,
+	ptn<	node_base,
 		ptn<	token_t,
-			ptn<	node_t,
+			ptn<	node_base,
 				ptn<	token_t,
-					ptn<	node_t > > > > > c;
+					ptn<	node_base > > > > > c;
 
 //	expression_t(op_t op, token_t* op_token, token_t* op_token_2, node_t *n1, node_t* n2 = NULL, node_t* n3 = NULL) :
 //		op(op), op_token(op_token), op_token_2(op_token_2), n1(n1), n2(n2), n3(n3) {}
@@ -339,7 +308,7 @@ struct abstract_declarator_t : public node_t<>
 
 struct type_specifier_t : public declaration_specifier_type
 {
-	ptn<	node_t> c; // FEATURE: more granular?
+	ptn<	node_base> c; // FEATURE: more granular?
 	virtual void accept(class visitor_t& v);
 };
 
@@ -1095,7 +1064,7 @@ struct declarator_t : public node_t<>
 struct declaration_specifiers_t : public node_t<>
 {
 	virtual void accept(class visitor_t& v);
-	std::list<node_t*> c;
+	std::list<node_base*> c;
 };
 
 struct function_definition_t : public node_t<struct external_declaration_t>

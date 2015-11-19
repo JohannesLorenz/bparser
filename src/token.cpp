@@ -25,16 +25,16 @@ const id_and_name names[] =
 	{ t_ne_op, "!=" },
 	{ t_and_op, "&&" },
 	{ t_or_op, "||" },
-	{ t_mul_assign, "*=" },
-	{ t_div_assign, "/=" },
-	{ t_mod_assign, "%=" },
-	{ t_add_assign, "+=" },
-	{ t_sub_assign, "-=" },
-	{ t_left_assign, "<<=" },
-	{ t_right_assign, ">>=" },
-	{ t_and_assign, "&=" },
-	{ t_xor_assign, "^=" },
-	{ t_or_assign, "|=" },
+	{ t_mul_asn, "*=" },
+	{ t_div_asn, "/=" },
+	{ t_mod_asn, "%=" },
+	{ t_add_asn, "+=" },
+	{ t_sub_asn, "-=" },
+	{ t_left_asn, "<<=" },
+	{ t_right_asn, ">>=" },
+	{ t_and_asn, "&=" },
+	{ t_xor_asn, "^=" },
+	{ t_or_asn, "|=" },
 	{ t_typedef_name, "<typedef name>" },
 	{ t_enumeration_constant, "<enumeration constant>" },
 
@@ -148,8 +148,8 @@ std::size_t token_length(token_id t)
 		case t_else:
 		case t_goto:
 			return 4;
-		case t_left_assign:
-		case t_right_assign:
+		case t_left_asn:
+		case t_right_asn:
 		case t_int:
 		case t_ellipsis:
 		case t_for:

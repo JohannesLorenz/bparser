@@ -924,6 +924,86 @@ node_t* echo(node_t* e)
 }
 */
 
+unary_op_t unary_op_l(int c)
+{
+	switch(c)
+	{
+		case '&': return op_addr; 
+		case '*': return op_ptr;
+		case '+': return op_pos;
+		case '-': return op_neg;
+		case '~': return op_compl;
+		case '!': return op_not;
+		case t_inc_op: return op_inc_pre;
+		case t_dec_op: return op_dec_pre;
+		default: assert(false);
+	}
+}
+
+unary_op_t unary_op_r(int c)
+{
+	switch(c)
+	{
+		case t_inc_op: return op_inc_post;
+		case t_dec_op: return op_dec_post;
+		default: assert(false);
+	}
+}
+
+binary_op_t binary_op_of(int c)
+{
+	switch(c)
+	{
+		case '=': return op_asn;
+		case t_mul_asn: return op_asn_mul;
+		case t_div_asn: return op_asn_div;
+		case t_mod_asn: return op_asn_mod;
+		case t_add_asn: return op_asn_add;
+		case t_sub_asn: return op_asn_sub;
+		case t_left_asn: return op_asn_left;
+		case t_right_asn: return op_asn_right;
+		case t_and_asn: return op_asn_and;
+		case t_xor_asn: return op_asn_xor;
+		case t_or_asn: return op_asn_or;
+	
+		case t_or_op: return op_or;
+		case t_and_op: return op_and;
+		case '|': return op_bor;
+		case '&': return op_band;
+		case '^': return op_xor;
+		case t_left_op: return op_lshift;
+		case t_right_op: return op_rshift;
+	
+		case '<': return op_lt;
+		case '>': return op_gt;
+		case t_le_op: return op_le;
+		case t_ge_op: return op_ge;
+		case t_eq_op: return op_eq;
+		case t_ne_op: return op_ne;
+	
+		case '+': return op_plus;
+		case '-': return op_minus;
+		case '*': return op_mult;
+		case '/': return op_div;
+		case '%': return op_mod;
+
+		case ',': return op_com;
+
+		default: std::cout << +c << std::endl; assert(false);
+	}
+}
+
+void type_completor::operator()(unary_expression_l& u)
+{
+	u.op_id = unary_op_l(u.c.get<0>()->value);
+}
+void type_completor::operator()(unary_expression_r& u)
+{
+	u.op_id = unary_op_r(u.c.get<1>()->value);
+}
+void type_completor::operator()(binary_expression_t& b) {
+	b.op_id = binary_op_of(b.c.get<1>()->value);
+}
 
 
 void type_completor::operator()(iteration_statement_t& i)
@@ -984,4 +1064,6 @@ void type_completor::operator()(struct_or_union_specifier_t& s)
 	s.is_union_type = (keyword == t_union);
 	xaccept(s.c);
 }
+
+
 

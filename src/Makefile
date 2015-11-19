@@ -1,6 +1,6 @@
 # Makefile
 
-FILES	= lexer.o parser.o node.o visitor.o token.o
+FILES	= lexer.o parser.o node.o visitor.o token.o geom.o ast.o
 #CC	= gcc
 #CXX	= g++
 # -Werror -Wno-unused ?
@@ -25,7 +25,7 @@ parser.c: parser.y lexer.c
 	$(CXX) $(FLAGS) $(CFLAGS) -c $< -o $@
 # main.cpp has no header file:
 #main.o: main.cpp lexer.c parser.c
-#	$(CXX) $(FLAGS) $(FLAGS) -c $< -o $@
+#	$(CXX) $(FLAGS) $(CFLAGS) -c $< -o $@
 # rule to compile lexer and parser:
 %.o: %.c lexer.c parser.c node.h
 	$(CXX) $(FLAGS) $(CFLAGS) -c $< -o $@
