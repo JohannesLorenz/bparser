@@ -1,5 +1,5 @@
 // virtual nodes:
-struct node_base;
+class node_base;
 struct statement_t;
 
 // other nodes:

@@ -69,7 +69,7 @@ int main(void)
 	//    result = evaluate(e);
 	
 	//    printf("Result of '%s' is %d\n", test, result);
-	puts("Result:");
+	std::cout << "Result:" << std::endl;
 	dumper_t dumper;
 	e->accept(dumper);
 	cleaner_t cleaner;
