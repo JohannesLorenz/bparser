@@ -134,6 +134,7 @@ typedef void* yyscan_t;
 	struct primary_expression_t* primary_expression;
 	struct terminal_t* terminal;
 	struct iconstant_t* iconstant;
+	struct fconstant_t* fconstant;
 
 	struct string_literal_t* string_literal;
 

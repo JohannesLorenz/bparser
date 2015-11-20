@@ -170,4 +170,5 @@ void identifier_list_t::accept(visitor_t &v) { v.visit(this); }
 
 
 void iconstant_t::accept(visitor_t &v) { v.visit(this); }
+void fconstant_t::accept(visitor_t &v) { v.visit(this); }
 

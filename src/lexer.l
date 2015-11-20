@@ -103,7 +103,11 @@ public:
 		++p; // skip #
 		for(; *p==' '; ++p) ;
 		last_col = 1;
-		p += sscanf(p, "%d", &last_line);
+		{
+			int n;
+			sscanf(p, "%d%n", &last_line, &n);
+			p += n;
+		}
 		// the last token in the token vector is \n,
 		// so we add a decrement manually:
 		--last_line;
@@ -179,6 +183,22 @@ int app_with_string(T*& token, int lex_id, const char* text, const char* end) {
 	return app(token = new T(res, get_pos()), lex_id);
 }
 
+bool icmp(const char* p, char c) {
+	return tolower(*p) == tolower(c);
+}
+
+int app_float(fconstant_t*& token, const char* text)
+{
+	const char* p = text;
+	{
+		float f; int n;
+		sscanf(text, "%f%n", &f, &n);
+		p += n;
+	}
+	if(*p && (icmp(p,'f') || icmp(p,'l'))) ++p;
+	return app_with_string(token, F_CONSTANT, text, p);
+}
+
 enum int_suffix_type
 {
 	no_suffix,
@@ -188,10 +208,6 @@ enum int_suffix_type
 	suf_l,
 	suf_ll,
 };
-
-bool icmp(const char* p, char c) {
-	return tolower(*p) == tolower(c);
-}
 
 const char* skip_suffix(const char*& p)
 {
@@ -238,6 +254,50 @@ const char* skip_suffix(const char*& p)
 	}
 
 	return p;
+}
+
+void skip_esc_seq(const char*& p)
+{
+	if(*p == '\\')
+	{
+		++p;
+		if(*p == '\'' || *p == '"'
+			|| *p == '?' || *p == '\\'
+			|| *p == 'a' || *p == 'b'
+			|| *p == 'f' || *p == 'n'
+			|| *p == 'r' || *p == 't'
+			|| *p == 'v')
+			++p;
+		else if(*p > '0' && *p < '7')
+		{
+			++p;
+			if(*p > '0' && *p < '7')
+			{
+				++p;
+				if(*p > '0' && *p < '7')
+				{
+					++p;
+				}
+			}
+		}
+		else if(*p == 'x')
+		{
+			while(isxdigit(*p)) ++p;
+		}
+	}
+}
+
+int app_int(iconstant_t*& token, const char* text, char scanf_type)
+{
+	const char* p = text;
+	{
+		char scanf_str [5] = {'%', scanf_type, '%', 'n', 0};
+		int tmp, n;
+		sscanf(text, scanf_str, &tmp, &n);
+		p += n;
+	}
+	skip_suffix(p);
+	return app_with_string(token, I_CONSTANT, text, p);
 }
 
 %}
@@ -340,37 +400,80 @@ static int check_type(void);
 						
 						return app(yylval->name = new identifier_t(res, get_pos()), check_type()); }
 
-{HP}{H}+{IS}?				{
-						const char* p = yytext + sscanf(yytext, "%x", &yylval->_int);
-						skip_suffix(p);
+{HP}{H}+{IS}?				{	return app_int(yylval->iconstant, yytext, 'x'); }
+{NZ}{D}*{IS}?				{ 	return app_int(yylval->iconstant, yytext, 'd'); }
+"0"{O}*{IS}?				{ 	return app_int(yylval->iconstant, yytext, 'o'); }
+{CP}?"'"([^'\\\n]|{ES})+"'"		{ const char* p = yytext; if(icmp(p, 'u') || *p == 'L') ++p;
+						++p; // '
+						// ES = (\\(['"\?\\abfnrtv]|[0-7]{1,3}|x[a-fA-F0-9]+))
+						bool ok = true;
+						do
+						{
+							if(*p != '\'' && *p != '\\' && *p != '\n') // exclude single chars
+							 ++p;
+							else if(*p == '\\')
+							{
+								skip_esc_seq(p);
+							}
+							else // must be '
+							{
+								if(*p != '\'')
+								 throw "lexer error for char parsing";
+								ok = false; // end found
+							}
+						} while(ok);
+						++p; // '
 						return app_with_string(yylval->iconstant, I_CONSTANT, yytext, p); }
-{NZ}{D}*{IS}?				{ 	const char* p = yytext + sscanf(yytext, "%d", &yylval->_int); // TODO: common func for ints
-						skip_suffix(p);
-						return app_with_string(yylval->iconstant, I_CONSTANT, yytext, p); }
-"0"{O}*{IS}?				{ 	const char* p = yytext + sscanf(yytext, "%o", &yylval->_int); // TODO: common func for ints
-						skip_suffix(p);
-						return app_with_string(yylval->iconstant, I_CONSTANT, yytext, p); }
-{CP}?"'"([^'\\\n]|{ES})+"'"		{ const char* pars = yytext; if(*pars == 'u' || *pars == 'U' || *pars == 'L') ++pars; ++pars;
-						char tmp_c; sscanf(pars, "%c", &tmp_c); yylval->_int = tmp_c; return I_CONSTANT; }
 
-{D}+{E}{FS}?				{ sscanf(yytext, "%f", &yylval->_float); return F_CONSTANT; }
-{D}*"."{D}+{E}?{FS}?			{ sscanf(yytext, "%f", &yylval->_float); return F_CONSTANT; }
-{D}+"."{E}?{FS}?			{ sscanf(yytext, "%f", &yylval->_float); return F_CONSTANT; }
-{HP}{H}+{P}{FS}?			{ sscanf(yytext, "%f", &yylval->_float); return F_CONSTANT; }
-{HP}{H}*"."{H}+{P}{FS}?			{ sscanf(yytext, "%f", &yylval->_float); return F_CONSTANT; }
-{HP}{H}+"."{P}{FS}?			{ sscanf(yytext, "%f", &yylval->_float); return F_CONSTANT; }
+{D}+{E}{FS}?				{ return app_float(yylval->fconstant, yytext); }
+{D}*"."{D}+{E}?{FS}?			{ return app_float(yylval->fconstant, yytext); }
+{D}+"."{E}?{FS}?			{ return app_float(yylval->fconstant, yytext); }
+{HP}{H}+{P}{FS}?			{ return app_float(yylval->fconstant, yytext); }
+{HP}{H}*"."{H}+{P}{FS}?			{ return app_float(yylval->fconstant, yytext); }
+{HP}{H}+"."{P}{FS}?			{ return app_float(yylval->fconstant, yytext); }
 
-({SP}?\"([^"\\\n]|{ES})*\"{WS}*)+	{ const char* pars = yytext; if(*pars == 'u' || *pars == 'U' || *pars == 'L') ++pars; ++pars;
-						const char* end = pars + 1;
-						for(; *end != '"'; ++end) ;
-						--end;
-						std::size_t length = end - yytext;
+({SP}?\"([^"\\\n]|{ES})*\"{WS}*)+	{ const char* p = yytext;
+						do
+						{
+							if(*p == 'u' || *p == 'U' || *p == 'L') ++p;
+							++p; // "
+							if(*p == '8')
+							 ++p;
+							bool ok = true;
+							do
+							{
+								if(*p != '"' && *p != '\\' && *p != '\n') // exclude single chars
+								 ++p;
+								else if(*p == '\\')
+								{
+									skip_esc_seq(p);
+								}
+								else // must be "
+								{
+									if(*p != '"')
+									 throw "lexer error for char parsing";
+									ok = false; // end found
+								}
+							} while(ok);
+							++p; // "'"
+
+							for(; *p == ' ' || *p == '\t' || *p == '\n'; ++p);
+
+
+						} while (*p == '"'
+							|| (*p == 'u' && (*(p+1) == '"'
+								|| (*(p+1) == '8' && *(p+2) == '"') ))
+							|| (*p == 'U' && *(p+1) == '"')
+							|| (*p == 'L' && *(p+1) == '"')
+							); // only strings start like this
+
+						std::size_t length = p - yytext;
 						cnt(yytext);
 						std::cout << "LENGTH: " << length << std::endl;
-						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, pars, length);
+						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, yytext, length);
 						std::cout << "STR: " << res << std::endl;
 						// FEATURE: common routine with identifier
-						return app(yylval->string_literal = new string_literal_t(res, get_pos()), STRING_LITERAL); }
+						return app_with_string(yylval->string_literal, STRING_LITERAL, yytext, p); }
 
 "..."					{ return app3(yylval->token, ELLIPSIS, yytext); }
 ">>="					{ return app3(yylval->token, RIGHT_ASSIGN, yytext); }

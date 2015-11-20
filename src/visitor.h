@@ -36,6 +36,7 @@ public:
 
 	virtual void visit(primary_expression_t* ) {}
 	virtual void visit(iconstant_t* ) {}
+	virtual void visit(fconstant_t* ) {}
 	virtual void visit(constant_t<int>* ) {}
 	virtual void visit(constant_t<float>* ) {}
 	virtual void visit(constant_t<std::string>* ) {}
@@ -432,6 +433,7 @@ public:
 
 	void visit(primary_expression_t* );
 	void visit(iconstant_t* ) {}
+	void visit(fconstant_t* ) {}
 	void visit(constant_t<int>* ) {}
 	void visit(constant_t<float>* ) {}
 	void visit(constant_t<std::string>* ) {}
@@ -587,6 +589,7 @@ public:
 	geom_completor(visitor_t* vref) : ftor_base(vref) {}
 
 	// default case
+	// TODO: use node& and terminal& below?
 	template<class NodeType>
 	void operator()(/*const*/ NodeType& n) {
 		xaccept(n.c);
@@ -595,9 +598,10 @@ public:
 
 	// terminals have no children
 	//  -> get geom directly from them
-
+	// TODO: make sure these are all terminals
 	void operator()(/*const*/ token_t& ) {}
 	void operator()(/*const*/ iconstant_t& ) {}
+	void operator()(/*const*/ fconstant_t& ) {}
 	void operator()(/*const*/ identifier_t& ) {}
 	void operator()(/*const*/ string_literal_t& ) {}
 };
@@ -633,6 +637,7 @@ public:
 	void visit(identifier_list_t* );
 
 	void visit(iconstant_t* c);
+	void visit(fconstant_t* c);
 	void visit(constant_t<int>* );
 	void visit(constant_t<float>* );
 	void visit(constant_t<std::string>* );

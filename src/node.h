@@ -519,12 +519,19 @@ struct constant_t : public terminal_t
 struct iconstant_t : public noconst_1line_terminal_t
 {
 	int suf_type; // TODO
-	iconstant_t(const char* value, geom_t geom) :
+	iconstant_t(const char* value, geom_t geom) : // TODO: value
 		noconst_1line_terminal_t(geom, 0, value) {}
 
 	virtual void accept(class visitor_t& v);
 };
 
+struct fconstant_t : public noconst_1line_terminal_t
+{
+	fconstant_t(const char* value, geom_t geom) : // TODO: value
+		noconst_1line_terminal_t(geom, 0, value) {}
+
+	virtual void accept(class visitor_t& v);
+};
 
 struct primary_expression_t : public expression_t {
 	ptn<	terminal_t,	// TODO: constant_base

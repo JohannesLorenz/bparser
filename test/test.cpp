@@ -50,13 +50,15 @@ int main(void)
 		"\t\tx++;\n"
 		"# 4 test.c 3 2\n"
 		"# 7 test.c 3 2\n"
-//		"\t\t42;\n"
+		"\t\t42uLL;\n"
+		"\t\t'c';\n"
+		"\t\t10.0e+3f;\n"
 		"\t\t0xDEADBEEF;\n"
 //		"\t\t41.999f;\n"
 		"# 6 test.c 5 4\n"
 		"\t\tI_AM_AN_ENUM;\n"
 //		"\t\t'c';\n"
-		"\t\t\"Hallo Welt!\";\n"
+		"\t\t\"Hallo Welt! Das ist keine newline: \\\\n.\";\n"
 		"\t\tsizeof(unsigned int);\n"
 		"\t}";
 #endif

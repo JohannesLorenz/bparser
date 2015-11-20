@@ -488,7 +488,12 @@ void dumper_t::visit(constant_t<int>* c)
 
 void dumper_t::visit(iconstant_t* c) {
 	incr_depth_t x(&depth, stream, c->span);
-	stream << "int constant: (TODO)" << std::endl;
+	stream << "int constant: " << c->raw << std::endl; // FEATURE...
+}
+
+void dumper_t::visit(fconstant_t* c) {
+	incr_depth_t x(&depth, stream, c->span);
+	stream << "float constant: " << c->raw << std::endl; // FEATURE...
 }
 
 void dumper_t::visit(constant_t<float>* c)
