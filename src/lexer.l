@@ -305,12 +305,12 @@ int app_int(iconstant_t*& token, const char* text, char scanf_type)
 
 class lookup_table_t
 {
-	typedef std::pair<int, const node_base*> value_t;
+	typedef std::pair<lookup_type, const node_base*> value_t;
 	typedef std::pair<std::string, value_t> entry_t;
 	typedef std::map<std::string, value_t> table_t;
 	static table_t table;
 public:
-	static void flag_symbol(const char* str, int type, const node_base* scope)
+	static void flag_symbol(const char* str, lookup_type type, const node_base* scope)
 	{
 		std::cout << "flagging: " << str << " as " << type << std::endl;
 		table.insert(entry_t(str, value_t(type, scope)));
@@ -325,7 +325,7 @@ public:
 		 itr->second.first = lt_undefined;
 	}
 
-	static int type_of(const char* str) {
+	static lookup_type type_of(const char* str) {
 		std::cout << "LOOKUP TABLE: " << std::endl;
 		for(table_t::const_iterator itr = table.begin();
 			itr != table.end(); ++itr)
@@ -340,11 +340,6 @@ public:
 
 lookup_table_t::table_t lookup_table_t::table;
 
-void flag_symbol(const char* str, int type, const node_base* scope)
-{
-	lookup_table_t::flag_symbol(str, type, scope);
-}
-
 void leave_scope(const node_base* scope)
 {
 	lookup_table_t::leave_scope(scope);
@@ -355,6 +350,13 @@ int type_of(const char* str) {
 }
 
 bool recent_struct_access = false;
+bool recent_typedef_keyword = false;
+bool recent_enum_flag = false;
+node_base* cur_scope = NULL;
+
+void set_scope(node_base* new_scope) {
+	cur_scope = new_scope;
+}
 
 %}
 
@@ -395,14 +397,14 @@ extern int sym_type(const char *);  /* returns type from symbol table */
 #define sym_type(identifier) IDENTIFIER /* with no symbol table, fake it */
 
 static void comment(void);
-static int check_type(void);
+static int check_type(const char* text);
 %}
 
 %%
 "/*"					{ comment(); }
 "//".*					{ /* consume //-comment */ }
 
-"auto"					{ return app3(yylval->token, AUTO, yytext); } // TODO: 2x AUTO
+"auto"					{ return app3(yylval->token, AUTO, yytext); }
 "break"					{ return app3(yylval->token, BREAK, yytext); }
 "case"					{ return app3(yylval->token, CASE, yytext); }
 "char"					{ return app3(yylval->token, CHAR, yytext); }
@@ -430,7 +432,8 @@ static int check_type(void);
 "static"				{ return app3(yylval->token, STATIC, yytext); }
 "struct"				{ return app3(yylval->token, STRUCT, yytext); }
 "switch"				{ return app3(yylval->token, SWITCH, yytext); }
-"typedef"				{ return app3(yylval->token, TYPEDEF, yytext); }
+"typedef"				{ recent_typedef_keyword = true;
+						return app3(yylval->token, TYPEDEF, yytext); }
 "union"					{ return app3(yylval->token, UNION, yytext); }
 "unsigned"				{ return app3(yylval->token, UNSIGNED, yytext); }
 "void"					{ return app3(yylval->token, VOID, yytext); }
@@ -459,7 +462,7 @@ static int check_type(void);
 						cnt(yytext);
 						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, yytext, length);
 						
-						return app(yylval->name = new identifier_t(res, get_pos()), check_type()); }
+						return app(yylval->name = new identifier_t(res, get_pos()), check_type(yytext)); }
 
 {HP}{H}+{IS}?				{	return app_int(yylval->iconstant, yytext, 'x'); }
 {NZ}{D}*{IS}?				{ 	return app_int(yylval->iconstant, yytext, 'd'); }
@@ -625,8 +628,37 @@ static void comment(void)
 #endif
 }
 
-static int check_type(void)
+static int check_type(const char* text) // FEATURE: lookup_table function?
 {
+	/*return (typeof(yytext) == lt_undefined)
+		? recent_typedef_keyword
+			? recent_typedef_keyword=false, TYPEDEF_NAME
+			: recent_struct_access*/
+	lookup_type lt = lookup_table_t::type_of(text);
+	if(lt == lt_undefined)
+	{
+		if(recent_typedef_keyword)
+		{
+			lt = lt_typedef_name;
+			recent_typedef_keyword=false;
+		}
+		else if(recent_enum_flag)
+		{
+			lt = lt_enumeration;
+			recent_enum_flag=false;
+		}
+		else // everything else...
+		 lt = lt_identifier;
+
+		lookup_table_t::flag_symbol(text, lt, cur_scope);
+
+		// since lt == lt_undefined, this is the definition
+		// in all case, for definitions, return IDENTIFIER
+		// for later use, return the real symbol type
+		return IDENTIFIER;
+	}
+	else return IDENTIFIER;
+#if 0
     switch (sym_type(yytext))
     {
     case TYPEDEF_NAME:                /* previously defined */
@@ -636,6 +668,7 @@ static int check_type(void)
     default:                          /* includes undefined */
 	return IDENTIFIER;
     }
+#endif
 }
 
 /*int yyerror(const char *msg) {

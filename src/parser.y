@@ -21,6 +21,7 @@ int yyerror(translation_unit_t ** /*expression*/, yyscan_t scanner, const char *
 }
 
 extern geom_t get_pos();
+extern void set_scope(node_base* new_scope);
 
 /*template<class R, class Left>
 R* init(Left* left) {
@@ -57,6 +58,7 @@ token_t* t(int token_id) { return new token_t(get_pos(), token_id); }
 extern void flag_symbol(const char* str, int type, const node_base* scope);
 extern void leave_scope(const node_base* scope);
 extern int type_of(const char* str);
+extern bool recent_enum_flag;
 
 %}
 
@@ -550,8 +552,8 @@ enumerator_list
 	;
 
 enumerator	/* identifiers must be flagged as ENUMERATION_CONSTANT */
-	: enumeration_constant '=' constant_expression { flag_symbol($1->raw.c_str(), lt_enumeration, NULL); alloc($$); $$->c.fill($1, $2, $3); }
-	| enumeration_constant { flag_symbol($1->raw.c_str(), lt_enumeration, NULL); alloc($$); $$->c.set($1); }
+	: enumeration_constant '=' constant_expression { recent_enum_flag = true; flag_symbol($1->raw.c_str(), lt_enumeration, NULL); alloc($$); $$->c.fill($1, $2, $3); }
+	| enumeration_constant { recent_enum_flag = true; flag_symbol($1->raw.c_str(), lt_enumeration, NULL); alloc($$); $$->c.set($1); }
 	;
 
 atomic_type_specifier
