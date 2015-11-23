@@ -9,7 +9,7 @@
 
 extern std::vector<std::string>& get_files();
 
-void init_files()
+void init_files() // TODO: rename -> init(), clear lookup table
 {
 	// init default file
 	get_files().push_back("default.c");

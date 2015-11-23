@@ -15,28 +15,14 @@
 
 void init_files();
 
-/*
-//! class representing a child pointer
-//! only intend: set the pointer to 0
-template<class T>
-class ch
+// TODO: not here?
+enum lookup_type
 {
-	T* ptr;
-public:
-	ch() : ptr(NULL) {}
-	explicit ch(T* ptr) : ptr(ptr) {}
-	ch& operator=(T* _ptr) { return ptr = _ptr, *this; }
-
-	operator T*() { return ptr; }
-	operator const T*() const { return ptr; }
-	
-	T& operator* () { return *ptr; }
-	const T& operator* () const { return *ptr; }
-	T* operator-> () { return ptr; }
-	const T* operator-> () const { return ptr; }
-
-	operator bool() const { return ptr; }
-};*/
+	lt_enumeration,
+	lt_typedef_name,
+	lt_identifier,
+	lt_undefined
+};
 
 class node_base
 {

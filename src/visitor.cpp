@@ -303,7 +303,7 @@ void fwd::visit(direct_declarator_arr *d)
 
 void fwd::visit(direct_declarator_func *d)
 {
-	visit_all(d->c);
+	accept_all(d->c);
 }
 
 void fwd::visit(direct_abstract_declarator_decl *d)
@@ -318,7 +318,7 @@ void fwd::visit(direct_abstract_declarator_arr *d)
 
 void fwd::visit(direct_abstract_declarator_func *d)
 {
-	visit_all(d->c);
+	accept_all(d->c);
 }
 
 
@@ -865,49 +865,49 @@ void dumper_t::visit(abstract_declarator_t *n)
 void dumper_t::visit(direct_declarator_id *d)
 {
 	incr_depth_t x(&depth, stream, d->span);
-	stream << "direct declarator 1 (TODO: specify?)" << std::endl;
+	stream << "direct declarator 1 (identifier)" << std::endl;
 	fwd::visit(d);
 }
 
 void dumper_t::visit(direct_declarator_decl *d)
 {
 	incr_depth_t x(&depth, stream, d->span);
-	stream << "direct declarator 2 (TODO: specify?)" << std::endl;
+	stream << "direct declarator 2 (declaration)" << std::endl;
 	fwd::visit(d);
 }
 
 void dumper_t::visit(direct_declarator_arr *d)
 {
 	incr_depth_t x(&depth, stream, d->span);
-	stream << "direct declarator 3 (TODO: specify?)" << std::endl;
+	stream << "direct declarator 3 (array)" << std::endl;
 	fwd::visit(d);
 }
 
 void dumper_t::visit(direct_declarator_func *d)
 {
 	incr_depth_t x(&depth, stream, d->span);
-	stream << "direct declarator 4 (TODO: specify?)" << std::endl;
+	stream << "direct declarator (function)" << std::endl;
 	fwd::visit(d);
 }
 
 void dumper_t::visit(direct_abstract_declarator_decl *d)
 {
 	incr_depth_t x(&depth, stream, d->span);
-	stream << "direct abstract declarator (TODO: specify?)" << std::endl;
+	stream << "direct abstract declarator (declaration)" << std::endl;
 	fwd::visit(d);
 }
 
 void dumper_t::visit(direct_abstract_declarator_arr *d)
 {
 	incr_depth_t x(&depth, stream, d->span);
-	stream << "direct abstract declarator (TODO: specify?)" << std::endl;
+	stream << "direct abstract declarator (array)" << std::endl;
 	fwd::visit(d);
 }
 
 void dumper_t::visit(direct_abstract_declarator_func *d)
 {
 	incr_depth_t x(&depth, stream, d->span);
-	stream << "direct abstract declarator (TODO: specify?)" << std::endl;
+	stream << "direct abstract declarator (function)" << std::endl;
 	fwd::visit(d);
 }
 

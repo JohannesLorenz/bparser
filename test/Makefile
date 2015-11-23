@@ -4,7 +4,7 @@ FILES	= lexer.o parser.o node.o visitor.o
 #CC	= gcc
 #CXX	= g++
 # -Werror -Wno-unused ?
-FLAGS	= -Wall -Wextra -Wno-unused -Wno-overloaded-virtual  -g -ggdb -ansi -DYYDEBUG=1 -pipe
+FLAGS	= -Wall -Wextra -Wno-unused -Wno-overloaded-virtual  -g -ggdb -DYYDEBUG=1 -pipe
 CFLAGS	= -I../src
 LFLAGS	= -L../src -lbparser
 

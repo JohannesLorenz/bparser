@@ -9,10 +9,10 @@ INCLUDEPATH += . src
 
 # Input
 HEADERS += src/lexer.h src/node.h src/visitor.h src/tuple03.h \
-    src/token.h
+    src/token.h src/ast.h
 LEXSOURCES += src/lexer.l
 YACCSOURCES += src/parser.y
 SOURCES += src/lexer.c test/test.cpp src/node.cpp src/visitor.cpp \
-    src/token.cpp
+    src/token.cpp src/ast.cpp
 OTHER_FILES += Makefile src/Makefile test/Makefile
 

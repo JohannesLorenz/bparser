@@ -1,6 +1,6 @@
 all:
-	cd src && make && cd ..
-	cd test && make && cd ..
+	cd src && $(MAKE) && cd ..
+	cd test && $(MAKE) && cd ..
 clean:
-	cd src && make clean && cd ..
-	cd test && make clean && cd ..
+	cd src && $(MAKE) clean && cd ..
+	cd test && $(MAKE) clean && cd ..

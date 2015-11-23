@@ -42,11 +42,12 @@ int main(void)
 		"return 42 + 0;"
 		"}\n";
 #else
-	char test[] = "\tint main(int) {\n"
+	char test[] = "enum { I_AM_AN_ENUM };\n"
+		"int main(int) {\n"
 		"\t\tfor(;;) {;}\n"
-		"\t\twhile(true) {;}\n"
-		"\t\tdo {;} while (true);\n"
-//		"\t\tint x = 3 + 0 * 4;\n"
+		"\t\twhile(1) {;}\n"
+		"\t\tdo {;} while (1);\n"
+		"\t\tint x = 3 + 0 * 4;\n"
 		"\t\tx++;\n"
 		"# 4 test.c 3 2\n"
 		"# 7 test.c 3 2\n"
@@ -77,8 +78,9 @@ int main(void)
 	cleaner_t cleaner;
 	e->accept(cleaner);
 
-	run_test("typedef struct s { int x; };\n"
-		"typedef union u { int x; };");
 	
+	run_test("typedef struct { int x; } s;\n"
+		"typedef s (*g)(int);");
+
 	return 0;
 }

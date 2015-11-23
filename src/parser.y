@@ -54,6 +54,10 @@ template<class T> T* alloc(T*& ptr_ref) { return ptr_ref = new T(); /* be C++03 
 
 token_t* t(int token_id) { return new token_t(get_pos(), token_id); }
 
+extern void flag_symbol(const char* str, int type, const node_base* scope);
+extern void leave_scope(const node_base* scope);
+extern int type_of(const char* str);
+
 %}
 
 %code requires {
@@ -256,11 +260,11 @@ typedef void* yyscan_t;
 // %printer { fprintf (yyoutput, "type %d", $$.expression->type); } <>
 %printer { fprintf (yyoutput, "<...?>"); } <>
 
-
 %%
 
 primary_expression // parents: postfix_expression
-	: IDENTIFIER { alloc($$); $$->c.fill(NULL, $1); }
+	: IDENTIFIER { if(type_of($1->raw.c_str())==lt_undefined) throw "identifier undefined"; else
+		{ alloc($$); $$->c.fill(NULL, $1); } }
 	| constant { alloc($$); $$->c.set($1); }
 	| string { alloc($$); $$->c.set($1); }
 	| '(' expression ')' { alloc($$); $$->c.fill(NULL, NULL, $1, $2, $3); }
@@ -494,8 +498,8 @@ type_specifier
 
 struct_or_union_specifier
 	: struct_or_union '{' struct_declaration_list '}' { alloc($$); $$->c.fill($1, NULL, $2, $3, $4); }
-	| struct_or_union IDENTIFIER '{' struct_declaration_list '}' { alloc($$); $$->c.fill($1, $2, $3, $4, $5); }
-	| struct_or_union IDENTIFIER { alloc($$); $$->c.fill($1, $2); }
+	| struct_or_union IDENTIFIER '{' struct_declaration_list '}' { flag_symbol($2->raw.c_str(), lt_identifier, NULL); alloc($$); $$->c.fill($1, $2, $3, $4, $5); }
+	| struct_or_union IDENTIFIER { flag_symbol($2->raw.c_str(), lt_identifier, NULL); alloc($$); $$->c.fill($1, $2); }
 	;
 
 struct_or_union
@@ -535,9 +539,9 @@ struct_declarator
 enum_specifier
 	: ENUM '{' enumerator_list '}' { alloc($$); $$->c.fill($1, NULL, $2, $3, NULL, $4); }
 	| ENUM '{' enumerator_list ',' '}' { alloc($$); $$->c.fill($1, NULL, $2, $3, $4, $5); }
-	| ENUM IDENTIFIER '{' enumerator_list '}' { alloc($$); $$->c.fill($1, $2, $3, $4, NULL, $5); }
-	| ENUM IDENTIFIER '{' enumerator_list ',' '}' { alloc($$); $$->c.fill($1, $2, $3, $4, $5, $6); }
-	| ENUM IDENTIFIER { alloc($$); $$->c.fill($1, $2); }
+	| ENUM IDENTIFIER '{' enumerator_list '}' { flag_symbol($2->raw.c_str(), lt_identifier, NULL); alloc($$); $$->c.fill($1, $2, $3, $4, NULL, $5); }
+	| ENUM IDENTIFIER '{' enumerator_list ',' '}' { flag_symbol($2->raw.c_str(), lt_identifier, NULL); alloc($$); $$->c.fill($1, $2, $3, $4, $5, $6); }
+	| ENUM IDENTIFIER { flag_symbol($2->raw.c_str(), lt_identifier, NULL); alloc($$); $$->c.fill($1, $2); }
 	;
 
 enumerator_list
@@ -546,8 +550,8 @@ enumerator_list
 	;
 
 enumerator	/* identifiers must be flagged as ENUMERATION_CONSTANT */
-	: enumeration_constant '=' constant_expression { alloc($$); $$->c.fill($1, $2, $3); }
-	| enumeration_constant { alloc($$); $$->c.set($1); }
+	: enumeration_constant '=' constant_expression { flag_symbol($1->raw.c_str(), lt_enumeration, NULL); alloc($$); $$->c.fill($1, $2, $3); }
+	| enumeration_constant { flag_symbol($1->raw.c_str(), lt_enumeration, NULL); alloc($$); $$->c.set($1); }
 	;
 
 atomic_type_specifier
@@ -583,7 +587,7 @@ declarator
 // direct_declarator_func
 
 direct_declarator
-	: IDENTIFIER { direct_declarator_id* d; $$ = alloc(d); d->c = $1; }
+	: IDENTIFIER { flag_symbol($1->raw.c_str(), lt_identifier, NULL); direct_declarator_id* d; $$ = alloc(d); d->c = $1; }
 	| '(' declarator ')' { direct_declarator_decl* d; $$ = alloc(d); d->c.fill($1, $2, $3); }
 	| direct_declarator '[' ']' { direct_declarator_arr* d; $$ = alloc(d);
 		d->c.fill($1, $2, NULL, NULL, NULL, NULL, $3); }
@@ -737,7 +741,7 @@ statement
 
 
 labeled_statement
-	: IDENTIFIER ':' statement { alloc($$); $$->c.fill(NULL, $1, NULL, $2, $3); }
+	: IDENTIFIER ':' statement { flag_symbol($1->raw.c_str(), lt_identifier, NULL); alloc($$); $$->c.fill(NULL, $1, NULL, $2, $3); }
 	| CASE constant_expression ':' statement { alloc($$); $$->c.fill($1, NULL, $2, $3, $4); }
 	| DEFAULT ':' statement { alloc($$); $$->c.fill($1, NULL, NULL, $2, $3); }
 	;

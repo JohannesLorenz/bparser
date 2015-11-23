@@ -13,6 +13,7 @@
 #include <iostream>
 #include <vector>
 #include <cstring>
+#include <map>
 
 std::vector<std::string>& get_files();
 
@@ -179,7 +180,7 @@ int app_with_string(T*& token, int lex_id, const char* text, const char* end) {
 	std::size_t length = end - text;
 	cnt(text);
 	char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, text, length);
-
+	if(*end) throw "end of token not 0";
 	return app(token = new T(res, get_pos()), lex_id);
 }
 
@@ -196,6 +197,7 @@ int app_float(fconstant_t*& token, const char* text)
 		p += n;
 	}
 	if(*p && (icmp(p,'f') || icmp(p,'l'))) ++p;
+	if(*p) throw "end of token not 0";
 	return app_with_string(token, F_CONSTANT, text, p);
 }
 
@@ -297,8 +299,62 @@ int app_int(iconstant_t*& token, const char* text, char scanf_type)
 		p += n;
 	}
 	skip_suffix(p);
+	if(*p) throw "end of token not 0";
 	return app_with_string(token, I_CONSTANT, text, p);
 }
+
+class lookup_table_t
+{
+	typedef std::pair<int, const node_base*> value_t;
+	typedef std::pair<std::string, value_t> entry_t;
+	typedef std::map<std::string, value_t> table_t;
+	static table_t table;
+public:
+	static void flag_symbol(const char* str, int type, const node_base* scope)
+	{
+		std::cout << "flagging: " << str << " as " << type << std::endl;
+		table.insert(entry_t(str, value_t(type, scope)));
+	}
+
+	static void leave_scope(const node_base* scope)
+	{
+		for(table_t::iterator itr = table.begin();
+			itr != table.end(); ++itr)
+		if(itr->second.first != lt_undefined &&
+			itr->second.second == scope)
+		 itr->second.first = lt_undefined;
+	}
+
+	static int type_of(const char* str) {
+		std::cout << "LOOKUP TABLE: " << std::endl;
+		for(table_t::const_iterator itr = table.begin();
+			itr != table.end(); ++itr)
+		{
+			std::cout << itr->first << ": " << itr->second.first << std::endl;
+		}
+		std::cout << "... looking for: " << str << std::endl;
+		table_t::const_iterator itr = table.find(str);
+		return (itr == table.end()) ? lt_undefined : itr->second.first;
+	}
+};
+
+lookup_table_t::table_t lookup_table_t::table;
+
+void flag_symbol(const char* str, int type, const node_base* scope)
+{
+	lookup_table_t::flag_symbol(str, type, scope);
+}
+
+void leave_scope(const node_base* scope)
+{
+	lookup_table_t::leave_scope(scope);
+}
+
+int type_of(const char* str) {
+	return lookup_table_t::type_of(str);
+}
+
+bool recent_struct_access = false;
 
 %}
 
@@ -392,7 +448,12 @@ static int check_type(void);
 "_Thread_local"                         { return app3(yylval->token, THREAD_LOCAL, yytext); }
 "__func__"                              { return app3(yylval->token, FUNC_NAME, yytext); }
 
-{L}{A}*					{ const char* end = yytext + 1; // TODO: write TESTS for ALL TERMINALS...
+{L}{A}*					{	// this could only be set to true if a . or -> preceded
+						// thus, this is the only place to set it to false
+						recent_struct_access = false;
+
+						// find end of identifier
+						const char* end = yytext + 1; // TODO: write TESTS for ALL TERMINALS...
 						for(; isalnum(*end) || *end == '_'; ++end) ;
 						std::size_t length = end - yytext;
 						cnt(yytext);
@@ -423,6 +484,7 @@ static int check_type(void);
 							}
 						} while(ok);
 						++p; // '
+						if(*p) throw "end of token not 0";
 						return app_with_string(yylval->iconstant, I_CONSTANT, yytext, p); }
 
 {D}+{E}{FS}?				{ return app_float(yylval->fconstant, yytext); }
@@ -469,9 +531,8 @@ static int check_type(void);
 
 						std::size_t length = p - yytext;
 						cnt(yytext);
-						std::cout << "LENGTH: " << length << std::endl;
 						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, yytext, length);
-						std::cout << "STR: " << res << std::endl;
+						if(*p) throw "end of token not 0";
 						// FEATURE: common routine with identifier
 						return app_with_string(yylval->string_literal, STRING_LITERAL, yytext, p); }
 
@@ -490,14 +551,14 @@ static int check_type(void);
 "<<"					{ return app3(yylval->token, LEFT_OP, yytext); }
 "++"					{ return app3(yylval->token, INC_OP, yytext); }
 "--"					{ return app3(yylval->token, DEC_OP, yytext); }
-"->"					{ return app3(yylval->token, PTR_OP, yytext); }
+"->"					{ recent_struct_access = true; return app3(yylval->token, PTR_OP, yytext); }
 "&&"					{ return app3(yylval->token, AND_OP, yytext); }
 "||"					{ return app3(yylval->token, OR_OP, yytext); }
 "<="					{ return app3(yylval->token, LE_OP, yytext); }
 ">="					{ return app3(yylval->token, GE_OP, yytext); }
 "=="					{ return app3(yylval->token, EQ_OP, yytext); }
 "!="					{ return app3(yylval->token, NE_OP, yytext); }
-";"					{ return app3(yylval->token, ';', yytext); }
+";"					{ std::cout << "SEM: " << (int*)yytext << std::endl; return app3(yylval->token, ';', yytext); }
 ("{"|"<%")				{ return app3(yylval->token, '{', yytext); }
 ("}"|"%>")				{ return app3(yylval->token, '}', yytext); }
 ","					{ return app3(yylval->token, ',', yytext); }
@@ -507,7 +568,7 @@ static int check_type(void);
 ")"					{ return app3(yylval->token, ')', yytext); }
 ("["|"<:")				{ return app3(yylval->token, '[', yytext); }
 ("]"|":>")				{ return app3(yylval->token, ']', yytext); }
-"."					{ return app3(yylval->token, '.', yytext); }
+"."					{ recent_struct_access = true; return app3(yylval->token, '.', yytext); }
 "&"					{ return app3(yylval->token, '&', yytext); }
 "!"					{ return app3(yylval->token, '!', yytext); }
 "~"					{ return app3(yylval->token, '~', yytext); }
