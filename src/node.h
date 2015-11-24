@@ -13,8 +13,6 @@
 
 // TODO: include and *use* node_fwd.h
 
-void init_files();
-
 // TODO: not here?
 enum lookup_type
 {
@@ -23,6 +21,8 @@ enum lookup_type
 	lt_identifier,
 	lt_undefined
 };
+
+void init_parser(); //!< see node.cpp
 
 class node_base
 {

@@ -8,11 +8,16 @@
 #include "parser.h"
 
 extern std::vector<std::string>& get_files();
+extern void clear_lookup_table();
 
-void init_files() // TODO: rename -> init(), clear lookup table
+void init_parser() // TODO: rename -> init(), clear lookup table
 {
 	// init default file
+	get_files().clear();
 	get_files().push_back("default.c");
+
+	// clear lookup table
+	clear_lookup_table();
 }
 
 //template<>

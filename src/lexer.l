@@ -336,6 +336,8 @@ public:
 		table_t::const_iterator itr = table.find(str);
 		return (itr == table.end()) ? lt_undefined : itr->second.first;
 	}
+
+	static void clear() { table.clear(); }
 };
 
 lookup_table_t::table_t lookup_table_t::table;
@@ -347,6 +349,11 @@ void leave_scope(const node_base* scope)
 
 int type_of(const char* str) {
 	return lookup_table_t::type_of(str);
+}
+
+void clear_lookup_table()
+{
+	lookup_table_t::clear();
 }
 
 bool recent_struct_access = false;

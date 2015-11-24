@@ -13,7 +13,7 @@ int yyparse(translation_unit_t **expression, yyscan_t scanner);
 
 translation_unit_t *get_ast(const char *input)
 {
-	init_files();
+	init_parser();
 
 	translation_unit_t *transl_unit;
 	yyscan_t scanner;
