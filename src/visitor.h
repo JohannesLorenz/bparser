@@ -204,6 +204,7 @@ public:
 	func_visitor(const FConstrPar& constr) : ftor(this, constr) {}
 
 	void visit(iconstant_t* n) { f(n); }
+	void visit(fconstant_t* n) { f(n); }
 
 	void visit(type_name_t *n) { f(n); }
 	void visit(specifier_qualifier_list_t* n) { f(n); }
@@ -537,45 +538,54 @@ public:
 
 // TODO: all private functions?
 template<class T> // TODO: also send file via parameter?
-inline geom_t get_geom_min(const ptn<T, null_type>& c) {
+inline span_t get_span_min(const ptn<T, null_type>& c) {
 
-	return c.value ? c.value->span.first : geom_t(0, std::numeric_limits<int>::max(),
-		std::numeric_limits<int>::max());
+	return c.value
+		? c.value->span
+		: span_t(	geom_t(0, std::numeric_limits<int>::max(),
+					std::numeric_limits<int>::max()),
+				geom_t(0, std::numeric_limits<int>::min(),
+					std::numeric_limits<int>::min())
+			);
 }
 
 template<class T, class N>
-inline geom_t get_geom_min(const ptn<T, N>& c)
+inline span_t get_span_min(const ptn<T, N>& c)
 {
-	geom_t next_geom = get_geom_min(c.get_next());
+	span_t next_span = get_span_min(c.get_next());
 	//std::cout << "VALUE: " << c.value << std::endl;
 	return c.value
-		? std::min(c.value->span.first, next_geom)
-		: next_geom;
+		? span_t(std::min(c.value->span.first, next_span.first),
+			std::max(c.value->span.second, next_span.second))
+		: next_span;
 }
 
 template<class T, class N>
-inline geom_t get_geom_min(const ptn<std::list<T*>, N>& c)
+inline span_t get_span_min(const ptn<std::list<T*>, N>& c)
 {
-	geom_t next_geom = get_geom_min(c.get_next());
+	span_t next_span = get_span_min(c.get_next());
+	span_t list_span = get_span_min(*c.value);
 	//std::cout << "VALUE: " << c.value << std::endl;
 	return c.value
-		? std::min(get_geom_min(*c.value), next_geom)
-		: next_geom;
+		? span_t(std::min(list_span.first, next_span.first),
+			std::max(list_span.second, next_span.second))
+		: next_span;
 }
 
+// if we have a tuple of lists...
 template<class T>
-inline geom_t get_geom_min(const std::list<T*>& c) {
-	return c.front()->span.first;
+inline span_t get_span_min(const std::list<T*>& c) {
+	return span_t(c.front()->span.first, c.back()->span.second);
 }
 
 template<class T>
 inline span_t get_span(const T& c) {
-	return span_t(get_geom_min(c), geom_t());
+	return get_span_min(c);
 }
 
 template<class T>
 inline span_t get_span(const std::list<T*>& c) {
-	return span_t(c.front()->span.first, geom_t());
+	return span_t(c.front()->span.first, c.back()->span.second);
 }
 
 inline span_t get_span(const null_type&) { // TODO: remove if finished grammar
@@ -585,6 +595,25 @@ inline span_t get_span(const null_type&) { // TODO: remove if finished grammar
 
 class geom_completor : ftor_base
 {
+	template<class T>
+	void add_geom(T& n)
+	{
+		std::size_t newlines = n.newlines(),
+			length = n.length(); // FEATURE: unify with lexer.l?
+		geom_t& end = n.span.second;
+		geom_t& start = n.span.first;
+		end.file_id = start.file_id;
+		if(newlines)
+		{
+			end.line = start.line + newlines;
+			end.col = 1 + length;
+		}
+		else
+		{
+			end.line = start.line;
+			end.col = start.col + length;
+		}
+	}
 public:
 	geom_completor(visitor_t* vref) : ftor_base(vref) {}
 
@@ -599,11 +628,11 @@ public:
 	// terminals have no children
 	//  -> get geom directly from them
 	// TODO: make sure these are all terminals
-	void operator()(/*const*/ token_t& ) {}
-	void operator()(/*const*/ iconstant_t& ) {}
-	void operator()(/*const*/ fconstant_t& ) {}
-	void operator()(/*const*/ identifier_t& ) {}
-	void operator()(/*const*/ string_literal_t& ) {}
+	void operator()(/*const*/ token_t& n) { add_geom(n); }
+	void operator()(/*const*/ iconstant_t& n) { add_geom(n); }
+	void operator()(/*const*/ fconstant_t& n) { add_geom(n); }
+	void operator()(/*const*/ identifier_t& n) { add_geom(n); }
+	void operator()(/*const*/ string_literal_t& n) { add_geom(n); }
 };
 
 

@@ -18,9 +18,32 @@ public:
 // ptn< a, ptn < b, c> > instead of ptn< a, ptn <b, ptn < c > > >
 
 template<class Tpl, std::size_t Idx>
+struct type_at;
+
+template<class Tpl>
+struct type_at<Tpl, 0>;
+
+/*
+template<class Tpl, std::size_t Idx>
 struct type_at
 {
 	typedef typename type_at<typename Tpl::next, Idx - 1>::type type;
+};
+
+template<class Tpl>
+struct type_at<Tpl, 0>
+{
+	typedef typename Tpl::type type;
+};*/
+
+template<int I> class number {};
+
+
+template<class Tpl, std::size_t Idx>
+struct type_at : public type_at<typename Tpl::next, Idx - 1>
+{
+	//typedef typename type_at<typename Tpl::next, Idx - 1>::type type;
+	//number<Idx> func(number<Idx>) { return number<Idx>(); }
 };
 
 template<class Tpl>
@@ -64,8 +87,14 @@ void foreach(Tpl& tpl, F& f) { _foreach<Tpl>::exec(tpl, f); }
 
 class skip{};
 
-// FEATURE: inherit from Next, if it's possible and makes sense
 template<class T, class Next = null_type>
+class tpl;
+
+template<class T>
+class tpl<T, null_type>;
+
+// FEATURE: inherit from Next, if it's possible and makes sense
+template<class T, class Next>
 class tpl // : private Next
 {
 	template<class Tpl, std::size_t Idx>
