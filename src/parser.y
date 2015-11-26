@@ -438,7 +438,7 @@ constant_expression
 	;
 
 declaration
-	: declaration_specifiers ';' { $$ = new declaration_t(); $$->c.fill($1, NULL, $2); }
+	: declaration_specifiers ';' { std::cout << "declaration" << std::endl; $$ = new declaration_t(); $$->c.fill($1, NULL, $2); }
 	| declaration_specifiers init_declarator_list ';' { $$ = new declaration_t(); $$->c.fill($1, $2, $3); }
 	| static_assert_declaration { c11(); }
 	;
@@ -734,7 +734,7 @@ static_assert_declaration
 statement
 	: labeled_statement { $$=$1; }
 	| compound_statement { $$=$1; }
-	| expression_statement { $$=$1; }
+	| expression_statement { std::cout << "EXPR STATE" << std::endl; $$=$1; }
 	| selection_statement { $$=$1; }
 	| iteration_statement { $$=$1; }
 	| jump_statement { $$=$1; }

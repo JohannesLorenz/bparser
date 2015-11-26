@@ -136,6 +136,13 @@ public:
 		for(; *p!='\n'; ++p) ;
 		// for explanation, see @a pos_counter::newline
 	}
+
+	static void reset()
+	{
+		last_file = 0; // default file
+		// we start at 1, 1 (typical convention)
+		last_line = last_col = 1;
+	}
 };
 
 int pos_counter::last_file = 0; // default file
@@ -143,6 +150,11 @@ int pos_counter::last_file = 0; // default file
 int pos_counter::last_line = 1;
 int pos_counter::last_col = 1;
 //int pos_counter::last_mult = 1;
+
+void reset_pos_counter()
+{
+	pos_counter::reset();
+}
 
 span_t cnt(const char* text_pos) {
 	return pos_counter::count(text_pos); }
@@ -359,10 +371,20 @@ void clear_lookup_table()
 bool recent_struct_access = false;
 bool recent_typedef_keyword = false;
 bool recent_enum_flag = false;
+int braces_since_typedef = 0;
 node_base* cur_scope = NULL;
 
 void set_scope(node_base* new_scope) {
 	cur_scope = new_scope;
+}
+
+void reset_variables()
+{
+	recent_struct_access = false;
+	recent_typedef_keyword = false;
+	recent_enum_flag = false;
+	braces_since_typedef = 0;
+	cur_scope = NULL;
 }
 
 %}
@@ -440,6 +462,7 @@ static int check_type(const char* text);
 "struct"				{ return app3(yylval->token, STRUCT, yytext); }
 "switch"				{ return app3(yylval->token, SWITCH, yytext); }
 "typedef"				{ recent_typedef_keyword = true;
+						braces_since_typedef = 0;
 						return app3(yylval->token, TYPEDEF, yytext); }
 "union"					{ return app3(yylval->token, UNION, yytext); }
 "unsigned"				{ return app3(yylval->token, UNSIGNED, yytext); }
@@ -569,8 +592,12 @@ static int check_type(const char* text);
 "=="					{ return app3(yylval->token, EQ_OP, yytext); }
 "!="					{ return app3(yylval->token, NE_OP, yytext); }
 ";"					{ std::cout << "SEM: " << (int*)yytext << std::endl; return app3(yylval->token, ';', yytext); }
-("{"|"<%")				{ return app3(yylval->token, '{', yytext); }
-("}"|"%>")				{ return app3(yylval->token, '}', yytext); }
+("{"|"<%")				{
+++braces_since_typedef;
+return app3(yylval->token, '{', yytext); }
+("}"|"%>")				{	--braces_since_typedef;
+						return app3(yylval->token, '}', yytext);
+}
 ","					{ return app3(yylval->token, ',', yytext); }
 ":"					{ return app3(yylval->token, ':', yytext); }
 "="					{ return app3(yylval->token, '=', yytext); }
@@ -644,7 +671,10 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 	lookup_type lt = lookup_table_t::type_of(text);
 	if(lt == lt_undefined)
 	{
-		if(recent_typedef_keyword)
+		// the braces check is a stupid fix
+		// however, it covers all problematic cases, like
+		// typedef struct { int x } s;
+		if(recent_typedef_keyword && (braces_since_typedef == 0))
 		{
 			lt = lt_typedef_name;
 			recent_typedef_keyword=false;
@@ -664,7 +694,15 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 		// for later use, return the real symbol type
 		return IDENTIFIER;
 	}
-	else return IDENTIFIER;
+	else switch(lt)
+	{
+		case lt_typedef_name:                /* previously defined */
+		 return TYPEDEF_NAME;
+		case lt_enumeration:        /* previously defined */
+		 return ENUMERATION_CONSTANT;
+		default:                          /* includes undefined */
+		 return IDENTIFIER;
+	}
 #if 0
     switch (sym_type(yytext))
     {

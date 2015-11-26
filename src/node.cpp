@@ -9,15 +9,23 @@
 
 extern std::vector<std::string>& get_files();
 extern void clear_lookup_table();
+extern std::vector<terminal_t*>& get_token_vector();
+extern void reset_pos_counter();
+extern void reset_variables();
 
 void init_parser() // TODO: rename -> init(), clear lookup table
 {
+	get_token_vector().clear();
+
+	reset_pos_counter();
+
 	// init default file
 	get_files().clear();
 	get_files().push_back("default.c");
 
-	// clear lookup table
 	clear_lookup_table();
+
+	reset_variables();
 }
 
 //template<>
