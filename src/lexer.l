@@ -7,7 +7,6 @@
 
 #include "node.h"
 #include "parser.h"
-#include "token.h" // TODO
 
 #include <cctype>
 #include <iostream>
@@ -227,7 +226,7 @@ const char* skip_suffix(const char*& p)
 {
 	int_suffix_type suf;
 	// (((u|U)(l|L|ll|LL)?)|((l|L|ll|LL)(u|U)?))
-	if(icmp(p, 'u')) // TODO: ?:
+	if(icmp(p, 'u')) // FEATURE: ?:
 	{
 		if(icmp(p+1,'l'))
 		{
@@ -492,7 +491,21 @@ static int check_type(const char* text);
 						cnt(yytext);
 						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, yytext, length);
 						
-						return app(yylval->name = new identifier_t(res, get_pos()), check_type(yytext)); }
+						int type = check_type(yytext);
+						switch(type)
+						{
+							case IDENTIFIER:
+							std::cout << " -> IDENTIFIER" << std::endl;
+							return app(yylval->name = new identifier_t(res, get_pos()), type);
+							case TYPEDEF_NAME:
+							std::cout << " -> TYPEDEF NAME" << std::endl;
+							return app(yylval->typedef_name = new typedef_name_t(res, get_pos()), type);
+							case ENUMERATION_CONSTANT:
+							std::cout << " -> ENUMERATION_CONSTANT" << std::endl;
+							return app(yylval->enumeration_constant = new enumeration_constant_t(res, get_pos()), type);
+
+						}
+					}
 
 {HP}{H}+{IS}?				{	return app_int(yylval->iconstant, yytext, 'x'); }
 {NZ}{D}*{IS}?				{ 	return app_int(yylval->iconstant, yytext, 'd'); }

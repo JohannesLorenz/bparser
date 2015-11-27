@@ -3,7 +3,7 @@
 
 #include <cstddef>
 
-// TODO: remove this include,
+// FEATURE: remove this include,
 //	make enum independent (other values),
 //	and show conversion only to parser.c
 #include "parser.h"

@@ -10,23 +10,6 @@
 
 extern std::vector<std::string>& get_files();
 
-
-
-
-
-
-
-
-
-
-
-
-
-// TODO: fwd does not visit tokens!
-
-
-
-
 void fwd::visit(type_name_t *t)
 {
 	visit_all(t->c);
@@ -186,7 +169,7 @@ void fwd::visit(expression_statement_t *e)
 	accept_all(e->c);
 }
 
-void fwd::visit(storage_class_specifier_t* ) { /* TODO... (when structs are made) */ }
+void fwd::visit(storage_class_specifier_t* ) { /* FEATURE: remove? */ }
 
 void fwd::visit(iteration_statement_t* i) { accept_all(i->c); }
 
@@ -197,10 +180,9 @@ void fwd::visit(iteration_statement_t* i) { accept_all(i->c); }
 
 void fwd::visit(sizeof_expression_t* n)
 {
-	visit_all(n->c);
+	accept_all(n->c);
 }
 
-void fwd::visit(identifier_t *) {}
 void fwd::visit(type_specifier_t *t) { accept_all(t->c); }
 //void fwd::visit(type_identifier *t) { visit_all(t->c); }
 void fwd::visit(type_qualifier_t *t) { visit_all(t->c); }
@@ -209,9 +191,9 @@ void fwd::visit(type_qualifier_list_t *n)
 {
 	vvisit(n->c);
 }
-void fwd::visit(function_specifier_t* ) { // TODO
+void fwd::visit(function_specifier_t* ) { // FEATURE: remove?
 }
-void fwd::visit(alignment_specifier_t* ) { // TODO
+void fwd::visit(alignment_specifier_t* ) { // FEATURE: remove?
 }
 void fwd::visit(declaration_list_t* d) { vvisit(d->declarations); }
 void fwd::visit(compound_statement_t* n) {
@@ -303,7 +285,12 @@ void fwd::visit(direct_declarator_arr *d)
 
 void fwd::visit(direct_declarator_func *d)
 {
-	accept_all(d->c);
+	visit_all(d->c);
+}
+
+void fwd::visit(direct_declarator_idlist* d)
+{
+	visit_all(d->c);
 }
 
 void fwd::visit(direct_abstract_declarator_decl *d)
@@ -400,21 +387,21 @@ void dumper_t::visit(struct_or_union_specifier_t *s)
 void dumper_t::visit(struct_declaration_t* n)
 {
 	incr_depth_t x(&depth, stream, n->span);
-	stream << "struct declaration" << std::endl; // TODO: good name?
+	stream << "struct declaration" << std::endl; // FEATURE: good name?
 	fwd::visit(n);
 }
 
 void dumper_t::visit(struct_declaration_list_t* n)
 {
 	incr_depth_t x(&depth, stream, n->span);
-	stream << "struct declaration list" << std::endl; // TODO: good name?
+	stream << "struct declaration list" << std::endl; // FEATURE: good name?
 	fwd::visit(n);
 }
 
 void dumper_t::visit(struct_declarator_list_t* n)
 {
 	incr_depth_t x(&depth, stream, n->span);
-	stream << "struct declarator list" << std::endl; // TODO: endl autom?
+	stream << "struct declarator list" << std::endl; // FEATURE: endl autom?
 	fwd::visit(n);
 }
 
@@ -580,7 +567,7 @@ void dumper_t::visit(token_t* e)
 {
 	incr_depth_t x(&depth, stream, e->span);
 
-	stream << "token, value: ";
+	stream << "token: ";
 	int value = e->value;
 	if(value <= 255)
 		stream << (char)value;
@@ -591,22 +578,23 @@ void dumper_t::visit(token_t* e)
 
 void dumper_t::visit(unary_expression_l *e)
 {
+	// FEATURE: full op names
 	incr_depth_t x(&depth, stream, e->span);
-	stream << "unary_expression, op 1: TODO" << std::endl;
+	stream << "unary_expression (prefix)" << std::endl;
 	fwd::visit(e);
 }
 
 void dumper_t::visit(unary_expression_r *e)
 {
 	incr_depth_t x(&depth, stream, e->span);
-	stream << "unary_expression, op 1: TODO" << std::endl;
+	stream << "unary_expression (postfix)" << std::endl;
 	fwd::visit(e);
 }
 
 void dumper_t::visit(binary_expression_t *e)
 {
 	incr_depth_t x(&depth, stream, e->span);
-	stream << "binary expression " << e->op_id << std::endl;
+	stream << "binary expression " << std::endl;
 	fwd::visit(e);
 }
 
@@ -619,7 +607,7 @@ void dumper_t::visit(ternary_expression_t *e)
 	if(e->n3) { e->n3->accept(*); on(e, 3); }*/
 
 	incr_depth_t x(&depth, stream, e->span);
-	stream << "ternary expression, op 1: TODO" << std::endl;
+	stream << "ternary expression" << std::endl;
 	fwd::visit(e);
 }
 
@@ -632,7 +620,6 @@ void dumper_t::visit(expression_statement_t *e)
 
 void dumper_t::visit(storage_class_specifier_t* )
 {
-	// TODO?
 }
 
 void dumper_t::visit(iteration_statement_t* n)
@@ -685,6 +672,20 @@ void dumper_t::visit(identifier_t *n)
 	fwd::visit(n);
 }
 
+void dumper_t::visit(enumeration_constant_t* n)
+{
+	incr_depth_t x(&depth, stream, n->span);
+	stream << "enumeration constant: " << n->raw << std::endl;
+	fwd::visit(n);
+}
+
+void dumper_t::visit(typedef_name_t* n)
+{
+	incr_depth_t x(&depth, stream, n->span);
+	stream << "typedef name: " << n->raw << std::endl;
+	fwd::visit(n);
+}
+
 void dumper_t::visit(string_literal_t *s)
 {
 	incr_depth_t x(&depth, stream, s->span);
@@ -710,15 +711,19 @@ void dumper_t::visit(type_qualifier_t* n) {
 	stream << "type qualifier" << std::endl;
 	fwd::visit(n);
 }
-void dumper_t::visit(function_specifier_t* n) {
+void dumper_t::visit(function_specifier_t* ) {
+#if 0
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "function specifier" << std::endl;
 	fwd::visit(n);
+#endif
 }
-void dumper_t::visit(alignment_specifier_t* n) {
+void dumper_t::visit(alignment_specifier_t* ) {
+#if 0
 	incr_depth_t x(&depth, stream, n->span);
 	stream << "alignment specifier" << std::endl;
 	fwd::visit(n);
+#endif
 }
 void dumper_t::visit(declaration_list_t* n) {
 	incr_depth_t x(&depth, stream, n->span);
@@ -889,6 +894,14 @@ void dumper_t::visit(direct_declarator_func *d)
 	stream << "direct declarator (function)" << std::endl;
 	fwd::visit(d);
 }
+
+void dumper_t::visit(direct_declarator_idlist *d)
+{
+	incr_depth_t x(&depth, stream, d->span);
+	stream << "direct declarator (identifier list)" << std::endl;
+	fwd::visit(d);
+}
+
 
 void dumper_t::visit(direct_abstract_declarator_decl *d)
 {

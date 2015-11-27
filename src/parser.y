@@ -45,7 +45,6 @@ R* app_right(R* cur, S& stor, Right* left) {
 }
 
 void c11() { throw "This C11 extension is not implemented yet."; }
-void not_yet() { throw "This extension is to be done."; }
 
 extern std::vector<terminal_t*>& get_token_vector();
 
@@ -81,6 +80,8 @@ typedef void* yyscan_t;
 
 %union {
 	struct identifier_t* name;
+	struct typedef_name_t* typedef_name;
+	struct enumeration_constant_t* enumeration_constant;
 	float _float;
 	int _int;
 	struct token_t* token;
@@ -164,7 +165,9 @@ typedef void* yyscan_t;
 
 %token	ALIGNAS ALIGNOF ATOMIC GENERIC NORETURN STATIC_ASSERT THREAD_LOCAL
 
-%type <name> IDENTIFIER ENUMERATION_CONSTANT TYPEDEF_NAME
+%type <name> IDENTIFIER
+%type <enumeration_constant> ENUMERATION_CONSTANT
+%type <typedef_name> TYPEDEF_NAME
 
 %type <string_literal> STRING_LITERAL
 %type <token> I_CONSTANT F_CONSTANT
@@ -194,7 +197,6 @@ typedef void* yyscan_t;
 %type <terminal> constant string
 
 %type <block_item> block_item
- // TODO: _operator unused?
 %type <type_name> type_name
 %type <declaration> declaration
 %type <statement> statement
@@ -276,7 +278,7 @@ primary_expression // parents: postfix_expression
 constant // parents: primary expression
 	: I_CONSTANT { $$=$1; }		/* includes character_constant */
 	| F_CONSTANT { $$=$1; }
-	| ENUMERATION_CONSTANT{ not_yet(); }	/* after it has been defined as such */
+	| ENUMERATION_CONSTANT{ $$=$1 }	/* after it has been defined as such */
 	;
 
 enumeration_constant		/* before it has been defined as such */
@@ -327,8 +329,8 @@ unary_expression
 	| INC_OP unary_expression { unary_expression_l* u; $$=alloc(u); u->c.fill($1, $2); }
 	| DEC_OP unary_expression { unary_expression_l* u; $$=alloc(u); u->c.fill($1, $2); }
 	| unary_operator cast_expression { unary_expression_l* u; $$=alloc(u); u->c.fill($1, $2); /*u->op_id = $1;*/ }
-	| SIZEOF unary_expression { not_yet(); }
-	| SIZEOF '(' type_name ')' { sizeof_expression_t* e; alloc(e); e->c.fill($1,$2,$3,$4); $$=e; }
+	| SIZEOF unary_expression { sizeof_expression_t* e; alloc(e); e->c.fill($1, NULL, NULL, $2, NULL); $$=e; } // example: sizeof 255+1
+	| SIZEOF '(' type_name ')' { sizeof_expression_t* e; alloc(e); e->c.fill($1,$2,$3,NULL, $4); $$=e; }
 	| ALIGNOF '(' type_name ')' { c11(); }
 	;
 
@@ -415,7 +417,7 @@ assignment_expression
 	;
 
 assignment_operator
-	: '=' { $$=$1; /* op_asn */ }
+	: '=' { $$=$1; /* op_asn */ } // FEATURE: remove those comments?
 	| MUL_ASSIGN { $$=$1; /* op_asn_mul */ }
 	| DIV_ASSIGN { $$=$1; /* op_asn_div */ }
 	| MOD_ASSIGN { $$=$1; /* op_asn_mod */ }
@@ -620,7 +622,9 @@ direct_declarator
 	| direct_declarator '(' ')' {
 		direct_declarator_func* d; $$ = alloc(d);
 		d->c.fill($1, $2, NULL, $3); }
-	| direct_declarator '(' identifier_list ')' { not_yet(); }
+	| direct_declarator '(' identifier_list ')' {
+		direct_declarator_idlist* d; $$ = alloc(d);
+		d->c.fill($1, $2, $3, $4); }
 	;
 
 pointer // should actually be named: "pointers"
@@ -796,7 +800,7 @@ translation_unit
 	| translation_unit external_declaration { (*expression)->c.push_back($2); }
 	;
 
-external_declaration // TODO: this class is not needed (->virtual)
+external_declaration
 	: function_definition { $$ = new external_declaration_t($1); }
 	| declaration { $$ = new external_declaration_t($1); }
 	;

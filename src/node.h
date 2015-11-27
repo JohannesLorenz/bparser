@@ -104,6 +104,18 @@ struct identifier_t : public noconst_1line_terminal_t
 	identifier_t(const char* name, geom_t geom);
 };
 
+struct typedef_name_t : public noconst_1line_terminal_t
+{
+	virtual void accept(class visitor_t& v);
+	typedef_name_t(const char* name, geom_t geom);
+};
+
+struct enumeration_constant_t : public noconst_1line_terminal_t
+{
+	virtual void accept(class visitor_t& v);
+	enumeration_constant_t(const char* name, geom_t geom);
+};
+
 struct string_literal_t : public noconst_terminal_t
 {
 	std::size_t _length, _newlines;
@@ -149,9 +161,11 @@ struct declaration_specifier_type : public node_t<> {
 	declaration_specifier_type(const geom_t& geom) : node_t<>(geom) {}
 };
 
+#if 0
 struct storage_class_specifier_t : public declaration_specifier_type {
 	virtual void accept(class visitor_t& v);
 };
+#endif
 
 #if 0
 enum type_specifier_id
@@ -458,7 +472,9 @@ struct sizeof_expression_t : public expression_t
 	//to< ptn< type_name_t, end_token > >::type c;
 	ptn<	token_t,
 		ptn <	token_t,
-			ptn <	type_name_t, end_token > > > c;
+			ptn <	type_name_t,
+				ptn<	expression_t,
+						end_token > > > > c;
 };
 
 enum constant_type
@@ -670,15 +686,18 @@ struct type_qualifier_t : public declaration_specifier_type
 	ptn<token_t> c;
 	virtual void accept(class visitor_t& v);
 };
-// TODO: needed?
+
+#if 0
 struct function_specifier_t : public declaration_specifier_type {
 	
 	virtual void accept(class visitor_t& v);
 };
-// TODO: needed?
+// FEATURE: needed?
 struct alignment_specifier_t : public declaration_specifier_type {
 	virtual void accept(class visitor_t& v);
 };
+#endif
+
 struct declaration_list_t : public node_t<struct function_definition_t>
 {
 	virtual void accept(class visitor_t& v);
@@ -999,7 +1018,16 @@ struct direct_declarator_func : public direct_declarator_t
 	virtual void accept(class visitor_t& v);
 };
 
+// FEATUR: what is this?
+struct direct_declarator_idlist : public direct_declarator_t
+{
+	ptn<	direct_declarator_t,
+		ptn<	token_t, // (
+			ptn<	identifier_list_t,
+					end_token > > > c;
 
+	virtual void accept(class visitor_t& v);
+};
 
 
 

@@ -13,7 +13,7 @@ extern std::vector<terminal_t*>& get_token_vector();
 extern void reset_pos_counter();
 extern void reset_variables();
 
-void init_parser() // TODO: rename -> init(), clear lookup table
+void init_parser()
 {
 	get_token_vector().clear();
 
@@ -31,11 +31,13 @@ void init_parser() // TODO: rename -> init(), clear lookup table
 //template<>
 //void type_specifier_simple_t::accept(visitor_t& v) { v.visit(this); }
 
-/*geom_t noconst_terminal_t::get_length() const { // TODO: rename: length
-	
-}*/
-
 identifier_t::identifier_t(const char* name, geom_t geom) :
+	noconst_1line_terminal_t(geom, t_identifier, name) {}
+
+typedef_name_t::typedef_name_t(const char* name, geom_t geom) :
+	noconst_1line_terminal_t(geom, t_identifier, name) {}
+
+enumeration_constant_t::enumeration_constant_t(const char* name, geom_t geom) :
 	noconst_1line_terminal_t(geom, t_identifier, name) {}
 
 std::size_t token_t::length() const
@@ -83,12 +85,13 @@ void unary_expression_r::accept(visitor_t& v) { v.visit(this); }
 void binary_expression_t::accept(visitor_t& v) { v.visit(this); }
 void ternary_expression_t::accept(visitor_t& v) { v.visit(this); }
 
-
+#if 0
 void storage_class_specifier_t::accept(visitor_t& v) { v.visit(this); }
+#endif
 //void type_specifier_t::accept(visitor_t& v) { v.visit(this); }
 void type_qualifier_t::accept(visitor_t& v) { v.visit(this); }
-void function_specifier_t::accept(visitor_t& v) { v.visit(this); }
-void alignment_specifier_t::accept(visitor_t& v) { v.visit(this); }
+//void function_specifier_t::accept(visitor_t& v) { v.visit(this); }
+//void alignment_specifier_t::accept(visitor_t& v) { v.visit(this); }
 void declaration_list_t::accept(visitor_t& v) { v.visit(this); }
 void compound_statement_t::accept(visitor_t& v) { v.visit(this); }
 void pointer_t::accept(visitor_t& v) { v.visit(this); }
@@ -129,6 +132,8 @@ void sizeof_expression_t::accept(visitor_t& v) { v.visit(this); }
 
 void block_item_t::accept(visitor_t &v) { v.visit(this); }
 void identifier_t::accept(visitor_t &v) { v.visit(this); }
+void enumeration_constant_t::accept(visitor_t &v) { v.visit(this); }
+void typedef_name_t::accept(visitor_t &v) { v.visit(this); }
 void string_literal_t::accept(visitor_t &v) { v.visit(this); }
 
 void init_declarator_t::accept(visitor_t &v) { v.visit(this); }
@@ -140,6 +145,7 @@ void direct_declarator_id::accept(visitor_t &v) { v.visit(this); }
 void direct_declarator_decl::accept(visitor_t &v) { v.visit(this); }
 void direct_declarator_arr::accept(visitor_t &v) { v.visit(this); }
 void direct_declarator_func::accept(visitor_t &v) { v.visit(this); }
+void direct_declarator_idlist::accept(visitor_t &v) { v.visit(this); }
 
 void direct_abstract_declarator_t::accept(visitor_t &v) { v.visit(this); }
 void direct_abstract_declarator_decl::accept(visitor_t &v) { v.visit(this); }

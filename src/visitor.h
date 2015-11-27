@@ -3,7 +3,6 @@
 #include <cassert>
 
 #include <list>
-#include <cstdlib> // TODO
 #include <limits>
 
 #include "tuple03.h"
@@ -14,11 +13,11 @@
 #ifndef VISITOR_H
 #define VISITOR_H
 
-// TODO: pointers->refs?
+// FEATURE: pointers->refs?
 class visitor_t
 {
 public:
-	virtual void visit(type_name_t *) {} // TODO: use refs?
+	virtual void visit(type_name_t *) {}
 	virtual void visit(specifier_qualifier_list_t* ) {}
 
 	virtual void visit(struct_or_union_specifier_t* ) {}
@@ -84,6 +83,8 @@ public:
 	//virtual void visit(block_item_list_t* ) {}
 	virtual void visit(block_item_t* ) {}
 	virtual void visit(identifier_t* ) {}
+	virtual void visit(enumeration_constant_t* ) {}
+	virtual void visit(typedef_name_t* ) {}
 	virtual void visit(string_literal_t* ) {}
 	virtual void visit(sizeof_expression_t* ) {}
 	virtual void visit(init_declarator_list_t* ) {}
@@ -100,6 +101,7 @@ public:
 	virtual void visit(direct_declarator_decl* ) {}
 	virtual void visit(direct_declarator_arr* ) {}
 	virtual void visit(direct_declarator_func* ) {}
+	virtual void visit(direct_declarator_idlist* ) {}
 	virtual void visit(direct_abstract_declarator_t* ) {}
 	virtual void visit(direct_abstract_declarator_decl* ) {}
 	virtual void visit(direct_abstract_declarator_arr* ) {}
@@ -136,7 +138,7 @@ public:
 		}
 	}
 
-	template<class T> // TODO: remove this func?!
+	template<class T> // FEATURE: remove this func?!
 	void accept_if_nontoken(T* const& non_token) {
 		if(non_token) non_token->accept(*this);
 	}
@@ -156,7 +158,7 @@ public:
 		 visit(non_token);
 	}
 
-	void visit_if_nontoken(token_t* const& ) {}
+	//void visit_if_nontoken(token_t* const& ) {}
 
 	template<class T, class Next>
 	void visit_all(const tpl<T, Next>& t) { visit_if_nontoken(t.value); visit_all(t.get_next()); }
@@ -175,13 +177,13 @@ public:
 	/*template<class T>
 	void xaccept(const ch<T>& c) { if(c) (T* c)->accept(*this); }*/
 
-	// terminals, nothing to do... // TODO: remove?
-	/*void xaccept(const int&) {}
+	// terminals, nothing to do...
+	/*void xaccept(const int&) {} -> remove?
 	void xaccept(const float&) {}
 	void xaccept(const std::string&) {}*/
 
 	// other case: non-terminal -> node ?
-	//void xaccept(node_base* node) { node->accept(*this); } // TODO: const version?
+	//void xaccept(node_base* node) { node->accept(*this); } ... -> const version?
 };
 
 namespace std
@@ -243,14 +245,18 @@ public:
 	void visit(unary_expression_r* n) { f(n); }
 	void visit(ternary_expression_t* n) { f(n); }
 	void visit(binary_expression_t* n) { f(n); }
+#if 0
 	void visit(storage_class_specifier_t* n) { f(n); }
+#endif
 	//void visit(type_specifier_token* n) { f(n); }
 	//void visit(type_identifier* n) { f(n); }
 	void visit(type_specifier_t* n) { f(n); }
 	void visit(type_qualifier_t* n) { f(n); }
 	void visit(type_qualifier_list_t* n) { f(n); }
+#if 0
 	void visit(function_specifier_t* n) { f(n); }
 	void visit(alignment_specifier_t* n) { f(n); }
+#endif
 	void visit(declaration_list_t* n) { f(n); }
 	void visit(compound_statement_t* n) { f(n); }
 	void visit(pointer_t* n) { f(n); }
@@ -270,6 +276,8 @@ public:
 	//void visit(block_item_list_t* n) { f(n); }
 	void visit(block_item_t* n) { f(n); }
 	void visit(identifier_t* n) { f(n); }
+	void visit(enumeration_constant_t* n) { f(n); }
+	void visit(typedef_name_t* n) { f(n); }
 	void visit(string_literal_t* n) { f(n); }
 	void visit(sizeof_expression_t* n) { f(n); }
 	void visit(init_declarator_list_t* n) { f(n); }
@@ -286,6 +294,7 @@ public:
 	void visit(direct_declarator_decl* n) { f(n); }
 	void visit(direct_declarator_arr* n) { f(n); }
 	void visit(direct_declarator_func* n) { f(n); }
+	void visit(direct_declarator_idlist* n) { f(n); }
 	void visit(direct_abstract_declarator_t* n) { f(n); }
 	void visit(direct_abstract_declarator_decl* n) { f(n); }
 	void visit(direct_abstract_declarator_arr* n) { f(n); }
@@ -321,7 +330,7 @@ protected:
 		}
 	}
 
-	template<class T> // TODO: remove this func?! non_token: wrong name
+	template<class T> // FEATURE: remove this func?! non_token: wrong name
 	void accept_if_nontoken(T* const& non_token) {
 		if(non_token) non_token->accept(*vref);
 	}
@@ -346,7 +355,7 @@ protected:
 		 visit(non_token);
 	}
 
-	void visit_if_nontoken(token_t* const& ) {}
+	//void visit_if_nontoken(token_t* const& ) {}
 
 	template<class T, class Next>
 	void visit_all(const tpl<T, Next>& t) { visit_if_nontoken(t.value); visit_all(t.get_next()); }
@@ -474,7 +483,10 @@ public:
 	void visit(translation_unit_t* n);
 	void visit(declaration_t* n);
 	void visit(iteration_statement_t* n);
-	void visit(identifier_t* n);
+	void visit(identifier_t* ) {}
+	void visit(enumeration_constant_t* ) {}
+	void visit(typedef_name_t* ) {}
+
 	void visit(string_literal_t* ) {}
 	void visit(sizeof_expression_t* n);
 //	void visit(constant_t* );
@@ -492,12 +504,13 @@ public:
 	void visit(direct_declarator_decl* );
 	void visit(direct_declarator_arr* );
 	void visit(direct_declarator_func* );
+	void visit(direct_declarator_idlist* );
 	void visit(direct_abstract_declarator_decl* );
 	void visit(direct_abstract_declarator_arr* );
 	void visit(direct_abstract_declarator_func* );
 
 
-}; // TODO: identifier...
+};
 
 class fwd_functor : ftor_base
 {
@@ -515,14 +528,12 @@ class type_completor : ftor_base
 public:
 	type_completor(visitor_t* vref) : ftor_base(vref) {}
 
+	// expressions...
 	void operator()(unary_expression_l& );
 	void operator()(unary_expression_r& );
 	void operator()(binary_expression_t& );
-	
-	// unary op_id
-	// binary op_id
 
-	// TODO: float, int
+	// FEATURE: float, int
 
 	// statements...
 	void operator()(iteration_statement_t& );
@@ -588,8 +599,8 @@ inline span_t get_span(const std::list<T*>& c) {
 	return span_t(c.front()->span.first, c.back()->span.second);
 }
 
-inline span_t get_span(const null_type&) { // TODO: remove if finished grammar
-//	std::cout << "SPAN: " << std::endl;
+inline span_t get_span(const null_type&) {
+	throw "should not happen. error in grammar!";
 	return span_t();
 }
 
@@ -619,7 +630,7 @@ public:
 
 	// default case
 	// TODO: use node& and terminal& below?
-	template<class NodeType>
+	template<class NodeType, class CT>
 	void operator()(/*const*/ NodeType& n) {
 		xaccept(n.c);
 		n.span = get_span(n.c);
@@ -632,6 +643,9 @@ public:
 	void operator()(/*const*/ iconstant_t& n) { add_geom(n); }
 	void operator()(/*const*/ fconstant_t& n) { add_geom(n); }
 	void operator()(/*const*/ identifier_t& n) { add_geom(n); }
+	void operator()(enumeration_constant_t& n) { add_geom(n); }
+	void operator()(typedef_name_t& n) { add_geom(n); }
+
 	void operator()(/*const*/ string_literal_t& n) { add_geom(n); }
 };
 
@@ -707,6 +721,8 @@ public:
 	void visit(declaration_t* n);
 	void visit(iteration_statement_t* n);
 	void visit(identifier_t* n);
+	void visit(enumeration_constant_t* n);
+	void visit(typedef_name_t* n);
 	void visit(string_literal_t* s);
 	void visit(sizeof_expression_t* n);
 //	void visit(constant_t* );
@@ -724,6 +740,7 @@ public:
 	void visit(direct_declarator_decl* );
 	void visit(direct_declarator_arr* );
 	void visit(direct_declarator_func* );
+	void visit(direct_declarator_idlist* );
 	void visit(direct_abstract_declarator_decl* );
 	void visit(direct_abstract_declarator_arr* );
 	void visit(direct_abstract_declarator_func* );
