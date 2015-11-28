@@ -1,3 +1,22 @@
+/*************************************************************************/
+/* bparser - a bison-based, C99 parser                                   */
+/* Copyright (C) 2015-2015                                               */
+/* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
+/*                                                                       */
+/* This program is free software; you can redistribute it and/or modify  */
+/* it under the terms of the GNU General Public License as published by  */
+/* the Free Software Foundation; either version 3 of the License, or (at */
+/* your option) any later version.                                       */
+/* This program is distributed in the hope that it will be useful, but   */
+/* WITHOUT ANY WARRANTY; without even the implied warranty of            */
+/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      */
+/* General Public License for more details.                              */
+/*                                                                       */
+/* You should have received a copy of the GNU General Public License     */
+/* along with this program; if not, write to the Free Software           */
+/* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
+/*************************************************************************/
+
 /**
  * @file node.h
  * definition of a node of the resulting AST
@@ -8,12 +27,12 @@
 #include <cstddef>
 #include <list>
 #include <string>
+
+#include "node_fwd.h"
 #include "tuple03.h"
 #include "geom.h"
 
-// TODO: include and *use* node_fwd.h
-
-// TODO: not here?
+// FEATURE: not here?
 enum lookup_type
 {
 	lt_enumeration,
@@ -29,7 +48,7 @@ class node_base
 public:
 	typedef std::size_t id_t;
 
-	span_t span; // TODO: public
+	span_t span; // FEATURE: not public
 	virtual void accept(class visitor_t& v) = 0;
 
 	node_base() {}
@@ -51,6 +70,7 @@ public:
 	virtual ~node_t() {}
 };
 
+#if 0
 template<class First, class Next = null_type>
 class node_ch : public node_t<>
 {
@@ -60,24 +80,29 @@ public:
 	node_ch(const geom_t& geom) : node_t<>(geom) {}
 
 	virtual ~node_ch() {}
-	void accept_children(visitor_t& v); // TODO
+	void accept_children(visitor_t& v);
 };
+#endif
 
-struct terminal_t : public node_t<> { // TODO: class
-	int value;
+class terminal_t : public node_t<>
+{
+	int _value;
 	virtual std::size_t length() const = 0;
 	virtual std::size_t newlines() const = 0;
 public:
-	terminal_t(const geom_t& geom, int value) : node_t<>(geom), value(value) {}
+	int value() const { return _value; }
+	std::size_t get_length() const { return length(); }
+	std::size_t get_newlines() const { return newlines(); }
+	terminal_t(const geom_t& geom, int _value) : node_t<>(geom), _value(_value) {}
 };
 
 struct token_t : public terminal_t
 {
+	std::size_t length() const;
+	std::size_t newlines() const;
 public:
 	token_t(const geom_t& pos, int value) : terminal_t(pos, value) {}
 	virtual void accept(class visitor_t& v);
-	std::size_t length() const;
-	std::size_t newlines() const;
 };
 
 struct noconst_terminal_t : public terminal_t
@@ -252,10 +277,7 @@ enum binary_op_t
 
 typedef ptn<token_t> end_token;
 
-struct expression_t : public node_t<> {
-//	op_t op_id; // TODO: reliable? redundant?
-//	virtual void accept(class visitor_t& v);
-};
+struct expression_t : public node_t<> {};
 
 struct unary_expression_r : public expression_t
 {
@@ -407,7 +429,7 @@ struct enumerator_list_t : public node_t<> // FEATURE: when alt list
 
 struct enumerator_t : public node_t<enumerator_list_t>
 {
-	ptn<	identifier_t, // TODO
+	ptn<	identifier_t,
 		ptn<	token_t, // =, optional
 			ptn<	expression_t // optional
 		> > > c;
@@ -422,7 +444,7 @@ struct parameter_type_list_t : public node_t<> // FEATURE: declar. or abstr. dec
 	void accept(class visitor_t& v);
 };
 
-struct parameter_list_t : public node_t<> // TODO: when alt list
+struct parameter_list_t : public node_t<> // FEATURE: when alt list
 {
 	ptn<	parameter_list_t,
 		ptn<	token_t,
@@ -434,13 +456,13 @@ struct parameter_list_t : public node_t<> // TODO: when alt list
 struct parameter_declaration_t : public node_t<parameter_list_t>
 {
 	ptn<	struct declaration_specifiers_t,
-		ptn<	declarator_t, // TODO: declarator base, and remove below
+		ptn<	declarator_t,
 			ptn<	abstract_declarator_t
 		> > > c;
 	void accept(class visitor_t& v);
 };
 
-struct identifier_list_t : public node_t<> // TODO: when alt list
+struct identifier_list_t : public node_t<> // FEATURE: when alt list
 {
 	ptn<	identifier_list_t,
 		ptn<	token_t,
@@ -505,23 +527,24 @@ enum primary_type
 	pt_string
 };
 
+#if 0
 // strings, ints, floats
-// TODO: keep strings of original values? e.g. ...f, ...lf ?
 template<class T>
 struct constant_t : public terminal_t
 {
 	std::string value;
 //	ptn<token_t> c;
 //	constant_t() {}
-	constant_t(const char* value, geom_t geom) : terminal_t(geom, 0/*TODO*/), value(value) {}
+	constant_t(const char* value, geom_t geom) : terminal_t(geom, 0), value(value) {}
 
 	virtual void accept(class visitor_t& v);
 };
+#endif
 
 struct iconstant_t : public noconst_1line_terminal_t
 {
-	int suf_type; // TODO
-	iconstant_t(const char* value, geom_t geom) : // TODO: value
+	int suf_type; // FEATURE: this is not being set yet
+	iconstant_t(const char* value, geom_t geom) :
 		noconst_1line_terminal_t(geom, 0, value) {}
 
 	virtual void accept(class visitor_t& v);
@@ -529,60 +552,23 @@ struct iconstant_t : public noconst_1line_terminal_t
 
 struct fconstant_t : public noconst_1line_terminal_t
 {
-	fconstant_t(const char* value, geom_t geom) : // TODO: value
+	fconstant_t(const char* value, geom_t geom) :
 		noconst_1line_terminal_t(geom, 0, value) {}
 
 	virtual void accept(class visitor_t& v);
 };
 
-struct primary_expression_t : public expression_t {
-	ptn<	terminal_t,	// TODO: constant_base
-		//ptn<	constant_t<float>,
-			ptn<	struct identifier_t,
-				ptn<	token_t,
-					ptn<	expression_t,
-							end_token
+struct primary_expression_t : public expression_t
+{
+	ptn<	noconst_terminal_t,
+		ptn<	struct identifier_t,
+			ptn<	token_t,
+				ptn<	expression_t,
+						end_token
 		> > > > c;
 	
 	virtual void accept(class visitor_t& v);
 };
-// TODO: currently no difference between enum_constant and identifier
-#if 0
-struct primary_identifier_t : public node_t
-{
-	ptn<identifier_t> c;
-	virtual void accept(class visitor_t& v);
-};
-
-struct primary_expression_expression_t : public node_t // TODO: put this all into primary_expression_t?
-{
-	ptn<	token_t,	// left brace
-		ptn<	expression_t,
-				end_token
-			> > c;
-	virtual void accept(class visitor_t& v);
-};
-#endif
-#if 0
-struct primary_expression_t : public expression_t
-{
-	virtual void accept(class visitor_t& v);
-	primary_type type;
-	
-/*	tok lbrace, rbrace;
-	ch<constant_t> constant;
-	identifier_t* identifier;
-	identifier_t* string;
-	expression_t* expression;*/
-	ptn<	identifier_t,	// identifier
-		ptn<	identifier_t,	// string literal
-			ptn<	constant_t,
-				ptn<	token_t,	// left brace
-					ptn<	expression_t,
-							end_token
-			> > > > > c;
-};
-#endif
 
 struct array_access_expression_t : public expression_t
 {
@@ -610,18 +596,18 @@ struct function_call_expression_t : public expression_t
 					end_token > > > c;
 	virtual void accept(class visitor_t& v);
 };
-// TODO: base for postfix expressions?
-// TODO: no op_id here, does this make sense?
+
+// FEATURE: base for postfix expressions? probably not?
 struct struct_access_expression_t : public expression_t
 {
+	bool pointer_access;
 	ptn<	expression_t,
 		ptn<	token_t,	// . or ->
 			ptn<	identifier_t > > > c;
 	virtual void accept(class visitor_t& v);
 };
 
-// TODO: what is this??
-struct cast_postfix_expression_t : public expression_t
+struct compound_literal_t : public expression_t
 {
 	ptn<	token_t,
 		ptn<	type_name_t,
@@ -701,7 +687,7 @@ struct alignment_specifier_t : public declaration_specifier_type {
 struct declaration_list_t : public node_t<struct function_definition_t>
 {
 	virtual void accept(class visitor_t& v);
-	std::list<struct declaration_t*> declarations;
+	std::list<struct declaration_t*> c;
 };
 
 
@@ -879,7 +865,7 @@ struct initializer_t : public node_t<>
 	virtual void accept(class visitor_t& v);
 };
 
-struct init_declarator_t : public node_t<> // TODO: node<init_declarator_list>
+struct init_declarator_t : public node_t<> // FEATURE: node<init_declarator_list>
 {
 	ptn<	struct declarator_t,
 		ptn<	token_t,
@@ -946,14 +932,13 @@ struct type_qualifier_list_t : public node_t<>
 };
 
 #if 0
-struct block_item_list_t : public node_t // TODO: define inside compound_statement_t?
+struct block_item_list_t : public node_t
 {
 	virtual void accept(class visitor_t& v);
 	std::list<block_item_t*> items;
 };
 #endif
 
-// TODO: rename all child members to 'c'
 struct compound_statement_t : public statement_t
 {
 	ptn<	token_t, // left bracket
@@ -971,12 +956,8 @@ struct pointer_t : public node_t<> // FEATURE: node<base class of declarator and
 	virtual void accept(class visitor_t& v);
 };
 struct direct_declarator_t : public node_t<> { // FEATURE: node<base class of ...>?
-	/*id_t identifier;
-	bool bracktype;
-	id_t lbrack, rbrack;*/
-
 	virtual void accept(class visitor_t& v);
-}; // TODO: identifier...
+};
 
 struct direct_declarator_id : public direct_declarator_t {
 	ptn<identifier_t> c;
@@ -1034,12 +1015,8 @@ struct direct_declarator_idlist : public direct_declarator_t
 
 
 struct direct_abstract_declarator_t : public node_t<> { // FEATURE: base class of ...?
-	/*id_t identifier;
-	bool bracktype;
-	id_t lbrack, rbrack;*/
-
 	virtual void accept(class visitor_t& v);
-}; // TODO: identifier...
+};
 
 struct direct_abstract_declarator_decl : public direct_abstract_declarator_t
 {

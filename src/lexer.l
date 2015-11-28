@@ -1,5 +1,23 @@
 %{
- 
+/*************************************************************************/
+/* bparser - a bison-based, C99 parser                                   */
+/* Copyright (C) 2015-2015                                               */
+/* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
+/*                                                                       */
+/* This program is free software; you can redistribute it and/or modify  */
+/* it under the terms of the GNU General Public License as published by  */
+/* the Free Software Foundation; either version 3 of the License, or (at */
+/* your option) any later version.                                       */
+/* This program is distributed in the hope that it will be useful, but   */
+/* WITHOUT ANY WARRANTY; without even the implied warranty of            */
+/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      */
+/* General Public License for more details.                              */
+/*                                                                       */
+/* You should have received a copy of the GNU General Public License     */
+/* along with this program; if not, write to the Free Software           */
+/* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
+/*************************************************************************/
+
 /**
  * @file lexer.l
  * To generate the lexical analyzer run: "flex lexer.l"
@@ -33,19 +51,14 @@ class pos_counter
 	static int last_line;
 	static int last_col;
 public:
-	static span_t count(const char* text_pos/*, std::size_t mult = 1*/) {
+	static span_t count()
+	{
 		if(get_token_vector().size())
 		{
 			terminal_t* prev = get_token_vector().back();
 
-			std::size_t newlines = prev->newlines(),
-				length = prev->length();
-		/*	if(prev->value <= 255)
-			 std::cout << "at: " << prev->value << std::endl;
-			else
-			 std::cout << "at (name): " << name_of(prev->value) << std::endl;
-			std::cout << "counting: " << newlines << " newlines, "
-				<< length << " length" << std::endl;*/
+			std::size_t newlines = prev->get_newlines(),
+				length = prev->get_length();
 
 			if(newlines)
 			{
@@ -57,26 +70,6 @@ public:
 				last_col += length;
 			}
 		}
-#if 0
-		if(!last_linebreak)
-		{
-			// if it is not initialized yet,
-			// we are at the first token of the file,
-			// so set it to this position
-			// (-1 because column 1 is the first column)
-			last_linebreak = text_pos - 1;
-		}
-
-		//static const char* last_text = text_pos;
-		//last_col += ((text_pos - last_text) * last_mult);
-		std::cout << "text: " << text_pos << std::endl;
-		//std::cout << "last_col: " << last_col << ", mult: " << mult << std::endl;
-		//last_text = text_pos;
-		//last_mult = mult;
-		
-		//geom_t geom(last_pos::value.line, yytext - last_text) last_span::value =  }
-		return span_t();
-#endif
 		return span_t();
 	}
 
@@ -148,15 +141,14 @@ int pos_counter::last_file = 0; // default file
 // we start at 1, 1 (typical convention)
 int pos_counter::last_line = 1;
 int pos_counter::last_col = 1;
-//int pos_counter::last_mult = 1;
 
 void reset_pos_counter()
 {
 	pos_counter::reset();
 }
 
-span_t cnt(const char* text_pos) {
-	return pos_counter::count(text_pos); }
+span_t cnt() {
+	return pos_counter::count(); }
 
 geom_t get_pos() { return pos_counter::pos(); } // FEATURE: common header instead of extern?
 
@@ -172,16 +164,15 @@ std::vector<std::string>& get_files() { return file_map::files; }
 //! creates a new token and appends it
 int app3(token_t*& token, int token_id, const char* text)
 { // FEATURE: rename to app() or app_token()
-	cnt(text);
+	cnt();
 	token = new token_t(get_pos(), token_id);
 	token_str::value.push_back(token);
 	return token_id;
 }
 
 //! appends an already created terminal
-template<class T> int app(T* elem, int lex_id/*, const char* text, int mult = 1*/)
+template<class T> int app(T* elem, int lex_id)
 {
-	//cnt(text, mult);
 	token_str::value.push_back(elem);
 	return lex_id;
 }
@@ -189,7 +180,7 @@ template<class T> int app(T* elem, int lex_id/*, const char* text, int mult = 1*
 template<class T>
 int app_with_string(T*& token, int lex_id, const char* text, const char* end) {
 	std::size_t length = end - text;
-	cnt(text);
+	cnt();
 	char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, text, length);
 	if(*end) throw "end of token not 0";
 	return app(token = new T(res, get_pos()), lex_id);
@@ -485,10 +476,10 @@ static int check_type(const char* text);
 						recent_struct_access = false;
 
 						// find end of identifier
-						const char* end = yytext + 1; // TODO: write TESTS for ALL TERMINALS...
+						const char* end = yytext + 1;
 						for(; isalnum(*end) || *end == '_'; ++end) ;
 						std::size_t length = end - yytext;
-						cnt(yytext);
+						cnt();
 						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, yytext, length);
 						
 						int type = check_type(yytext);
@@ -576,7 +567,6 @@ static int check_type(const char* text);
 							); // only strings start like this
 
 						std::size_t length = p - yytext;
-						cnt(yytext);
 						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, yytext, length);
 						if(*p) throw "end of token not 0";
 						// FEATURE: common routine with identifier
@@ -604,7 +594,7 @@ static int check_type(const char* text);
 ">="					{ return app3(yylval->token, GE_OP, yytext); }
 "=="					{ return app3(yylval->token, EQ_OP, yytext); }
 "!="					{ return app3(yylval->token, NE_OP, yytext); }
-";"					{ std::cout << "SEM: " << (int*)yytext << std::endl; return app3(yylval->token, ';', yytext); }
+";"					{ return app3(yylval->token, ';', yytext); }
 ("{"|"<%")				{
 ++braces_since_typedef;
 return app3(yylval->token, '{', yytext); }
@@ -634,15 +624,11 @@ return app3(yylval->token, '{', yytext); }
 "?"					{ return app3(yylval->token, '?', yytext); }
 
 "\t"					{ app3(yylval->token, '\t', yytext); }
-"\n"					{ std::cout << "NEWLINE TOKEN" << std::endl; app3(yylval->token, '\n', yytext); pos_counter::newline(yytext); }
+"\n"					{ app3(yylval->token, '\n', yytext); pos_counter::newline(yytext); }
 "\v"					{ throw "non-supported sign \\v"; }
 "\f"					{ throw "non-supported sign \\f"; }
 " "					{ app3(yylval->token, ' ', yytext); }
-"#"([^\\\n])*"\n"			{ std::cout << "preprocessor line" << std::endl;
-						std::cout << pos_counter::pos() << std::endl;
-						pos_counter::parse_ppline(yytext);
-						std::cout << pos_counter::pos() << std::endl;
-						}
+"#"([^\\\n])*"\n"			{ pos_counter::parse_ppline(yytext); }
 .					{ std::cerr << "At: " << yytext << std::endl; throw "bad character"; }
 
 %%

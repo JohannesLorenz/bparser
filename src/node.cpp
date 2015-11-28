@@ -1,3 +1,22 @@
+/*************************************************************************/
+/* bparser - a bison-based, C99 parser                                   */
+/* Copyright (C) 2015-2015                                               */
+/* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
+/*                                                                       */
+/* This program is free software; you can redistribute it and/or modify  */
+/* it under the terms of the GNU General Public License as published by  */
+/* the Free Software Foundation; either version 3 of the License, or (at */
+/* your option) any later version.                                       */
+/* This program is distributed in the hope that it will be useful, but   */
+/* WITHOUT ANY WARRANTY; without even the implied warranty of            */
+/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      */
+/* General Public License for more details.                              */
+/*                                                                       */
+/* You should have received a copy of the GNU General Public License     */
+/* along with this program; if not, write to the Free Software           */
+/* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
+/*************************************************************************/
+
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -42,14 +61,14 @@ enumeration_constant_t::enumeration_constant_t(const char* name, geom_t geom) :
 
 std::size_t token_t::length() const
 {
-	return (value <= std::numeric_limits<signed char>::max())
-		? ((value == '\n') ? 0 : 1)
-		: token_length((token_id)value);
+	return (value() <= std::numeric_limits<signed char>::max())
+		? ((value() == '\n') ? 0 : 1)
+		: token_length((token_id)value());
 }
 
 std::size_t token_t::newlines() const
 {
-	return (std::size_t)(value == '\n');
+	return (std::size_t)(value() == '\n');
 }
 
 std::size_t string_literal_t::length() const { return _length; }
@@ -66,11 +85,11 @@ string_literal_t::string_literal_t(const char* value, geom_t geom) :
 	_newlines(0)
 {
 	const char *p = value, *last_linestart = value;
-	for(; *p; p = next_0_or_n(p+1))
+	for(; *p; p = next_0_or_n(p), ++_newlines)
 	{
-		last_linestart = p+1;
-		++_newlines;
+		last_linestart = ++p;
 	}
+	--_newlines; // \0 has been counted as newline
 	_length = p - last_linestart;
 }
 
@@ -104,12 +123,14 @@ void translation_unit_t::accept(visitor_t& v) { v.visit(this); }
 void declaration_t::accept(visitor_t& v) { v.visit(this); }
 void type_qualifier_list_t::accept(visitor_t& v) { v.visit(this); }
 void primary_expression_t::accept(visitor_t &v) { v.visit(this); }
+#if 0
 template<>
 void constant_t<int>::accept(visitor_t& v) { v.visit(this); }
 template<>
 void constant_t<float>::accept(visitor_t& v) { v.visit(this); }
 template<>
 void constant_t<std::string>::accept(visitor_t& v) { v.visit(this); }
+#endif
 //void primary_identifier_t::accept(visitor_t& v) { v.visit(this); }
 //void primary_expression_expression_t::accept(visitor_t& v) { v.visit(this); }
 //void constant_t::accept(visitor_t& v) { v.visit(this); }
@@ -163,7 +184,7 @@ void array_access_expression_t::accept(visitor_t &v) { v.visit(this); }
 void argument_expression_list_t::accept(visitor_t &v) { v.visit(this); }
 void function_call_expression_t::accept(visitor_t &v) { v.visit(this); }
 void struct_access_expression_t::accept(visitor_t &v) { v.visit(this); }
-void cast_postfix_expression_t::accept(visitor_t &v) { v.visit(this); }
+void compound_literal_t::accept(visitor_t &v) { v.visit(this); }
 void cast_expression_t::accept(visitor_t &v) { v.visit(this); }
 
 

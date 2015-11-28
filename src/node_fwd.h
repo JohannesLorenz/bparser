@@ -21,8 +21,8 @@ struct identifier_list_t;
 
 struct primary_expression_t;
 struct iconstant_t;
-template<class T>
-struct constant_t;
+//template<class T>
+//struct constant_t;
 struct primary_identifier_t;
 struct primary_expression_expression_t;
 
@@ -30,7 +30,7 @@ struct array_access_expression_t;
 struct argument_expression_list_t;
 struct function_call_expression_t;
 struct struct_access_expression_t;
-struct cast_postfix_expression_t;
+struct compound_literal_t;
 struct cast_expression_t;
 
 struct type_specifier_simple_t;

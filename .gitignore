@@ -2,5 +2,5 @@ lexer.c
 lexer.h
 parser.c
 parser.h
-main
+test/test
 

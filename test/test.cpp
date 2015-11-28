@@ -1,4 +1,27 @@
+/*************************************************************************/
+/* bparser - a bison-based, C99 parser                                   */
+/* Copyright (C) 2015-2015                                               */
+/* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
+/*                                                                       */
+/* This program is free software; you can redistribute it and/or modify  */
+/* it under the terms of the GNU General Public License as published by  */
+/* the Free Software Foundation; either version 3 of the License, or (at */
+/* your option) any later version.                                       */
+/* This program is distributed in the hope that it will be useful, but   */
+/* WITHOUT ANY WARRANTY; without even the implied warranty of            */
+/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      */
+/* General Public License for more details.                              */
+/*                                                                       */
+/* You should have received a copy of the GNU General Public License     */
+/* along with this program; if not, write to the Free Software           */
+/* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
+/*************************************************************************/
+
 #include <iostream>
+#include <sstream>
+#include <fstream>
+#include <vector>
+#include <cstring>
 
 #include "node.h"
 #include "visitor.h"
@@ -20,14 +43,86 @@ int evaluate(node_base* /*e*/)
 	return 0;
 }
 
-void run_test(const char* str)
+extern std::vector<terminal_t*>& get_token_vector();
+
+void run_test(const char* str,
+	const char* out_name)
 {
-	std::cout << "code: " << std::endl << str << std::endl;
+	//std::cout << "code: " << std::endl << str << std::endl;
 	translation_unit_t *e = get_ast(str);
 
-	dumper_t dumper;
+	std::ostringstream os;
+	dumper_t dumper(os);
 	e->accept(dumper);
+	std::string res_str = os.str();
+
+	if(out_name)
+	{
+		std::string out_name_with_path = "test/output/";
+		out_name_with_path += out_name;
+		std::ifstream infile(out_name_with_path.c_str());
+		if(!infile)
+		 throw "Could not open input file.";
+
+		const char* res = res_str.data();
+		std::string line;
+		std::size_t line_no = 0;
+		while (std::getline(infile, line))
+		{
+			++line_no;
+			for(const char* exp = line.data(); *exp; ++exp, ++res)
+			{
+				if(*exp != *res) {
+					std::cout << "line " << line_no
+						<< ": expecting: " << exp
+						<< ", got: " << res << std::endl;
+					throw "lines not equal";
+				}
+			}
+			if(*res != '\n')
+			 throw "expected newline";
+			++res; // newline char is discarded in line
+		}
+	}
+
+	typedef std::vector<terminal_t*> term_v;
+	{
+		term_v terms = get_token_vector();
+		for(term_v::const_iterator itr = terms.begin();
+			itr != terms.end(); ++itr)
+		{
+			//dumper_t dumper;
+			//(*itr)->accept(dumper);
+			if((*itr)->value() == ' ' && *str != ' ')
+			 throw "invalid position of whitespace detected";
+			std::size_t newlines = (*itr)->get_newlines();
+			if(newlines)
+			{
+				for(; newlines && *str; str = strchr(str, '\n') + 1, --newlines)
+				 ;
+			}
+			str += (*itr)->get_length();
+		}
+	}
 }
+
+void run_test_file(const char* file,
+	const char* out_name)
+{
+	std::string in_name_with_path = "test/input/";
+	in_name_with_path += file;
+
+	std::ifstream t(in_name_with_path.c_str());
+	if(!t)
+	 throw "Could not open input file.";
+
+	std::stringstream buffer;
+	buffer << t.rdbuf();
+	std::string buffer_res = buffer.str();
+
+	run_test(buffer_res.c_str(), out_name);
+}
+
 
 int main(void)
 {
@@ -80,7 +175,79 @@ int main(void)
 
 	
 	run_test("typedef struct { int x; } s;\n"
-		"typedef s (*g)(int);");
+		"typedef s (*g)(int);",
+		"typedefs.out"
+		);
+
+	/*labeled_statement { $$=$1; }
+	| compound_statement { $$=$1; }
+	| expression_statement { $$=$1; }
+	| selection_statement { $$=$1; }
+	| iteration_statement { $$=$1; }
+	| jump_statement { $$=$1; }*/
+
+
+	// translation_unit
+	// external_declaration
+	// function_definition
+	// declaration_list
+	// compound_statement
+	run_test("int x;\n"
+		"int f(int, char* c) {}\n"
+		"int main() {\n"
+		"}",
+		NULL
+		//"basics.out"
+		);
+
+	//
+	//
+	//
+	//
+	//
+	run_test_file("statements.c",
+		NULL
+		//"statements.out"
+		);
+
+	run_test_file("initializers.c",
+		NULL
+		//"statements.out"
+		);
+
+	run_test_file("abstract_declarators.c",
+		NULL
+		//"statements.out"
+		);
+
+	run_test_file("direct_declarators.c",
+		NULL
+		//"statements.out"
+		);
+
+	run_test_file("declaration_specifiers.c",
+		NULL
+		//"statements.out"
+		);
+
+	run_test_file("structs.c",
+		NULL
+		//"statements.out"
+		);
+
+	run_test_file("enums.c",
+		NULL
+		);
+
+	run_test_file("expressions.c",
+		NULL
+		);
+
+	run_test_file("constants.c",
+		NULL
+		);
+
+	run_test_file("clash.c", NULL);
 
 	return 0;
 }

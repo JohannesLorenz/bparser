@@ -1,3 +1,22 @@
+/*************************************************************************/
+/* bparser - a bison-based, C99 parser                                   */
+/* Copyright (C) 2015-2015                                               */
+/* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
+/*                                                                       */
+/* This program is free software; you can redistribute it and/or modify  */
+/* it under the terms of the GNU General Public License as published by  */
+/* the Free Software Foundation; either version 3 of the License, or (at */
+/* your option) any later version.                                       */
+/* This program is distributed in the hope that it will be useful, but   */
+/* WITHOUT ANY WARRANTY; without even the implied warranty of            */
+/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      */
+/* General Public License for more details.                              */
+/*                                                                       */
+/* You should have received a copy of the GNU General Public License     */
+/* along with this program; if not, write to the Free Software           */
+/* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
+/*************************************************************************/
+
 #include <cassert>
 #include <iostream>
 #include <cstdio>
@@ -114,7 +133,7 @@ void fwd::visit(struct_access_expression_t *e)
 	accept_all(e->c);
 }
 
-void fwd::visit(cast_postfix_expression_t *e)
+void fwd::visit(compound_literal_t *e)
 {
 	accept_all(e->c);
 }
@@ -195,11 +214,12 @@ void fwd::visit(function_specifier_t* ) { // FEATURE: remove?
 }
 void fwd::visit(alignment_specifier_t* ) { // FEATURE: remove?
 }
-void fwd::visit(declaration_list_t* d) { vvisit(d->declarations); }
+void fwd::visit(declaration_list_t* d) { vvisit(d->c); }
 void fwd::visit(compound_statement_t* n) {
-		tvisit(n->c.value);
+		accept_all(n->c);
+		/*tvisit(n->c.value);
 		vaccept(*n->c.get_next().value);
-		tvisit(n->c.get_next().get_next().value);
+		tvisit(n->c.get_next().get_next().value);*/
 		}
 
 void fwd::visit(pointer_t* p) { visit_all(p->c); }
@@ -340,7 +360,7 @@ public:
 		span(span)
 	{
 		char tmp[64];
-		snprintf(tmp, 64, "%32s (l%4d c%4d) (l%4d c%4d)",
+		snprintf(tmp, 64, "%32s (l%4d c%4d) (l%4d c%4d) ",
 			get_files().at(span.first.file_id).c_str(),
 			span.first.line,
 			span.first.col, span.second.line, span.second.col);
@@ -467,11 +487,13 @@ void dumper_t::visit(primary_expression_t* p) {
 	fwd::visit(p);
 }
 
+#if 0
 void dumper_t::visit(constant_t<int>* c)
 {
 	incr_depth_t x(&depth, stream, c->span);
 	stream << "int constant: " << c->value << std::endl;
 }
+#endif
 
 void dumper_t::visit(iconstant_t* c) {
 	incr_depth_t x(&depth, stream, c->span);
@@ -483,6 +505,7 @@ void dumper_t::visit(fconstant_t* c) {
 	stream << "float constant: " << c->raw << std::endl; // FEATURE...
 }
 
+#if 0
 void dumper_t::visit(constant_t<float>* c)
 {
 	incr_depth_t x(&depth, stream, c->span);
@@ -494,6 +517,7 @@ void dumper_t::visit(constant_t<std::string>* c)
 	incr_depth_t x(&depth, stream, c->span);
 	stream << "string constant: " << c->value << std::endl;
 }
+#endif
 
 /*void dumper_t::visit(primary_identifier_t* p)
 {
@@ -537,10 +561,10 @@ void dumper_t::visit(struct_access_expression_t *e)
 	fwd::visit(e);
 }
 
-void dumper_t::visit(cast_postfix_expression_t *e)
+void dumper_t::visit(compound_literal_t *e)
 {
 	incr_depth_t x(&depth, stream, e->span);
-	stream << "cast postfix expression (what is that?)" << std::endl;
+	stream << "compound literal" << std::endl;
 	fwd::visit(e);
 }
 
@@ -568,7 +592,7 @@ void dumper_t::visit(token_t* e)
 	incr_depth_t x(&depth, stream, e->span);
 
 	stream << "token: ";
-	int value = e->value;
+	int value = e->value();
 	if(value <= 255)
 		stream << (char)value;
 	else
@@ -1013,14 +1037,14 @@ binary_op_t binary_op_of(int c)
 
 void type_completor::operator()(unary_expression_l& u)
 {
-	u.op_id = unary_op_l(u.c.get<0>()->value);
+	u.op_id = unary_op_l(u.c.get<0>()->value());
 }
 void type_completor::operator()(unary_expression_r& u)
 {
-	u.op_id = unary_op_r(u.c.get<1>()->value);
+	u.op_id = unary_op_r(u.c.get<1>()->value());
 }
 void type_completor::operator()(binary_expression_t& b) {
-	b.op_id = binary_op_of(b.c.get<1>()->value);
+	b.op_id = binary_op_of(b.c.get<1>()->value());
 }
 
 
@@ -1060,7 +1084,7 @@ void type_completor::operator()(labeled_statement_t& l)
 
 void type_completor::operator()(jump_statement_t& j)
 {
-	const int keyword = j.c.get<jump_statement_t::keyword>()->value;
+	const int keyword = j.c.get<jump_statement_t::keyword>()->value();
 	j.type =
 		(keyword == t_return)
 			? (j.c.get<jump_statement_t::expression>()
@@ -1078,8 +1102,15 @@ void type_completor::operator()(jump_statement_t& j)
 
 void type_completor::operator()(struct_or_union_specifier_t& s)
 {
-	const int keyword = s.c.get<struct_or_union_specifier_t::keyword>()->value;
+	const int keyword = s.c.get<struct_or_union_specifier_t::keyword>()->value();
 	s.is_union_type = (keyword == t_union);
+	xaccept(s.c);
+}
+
+void type_completor::operator()(struct_access_expression_t& s)
+{
+	const int optype = s.c.get<1>()->value();
+	s.pointer_access = (optype == t_ptr_op);
 	xaccept(s.c);
 }
 

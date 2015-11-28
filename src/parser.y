@@ -1,4 +1,22 @@
 %{
+/*************************************************************************/
+/* bparser - a bison-based, C99 parser                                   */
+/* Copyright (C) 2015-2015                                               */
+/* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
+/*                                                                       */
+/* This program is free software; you can redistribute it and/or modify  */
+/* it under the terms of the GNU General Public License as published by  */
+/* the Free Software Foundation; either version 3 of the License, or (at */
+/* your option) any later version.                                       */
+/* This program is distributed in the hope that it will be useful, but   */
+/* WITHOUT ANY WARRANTY; without even the implied warranty of            */
+/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      */
+/* General Public License for more details.                              */
+/*                                                                       */
+/* You should have received a copy of the GNU General Public License     */
+/* along with this program; if not, write to the Free Software           */
+/* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
+/*************************************************************************/
 
 /**
  * @file parser.y
@@ -11,9 +29,6 @@
 #include "node.h"
 #include "parser.h"
 #include "lexer.h"
-//#include "visitor.h"
-
-// TODO: check for no returns anywhere!!, i.e. no return keyword in any rule!!
 
 int yyerror(translation_unit_t ** /*expression*/, yyscan_t scanner, const char *msg) {
 	fprintf(stderr,"At: %s,\n  line %d, column %d: Error:%s\n", yyget_text(scanner), yyget_lineno(scanner), yyget_column(scanner), msg); return 0;
@@ -139,7 +154,7 @@ typedef void* yyscan_t;
 	struct argument_expression_list_t* argument_expression_list;
 
 	struct primary_expression_t* primary_expression;
-	struct terminal_t* terminal;
+	struct noconst_terminal_t* terminal;
 	struct iconstant_t* iconstant;
 	struct fconstant_t* fconstant;
 
@@ -170,7 +185,8 @@ typedef void* yyscan_t;
 %type <typedef_name> TYPEDEF_NAME
 
 %type <string_literal> STRING_LITERAL
-%type <token> I_CONSTANT F_CONSTANT
+%type <iconstant> I_CONSTANT
+%type <fconstant> F_CONSTANT
 
 // FEATURE: wrong: translation_unit_t?
 %type <translation_unit> translation_unit
@@ -314,8 +330,8 @@ postfix_expression
 	| postfix_expression PTR_OP IDENTIFIER { struct_access_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3); }
 	| postfix_expression INC_OP { unary_expression_r* u; $$=alloc(u); u->c.fill($1, $2); }
 	| postfix_expression DEC_OP { unary_expression_r* u; $$=alloc(u); u->c.fill($1, $2); }
-	| '(' type_name ')' '{' initializer_list '}' { cast_postfix_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3, $4, $5, NULL, $6); }
-	| '(' type_name ')' '{' initializer_list ',' '}' { cast_postfix_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3, $4, $5, $6, $7); }
+	| '(' type_name ')' '{' initializer_list '}' { compound_literal_t* e; $$=alloc(e); e->c.fill($1, $2, $3, $4, $5, NULL, $6); }
+	| '(' type_name ')' '{' initializer_list ',' '}' { compound_literal_t* e; $$=alloc(e); e->c.fill($1, $2, $3, $4, $5, $6, $7); }
 	;
 
 // FEATURE: alternate list<token_t, assignment_exp>
@@ -440,7 +456,7 @@ constant_expression
 	;
 
 declaration
-	: declaration_specifiers ';' { std::cout << "declaration" << std::endl; $$ = new declaration_t(); $$->c.fill($1, NULL, $2); }
+	: declaration_specifiers ';' { $$ = new declaration_t(); $$->c.fill($1, NULL, $2); }
 	| declaration_specifiers init_declarator_list ';' { $$ = new declaration_t(); $$->c.fill($1, $2, $3); }
 	| static_assert_declaration { c11(); }
 	;
@@ -449,7 +465,7 @@ declaration_specifiers
 	: storage_class_specifier declaration_specifiers { $$ = app_left($2, $2->c, $1); }
 	| storage_class_specifier { alloc($$); app_left($$, $$->c, $1); }
 	| type_specifier declaration_specifiers { $$ = app_left($2, $2->c, $1); }
-	| type_specifier { alloc($$); app_left($$, $$->c, $1); } // TODO: -> better return type than node_t?
+	| type_specifier { alloc($$); app_left($$, $$->c, $1); }
 	| type_qualifier declaration_specifiers { $$ = app_left($2, $2->c, $1); }
 	| type_qualifier { alloc($$); app_left($$, $$->c, $1); }
 	| function_specifier declaration_specifiers { $$ = app_left($2, $2->c, $1); }
@@ -585,10 +601,6 @@ declarator
 	;
 
 // NOTE: static etc in [] can only appear in function parameter declarations
-// direct_declarator_id
-// direct_declarator_decl
-// direct_declarator_arr_expr
-// direct_declarator_func
 
 direct_declarator
 	: IDENTIFIER { direct_declarator_id* d; $$ = alloc(d); d->c = $1; }
@@ -624,10 +636,10 @@ direct_declarator
 		d->c.fill($1, $2, NULL, $3); }
 	| direct_declarator '(' identifier_list ')' {
 		direct_declarator_idlist* d; $$ = alloc(d);
-		d->c.fill($1, $2, $3, $4); }
+		d->c.fill($1, $2, $3, $4); } // old-style C function declarator
 	;
 
-pointer // should actually be named: "pointers"
+pointer
 	: '*' type_qualifier_list pointer { alloc($$); $$->c.fill($1, $2, $3); }
 	| '*' type_qualifier_list { alloc($$); $$->c.fill($1, $2, NULL); }
 	| '*' pointer { alloc($$); $$->c.fill($1, NULL, $2); }
@@ -721,7 +733,7 @@ initializer_list
 //	: designator_list '='
 //	;
 
-designator_list
+designator_list // e.g. 2D arrays: int a[1][1] = { [0][0] = 0 };
 	: designator { alloc($$); app_right($$, $$->c, $1); }
 	| designator_list designator { $$ = app_right($1, $1->c, $2); }
 	;
@@ -738,7 +750,7 @@ static_assert_declaration
 statement
 	: labeled_statement { $$=$1; }
 	| compound_statement { $$=$1; }
-	| expression_statement { std::cout << "EXPR STATE" << std::endl; $$=$1; }
+	| expression_statement { $$=$1; }
 	| selection_statement { $$=$1; }
 	| iteration_statement { $$=$1; }
 	| jump_statement { $$=$1; }
@@ -811,8 +823,8 @@ function_definition
 	;
 
 declaration_list
-	: declaration { alloc($$); app_first($$->declarations, $1); }
-	| declaration_list declaration { app_right($1, $1->declarations, $2); }
+	: declaration { alloc($$); app_first($$->c, $1); }
+	| declaration_list declaration { app_right($1, $1->c, $2); }
 	;
 
 %%

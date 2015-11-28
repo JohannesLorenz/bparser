@@ -1,3 +1,22 @@
+/*************************************************************************/
+/* bparser - a bison-based, C99 parser                                   */
+/* Copyright (C) 2015-2015                                               */
+/* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
+/*                                                                       */
+/* This program is free software; you can redistribute it and/or modify  */
+/* it under the terms of the GNU General Public License as published by  */
+/* the Free Software Foundation; either version 3 of the License, or (at */
+/* your option) any later version.                                       */
+/* This program is distributed in the hope that it will be useful, but   */
+/* WITHOUT ANY WARRANTY; without even the implied warranty of            */
+/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      */
+/* General Public License for more details.                              */
+/*                                                                       */
+/* You should have received a copy of the GNU General Public License     */
+/* along with this program; if not, write to the Free Software           */
+/* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
+/*************************************************************************/
+
 #include <cstddef>
 #include <iosfwd>
 #include <cassert>
@@ -36,9 +55,9 @@ public:
 	virtual void visit(primary_expression_t* ) {}
 	virtual void visit(iconstant_t* ) {}
 	virtual void visit(fconstant_t* ) {}
-	virtual void visit(constant_t<int>* ) {}
+/*	virtual void visit(constant_t<int>* ) {}
 	virtual void visit(constant_t<float>* ) {}
-	virtual void visit(constant_t<std::string>* ) {}
+	virtual void visit(constant_t<std::string>* ) {}*/
 //	virtual void visit(primary_identifier_t* ) {}
 //	virtual void visit(primary_expression_expression_t* ) {}
 
@@ -46,7 +65,7 @@ public:
 	virtual void visit(argument_expression_list_t* ) {}
 	virtual void visit(function_call_expression_t* ) {}
 	virtual void visit(struct_access_expression_t* ) {}
-	virtual void visit(cast_postfix_expression_t* ) {}
+	virtual void visit(compound_literal_t* ) {}
 	virtual void visit(cast_expression_t* ) {}
 
 	//virtual void visit(type_specifier_simple_t* ) {}
@@ -143,6 +162,11 @@ public:
 		if(non_token) non_token->accept(*this);
 	}
 
+	template<class T>
+	void accept_if_nontoken(std::list<T*>* const& list) {
+		if(list) vaccept(*list);
+	}
+
 	//void accept_if_nontoken(token_t* const & ) {}
 
 
@@ -225,9 +249,9 @@ public:
 	void visit(identifier_list_t* n) { f(n); }
 
 	void visit(primary_expression_t* n) { f(n); }
-	void visit(constant_t<int>* n) { f(n); }
+/*	void visit(constant_t<int>* n) { f(n); }
 	void visit(constant_t<float>* n) { f(n); }
-	void visit(constant_t<std::string>* n) { f(n); }
+	void visit(constant_t<std::string>* n) { f(n); }*/
 //	void visit(primary_identifier_t* n) { f(n); }
 //	void visit(primary_expression_expression_t* n) { f(n); }
 
@@ -235,7 +259,7 @@ public:
 	void visit(argument_expression_list_t* n) { f(n); }
 	void visit(function_call_expression_t* n) { f(n); }
 	void visit(struct_access_expression_t* n) { f(n); }
-	void visit(cast_postfix_expression_t* n) { f(n); }
+	void visit(compound_literal_t* n) { f(n); }
 	void visit(cast_expression_t* n) { f(n); }
 
 	//void visit(type_specifier_simple_t* n) { f(n); }
@@ -444,9 +468,9 @@ public:
 	void visit(primary_expression_t* );
 	void visit(iconstant_t* ) {}
 	void visit(fconstant_t* ) {}
-	void visit(constant_t<int>* ) {}
+/*	void visit(constant_t<int>* ) {}
 	void visit(constant_t<float>* ) {}
-	void visit(constant_t<std::string>* ) {}
+	void visit(constant_t<std::string>* ) {}*/
 //	void visit(primary_identifier_t* n);
 //	void visit(primary_expression_expression_t* n);
 
@@ -454,7 +478,7 @@ public:
 	void visit(argument_expression_list_t* e);
 	void visit(function_call_expression_t* e);
 	void visit(struct_access_expression_t* e);
-	void visit(cast_postfix_expression_t* e);
+	void visit(compound_literal_t *e);
 	void visit(cast_expression_t* e);
 	//void visit(type_specifier_simple_t* e);
 	//void visit(number_t *e);
@@ -539,78 +563,89 @@ public:
 	void operator()(iteration_statement_t& );
 	void operator()(labeled_statement_t& );
 	void operator()(jump_statement_t& );
-	void operator()(struct_or_union_specifier_t& );
 
+	// structs...
+	void operator()(struct_or_union_specifier_t& );
+	void operator()(struct_access_expression_t& );
 
 	// default case
 	template<class NodeType>
 	void operator()(/*const*/ NodeType& n) { xaccept(n.c); }
 };
 
-// TODO: all private functions?
-template<class T> // TODO: also send file via parameter?
-inline span_t get_span_min(const ptn<T, null_type>& c) {
-
-	return c.value
-		? c.value->span
-		: span_t(	geom_t(0, std::numeric_limits<int>::max(),
-					std::numeric_limits<int>::max()),
-				geom_t(0, std::numeric_limits<int>::min(),
-					std::numeric_limits<int>::min())
-			);
-}
-
-template<class T, class N>
-inline span_t get_span_min(const ptn<T, N>& c)
-{
-	span_t next_span = get_span_min(c.get_next());
-	//std::cout << "VALUE: " << c.value << std::endl;
-	return c.value
-		? span_t(std::min(c.value->span.first, next_span.first),
-			std::max(c.value->span.second, next_span.second))
-		: next_span;
-}
-
-template<class T, class N>
-inline span_t get_span_min(const ptn<std::list<T*>, N>& c)
-{
-	span_t next_span = get_span_min(c.get_next());
-	span_t list_span = get_span_min(*c.value);
-	//std::cout << "VALUE: " << c.value << std::endl;
-	return c.value
-		? span_t(std::min(list_span.first, next_span.first),
-			std::max(list_span.second, next_span.second))
-		: next_span;
-}
-
-// if we have a tuple of lists...
-template<class T>
-inline span_t get_span_min(const std::list<T*>& c) {
-	return span_t(c.front()->span.first, c.back()->span.second);
-}
-
-template<class T>
-inline span_t get_span(const T& c) {
-	return get_span_min(c);
-}
-
-template<class T>
-inline span_t get_span(const std::list<T*>& c) {
-	return span_t(c.front()->span.first, c.back()->span.second);
-}
-
-inline span_t get_span(const null_type&) {
-	throw "should not happen. error in grammar!";
-	return span_t();
-}
-
 class geom_completor : ftor_base
 {
+	static span_t span_limit() {
+		return span_t(	geom_t(0, std::numeric_limits<int>::max(),
+						std::numeric_limits<int>::max()),
+					geom_t(0, std::numeric_limits<int>::min(),
+						std::numeric_limits<int>::min())
+				);
+	}
+
+	template<class T>
+	span_t get_span_minmax(const ptn<T, null_type>& c) {
+
+		return c.value
+			? c.value->span
+			: span_limit();
+	}
+
+	template<class T, class N>
+	span_t get_span_minmax(const ptn<T, N>& c)
+	{
+		span_t next_span = get_span_minmax(c.get_next());
+		//std::cout << "VALUE: " << c.value << std::endl;
+		return c.value
+			? span_t(std::min(c.value->span.first, next_span.first),
+				std::max(c.value->span.second, next_span.second))
+			: next_span;
+	}
+
+	template<class T, class N>
+	span_t get_span_minmax(const ptn<std::list<T*>, N>& c)
+	{
+		span_t next_span = get_span_minmax(c.get_next());
+		//std::cout << "VALUE: " << c.value << std::endl;
+		if(c.value)
+		{
+			span_t list_span = get_span_minmax(*c.value);
+			return span_t(std::min(list_span.first, next_span.first),
+				std::max(list_span.second, next_span.second));
+		}
+		else
+			return next_span;
+	}
+
+	// if we have a tuple of lists...
+	template<class T>
+	span_t get_span_minmax(const std::list<T*>& c) {
+		return c.size() ? span_t(c.front()->span.first, c.back()->span.second)
+			: span_limit();
+	}
+
+	template<class T>
+	span_t get_span(const T& c) {
+		return get_span_minmax(c);
+	}
+
+	template<class T>
+	span_t get_span(const std::list<T*>& c) {
+		return c.size()
+			? span_t(c.front()->span.first, c.back()->span.second)
+			: span_limit();
+	}
+
+	span_t get_span(const null_type&) {
+		throw "should not happen. error in grammar!";
+		return span_t();
+	}
+
 	template<class T>
 	void add_geom(T& n)
 	{
-		std::size_t newlines = n.newlines(),
-			length = n.length(); // FEATURE: unify with lexer.l?
+		std::size_t newlines = n.get_newlines(),
+			length = n.get_length(); // FEATURE: unify with lexer.l?
 		geom_t& end = n.span.second;
 		geom_t& start = n.span.first;
 		end.file_id = start.file_id;
@@ -625,28 +660,26 @@ class geom_completor : ftor_base
 			end.col = start.col + length;
 		}
 	}
-public:
-	geom_completor(visitor_t* vref) : ftor_base(vref) {}
 
 	// default case
-	// TODO: use node& and terminal& below?
-	template<class NodeType, class CT>
-	void operator()(/*const*/ NodeType& n) {
-		xaccept(n.c);
-		n.span = get_span(n.c);
+	template<class CT>
+	void on(/*const*/ node_base& n, CT& c) {
+		xaccept(c);
+		n.span = get_span(c);
 	}
 
 	// terminals have no children
 	//  -> get geom directly from them
-	// TODO: make sure these are all terminals
-	void operator()(/*const*/ token_t& n) { add_geom(n); }
-	void operator()(/*const*/ iconstant_t& n) { add_geom(n); }
-	void operator()(/*const*/ fconstant_t& n) { add_geom(n); }
-	void operator()(/*const*/ identifier_t& n) { add_geom(n); }
-	void operator()(enumeration_constant_t& n) { add_geom(n); }
-	void operator()(typedef_name_t& n) { add_geom(n); }
+	template<class CT>
+	void on(/*const*/ terminal_t& n, CT& ) { add_geom(n); }
 
-	void operator()(/*const*/ string_literal_t& n) { add_geom(n); }
+public:
+	geom_completor(visitor_t* vref) : ftor_base(vref) {}
+
+	template<class NodeType>
+	void operator()(/*const*/ NodeType& n) {
+		on(n, n.c);
+	}
 };
 
 
@@ -681,9 +714,9 @@ public:
 
 	void visit(iconstant_t* c);
 	void visit(fconstant_t* c);
-	void visit(constant_t<int>* );
+/*	void visit(constant_t<int>* );
 	void visit(constant_t<float>* );
-	void visit(constant_t<std::string>* );
+	void visit(constant_t<std::string>* );*/
 	void visit(primary_expression_t* );
 //	void visit(primary_identifier_t* );
 //	void visit(primary_expression_expression_t* );
@@ -692,7 +725,7 @@ public:
 	void visit(argument_expression_list_t* e);
 	void visit(function_call_expression_t* e);
 	void visit(struct_access_expression_t* e);
-	void visit(cast_postfix_expression_t* e);
+	void visit(compound_literal_t* e);
 	void visit(cast_expression_t* e);
 	//void visit(type_specifier_simple_t* e);
 	//void visit(number_t *e);
@@ -746,7 +779,7 @@ public:
 	void visit(direct_abstract_declarator_func* );
 
 
-}; // TODO: identifier...
+};
 
 
 
@@ -761,7 +794,7 @@ struct cleaner_t : visitor_t
 template<class T>
 struct append_t : public visitor_t
 {
-	T* node; // TODO: const everywhere?
+	T* node; ... -> const everywhere?
 	append_t(T* node) : node(node) {}
 	void visit(translation_unit_t* t) { t->c.push_back(node); }
 	void visit(node_base* ) { assert(false); }
