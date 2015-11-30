@@ -32,7 +32,14 @@
 #include <cstring>
 #include <map>
 
-int recent_token = -1; // FEATURE: better initial number?
+int recent_token = -1;
+/*int _recent_tokens[3] = { -1, -1, -1 }; // FEATURE: better initial numbers?
+int* recent_tokens = _recent_tokens + 2;
+int add_recent_token(int new_one) {
+	recent_tokens[-2] = recent_tokens[-1];
+	recent_tokens[-1] = recent_tokens[0];
+	return recent_tokens[ 0] = new_one;
+}*/
 
 std::vector<std::string>& get_files();
 
@@ -398,7 +405,7 @@ void clear_lookup_table()
 
 bool recent_struct_access = false;
 bool recent_typedef_keyword = false;
-bool recent_enum_flag = false;
+bool in_enum_block = false;
 int braces_since_typedef = 0;
 node_base* cur_scope = NULL;
 
@@ -410,7 +417,7 @@ void reset_variables()
 {
 	recent_struct_access = false;
 	recent_typedef_keyword = false;
-	recent_enum_flag = false;
+	in_enum_block = false;
 	braces_since_typedef = 0;
 	cur_scope = NULL;
 }
@@ -508,6 +515,7 @@ static int check_type(const char* text);
 "_Static_assert"                        { return app3(yylval->token, STATIC_ASSERT, yytext); }
 "_Thread_local"                         { return app3(yylval->token, THREAD_LOCAL, yytext); }
 "__func__"                              { return app3(yylval->token, FUNC_NAME, yytext); }
+"__attribute__"				{ return app3(yylval->token, ATTRIBUTE, yytext); }
 
 {L}{A}*					{	// this could only be set to true if a . or -> preceded
 						// thus, this is the only place to set it to false
@@ -532,7 +540,9 @@ static int check_type(const char* text);
 							case ENUMERATION_CONSTANT:
 							std::cout << " -> ENUMERATION_CONSTANT" << std::endl;
 							return app(yylval->enumeration_constant = new enumeration_constant_t(res, get_pos()), type);
-
+							case ATTR_NAME:
+							std::cout << " -> ATTR_NAME" << std::endl;
+							return app(yylval->attr_name = new attr_name_t(res, get_pos()), type);
 						}
 					}
 
@@ -634,14 +644,14 @@ static int check_type(const char* text);
 "!="					{ return app3(yylval->token, NE_OP, yytext); }
 ";"					{ return app3(yylval->token, ';', yytext); }
 ("{"|"<%")				{
-if(recent_token == ENUM)
- recent_enum_flag = true;
+if(get_token_vector().back()->value() == ENUM)
+ in_enum_block = true;
 lookup_table_t::inc_bracket_depth();
 ++braces_since_typedef;
 return app3(yylval->token, '{', yytext); }
 ("}"|"%>")				{
-						if(recent_enum_flag)
-						 recent_enum_flag = false;
+						if(in_enum_block)
+						 in_enum_block = false;
 						lookup_table_t::dec_bracket_depth();
 						--braces_since_typedef;
 						return app3(yylval->token, '}', yytext);
@@ -712,6 +722,10 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 		? recent_typedef_keyword
 			? recent_typedef_keyword=false, TYPEDEF_NAME
 			: recent_struct_access*/
+	if(	get_token_vector().size() >= 3 &&
+		(*(get_token_vector().end() - 3))->value() == ATTRIBUTE)
+	 return ATTR_NAME;
+
 	lookup_type lt = lookup_table_t::type_of(text);
 	if(lt == lt_undefined)
 	{
@@ -723,10 +737,11 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 			lt = lt_typedef_name;
 			recent_typedef_keyword=false;
 		}
-		else if(recent_enum_flag)
+		else if(in_enum_block &&
+			(get_token_vector().back()->value() == '{' ||
+			get_token_vector().back()->value() == ',') )
 		{
 			lt = lt_enumeration;
-			//recent_enum_flag=false;
 		}
 		else // everything else...
 		 lt = lt_identifier;

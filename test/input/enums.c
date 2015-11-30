@@ -6,7 +6,7 @@ enum e1
 
 enum e2
 {
-	zero
+	zero = first
 };
 
 int main()

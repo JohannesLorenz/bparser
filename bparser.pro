@@ -13,6 +13,17 @@ HEADERS += src/lexer.h src/node.h src/visitor.h src/tuple03.h \
 LEXSOURCES += src/lexer.l
 YACCSOURCES += src/parser.y
 SOURCES += src/lexer.c test/test.cpp src/node.cpp src/visitor.cpp \
-    src/token.cpp src/ast.cpp
+    src/token.cpp src/ast.cpp \
+    test/input/statements.c \
+    test/input/abstract_declarators.c \
+    test/input/direct_declarators \
+    test/input/declaration_specifiers.c \
+    test/input/initializers.c \
+    test/input/structs.c \
+    test/input/enums.c \
+    test/input/expressions.c \
+    test/input/constants.c \
+    test/input/scopes.c \
+    test/input/clash.c
 OTHER_FILES += Makefile src/Makefile test/Makefile
 

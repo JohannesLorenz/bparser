@@ -66,6 +66,8 @@ struct iteration_statement_t;
 struct jump_statement_t;
 struct block_item_list_t;
 struct block_item_t;
+struct attr_name_t;
+struct attribute_t;
 struct identifier_t;
 struct string_literal_t;
 struct sizeof_expression_t;
