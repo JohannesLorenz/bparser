@@ -1,6 +1,6 @@
-typedef int t;
+char t;
 
 int main()
 {
-	char t;
+	typedef int t;
 }

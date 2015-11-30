@@ -56,6 +56,8 @@ void run_test(const char* str,
 	e->accept(dumper);
 	std::string res_str = os.str();
 
+	std::cout << res_str << std::endl;
+
 	if(out_name)
 	{
 		std::string out_name_with_path = "test/output/";
@@ -194,12 +196,13 @@ int main(void)
 	// compound_statement
 	run_test("int x;\n"
 		"int f(int, char* c) {}\n"
+		"int g(a, b) int a,b; {}\n"
 		"int main() {\n"
 		"}",
 		NULL
 		//"basics.out"
 		);
-
+#if 0
 	//
 	//
 	//
@@ -238,16 +241,20 @@ int main(void)
 	run_test_file("enums.c",
 		NULL
 		);
-
+#endif
 	run_test_file("expressions.c",
 		NULL
 		);
-
+#if 0
 	run_test_file("constants.c",
 		NULL
 		);
 
 	run_test_file("clash.c", NULL);
+	run_test_file("scopes.c", NULL);
+#endif
+
+	run_test("int main() { int x; y = x + (x); }", NULL);
 
 	return 0;
 }

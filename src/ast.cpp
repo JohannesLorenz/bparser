@@ -38,7 +38,7 @@ translation_unit_t *get_ast(const char *input)
 	yyscan_t scanner;
 	YY_BUFFER_STATE state;
 	
-	//yydebug = 1;
+	yydebug = 1;
 	if (yylex_init(&scanner)) {
 		// couldn't initialize
 		return NULL;

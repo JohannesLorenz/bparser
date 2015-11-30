@@ -307,24 +307,57 @@ int app_int(iconstant_t*& token, const char* text, char scanf_type)
 
 class lookup_table_t
 {
-	typedef std::pair<lookup_type, const node_base*> value_t;
+	typedef std::pair<lookup_type, std::size_t> value_t;
 	typedef std::pair<std::string, value_t> entry_t;
 	typedef std::map<std::string, value_t> table_t;
 	static table_t table;
+
+	static std::size_t bracket_depth;
+
 public:
-	static void flag_symbol(const char* str, lookup_type type, const node_base* scope)
+	static void inc_bracket_depth() { ++bracket_depth; }
+	static void dec_bracket_depth() {
+		std::cout << "DEC to: " << bracket_depth - 1 << std::endl;
+		table_t::iterator itr = table.begin(),
+			next = table.begin();
+		for(table_t::const_iterator itr = table.begin();
+			itr != table.end(); ++itr)
+		{
+			std::cout << itr->first << ": " << itr->second.first
+				<< ", depth: " << itr->second.second
+				<< std::endl;
+		}
+		for(itr = table.begin(); itr != table.end(); itr = next)
+		{
+			// invariant: itr == next
+			if(next != table.end())
+			 ++next;
+			// invariant: ++itr == next || next == table.end()
+			std::cout << itr->second.second << " <-> " << bracket_depth << std::endl;
+			if(itr->second.second == bracket_depth)
+			{
+				// out of scope
+				table.erase(itr);
+			}
+			else if(itr->second.second > bracket_depth)
+			 throw "overseen last scope end";
+		}
+		--bracket_depth;
+	}
+
+	static void flag_symbol(const char* str, lookup_type type)
 	{
 		std::cout << "flagging: " << str << " as " << type << std::endl;
-		table.insert(entry_t(str, value_t(type, scope)));
+		table.insert(entry_t(str, value_t(type, bracket_depth)));
 	}
 
 	static void leave_scope(const node_base* scope)
 	{
-		for(table_t::iterator itr = table.begin();
+	/*	for(table_t::iterator itr = table.begin();
 			itr != table.end(); ++itr)
 		if(itr->second.first != lt_undefined &&
 			itr->second.second == scope)
-		 itr->second.first = lt_undefined;
+		 itr->second.first = lt_undefined;*/
 	}
 
 	static lookup_type type_of(const char* str) {
@@ -332,7 +365,9 @@ public:
 		for(table_t::const_iterator itr = table.begin();
 			itr != table.end(); ++itr)
 		{
-			std::cout << itr->first << ": " << itr->second.first << std::endl;
+			std::cout << itr->first << ": " << itr->second.first
+				<< ", depth: " << itr->second.second
+				<< std::endl;
 		}
 		std::cout << "... looking for: " << str << std::endl;
 		table_t::const_iterator itr = table.find(str);
@@ -343,6 +378,7 @@ public:
 };
 
 lookup_table_t::table_t lookup_table_t::table;
+std::size_t lookup_table_t::bracket_depth = 0;
 
 void leave_scope(const node_base* scope)
 {
@@ -596,9 +632,11 @@ static int check_type(const char* text);
 "!="					{ return app3(yylval->token, NE_OP, yytext); }
 ";"					{ return app3(yylval->token, ';', yytext); }
 ("{"|"<%")				{
+lookup_table_t::inc_bracket_depth();
 ++braces_since_typedef;
 return app3(yylval->token, '{', yytext); }
-("}"|"%>")				{	--braces_since_typedef;
+("}"|"%>")				{	lookup_table_t::dec_bracket_depth();
+						--braces_since_typedef;
 						return app3(yylval->token, '}', yytext);
 }
 ","					{ return app3(yylval->token, ',', yytext); }
@@ -686,7 +724,7 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 		else // everything else...
 		 lt = lt_identifier;
 
-		lookup_table_t::flag_symbol(text, lt, cur_scope);
+		lookup_table_t::flag_symbol(text, lt);
 
 		// since lt == lt_undefined, this is the definition
 		// in all case, for definitions, return IDENTIFIER
