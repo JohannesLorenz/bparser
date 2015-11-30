@@ -32,6 +32,8 @@
 #include <cstring>
 #include <map>
 
+int recent_token = -1; // FEATURE: better initial number?
+
 std::vector<std::string>& get_files();
 
 //const int FIRST_COL = 1;
@@ -167,14 +169,14 @@ int app3(token_t*& token, int token_id, const char* text)
 	cnt();
 	token = new token_t(get_pos(), token_id);
 	token_str::value.push_back(token);
-	return token_id;
+	return recent_token = token_id;
 }
 
 //! appends an already created terminal
 template<class T> int app(T* elem, int lex_id)
 {
 	token_str::value.push_back(elem);
-	return lex_id;
+	return recent_token = lex_id;
 }
 
 template<class T>
@@ -200,7 +202,7 @@ int app_float(fconstant_t*& token, const char* text)
 	}
 	if(*p && (icmp(p,'f') || icmp(p,'l'))) ++p;
 	if(*p) throw "end of token not 0";
-	return app_with_string(token, F_CONSTANT, text, p);
+	return app_with_string(token, recent_token = F_CONSTANT, text, p);
 }
 
 enum int_suffix_type
@@ -302,7 +304,7 @@ int app_int(iconstant_t*& token, const char* text, char scanf_type)
 	}
 	skip_suffix(p);
 	if(*p) throw "end of token not 0";
-	return app_with_string(token, I_CONSTANT, text, p);
+	return app_with_string(token, recent_token = I_CONSTANT, text, p);
 }
 
 class lookup_table_t
@@ -632,10 +634,15 @@ static int check_type(const char* text);
 "!="					{ return app3(yylval->token, NE_OP, yytext); }
 ";"					{ return app3(yylval->token, ';', yytext); }
 ("{"|"<%")				{
+if(recent_token == ENUM)
+ recent_enum_flag = true;
 lookup_table_t::inc_bracket_depth();
 ++braces_since_typedef;
 return app3(yylval->token, '{', yytext); }
-("}"|"%>")				{	lookup_table_t::dec_bracket_depth();
+("}"|"%>")				{
+						if(recent_enum_flag)
+						 recent_enum_flag = false;
+						lookup_table_t::dec_bracket_depth();
 						--braces_since_typedef;
 						return app3(yylval->token, '}', yytext);
 }
@@ -719,7 +726,7 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 		else if(recent_enum_flag)
 		{
 			lt = lt_enumeration;
-			recent_enum_flag=false;
+			//recent_enum_flag=false;
 		}
 		else // everything else...
 		 lt = lt_identifier;
