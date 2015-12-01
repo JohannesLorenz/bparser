@@ -18,11 +18,6 @@
 /* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
 /*************************************************************************/
 
-/**
- * @file parser.y
- * To generate the parser run: "bison Parser.y"
- */
-
 #include <algorithm>
 #include <vector>
 #include <iostream>
@@ -50,7 +45,7 @@ void app_first(S& stor, Left* left) {
 }
 
 template<class R, class S, class Left>
-R* app_left(R* cur, S& stor, Left* left) {
+R* app_left(R* cur, S& stor, Left* left) { // TODO: all 3 funcs: stor redundant! use .c
 	 return stor.push_front(left), cur; 
 }
 
@@ -294,7 +289,7 @@ primary_expression // parents: postfix_expression
 constant // parents: primary expression
 	: I_CONSTANT { $$=$1; }		/* includes character_constant */
 	| F_CONSTANT { $$=$1; }
-	| ENUMERATION_CONSTANT{ $$=$1 }	/* after it has been defined as such */
+	| ENUMERATION_CONSTANT{ $$=$1; }	/* after it has been defined as such */
 	;
 
 enumeration_constant		/* before it has been defined as such */

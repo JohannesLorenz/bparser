@@ -151,36 +151,6 @@ public:
 	string_literal_t(const char* value, geom_t geom);
 };
 
-//typedef ch<token_t> tok;
-/*
-struct number_t : public node_t
-{
-	int value;
-public:
-	number_t(int value) : value(value) {}
-	virtual void accept(class visitor_t& v);
-};*/
-
-enum op_type
-{
-	op_multiply,
-	op_add
-};
-
-/*struct expression_t : public node_t
-{
-	node_t *first;
-	node_t *second;
-	node_t *third;
-	op_type type;
-
-	void accept_children(class visitor_t& v);
-public:
-	expression_t(op_type type, node_t *n1, node_t* n2 = NULL, node_t* n3 = NULL) :
-		first(n1), second(n2), third(n3) {}
-	virtual void accept(class visitor_t& v);
-};*/
-
 struct declaration_specifier_type : public node_t<> {
 	declaration_specifier_type() {}
 	declaration_specifier_type(const geom_t& geom) : node_t<>(geom) {}

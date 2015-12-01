@@ -18,11 +18,6 @@
 /* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
 /*************************************************************************/
 
-/**
- * @file lexer.l
- * To generate the lexical analyzer run: "flex lexer.l"
- */
-
 #include "node.h"
 #include "parser.h"
 
@@ -213,6 +208,7 @@ enum int_suffix_type
 	suf_ll,
 };
 
+// FEATURE: not here -> type_completor
 const char* skip_suffix(const char*& p)
 {
 	int_suffix_type suf;
@@ -347,7 +343,7 @@ public:
 
 	static void flag_symbol(const char* str, lookup_type type)
 	{
-		std::cout << "flagging: " << str << " as " << type << std::endl;
+		std::cout << "flagging: " << str << " as " << type << " (" << get_pos() << ")" <<  std::endl;
 		table.insert(entry_t(str, value_t(type, bracket_depth)));
 	}
 
