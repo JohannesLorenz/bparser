@@ -202,7 +202,7 @@ int main(void)
 		NULL
 		//"basics.out"
 		);
-#if 0
+
 	//
 	//
 	//
@@ -241,18 +241,17 @@ int main(void)
 	run_test_file("enums.c",
 		NULL
 		);
-#endif
+
 	run_test_file("expressions.c",
 		NULL
 		);
-#if 0
+
 	run_test_file("constants.c",
 		NULL
 		);
 
 	run_test_file("clash.c", NULL);
 	run_test_file("scopes.c", NULL);
-#endif
 
 	run_test("int main() { int x; y = x + (x); }", NULL);
 

@@ -308,6 +308,23 @@ struct type_specifier_complex_t : public type_specifier_t {
 	//virtual void accept(class visitor_t& v);
 };
 
+struct attr_name_t : public noconst_1line_terminal_t
+{
+	virtual void accept(class visitor_t& v);
+	attr_name_t(const char* name, geom_t geom);
+};
+
+struct attribute_t : public node_t<struct_or_union_specifier_t>
+{
+	virtual void accept(class visitor_t& v);
+	ptn<	token_t,
+		ptn<	token_t,
+			ptn<	attr_name_t,
+				ptn<	token_t,
+						end_token
+		> > > > c;
+};
+
 struct struct_or_union_specifier_t : public type_specifier_complex_t
 {
 	bool is_union_type;
@@ -324,8 +341,9 @@ struct struct_or_union_specifier_t : public type_specifier_complex_t
 		ptn<	identifier_t,
 			ptn<	token_t,
 				ptn<	struct struct_declaration_list_t,
-					end_token
-		> > > > c;
+					ptn<	token_t,
+						ptn<	attribute_t >
+		> > > > > c;
 
 	virtual void accept(class visitor_t& v);
 };

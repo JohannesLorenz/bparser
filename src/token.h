@@ -29,6 +29,8 @@
 
 enum token_id
 {
+	t_attribute = ATTRIBUTE,
+	t_attr_name = ATTR_NAME,
 	t_identifier = IDENTIFIER,
 	t_i_constant = I_CONSTANT,
 	t_f_constant = F_CONSTANT,

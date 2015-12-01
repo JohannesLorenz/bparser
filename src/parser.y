@@ -67,7 +67,6 @@ token_t* t(int token_id) { return new token_t(get_pos(), token_id); }
 extern void flag_symbol(const char* str, int type, const node_base* scope);
 extern void leave_scope(const node_base* scope);
 extern int type_of(const char* str);
-extern bool recent_enum_flag;
 
 %}
 
@@ -89,6 +88,8 @@ typedef void* yyscan_t;
 %parse-param { yyscan_t scanner }
 
 %union {
+	struct attr_name_t* attr_name;
+	struct attribute_t* attribute;
 	struct identifier_t* name;
 	struct typedef_name_t* typedef_name;
 	struct enumeration_constant_t* enumeration_constant;
@@ -158,6 +159,7 @@ typedef void* yyscan_t;
 	struct translation_unit_t* translation_unit;
 }
 
+%token	ATTR_NAME ATTRIBUTE
 %token	IDENTIFIER I_CONSTANT F_CONSTANT STRING_LITERAL FUNC_NAME SIZEOF
 %token	PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
 %token	AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
@@ -211,6 +213,8 @@ typedef void* yyscan_t;
 %type <type_name> type_name
 %type <declaration> declaration
 %type <statement> statement
+%type <attr_name> ATTR_NAME
+%type <attribute> attribute
 %type <identifier> enumeration_constant
 %type <token> type_specifier_simple unary_operator assignment_operator
 %type <declaration_specifiers> declaration_specifiers
@@ -268,6 +272,7 @@ typedef void* yyscan_t;
 	'~' '!' MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN SUB_ASSIGN
 	LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
 	STRUCT UNION ENUM ELLIPSIS
+	ATTRIBUTE
 
 %start translation_unit
 
@@ -511,9 +516,15 @@ type_specifier
 	| TYPEDEF_NAME { $$ = alloc($$); $$->c.set($1); }	/* after it has been defined as such */
 	;
 
+attribute
+	: ATTRIBUTE '(' '(' ATTR_NAME ')' ')' { $$ = alloc($$); $$->c.set($1); }
+	;
+
 struct_or_union_specifier
 	: struct_or_union '{' struct_declaration_list '}' { alloc($$); $$->c.fill($1, NULL, $2, $3, $4); }
 	| struct_or_union IDENTIFIER '{' struct_declaration_list '}' { alloc($$); $$->c.fill($1, $2, $3, $4, $5); }
+	| struct_or_union '{' struct_declaration_list '}' attribute { alloc($$); $$->c.fill($1, NULL, $2, $3, $4, $5); }
+	| struct_or_union IDENTIFIER '{' struct_declaration_list '}' attribute { alloc($$); $$->c.fill($1, $2, $3, $4, $5, $6); }
 	| struct_or_union IDENTIFIER { alloc($$); $$->c.fill($1, $2); }
 	;
 
@@ -565,8 +576,8 @@ enumerator_list
 	;
 
 enumerator	/* identifiers must be flagged as ENUMERATION_CONSTANT */
-	: enumeration_constant '=' constant_expression { recent_enum_flag = true; alloc($$); $$->c.fill($1, $2, $3); }
-	| enumeration_constant { recent_enum_flag = true; alloc($$); $$->c.set($1); }
+	: enumeration_constant '=' constant_expression { alloc($$); $$->c.fill($1, $2, $3); }
+	| enumeration_constant { alloc($$); $$->c.set($1); }
 	;
 
 atomic_type_specifier

@@ -59,6 +59,9 @@ typedef_name_t::typedef_name_t(const char* name, geom_t geom) :
 enumeration_constant_t::enumeration_constant_t(const char* name, geom_t geom) :
 	noconst_1line_terminal_t(geom, t_identifier, name) {}
 
+attr_name_t::attr_name_t(const char* name, geom_t geom) :
+	noconst_1line_terminal_t(geom, t_attr_name, name) {}
+
 std::size_t token_t::length() const
 {
 	return (value() <= std::numeric_limits<signed char>::max())
@@ -152,6 +155,8 @@ void sizeof_expression_t::accept(visitor_t& v) { v.visit(this); }
 
 
 void block_item_t::accept(visitor_t &v) { v.visit(this); }
+void attr_name_t::accept(class visitor_t& v) { v.visit(this); }
+void attribute_t::accept(class visitor_t& v) { v.visit(this); }
 void identifier_t::accept(visitor_t &v) { v.visit(this); }
 void enumeration_constant_t::accept(visitor_t &v) { v.visit(this); }
 void typedef_name_t::accept(visitor_t &v) { v.visit(this); }

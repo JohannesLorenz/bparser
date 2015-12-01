@@ -27,6 +27,8 @@ struct id_and_name
 
 const id_and_name names[] =
 {
+	{ t_attribute, "__attribute__" },
+	{ t_attr_name, "<attribute name>" },
 	{ t_identifier, "<identifier>" },
 	{ t_i_constant, "<integer constant>" },
 	{ t_f_constant, "<float constant>" },
@@ -119,6 +121,7 @@ std::size_t token_length(token_id t)
 {
 	switch(t)
 	{
+		case t_attribute:
 		case t_static_assert:
 			return 13;
 		case t_thread_local:
