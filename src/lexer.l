@@ -27,14 +27,14 @@
 #include <cstring>
 #include <map>
 
-int recent_token = -1;
-/*int _recent_tokens[3] = { -1, -1, -1 }; // FEATURE: better initial numbers?
-int* recent_tokens = _recent_tokens + 2;
+int _recent_tokens[4] = { -1, -1, -1, -1 }; // FEATURE: better initial numbers?
+int* recent_tokens = _recent_tokens + 3;
 int add_recent_token(int new_one) {
+	recent_tokens[-3] = recent_tokens[-2];
 	recent_tokens[-2] = recent_tokens[-1];
 	recent_tokens[-1] = recent_tokens[0];
 	return recent_tokens[ 0] = new_one;
-}*/
+}
 
 std::vector<std::string>& get_files();
 
@@ -165,24 +165,141 @@ std::vector<std::string> file_map::files;
 
 std::vector<std::string>& get_files() { return file_map::files; }
 
+enum declaration_state_t
+{
+	expect_type_specifier,
+	expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier,
+	expect_braces_pointers_type_qualifiers_identifier,
+	declarator_found
+} declaration_state = expect_type_specifier;
+int declaration_state_braces = 0;
+
+bool is_type_specifier(int token_id)
+{
+	switch(token_id)
+	{
+		case VOID:
+		case CHAR:
+		case SHORT:
+		case INT:
+		case LONG:
+		case FLOAT:
+		case DOUBLE:
+		case SIGNED:
+		case UNSIGNED:
+		case BOOL:
+		case COMPLEX:
+		case IMAGINARY:
+		case TYPEDEF_NAME:
+			return true;
+		case '{':
+			if(recent_tokens[0] == ENUM
+			|| recent_tokens[0] == STRUCT
+			|| recent_tokens[-1] == ENUM
+			|| recent_tokens[-1] == STRUCT)
+				++declaration_state_braces;
+			return false;
+		case '}': // has already been increased
+			return true;
+		default:
+			return false;
+	}
+}
+
+void set_state(int token_id)
+{
+if(token_id != ' ' && token_id != '\n' && token_id != '\t')
+{
+	if(declaration_state_braces)
+	{
+		// ignore everything, except closing braces
+		if(token_id == '}')
+		 --declaration_state_braces;
+	}
+	
+	if(!declaration_state_braces)
+	{
+		declaration_state_t next_state = expect_type_specifier;
+		switch(declaration_state)
+		{
+			case expect_type_specifier:
+				if(is_type_specifier(token_id))
+					next_state =
+						expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
+				break;
+			case expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier:
+				if(is_type_specifier(token_id))
+				{
+					next_state =
+						expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
+				}
+				else switch(token_id)
+				{
+					// storage specifiers
+					case TYPEDEF:
+					case EXTERN:
+					case STATIC:
+					case THREAD_LOCAL:
+					case AUTO:
+					case REGISTER:
+					// type qualifiers
+					case CONST:
+					case RESTRICT:
+					case VOLATILE:
+					case ATOMIC:
+					// function specifiers
+					case INLINE:
+					case NORETURN:
+						next_state = expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
+				}
+			case expect_braces_pointers_type_qualifiers_identifier:
+				switch(token_id)
+				{
+					case '(':
+					case '*':
+					// type qualifiers
+					case CONST:
+					case RESTRICT:
+					case VOLATILE:
+					case ATOMIC:
+						next_state = expect_braces_pointers_type_qualifiers_identifier;
+						break;
+					case IDENTIFIER:
+						next_state = declarator_found;
+						break;
+				}
+				break;
+			case declarator_found:
+				throw "this function shall not be called with declarator_found";
+		}
+		declaration_state = next_state;
+	}
+
+	add_recent_token(token_id);
+}
+}
+
 //! creates a new token and appends it
 int app3(token_t*& token, int token_id, const char* text)
 { // FEATURE: rename to app() or app_token()
+	set_state(token_id);
 	cnt();
 	token = new token_t(get_pos(), token_id);
 	token_str::value.push_back(token);
-	return recent_token = token_id;
+	return token_id;
 }
 
 //! appends an already created terminal
 template<class T> int app(T* elem, int lex_id)
 {
 	token_str::value.push_back(elem);
-	return recent_token = lex_id;
+	return lex_id;
 }
 
 template<class T>
-int app_with_string(T*& token, int lex_id, const char* text, const char* end) {
+int app_with_string(T*& token, int lex_id, const char* text, const char* end)
+{
+	set_state(lex_id);
 	std::size_t length = end - text;
 	cnt();
 	char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, text, length);
@@ -204,7 +321,7 @@ int app_float(fconstant_t*& token, const char* text)
 	}
 	if(*p && (icmp(p,'f') || icmp(p,'l'))) ++p;
 	if(*p) throw "end of token not 0";
-	return app_with_string(token, recent_token = F_CONSTANT, text, p);
+	return app_with_string(token, F_CONSTANT, text, p);
 }
 
 enum int_suffix_type
@@ -307,7 +424,7 @@ int app_int(iconstant_t*& token, const char* text, char scanf_type)
 	}
 	skip_suffix(p);
 	if(*p) throw "end of token not 0";
-	return app_with_string(token, recent_token = I_CONSTANT, text, p);
+	return app_with_string(token, I_CONSTANT, text, p);
 }
 
 class lookup_table_t
@@ -353,7 +470,7 @@ public:
 	static void flag_symbol(const char* str, lookup_type type)
 	{
 		std::cout << "flagging: " << str << " as " << type << " (" << get_pos() << ")" <<  std::endl;
-		table.insert(entry_t(str, value_t(type, bracket_depth)));
+		table.insert(entry_t(str, value_t(type, bracket_depth - (type == lt_enumeration))));
 	}
 
 	static void leave_scope(const node_base* scope)
@@ -513,10 +630,17 @@ static int check_type(const char* text);
 "__func__"                              { return app3(yylval->token, FUNC_NAME, yytext); }
 "__attribute__"				{ return app3(yylval->token, ATTRIBUTE, yytext); }
 
-{L}{A}*					{	// this could only be set to true if a . or -> preceded
+{L}{A}*					{	
+						// this could only be set to true if a . or -> preceded
 						// thus, this is the only place to set it to false
 						recent_struct_access = false;
-
+						
+						int type = check_type(yytext);
+						
+						// it should rather be: set_state (IDENTIFIER_OR_ENUMERATOR_OR...)
+						// nonetheless, it should be clear what was meant here.
+						set_state(IDENTIFIER);
+						
 						// find end of identifier
 						const char* end = yytext + 1;
 						for(; isalnum(*end) || *end == '_'; ++end) ;
@@ -524,7 +648,6 @@ static int check_type(const char* text);
 						cnt();
 						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, yytext, length);
 						
-						int type = check_type(yytext);
 						switch(type)
 						{
 							case IDENTIFIER:
@@ -640,7 +763,7 @@ static int check_type(const char* text);
 "!="					{ return app3(yylval->token, NE_OP, yytext); }
 ";"					{ return app3(yylval->token, ';', yytext); }
 ("{"|"<%")				{
-if(get_token_vector().back()->value() == ENUM)
+if(recent_tokens[0] == ENUM || recent_tokens[-1] == ENUM)
  in_enum_block = true;
 lookup_table_t::inc_bracket_depth();
 ++braces_since_typedef;
@@ -718,11 +841,75 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 		? recent_typedef_keyword
 			? recent_typedef_keyword=false, TYPEDEF_NAME
 			: recent_struct_access*/
-	if(	get_token_vector().size() >= 3 &&
-		(*(get_token_vector().end() - 3))->value() == ATTRIBUTE)
+
+	// attribute names go separate
+	if(recent_tokens[-3] == ATTRIBUTE)
 	 return ATTR_NAME;
 
-	lookup_type lt = lookup_table_t::type_of(text);
+	/*
+		Grammar: Each type_specifier is followed by either '<declaration_specifier>*['('<type_qualifier_list>*]*IDENTIFIER' => declaration,
+		Grammar: if it's followed by something else it's not a declaration
+			i.e. <this regexp> => declaration
+		The C standard forces that at least one declaration specifier is a type specifier
+		(http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf 6.7.2.2)
+
+		Thus:
+		type_specifier + regex + IDENTIFIER (grammar)=> declaration, otherwise => no declaration
+		declaration (C standard)=> type_specifier (above)=> type_specifier + regex + IDENTIFIER
+
+		Finally:
+		type_specifier + regex + IDENTIFIER (grammar) <=> declaration
+		
+	*/
+
+
+	/*
+		first of all, check if this is declaration
+		lookup table does not matter, since this could be an identifier with the same name
+		this comparison is reliable in all cases:
+	*/
+
+
+	
+
+	if(declaration_state == declarator_found)
+	{
+		lookup_table_t::flag_symbol(text, recent_typedef_keyword
+							? lt_typedef_name
+							: lt_identifier);
+		declaration_state = expect_type_specifier; // reset for next declaration
+		std::cout << " -> declaration, no braces" << std::endl;
+		return IDENTIFIER;
+	}
+	else if(declaration_state_braces)
+	{
+		// the last IF found *all* declarations, except all inside of enum {} and struct {}
+		// find these manually, this is easy
+		lookup_table_t::flag_symbol(text,
+			(in_enum_block &&
+			(recent_tokens[-1] == '{' ||
+			recent_tokens[-1] == ',') )
+			? lt_enumeration
+			: lt_identifier);
+// TODO: the comma might be from the comma op ! error !
+		std::cout << " -> declaration, braces" << std::endl;
+		return IDENTIFIER;
+	}
+		else switch(lookup_table_t::type_of(text))
+		{
+			// now it really can't be a declaration, so it must be known
+			case lt_typedef_name:                /* previously defined */
+			return TYPEDEF_NAME;
+			case lt_enumeration:        /* previously defined */
+			return ENUMERATION_CONSTANT;
+			case lt_identifier:                          /* includes undefined */
+			return IDENTIFIER;
+			default:
+			throw "This is neither a declaration, nor is this type known.";
+		}
+
+#if 0	
+lookup_type lt = lookup_table_t::type_of(text);
 	if(lt == lt_undefined)
 	{
 		// the braces check is a stupid fix
@@ -758,6 +945,7 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 		default:                          /* includes undefined */
 		 return IDENTIFIER;
 	}
+#endif
 #if 0
     switch (sym_type(yytext))
     {

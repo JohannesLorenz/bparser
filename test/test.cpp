@@ -126,7 +126,7 @@ void run_test_file(const char* file,
 }
 
 
-int main(void)
+void run()
 {
 	translation_unit_t *e = NULL;
 	//    char test[]=" 4 + 2*10 + 3*( 5 + 1 )";
@@ -163,7 +163,7 @@ int main(void)
 	std::cerr << test << std::endl;
 
 	int result = 0;
-	
+#if 0	
 	e = get_ast(test);
 	
 	//    result = evaluate(e);
@@ -174,7 +174,7 @@ int main(void)
 	e->accept(dumper);
 	cleaner_t cleaner;
 	e->accept(cleaner);
-
+#endif
 	
 	run_test("typedef struct { int x; } s;\n"
 		"typedef s (*g)(int);",
@@ -254,6 +254,18 @@ int main(void)
 	run_test_file("scopes.c", NULL);
 
 	run_test("int main() { int x; y = x + (x); }", NULL);
+}
 
-	return 0;
+int main(void)
+{
+	int exit_value = EXIT_SUCCESS;
+	try {
+		run();
+	} catch (const char* err_msg) {
+		std::cout << "FEHLER: " << std::endl;
+		std::cout << err_msg << std::endl;
+		std::cout << "ABBRUCH." << std::endl;
+		exit_value = EXIT_FAILURE;
+	}
+	return exit_value;
 }
