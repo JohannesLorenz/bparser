@@ -686,6 +686,13 @@ public:
 	void operator()(/*const*/ NodeType& n) {
 		on(n, n.c);
 	}
+
+	void operator()(/*const*/ translation_unit_t& t) {
+		if(t.c.empty())
+		 t.span = span_t(0,0,0,0); // the file id does not matter if all files are empty
+		else
+		 on(t, t.c);
+	}
 };
 
 

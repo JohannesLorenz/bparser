@@ -186,7 +186,7 @@ typedef void* yyscan_t;
 %type <fconstant> F_CONSTANT
 
 // FEATURE: wrong: translation_unit_t?
-%type <translation_unit> translation_unit
+%type <translation_unit> translation_unit translation_unit_nonempty
 %type <node> static_assert_declaration
 
 %type<expression> postfix_expression
@@ -813,9 +813,14 @@ jump_statement
 	| RETURN expression ';' { alloc($$); $$->c.fill($1, NULL, $2, $3); }
 	;
 
+translation_unit_nonempty // TODO: dynamic cast useless?
+	: external_declaration { alloc($$); $$->c.push_back($1); }
+	| translation_unit_nonempty external_declaration { $$->c.push_back($2); }
+	;
+
 translation_unit
-	: external_declaration { alloc(*expression); dynamic_cast<translation_unit_t*>(*expression)->c.push_back($1); }
-	| translation_unit external_declaration { (*expression)->c.push_back($2); }
+	: { alloc(*expression); }
+	| translation_unit_nonempty { *expression = $1; }
 	;
 
 external_declaration
