@@ -630,16 +630,21 @@ static int check_type(const char* text);
 "__func__"                              { return app3(yylval->token, FUNC_NAME, yytext); }
 "__attribute__"				{ return app3(yylval->token, ATTRIBUTE, yytext); }
 
-{L}{A}*					{	
+{L}{A}*					{
+
+
+						bool is_decl = (declaration_state == declarator_found)
+							|| declaration_state_braces;
+						
+						// it should rather be: set_state (IDENTIFIER_OR_ENUMERATOR_OR...)
+						// nonetheless, it should be clear what was meant here.
+						set_state(IDENTIFIER);
+
 						// this could only be set to true if a . or -> preceded
 						// thus, this is the only place to set it to false
 						recent_struct_access = false;
 						
 						int type = check_type(yytext);
-						
-						// it should rather be: set_state (IDENTIFIER_OR_ENUMERATOR_OR...)
-						// nonetheless, it should be clear what was meant here.
-						set_state(IDENTIFIER);
 						
 						// find end of identifier
 						const char* end = yytext + 1;
@@ -870,7 +875,11 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 	*/
 
 
-	
+	bool is_decl = (declaration_state == declarator_found)
+		|| declaration_state_braces;
+
+
+
 
 	if(declaration_state == declarator_found)
 	{
