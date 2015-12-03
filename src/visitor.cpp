@@ -310,12 +310,12 @@ void fwd::visit(direct_declarator_arr *d)
 
 void fwd::visit(direct_declarator_func *d)
 {
-	visit_all(d->c);
+	accept_all(d->c);
 }
 
 void fwd::visit(direct_declarator_idlist* d)
 {
-	visit_all(d->c);
+	accept_all(d->c);
 }
 
 void fwd::visit(direct_abstract_declarator_decl *d)

@@ -35,6 +35,14 @@
                        default.c (l   2 c  11) (l   2 c  20)         init declarator
                        default.c (l   2 c  11) (l   2 c  20)           declarator
                        default.c (l   2 c  11) (l   2 c  20)             direct declarator (function)
+                       default.c (l   2 c  11) (l   2 c  15)               direct declarator 2 (declaration)
+                       default.c (l   2 c  11) (l   2 c  12)                 token: (
+                       default.c (l   2 c  12) (l   2 c  14)                 declarator
+                       default.c (l   2 c  12) (l   2 c  13)                   pointer
+                       default.c (l   2 c  12) (l   2 c  13)                     token: *
+                       default.c (l   2 c  13) (l   2 c  14)                   direct declarator 1 (identifier)
+                       default.c (l   2 c  13) (l   2 c  14)                     identifier: g
+                       default.c (l   2 c  14) (l   2 c  15)                 token: )
                        default.c (l   2 c  15) (l   2 c  16)               token: (
                        default.c (l   2 c  16) (l   2 c  19)               parameter type list
                        default.c (l   2 c  16) (l   2 c  19)                 parameter list
