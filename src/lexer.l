@@ -284,176 +284,188 @@ enum declaration_state_t
 	expect_type_specifier,
 	expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier,
 	expect_braces_pointers_type_qualifiers_identifier,
-	expect_initializer_or_comma // declarator has been found
+	declarator_found, //! < this will only be used for a short time
+	expect_initializer_or_comma
 } declaration_state = expect_type_specifier;
 int declaration_state_braces = 0;
 
 enum { MAYBE_IDENTIFIER = 4242 } ; // some value that has not been used
 
-bool is_type_specifier(const char* text, int token_id, bool id_is_decl)
+class states_t
 {
-	switch(token_id)
-	{
-		case VOID:
-		case CHAR:
-		case SHORT:
-		case INT:
-		case LONG:
-		case FLOAT:
-		case DOUBLE:
-		case SIGNED:
-		case UNSIGNED:
-		case BOOL:
-		case COMPLEX:
-		case IMAGINARY:
-			return true;
-		//case TYPEDEF_NAME:
-		//	return true;
-		case MAYBE_IDENTIFIER:
-		
-			// if id => decl, than we have a declaration, no type_specifier
-			// otherwise, we have no declaration, so the maybe-id must be known
-			// then, it is only a type specifier if it is a typedef name	
-			return (!id_is_decl) && lookup_table_t::type_of(text) == lt_typedef_name;
-		case '{':
-			if(recent_tokens[0] == ENUM
-			|| recent_tokens[0] == STRUCT
-			|| recent_tokens[-1] == ENUM
-			|| recent_tokens[-1] == STRUCT)
-				++declaration_state_braces;
-			return false;
-		case '}': // has already been increased
-			return true;
-		default:
-			return false;
-	}
-}
+public:
+	int declaration_state_pars_after = 0;
+	int declaration_state_braces_after = 0;
 
-int declaration_state_pars_after = 0;
-int declaration_state_braces_after = 0;
-
-void set_state(const char* text, int token_id)
-{	
-if(token_id != ' ' && token_id != '\n' && token_id != '\t')
-{
-	if(declaration_state_braces) // structs, enums
+	void set_state(const char* text, int token_id)
 	{
-		// ignore everything, except closing braces
-		if(token_id == '}')
-		 --declaration_state_braces;
-	}
-	else if(declaration_state_braces_after || declaration_state_pars_after)
+	if(token_id != ' ' && token_id != '\n' && token_id != '\t')
 	{
-		if(token_id == '}')
-		 --declaration_state_braces_after;
-		else if(token_id == ')')
-		 --declaration_state_pars_after;
-	}
-	
-	if(!declaration_state_braces)
-	{
-		declaration_state_t next_state = expect_type_specifier;
-		switch(declaration_state)
+		if(declaration_state_braces) // structs, enums
 		{
-			case expect_type_specifier:
-				if(is_type_specifier(text, token_id, false))
-					next_state =
-						expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
-				break;
-			case expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier:
-				if(is_type_specifier(text, token_id, true))
-				{
-					next_state =
-						expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
-				}
-				else switch(token_id)
-				{
-					// storage specifiers
-					case TYPEDEF:
-					case EXTERN:
-					case STATIC:
-					case THREAD_LOCAL:
-					case AUTO:
-					case REGISTER:
-					// type qualifiers
-					case CONST:
-					case RESTRICT:
-					case VOLATILE:
-					case ATOMIC:
-					// function specifiers
-					case INLINE:
-					case NORETURN:
-						next_state = expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
-				}
-			case expect_braces_pointers_type_qualifiers_identifier:
-				switch(token_id)
-				{
-					case '(':
-					case '*':
-					// type qualifiers
-					case CONST:
-					case RESTRICT:
-					case VOLATILE:
-					case ATOMIC:
-						next_state = expect_braces_pointers_type_qualifiers_identifier;
-						break;
-					case MAYBE_IDENTIFIER:
-						next_state = expect_initializer_or_comma;
-						break;
-				}
-				break;
-			case expect_initializer_or_comma:
-				switch(token_id)
-				{
-					// these mark the end of a declaration
-					case ';':
-					case '}':
-					case ')':
-						std::cout << "CASE 1" << std::endl;
-						next_state = expect_type_specifier;
-						break;
-					case ',':
-						std::cout << "CASE 2" << std::endl;
-						next_state = expect_braces_pointers_type_qualifiers_identifier;
-						break;
-					default: // might be some complicated intializating expression
-						std::cout << "CASE 3" << std::endl;
-						next_state = expect_initializer_or_comma;
-				}
+			// ignore everything, except closing braces
+			if(token_id == '}')
+			 --declaration_state_braces;
 		}
-		declaration_state = next_state;
+		else if(declaration_state_braces_after || declaration_state_pars_after)
+		{
+			if(token_id == '}')
+			 --declaration_state_braces_after;
+			else if(token_id == ')')
+			 --declaration_state_pars_after;
+		}
+
+		if(!declaration_state_braces && !declaration_state_braces_after && !declaration_state_pars_after)
+		{
+			declaration_state_t next_state = expect_type_specifier;
+			switch(declaration_state)
+			{
+				case expect_type_specifier:
+					if(is_type_specifier(text, token_id, false))
+						next_state =
+							expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
+					break;
+				case expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier:
+					if(is_type_specifier(text, token_id, true))
+					{
+						next_state =
+							expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
+					}
+					else switch(token_id)
+					{
+						// storage specifiers
+						case TYPEDEF:
+						case EXTERN:
+						case STATIC:
+						case THREAD_LOCAL:
+						case AUTO:
+						case REGISTER:
+						// type qualifiers
+						case CONST:
+						case RESTRICT:
+						case VOLATILE:
+						case ATOMIC:
+						// function specifiers
+						case INLINE:
+						case NORETURN:
+							next_state = expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
+					}
+				case expect_braces_pointers_type_qualifiers_identifier:
+					switch(token_id)
+					{
+						case '(':
+						case '*':
+						// type qualifiers
+						case CONST:
+						case RESTRICT:
+						case VOLATILE:
+						case ATOMIC:
+							next_state = expect_braces_pointers_type_qualifiers_identifier;
+							break;
+						case MAYBE_IDENTIFIER:
+							next_state = declarator_found;
+							break;
+					}
+					break;
+				case declarator_found:
+					throw "this function should never be called with declarator_found";
+				case expect_initializer_or_comma:
+					switch(token_id)
+					{
+						// these mark the end of a declaration
+						case ';':
+						case '}':
+						case ')':
+							std::cout << "CASE 1" << std::endl;
+							next_state = expect_type_specifier;
+							break;
+						case ',':
+							std::cout << "CASE 2" << std::endl;
+							next_state = expect_braces_pointers_type_qualifiers_identifier;
+							break;
+						default: // might be some complicated intializating expression
+							std::cout << "CASE 3" << std::endl;
+							next_state = expect_initializer_or_comma;
+					}
+			}
+			declaration_state = next_state;
+
+			if(declaration_state == declarator_found)
+			{
+				declaration_state_pars_after =
+				declaration_state_braces_after =
+				0;
+			}
+		}
 
 		if(declaration_state == expect_initializer_or_comma)
 		{
-			declaration_state_pars_after = 
-			declaration_state_braces_after =
-			0;
+			switch(token_id)
+			{
+				case '{':
+					++declaration_state_braces_after; break;
+				case '(':
+					++declaration_state_pars_after; break;
+				case '}':
+					--declaration_state_braces_after; break;
+				case ')':
+					--declaration_state_pars_after; break;
+			}
 		}
+
+		std::cout << "SET STATE NOW: " << declaration_state << " with text: "<< text << std::endl;
+
+		add_recent_token(token_id);
 	}
-	
-	if(declaration_state == expect_initializer_or_comma)
+	}
+
+	bool is_type_specifier(const char* text, int token_id, bool id_is_decl)
 	{
 		switch(token_id)
 		{
+			case VOID:
+			case CHAR:
+			case SHORT:
+			case INT:
+			case LONG:
+			case FLOAT:
+			case DOUBLE:
+			case SIGNED:
+			case UNSIGNED:
+			case BOOL:
+			case COMPLEX:
+			case IMAGINARY:
+				return true;
+			//case TYPEDEF_NAME:
+			//	return true;
+			case MAYBE_IDENTIFIER:
+
+				// if id => decl, than we have a declaration, no type_specifier
+				// otherwise, we have no declaration, so the maybe-id must be known
+				// then, it is only a type specifier if it is a typedef name
+				return (!id_is_decl) && lookup_table_t::type_of(text) == lt_typedef_name;
 			case '{':
-				++declaration_state_braces_after; break;
-			case '(':
-				++declaration_state_pars_after; break;
-			case '}':
-				--declaration_state_braces_after; break;
-			case ')':
-				--declaration_state_pars_after; break;
+				if(recent_tokens[0] == ENUM
+				|| recent_tokens[0] == STRUCT
+				|| recent_tokens[-1] == ENUM
+				|| recent_tokens[-1] == STRUCT)
+					++declaration_state_braces;
+				return false;
+			case '}': // has already been increased
+				return true;
+			default:
+				return false;
 		}
 	}
-	
-	add_recent_token(token_id);
-}
-}
+
+};
+
+states_t states;
 
 //! creates a new token and appends it
 int app3(token_t*& token, int token_id, const char* text)
 { // FEATURE: rename to app() or app_token()
-	set_state(text, token_id);
+	states.set_state(text, token_id);
 	cnt();
 	token = new token_t(get_pos(), token_id);
 	token_str::value.push_back(token);
@@ -470,7 +482,7 @@ template<class T> int app(T* elem, int lex_id)
 template<class T>
 int app_with_string(T*& token, int lex_id, const char* text, const char* end)
 {
-	set_state(text, lex_id);
+	states.set_state(text, lex_id);
 	std::size_t length = end - text;
 	cnt();
 	char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, text, length);
@@ -715,7 +727,7 @@ static int check_type(const char* text);
 {L}{A}*					{	
 						// it should rather be: set_state (IDENTIFIER_OR_ENUMERATOR_OR...)
 						// nonetheless, it should be clear what was meant here.
-						set_state(yytext, MAYBE_IDENTIFIER);
+						states.set_state(yytext, MAYBE_IDENTIFIER);
 
 						// this could only be set to true if a . or -> preceded
 						// thus, this is the only place to set it to false
@@ -943,19 +955,23 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 		
 	*/
 
+	std::cout << "STATE NOW: " << declaration_state << std::endl;
 
 	/*
 		first of all, check if this is declaration
 		lookup table does not matter, since this could be an identifier with the same name
 		this comparison is reliable in all cases:
 	*/
-	if(declaration_state == expect_initializer_or_comma)
+	if(declaration_state == declarator_found)
 	{
 		lookup_table_t::flag_symbol(text, recent_typedef_keyword
 							? lt_typedef_name
 							: lt_identifier);
 //		declaration_state = expect_type_specifier; // reset for next declaration
 		std::cout << " -> declaration, no braces" << std::endl;
+
+		declaration_state = expect_initializer_or_comma;
+
 		return IDENTIFIER;
 	}
 	else if(declaration_state_braces)
@@ -970,6 +986,12 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 			: lt_identifier);
 // TODO: the comma might be from the comma op ! error !
 		std::cout << " -> declaration, braces" << std::endl;
+		return IDENTIFIER;
+	} else if(states.declaration_state_pars_after)
+	{
+		// must be a function. all identifiers must be declarators
+		lookup_table_t::flag_symbol(text, lt_identifier);
+		std::cout << " -> declaration, function parameter" << std::endl;
 		return IDENTIFIER;
 	}
 		else switch(lookup_table_t::type_of(text))

@@ -200,8 +200,7 @@ void run()
 		"int g(a, b) int a,b; {}\n"
 		"int main() {\n"
 		"}",
-		NULL
-		//"basics.out"
+		"basics.out"
 		);
 
 	//

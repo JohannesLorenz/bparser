@@ -595,8 +595,8 @@ public:
 #endif
 	template<class NodeType>
 	void operator()(NodeType& n) {
-		parent_assigner<NodeType> pa(&n);
-		foreach(n.c, pa);
+		//parent_assigner<NodeType> pa(&n);
+		//foreach(n.c, pa);
 		on(n);
 		xaccept(n.c);
 	}

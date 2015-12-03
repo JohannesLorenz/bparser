@@ -212,7 +212,7 @@ public:
 	{
 		value = _value;
 	}
-	
+
 //	template<class T1>
 //	void fill(const T1& e1) { set(e1); }
 };
