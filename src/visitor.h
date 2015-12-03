@@ -553,30 +553,53 @@ public:
 	void operator()(const NodeType& nt) { ++depth; xaccept(nt.c); --depth; }
 };
 
+template<class T>
+class parent_assigner
+{
+	T* parent;
+public:
+	parent_assigner(T* parent) : parent(parent) {}
+	template<class C>
+	void operator()(const C& child) {
+		child->parent = parent;
+	}
+};
+
 class type_completor : ftor_base
 {
 public:
 	type_completor(visitor_t* vref) : ftor_base(vref) {}
 
 	// expressions...
-	void operator()(unary_expression_l& );
-	void operator()(unary_expression_r& );
-	void operator()(binary_expression_t& );
+	void on(unary_expression_l& );
+	void on(unary_expression_r& );
+	void on(binary_expression_t& );
 
 	// FEATURE: float, int
 
 	// statements...
-	void operator()(iteration_statement_t& );
-	void operator()(labeled_statement_t& );
-	void operator()(jump_statement_t& );
+	void on(iteration_statement_t& );
+	void on(labeled_statement_t& );
+	void on(jump_statement_t& );
 
 	// structs...
-	void operator()(struct_or_union_specifier_t& );
-	void operator()(struct_access_expression_t& );
+	void on(struct_or_union_specifier_t& );
+	void on(struct_access_expression_t& );
 
 	// default case
 	template<class NodeType>
-	void operator()(/*const*/ NodeType& n) { xaccept(n.c); }
+	void on(/*const*/ NodeType& ) { }
+#if 0	
+	template<class NodeType>
+	void on(const NodeType&) 
+#endif
+	template<class NodeType>
+	void operator()(NodeType& n) {
+		parent_assigner<NodeType> pa(&n);
+		foreach(n.c, pa);
+		on(n);
+		xaccept(n.c);
+	}
 };
 
 class geom_completor : ftor_base

@@ -90,7 +90,7 @@ typename type_at<Tpl, Idx>::type& value_at(Tpl& tpl) { return _value_at<Tpl, Idx
 template<class Tpl>
 struct _foreach {
 	template<class F>
-	void exec(Tpl& tpl, F& f) {
+	static void exec(Tpl& tpl, F& f) {
 		f(tpl.value), foreach(tpl.get_next(), f);
 	}
 };
@@ -98,7 +98,7 @@ struct _foreach {
 template<>
 struct _foreach<null_type> {
 	template<class F>
-	void exec(const null_type& , F&) {}
+	static void exec(const null_type& , F&) {}
 };
 
 template<class Tpl, class F>

@@ -1051,20 +1051,20 @@ binary_op_t binary_op_of(int c)
 	}
 }
 
-void type_completor::operator()(unary_expression_l& u)
+void type_completor::on(unary_expression_l& u)
 {
 	u.op_id = unary_op_l(u.c.get<0>()->value());
 }
-void type_completor::operator()(unary_expression_r& u)
+void type_completor::on(unary_expression_r& u)
 {
 	u.op_id = unary_op_r(u.c.get<1>()->value());
 }
-void type_completor::operator()(binary_expression_t& b) {
+void type_completor::on(binary_expression_t& b) {
 	b.op_id = binary_op_of(b.c.get<1>()->value());
 }
 
 
-void type_completor::operator()(iteration_statement_t& i)
+void type_completor::on(iteration_statement_t& i)
 {
 	i.type =
 		i.c.get<iteration_statement_t::for_cond>()
@@ -1084,10 +1084,9 @@ void type_completor::operator()(iteration_statement_t& i)
 				? iteration_statement_t::for_type_decl_iter
 				: iteration_statement_t::for_type_decl_niter);
 
-	xaccept(i.c);
 }
 
-void type_completor::operator()(labeled_statement_t& l)
+void type_completor::on(labeled_statement_t& l)
 {
 	l.type =
 		l.c.get<labeled_statement_t::keyword>()
@@ -1095,10 +1094,9 @@ void type_completor::operator()(labeled_statement_t& l)
 				? labeled_statement_t::case_label
 				: labeled_statement_t::default_label)
 			: labeled_statement_t::jump_label;
-	xaccept(l.c);
 }
 
-void type_completor::operator()(jump_statement_t& j)
+void type_completor::on(jump_statement_t& j)
 {
 	const int keyword = j.c.get<jump_statement_t::keyword>()->value();
 	j.type =
@@ -1113,21 +1111,18 @@ void type_completor::operator()(jump_statement_t& j)
 					: jump_statement_t::goto_type
 				)
 			);
-	xaccept(j.c);
 }
 
-void type_completor::operator()(struct_or_union_specifier_t& s)
+void type_completor::on(struct_or_union_specifier_t& s)
 {
 	const int keyword = s.c.get<struct_or_union_specifier_t::keyword>()->value();
 	s.is_union_type = (keyword == t_union);
-	xaccept(s.c);
 }
 
-void type_completor::operator()(struct_access_expression_t& s)
+void type_completor::on(struct_access_expression_t& s)
 {
 	const int optype = s.c.get<1>()->value();
 	s.pointer_access = (optype == t_ptr_op);
-	xaccept(s.c);
 }
 
 
