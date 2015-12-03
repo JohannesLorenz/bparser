@@ -39,6 +39,7 @@ enum lookup_type
 	lt_typedef_name,
 	lt_identifier,
 	lt_identifier_list,
+	lt_struct_bound,
 	lt_undefined
 };
 

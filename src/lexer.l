@@ -213,7 +213,7 @@ public:
 		table_t::iterator itr = table.find(str);
 		if(itr != table.end() && itr->second.first == lt_identifier_list)
 		{
-			if(type != lt_identifier)
+			if(type != lt_identifier && type != lt_identifier_list)
 			 throw "declarator type must be identifier if it follows an identifier list.";
 			else
 			 std::cout << "FOUND *UNDECLARED* IDENTIFIER: " << str << std::endl;
@@ -293,9 +293,10 @@ enum { MAYBE_IDENTIFIER = 4242 } ; // some value that has not been used
 
 class states_t
 {
-public:
 	int declaration_state_pars_after = 0;
 	int declaration_state_braces_after = 0;
+public:
+	std::string recent_was_flagged_unknown;
 
 	void set_state(const char* text, int token_id)
 	{
@@ -313,9 +314,24 @@ public:
 			 --declaration_state_braces_after;
 			else if(token_id == ')')
 			 --declaration_state_pars_after;
+			std::cout << "DAF 1: " << declaration_state_pars_after << std::endl;
+		} // TODO: remove this or put together with lower part?
+
+		if(declaration_state == expect_initializer_or_comma
+			|| declaration_state == declarator_found)
+		{
+			switch(token_id)
+			{
+				case '{':
+					++declaration_state_braces_after; break;
+				case '(':
+					std::cout << "DAF 2: " << declaration_state_pars_after << std::endl;
+					++declaration_state_pars_after; break;
+			}
 		}
 
-		if(!declaration_state_braces && !declaration_state_braces_after && !declaration_state_pars_after)
+
+		if(!declaration_state_braces /*&& declaration_state_braces_after && !declaration_state_pars_after*/)
 		{
 			declaration_state_t next_state = expect_type_specifier;
 			switch(declaration_state)
@@ -375,13 +391,28 @@ public:
 						// these mark the end of a declaration
 						case ';':
 						case '}':
-						case ')':
+					//	case ')':
 							std::cout << "CASE 1" << std::endl;
+							next_state = expect_type_specifier;
+							break;
+						case ')':
+							std::cout << "CASE 1.1" << std::endl;
+							next_state = (declaration_state_pars_after > 0)
+								? expect_braces_pointers_type_qualifiers_identifier
+								: expect_type_specifier;
+						case '(':
+							std::cout << "CASE 1.2" << std::endl;
 							next_state = expect_type_specifier;
 							break;
 						case ',':
 							std::cout << "CASE 2" << std::endl;
-							next_state = expect_braces_pointers_type_qualifiers_identifier;
+							std::cout << declaration_state_pars_after << std::endl;
+							next_state = (declaration_state_pars_after > 0)
+								// in a function, a comma separates identifiers: "void f(int a, int b)"
+								? expect_type_specifier
+								// outside a function, we may have multiple declarators of
+								// "similar" type: "int a,b";
+								: expect_braces_pointers_type_qualifiers_identifier;
 							break;
 						default: // might be some complicated intializating expression
 							std::cout << "CASE 3" << std::endl;
@@ -392,30 +423,41 @@ public:
 
 			if(declaration_state == declarator_found)
 			{
-				declaration_state_pars_after =
+				/*declaration_state_pars_after =
 				declaration_state_braces_after =
-				0;
+				0;*/
 			}
 		}
 
-		if(declaration_state == expect_initializer_or_comma)
+		if(declaration_state == expect_initializer_or_comma
+			|| declaration_state == declarator_found)
 		{
 			switch(token_id)
 			{
-				case '{':
+			/*	case '{':
 					++declaration_state_braces_after; break;
 				case '(':
-					++declaration_state_pars_after; break;
+					std::cout << "DAF 2: " << declaration_state_pars_after << std::endl;
+					++declaration_state_pars_after; break;*/
 				case '}':
 					--declaration_state_braces_after; break;
 				case ')':
+					std::cout << "DAF 3: " << declaration_state_pars_after << std::endl;
 					--declaration_state_pars_after; break;
 			}
 		}
 
-		std::cout << "SET STATE NOW: " << declaration_state << " with text: "<< text << std::endl;
+		std::cout << "SET STATE NOW: " << declaration_state << " after text: "<< text << std::endl;
 
 		add_recent_token(token_id);
+
+		if(token_id == ':' && recent_was_flagged_unknown.size())
+		{
+			// re-flag
+			lookup_table_t::flag_symbol(recent_was_flagged_unknown.c_str(), lt_identifier);
+		}
+
+		recent_was_flagged_unknown.clear();
 	}
 	}
 
@@ -443,13 +485,21 @@ public:
 				// if id => decl, than we have a declaration, no type_specifier
 				// otherwise, we have no declaration, so the maybe-id must be known
 				// then, it is only a type specifier if it is a typedef name
+				if(recent_tokens[0] == STRUCT || recent_tokens[0] == UNION
+					|| recent_tokens[0] == ENUM) // TODO: ENUM?
+				 return true;
+				else
 				return (!id_is_decl) && lookup_table_t::type_of(text) == lt_typedef_name;
 			case '{':
 				if(recent_tokens[0] == ENUM
 				|| recent_tokens[0] == STRUCT
+				|| recent_tokens[0] == UNION
 				|| recent_tokens[-1] == ENUM
-				|| recent_tokens[-1] == STRUCT)
+				|| recent_tokens[-1] == STRUCT
+				|| recent_tokens[-1] == UNION)
+				{
 					++declaration_state_braces;
+				}
 				return false;
 			case '}': // has already been increased
 				return true;
@@ -957,16 +1007,24 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 
 	std::cout << "STATE NOW: " << declaration_state << std::endl;
 
+
+	if(recent_tokens[-1] == STRUCT || recent_tokens[-1] == UNION || recent_tokens[-1] == ENUM)
+	{
+		lookup_table_t::flag_symbol(text, lt_struct_bound);
+		return IDENTIFIER;
+	}
 	/*
 		first of all, check if this is declaration
 		lookup table does not matter, since this could be an identifier with the same name
 		this comparison is reliable in all cases:
 	*/
-	if(declaration_state == declarator_found)
+	else if(!declaration_state_braces && declaration_state == declarator_found)
 	{
 		lookup_table_t::flag_symbol(text, recent_typedef_keyword
 							? lt_typedef_name
 							: lt_identifier);
+		recent_typedef_keyword = false;
+
 //		declaration_state = expect_type_specifier; // reset for next declaration
 		std::cout << " -> declaration, no braces" << std::endl;
 
@@ -987,13 +1045,13 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 // TODO: the comma might be from the comma op ! error !
 		std::cout << " -> declaration, braces" << std::endl;
 		return IDENTIFIER;
-	} else if(states.declaration_state_pars_after)
+	}/* else if(states.declaration_state_pars_after > 0)
 	{
 		// must be a function. all identifiers must be declarators
 		lookup_table_t::flag_symbol(text, lt_identifier);
 		std::cout << " -> declaration, function parameter" << std::endl;
 		return IDENTIFIER;
-	}
+	}*/
 		else switch(lookup_table_t::type_of(text))
 		{
 			// now it really can't be a declaration, so it must be known
@@ -1002,9 +1060,11 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 			case lt_enumeration:        /* previously defined */
 			return ENUMERATION_CONSTANT;
 			case lt_identifier:                          /* includes undefined */
+			case lt_struct_bound:
 			return IDENTIFIER;
 			default:
 			lookup_table_t::flag_symbol(text, lt_identifier_list);
+			states.recent_was_flagged_unknown = text;
 			return IDENTIFIER;
 			//throw "This is neither a declaration, nor is this type known.";
 		}

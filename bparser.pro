@@ -16,7 +16,7 @@ SOURCES += src/lexer.c test/test.cpp src/node.cpp src/visitor.cpp \
     src/token.cpp src/ast.cpp \
     test/input/statements.c \
     test/input/abstract_declarators.c \
-    test/input/direct_declarators \
+    test/input/direct_declarators.c \
     test/input/declaration_specifiers.c \
     test/input/initializers.c \
     test/input/structs.c \

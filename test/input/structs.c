@@ -7,8 +7,8 @@ struct b {
 	int x, :15,  rest:1;
 };
 
-struct c { float f; } __attribute__((packed));
-typedef struct { float f; } __attribute__((packed)) d;
+struct c { float f; } ;
+typedef struct { float f; } d;
 
 int main()
 {

@@ -107,11 +107,18 @@ void run_test(const char* str,
 			str += (*itr)->get_length();
 		}
 	}
+
+	char c;
+	std::cin >> c;
 }
 
 void run_test_file(const char* file,
 	const char* out_name)
 {
+	std::cout << ":::::::::::::::" << std::endl;
+	std::cout << "running test: " << file << std::endl;
+	std::cout << ":::::::::::::::" << std::endl;
+
 	std::string in_name_with_path = "test/input/";
 	in_name_with_path += file;
 
