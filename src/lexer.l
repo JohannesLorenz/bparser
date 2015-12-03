@@ -165,16 +165,132 @@ std::vector<std::string> file_map::files;
 
 std::vector<std::string>& get_files() { return file_map::files; }
 
+
+
+
+class lookup_table_t
+{
+	typedef std::pair<lookup_type, std::size_t> value_t;
+	typedef std::pair<std::string, value_t> entry_t;
+	typedef std::map<std::string, value_t> table_t;
+	static table_t table;
+
+	static std::size_t bracket_depth;
+
+public:
+	static void inc_bracket_depth() { ++bracket_depth; }
+	static void dec_bracket_depth() {
+		std::cout << "DEC to: " << bracket_depth - 1 << std::endl;
+		table_t::iterator itr = table.begin(),
+			next = table.begin();
+		for(table_t::const_iterator itr = table.begin();
+			itr != table.end(); ++itr)
+		{
+			std::cout << itr->first << ": " << itr->second.first
+				<< ", depth: " << itr->second.second
+				<< std::endl;
+		}
+		for(itr = table.begin(); itr != table.end(); itr = next)
+		{
+			// invariant: itr == next
+			if(next != table.end())
+			 ++next;
+			// invariant: ++itr == next || next == table.end()
+			std::cout << itr->second.second << " <-> " << bracket_depth << std::endl;
+			if(itr->second.second == bracket_depth)
+			{
+				// out of scope
+				table.erase(itr);
+			}
+			else if(itr->second.second > bracket_depth)
+			 throw "overseen last scope end";
+		}
+		--bracket_depth;
+	}
+
+	static void flag_symbol(const char* str, lookup_type type)
+	{
+		table_t::iterator itr = table.find(str);
+		if(itr != table.end() && itr->second.first == lt_identifier_list)
+		{
+			if(type != lt_identifier)
+			 throw "declarator type must be identifier if it follows an identifier list.";
+			else
+			 std::cout << "FOUND *UNDECLARED* IDENTIFIER: " << str << std::endl;
+			itr->second.first = type;
+		}
+		else
+		{
+			std::cout << "flagging: " << str << " as " << type << " (" << get_pos() << ")" <<  std::endl;
+			table.insert(entry_t(str, value_t(type, bracket_depth - (type == lt_enumeration))));
+		}
+	}
+
+	static void leave_scope(const node_base* scope)
+	{
+	/*	for(table_t::iterator itr = table.begin();
+			itr != table.end(); ++itr)
+		if(itr->second.first != lt_undefined &&
+			itr->second.second == scope)
+		 itr->second.first = lt_undefined;*/
+	}
+
+	static lookup_type type_of(const char* str) {
+		std::cout << "LOOKUP TABLE: " << std::endl;
+		for(table_t::const_iterator itr = table.begin();
+			itr != table.end(); ++itr)
+		{
+			std::cout << itr->first << ": " << itr->second.first
+				<< ", depth: " << itr->second.second
+				<< std::endl;
+		}
+		std::cout << "... looking for: " << str << std::endl;
+		table_t::const_iterator itr = table.find(str);
+		return (itr == table.end()) ? lt_undefined : itr->second.first;
+	}
+
+	static void clear() {
+		for(table_t::const_iterator itr = table.begin(); itr != table.end(); ++itr)
+		{
+			if(itr->second.first == lt_identifier_list) {
+				std::cout << "Error: remaining undeclared identifier" << itr->first << "(from identifier list?)" << std::endl;
+				throw "Error remaining undeclared identifier (from identifier list?)";
+			}
+		}
+		table.clear(); }
+};
+
+lookup_table_t::table_t lookup_table_t::table;
+std::size_t lookup_table_t::bracket_depth = 0;
+
+void leave_scope(const node_base* scope)
+{
+	lookup_table_t::leave_scope(scope);
+}
+
+int type_of(const char* str) {
+	return lookup_table_t::type_of(str);
+}
+
+void clear_lookup_table()
+{
+	lookup_table_t::clear();
+}
+
+
+
 enum declaration_state_t
 {
 	expect_type_specifier,
 	expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier,
 	expect_braces_pointers_type_qualifiers_identifier,
-	declarator_found
+	expect_initializer_or_comma // declarator has been found
 } declaration_state = expect_type_specifier;
 int declaration_state_braces = 0;
 
-bool is_type_specifier(int token_id)
+enum { MAYBE_IDENTIFIER = 4242 } ; // some value that has not been used
+
+bool is_type_specifier(const char* text, int token_id, bool id_is_decl)
 {
 	switch(token_id)
 	{
@@ -190,8 +306,15 @@ bool is_type_specifier(int token_id)
 		case BOOL:
 		case COMPLEX:
 		case IMAGINARY:
-		case TYPEDEF_NAME:
 			return true;
+		//case TYPEDEF_NAME:
+		//	return true;
+		case MAYBE_IDENTIFIER:
+		
+			// if id => decl, than we have a declaration, no type_specifier
+			// otherwise, we have no declaration, so the maybe-id must be known
+			// then, it is only a type specifier if it is a typedef name	
+			return (!id_is_decl) && lookup_table_t::type_of(text) == lt_typedef_name;
 		case '{':
 			if(recent_tokens[0] == ENUM
 			|| recent_tokens[0] == STRUCT
@@ -206,15 +329,25 @@ bool is_type_specifier(int token_id)
 	}
 }
 
-void set_state(int token_id)
-{
+int declaration_state_pars_after = 0;
+int declaration_state_braces_after = 0;
+
+void set_state(const char* text, int token_id)
+{	
 if(token_id != ' ' && token_id != '\n' && token_id != '\t')
 {
-	if(declaration_state_braces)
+	if(declaration_state_braces) // structs, enums
 	{
 		// ignore everything, except closing braces
 		if(token_id == '}')
 		 --declaration_state_braces;
+	}
+	else if(declaration_state_braces_after || declaration_state_pars_after)
+	{
+		if(token_id == '}')
+		 --declaration_state_braces_after;
+		else if(token_id == ')')
+		 --declaration_state_pars_after;
 	}
 	
 	if(!declaration_state_braces)
@@ -223,12 +356,12 @@ if(token_id != ' ' && token_id != '\n' && token_id != '\t')
 		switch(declaration_state)
 		{
 			case expect_type_specifier:
-				if(is_type_specifier(token_id))
+				if(is_type_specifier(text, token_id, false))
 					next_state =
 						expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
 				break;
 			case expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier:
-				if(is_type_specifier(token_id))
+				if(is_type_specifier(text, token_id, true))
 				{
 					next_state =
 						expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
@@ -264,17 +397,55 @@ if(token_id != ' ' && token_id != '\n' && token_id != '\t')
 					case ATOMIC:
 						next_state = expect_braces_pointers_type_qualifiers_identifier;
 						break;
-					case IDENTIFIER:
-						next_state = declarator_found;
+					case MAYBE_IDENTIFIER:
+						next_state = expect_initializer_or_comma;
 						break;
 				}
 				break;
-			case declarator_found:
-				throw "this function shall not be called with declarator_found";
+			case expect_initializer_or_comma:
+				switch(token_id)
+				{
+					// these mark the end of a declaration
+					case ';':
+					case '}':
+					case ')':
+						std::cout << "CASE 1" << std::endl;
+						next_state = expect_type_specifier;
+						break;
+					case ',':
+						std::cout << "CASE 2" << std::endl;
+						next_state = expect_braces_pointers_type_qualifiers_identifier;
+						break;
+					default: // might be some complicated intializating expression
+						std::cout << "CASE 3" << std::endl;
+						next_state = expect_initializer_or_comma;
+				}
 		}
 		declaration_state = next_state;
-	}
 
+		if(declaration_state == expect_initializer_or_comma)
+		{
+			declaration_state_pars_after = 
+			declaration_state_braces_after =
+			0;
+		}
+	}
+	
+	if(declaration_state == expect_initializer_or_comma)
+	{
+		switch(token_id)
+		{
+			case '{':
+				++declaration_state_braces_after; break;
+			case '(':
+				++declaration_state_pars_after; break;
+			case '}':
+				--declaration_state_braces_after; break;
+			case ')':
+				--declaration_state_pars_after; break;
+		}
+	}
+	
 	add_recent_token(token_id);
 }
 }
@@ -282,7 +453,7 @@ if(token_id != ' ' && token_id != '\n' && token_id != '\t')
 //! creates a new token and appends it
 int app3(token_t*& token, int token_id, const char* text)
 { // FEATURE: rename to app() or app_token()
-	set_state(token_id);
+	set_state(text, token_id);
 	cnt();
 	token = new token_t(get_pos(), token_id);
 	token_str::value.push_back(token);
@@ -299,7 +470,7 @@ template<class T> int app(T* elem, int lex_id)
 template<class T>
 int app_with_string(T*& token, int lex_id, const char* text, const char* end)
 {
-	set_state(lex_id);
+	set_state(text, lex_id);
 	std::size_t length = end - text;
 	cnt();
 	char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, text, length);
@@ -427,95 +598,6 @@ int app_int(iconstant_t*& token, const char* text, char scanf_type)
 	return app_with_string(token, I_CONSTANT, text, p);
 }
 
-class lookup_table_t
-{
-	typedef std::pair<lookup_type, std::size_t> value_t;
-	typedef std::pair<std::string, value_t> entry_t;
-	typedef std::map<std::string, value_t> table_t;
-	static table_t table;
-
-	static std::size_t bracket_depth;
-
-public:
-	static void inc_bracket_depth() { ++bracket_depth; }
-	static void dec_bracket_depth() {
-		std::cout << "DEC to: " << bracket_depth - 1 << std::endl;
-		table_t::iterator itr = table.begin(),
-			next = table.begin();
-		for(table_t::const_iterator itr = table.begin();
-			itr != table.end(); ++itr)
-		{
-			std::cout << itr->first << ": " << itr->second.first
-				<< ", depth: " << itr->second.second
-				<< std::endl;
-		}
-		for(itr = table.begin(); itr != table.end(); itr = next)
-		{
-			// invariant: itr == next
-			if(next != table.end())
-			 ++next;
-			// invariant: ++itr == next || next == table.end()
-			std::cout << itr->second.second << " <-> " << bracket_depth << std::endl;
-			if(itr->second.second == bracket_depth)
-			{
-				// out of scope
-				table.erase(itr);
-			}
-			else if(itr->second.second > bracket_depth)
-			 throw "overseen last scope end";
-		}
-		--bracket_depth;
-	}
-
-	static void flag_symbol(const char* str, lookup_type type)
-	{
-		std::cout << "flagging: " << str << " as " << type << " (" << get_pos() << ")" <<  std::endl;
-		table.insert(entry_t(str, value_t(type, bracket_depth - (type == lt_enumeration))));
-	}
-
-	static void leave_scope(const node_base* scope)
-	{
-	/*	for(table_t::iterator itr = table.begin();
-			itr != table.end(); ++itr)
-		if(itr->second.first != lt_undefined &&
-			itr->second.second == scope)
-		 itr->second.first = lt_undefined;*/
-	}
-
-	static lookup_type type_of(const char* str) {
-		std::cout << "LOOKUP TABLE: " << std::endl;
-		for(table_t::const_iterator itr = table.begin();
-			itr != table.end(); ++itr)
-		{
-			std::cout << itr->first << ": " << itr->second.first
-				<< ", depth: " << itr->second.second
-				<< std::endl;
-		}
-		std::cout << "... looking for: " << str << std::endl;
-		table_t::const_iterator itr = table.find(str);
-		return (itr == table.end()) ? lt_undefined : itr->second.first;
-	}
-
-	static void clear() { table.clear(); }
-};
-
-lookup_table_t::table_t lookup_table_t::table;
-std::size_t lookup_table_t::bracket_depth = 0;
-
-void leave_scope(const node_base* scope)
-{
-	lookup_table_t::leave_scope(scope);
-}
-
-int type_of(const char* str) {
-	return lookup_table_t::type_of(str);
-}
-
-void clear_lookup_table()
-{
-	lookup_table_t::clear();
-}
-
 bool recent_struct_access = false;
 bool recent_typedef_keyword = false;
 bool in_enum_block = false;
@@ -630,22 +712,15 @@ static int check_type(const char* text);
 "__func__"                              { return app3(yylval->token, FUNC_NAME, yytext); }
 "__attribute__"				{ return app3(yylval->token, ATTRIBUTE, yytext); }
 
-{L}{A}*					{
-
-
-						bool is_decl = (declaration_state == declarator_found)
-							|| declaration_state_braces;
-						
+{L}{A}*					{	
 						// it should rather be: set_state (IDENTIFIER_OR_ENUMERATOR_OR...)
 						// nonetheless, it should be clear what was meant here.
-						set_state(IDENTIFIER);
+						set_state(yytext, MAYBE_IDENTIFIER);
 
 						// this could only be set to true if a . or -> preceded
 						// thus, this is the only place to set it to false
 						recent_struct_access = false;
-						
-						int type = check_type(yytext);
-						
+
 						// find end of identifier
 						const char* end = yytext + 1;
 						for(; isalnum(*end) || *end == '_'; ++end) ;
@@ -653,6 +728,7 @@ static int check_type(const char* text);
 						cnt();
 						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, yytext, length);
 						
+						int type = check_type(yytext);
 						switch(type)
 						{
 							case IDENTIFIER:
@@ -873,20 +949,12 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 		lookup table does not matter, since this could be an identifier with the same name
 		this comparison is reliable in all cases:
 	*/
-
-
-	bool is_decl = (declaration_state == declarator_found)
-		|| declaration_state_braces;
-
-
-
-
-	if(declaration_state == declarator_found)
+	if(declaration_state == expect_initializer_or_comma)
 	{
 		lookup_table_t::flag_symbol(text, recent_typedef_keyword
 							? lt_typedef_name
 							: lt_identifier);
-		declaration_state = expect_type_specifier; // reset for next declaration
+//		declaration_state = expect_type_specifier; // reset for next declaration
 		std::cout << " -> declaration, no braces" << std::endl;
 		return IDENTIFIER;
 	}
@@ -914,7 +982,9 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 			case lt_identifier:                          /* includes undefined */
 			return IDENTIFIER;
 			default:
-			throw "This is neither a declaration, nor is this type known.";
+			lookup_table_t::flag_symbol(text, lt_identifier_list);
+			return IDENTIFIER;
+			//throw "This is neither a declaration, nor is this type known.";
 		}
 
 #if 0	
