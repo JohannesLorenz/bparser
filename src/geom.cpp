@@ -15,7 +15,11 @@ std::ostream& operator<<(std::ostream& stream,
 std::ostream& operator<<(std::ostream& stream,
 	const span_t& s)
 {
-	return stream << get_files().at(s.first.file_id) << ": "
-		<< "l" << s.first.line << ", c" << s.first.col << "-"
-		<< "l" << s.second.line << ", c" << s.second.col;
+	stream << get_files().at(s.first.file_id) << ": ";
+	if(s.first.line == s.second.line)
+		stream << "l" << s.first.line << ", c" << s.first.col << "-" << s.second.col;
+	else
+		stream	<< "l" << s.first.line << ", c" << s.first.col << "-"
+			<< "l" << s.second.line << ", c" << s.second.col;
+	return stream;
 }

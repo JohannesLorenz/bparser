@@ -30,9 +30,9 @@ extern std::vector<terminal_t*>& get_token_vector();
 
 int yyparse(translation_unit_t **expression, yyscan_t scanner);
 
-translation_unit_t *get_ast(const char *input)
+translation_unit_t *get_ast(const char *input, const char* fname)
 {
-	init_parser();
+	init_parser(fname);
 
 	translation_unit_t *transl_unit;
 	yyscan_t scanner;

@@ -17,4 +17,4 @@
 /* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
 /*************************************************************************/
 
-struct translation_unit_t *get_ast(const char *input);
+struct translation_unit_t *get_ast(const char *input, const char* fname = NULL);

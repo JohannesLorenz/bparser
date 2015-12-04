@@ -43,7 +43,7 @@ enum lookup_type
 	lt_undefined
 };
 
-void init_parser(); //!< see node.cpp
+void init_parser(const char* fname = NULL); //!< see node.cpp
 
 class node_base
 {

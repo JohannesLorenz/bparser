@@ -293,9 +293,14 @@ enum { MAYBE_IDENTIFIER = 4242 } ; // some value that has not been used
 
 class states_t
 {
-	int declaration_state_pars_after = 0;
-	int declaration_state_braces_after = 0;
+	int declaration_state_pars_after;
+	int declaration_state_braces_after;
 public:
+	states_t() :
+		declaration_state_pars_after(0),
+		declaration_state_braces_after(0)
+		{}
+	
 	std::string recent_was_flagged_unknown;
 
 	void set_state(const char* text, int token_id)

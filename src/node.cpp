@@ -32,7 +32,7 @@ extern std::vector<terminal_t*>& get_token_vector();
 extern void reset_pos_counter();
 extern void reset_variables();
 
-void init_parser()
+void init_parser(const char* fname)
 {
 	get_token_vector().clear();
 
@@ -40,7 +40,7 @@ void init_parser()
 
 	// init default file
 	get_files().clear();
-	get_files().push_back("default.c");
+	get_files().push_back(fname ? fname : "default.c");
 
 	clear_lookup_table();
 

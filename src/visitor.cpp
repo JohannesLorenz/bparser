@@ -188,6 +188,21 @@ void fwd::visit(expression_statement_t *e)
 	accept_all(e->c);
 }
 
+void fwd::visit(selection_statement_t *e)
+{
+	accept_all(e->c);
+}
+
+void fwd::visit(labeled_statement_t *s)
+{
+	accept_all(s->c);
+}
+
+void fwd::visit(jump_statement_t *s)
+{
+	accept_all(s->c);
+}
+
 void fwd::visit(storage_class_specifier_t* ) { /* FEATURE: remove? */ }
 
 void fwd::visit(iteration_statement_t* i) { accept_all(i->c); }
@@ -365,8 +380,10 @@ public:
 		span(span)
 	{
 		char tmp[64];
+		const char* fname = get_files().at(span.first.file_id).c_str();
+		const char* last_slash = strrchr(fname, '/');
 		snprintf(tmp, 64, "%32s (l%4d c%4d) (l%4d c%4d) ",
-			get_files().at(span.first.file_id).c_str(),
+			last_slash ? 1+last_slash : fname,
 			span.first.line,
 			span.first.col, span.second.line, span.second.col);
 		stream << tmp;
@@ -645,6 +662,43 @@ void dumper_t::visit(expression_statement_t *e)
 	incr_depth_t x(&depth, stream, e->span);
 	stream << "expression statement" << std::endl;
 	fwd::visit(e);
+}
+
+void dumper_t::visit(selection_statement_t *e)
+{
+	incr_depth_t x(&depth, stream, e->span);
+	stream << "selection statement" << std::endl;
+	fwd::visit(e);
+}
+
+void dumper_t::visit(labeled_statement_t *s)
+{
+	incr_depth_t x(&depth, stream, s->span);
+	stream << "labeled statement (type ";
+	switch(s->type)
+	{
+		case labeled_statement_t::case_label: stream << "case label"; break; // FEATURE: type->string func in node.h
+		case labeled_statement_t::default_label: stream << "default label"; break;
+		case labeled_statement_t::jump_label: stream << "jump label"; break;
+	}
+	stream << ")" << std::endl;
+	fwd::visit(s);
+}
+
+void dumper_t::visit(jump_statement_t *s)
+{
+	incr_depth_t x(&depth, stream, s->span);
+	stream << "jump statement (type ";
+	switch(s->type)
+	{
+		case jump_statement_t::goto_type: stream << "goto"; break; // FEATURE: type->string func in node.h
+		case jump_statement_t::continue_type: stream << "continue"; break;
+		case jump_statement_t::break_type: stream << "break"; break;
+		case jump_statement_t::return_void: stream << "return"; break;
+		case jump_statement_t::return_type: stream << "return (with type)"; break;
+	}
+	stream << ")" << std::endl;
+	fwd::visit(s);
 }
 
 void dumper_t::visit(storage_class_specifier_t* )

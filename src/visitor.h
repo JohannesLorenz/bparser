@@ -492,6 +492,9 @@ public:
 	void visit(ternary_expression_t *e);
 	void visit(binary_expression_t *e);
 	void visit(expression_statement_t *e);
+	void visit(selection_statement_t* s);
+	void visit(labeled_statement_t* s);
+	void visit(jump_statement_t* s);
 	//void visit(node_t *e); //!< default
 	void visit(storage_class_specifier_t* n);
 	//void visit(type_specifier_token* t);
@@ -771,6 +774,9 @@ public:
 	void visit(ternary_expression_t *e);
 	void visit(binary_expression_t *e);
 	void visit(expression_statement_t *e);
+	void visit(selection_statement_t* e);
+	void visit(labeled_statement_t* s);
+	void visit(jump_statement_t* s);
 	//void visit(node_t *e); //!< default
 	void visit(storage_class_specifier_t* n);
 	//void visit(type_specifier_token* t);
