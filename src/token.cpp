@@ -107,7 +107,7 @@ const id_and_name names[] =
 	{ t_static_assert, "static_assert" },
 	{ t_thread_local, "thread_local" }
 };
-#include <iostream>
+
 const char* name_of(int token_id)
 {
 	const unsigned max = sizeof(names)/sizeof(id_and_name);
@@ -180,3 +180,26 @@ std::size_t token_length(token_id t)
 			return 2;
 	}
 }
+
+bool alpha_with_2_or_3_letters(int token_id)
+{
+	bool rval = false;
+	switch(token_id)
+	{
+		case t_int:
+		case t_if:
+		case t_do:
+		case t_for:
+			rval = true;
+		default: ;
+	}
+	return rval;
+}
+
+bool has_alpha(int t_id)
+{
+	return (t_id > 255) &&
+		((token_length((token_id)t_id) > 3)
+			|| alpha_with_2_or_3_letters(t_id));
+}
+

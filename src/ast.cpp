@@ -24,6 +24,7 @@
 #include "visitor.h"
 #include "parser.h"
 #include "lexer.h"
+#include "ast.h"
 
 extern int yydebug;
 extern std::vector<terminal_t*>& get_token_vector();

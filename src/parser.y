@@ -762,8 +762,6 @@ statement
 	| jump_statement { $$=$1; }
 	;
 
-
-
 labeled_statement
 	: IDENTIFIER ':' statement { alloc($$); $$->c.fill(NULL, $1, NULL, $2, $3); }
 	| CASE constant_expression ':' statement { alloc($$); $$->c.fill($1, NULL, $2, $3, $4); }

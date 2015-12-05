@@ -22,6 +22,7 @@
 #include <cstdio>
 #include <vector>
 #include <string>
+#include <cstring>
 #include "node.h"
 #include "visitor.h"
 
@@ -411,9 +412,12 @@ void dumper_t::visit(type_name_t *t)
 
 void dumper_t::visit(specifier_qualifier_list_t *s)
 {
-	incr_depth_t x(&depth, stream, s->span);
-	stream << "specifier-qualifier-list" << std::endl;
-	fwd::visit(s);
+	if(s->c.size() > 1)
+	{
+		incr_depth_t x(&depth, stream, s->span);
+		stream << "specifier-qualifier-list" << std::endl;
+		fwd::visit(s);
+	} else fwd::visit(s);
 }
 
 void dumper_t::visit(struct_or_union_specifier_t *s)
@@ -435,23 +439,33 @@ void dumper_t::visit(struct_declaration_t* n)
 
 void dumper_t::visit(struct_declaration_list_t* n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "struct declaration list" << std::endl; // FEATURE: good name?
-	fwd::visit(n);
+	if(n->c.size() > 1)
+	{
+		incr_depth_t x(&depth, stream, n->span);
+		stream << "struct declaration list" << std::endl; // FEATURE: good name?
+		fwd::visit(n);
+	} else fwd::visit(n);
 }
 
 void dumper_t::visit(struct_declarator_list_t* n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "struct declarator list" << std::endl; // FEATURE: endl autom?
-	fwd::visit(n);
+	if(n->c.size() > 1)
+	{
+		incr_depth_t x(&depth, stream, n->span);
+		stream << "struct declarator list" << std::endl; // FEATURE: endl autom?
+		fwd::visit(n);
+	}
+	else fwd::visit(n);
 }
 
 void dumper_t::visit(struct_declarator_t* n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "struct declarator" << std::endl;
-	fwd::visit(n);
+	if(n->c.get<2>())
+	{
+		incr_depth_t x(&depth, stream, n->span);
+		stream << "struct declarator" << std::endl;
+		fwd::visit(n);
+	} else fwd::visit(n);
 }
 
 void dumper_t::visit(enum_specifier_t* n)
@@ -463,30 +477,43 @@ void dumper_t::visit(enum_specifier_t* n)
 
 void dumper_t::visit(enumerator_list_t* n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "enumerator list" << std::endl;
-	fwd::visit(n);
+	if(n->c.size() > 1)
+	{
+		incr_depth_t x(&depth, stream, n->span);
+		stream << "enumerator list" << std::endl;
+		fwd::visit(n);
+	}
+	else fwd::visit(n);
 }
 
 void dumper_t::visit(enumerator_t* n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "enumerator" << std::endl;
-	fwd::visit(n);
+	if(n->c.get<2>())
+	{
+		incr_depth_t x(&depth, stream, n->span);
+		stream << "enumerator" << std::endl;
+		fwd::visit(n);
+	} else fwd::visit(n);
 }
 
 void dumper_t::visit(parameter_type_list_t* n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "parameter type list" << std::endl; // FEATURE: better description?
-	fwd::visit(n);
+	if(n->c.size() > 1)
+	{
+		incr_depth_t x(&depth, stream, n->span);
+		stream << "parameter type list" << std::endl; // FEATURE: better description?
+		fwd::visit(n);
+	} else fwd::visit(n);
 }
 
 void dumper_t::visit(parameter_list_t* n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "parameter list" << std::endl;
-	fwd::visit(n);
+	if(n->c.size() > 1)
+	{
+		incr_depth_t x(&depth, stream, n->span);
+		stream << "parameter list" << std::endl;
+		fwd::visit(n);
+	} else fwd::visit(n);
 }
 
 void dumper_t::visit(parameter_declaration_t* n)
@@ -498,9 +525,12 @@ void dumper_t::visit(parameter_declaration_t* n)
 
 void dumper_t::visit(identifier_list_t* n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "identifier list" << std::endl;
-	fwd::visit(n);
+	if(n->c.size() > 1)
+	{
+		incr_depth_t x(&depth, stream, n->span);
+		stream << "identifier list" << std::endl;
+		fwd::visit(n);
+	} else fwd::visit(n);
 }
 
 void dumper_t::visit(primary_expression_t* p) {
@@ -564,9 +594,12 @@ void dumper_t::visit(array_access_expression_t *e)
 
 void dumper_t::visit(argument_expression_list_t *e)
 {
-	incr_depth_t x(&depth, stream, e->span);
-	stream << "argument expression list" << std::endl;
-	fwd::visit(e);
+	if(e->c.size() > 1)
+	{
+		incr_depth_t x(&depth, stream, e->span);
+		stream << "argument expression list" << std::endl;
+		fwd::visit(e);
+	} else fwd::visit(e);
 }
 
 void dumper_t::visit(function_call_expression_t *e)
@@ -613,12 +646,20 @@ void dumper_t::visit(token_t* e)
 {
 	incr_depth_t x(&depth, stream, e->span);
 
-	stream << "token: ";
+	//stream << "token: ";
+
+	bool _has_alpha = has_alpha(e->value());
+	if(_has_alpha)
+	 stream << '"';
+
 	int value = e->value();
 	if(value <= 255)
 		stream << (char)value;
 	else
 		stream << name_of(value);
+
+	if(_has_alpha)
+	 stream << '"';
 	stream << std::endl;
 }
 
@@ -820,9 +861,12 @@ void dumper_t::visit(alignment_specifier_t* ) {
 #endif
 }
 void dumper_t::visit(declaration_list_t* n) {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "declaration list" << std::endl;
-	fwd::visit(n);
+	if(n->c.size() > 1)
+	{
+		incr_depth_t x(&depth, stream, n->span);
+		stream << "declaration list" << std::endl;
+		fwd::visit(n);
+	} else fwd::visit(n);
 }
 void dumper_t::visit(compound_statement_t* n)
 {
@@ -839,22 +883,26 @@ void dumper_t::visit(pointer_t* n) {
 
 void dumper_t::visit(declarator_t* n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "declarator" << std::endl;
-	fwd::visit(n);
+	if(n->c.get<0>()) // pointer prepended?
+	{
+		incr_depth_t x(&depth, stream, n->span);
+		stream << "declarator" << std::endl;
+		fwd::visit(n);
+	}
+	else // no pointer, just a direct_declarator
+	 fwd::visit(n);
 }
 
 void dumper_t::visit(declaration_specifiers_t* n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "declaration specifiers" << std::endl;
-
-	/*vvisit(n->storage_class_specifiers);
-	vvisit(n->type_specifiers);
-	vvisit(n->type_qualifiers);
-	vvisit(n->function_specifiers);
-	vvisit(n->alignment_specifiers);*/
-	fwd::visit(n);
+	if(n->c.size())
+	{
+		incr_depth_t x(&depth, stream, n->span);
+		stream << "declaration specifiers" << std::endl;
+		fwd::visit(n);
+	}
+	else
+		fwd::visit(n);
 }
 void dumper_t::visit(function_definition_t* n)
 {
@@ -905,16 +953,23 @@ void dumper_t::visit(declaration_t* n)
 
 void dumper_t::visit(init_declarator_t *i)
 {
-	incr_depth_t x(&depth, stream, i->span);
-	stream << "init declarator" << std::endl;
-	fwd::visit(i);
+	if(i->c.get<2>())
+	{
+		incr_depth_t x(&depth, stream, i->span);
+		stream << "init declarator" << std::endl;
+		fwd::visit(i);
+	}
+	else fwd::visit(i);
 }
 
 void dumper_t::visit(init_declarator_list_t *i)
 {
-	incr_depth_t x(&depth, stream, i->span);
-	stream << "init declarator list" << std::endl;
-	fwd::visit(i);
+	if(i->c.size() > 1)
+	{
+		incr_depth_t x(&depth, stream, i->span);
+		stream << "init declarator list" << std::endl;
+		fwd::visit(i);
+	} else fwd::visit(i);
 }
 
 void dumper_t::visit(initializer_t *i)
@@ -926,16 +981,22 @@ void dumper_t::visit(initializer_t *i)
 
 void dumper_t::visit(initializer_list_t *i)
 {
-	incr_depth_t x(&depth, stream, i->span);
-	stream << "initializer list" << std::endl;
-	fwd::visit(i);
+	if(i->c.size() > 1)
+	{
+		incr_depth_t x(&depth, stream, i->span);
+		stream << "initializer list" << std::endl;
+		fwd::visit(i);
+	} else fwd::visit(i);
 }
 
 
 void dumper_t::visit(designator_list_t* d) {
-	incr_depth_t x(&depth, stream, d->span);
-	stream << "designator list" << std::endl;
-	fwd::visit(d);
+	if(d->c.size() > 1)
+	{
+		incr_depth_t x(&depth, stream, d->span);
+		stream << "designator list" << std::endl;
+		fwd::visit(d);
+	} else fwd::visit(d);
 }
 
 void dumper_t::visit(designator_id* d) {
@@ -954,9 +1015,14 @@ void dumper_t::visit(designator_constant_expr* d) {
 
 void dumper_t::visit(abstract_declarator_t *n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "abstract declarator" << std::endl;
-	fwd::visit(n);
+	if(n->c.get<0>()) // pointer prepended?
+	{
+		incr_depth_t x(&depth, stream, n->span);
+		stream << "abstract declarator" << std::endl;
+		fwd::visit(n);
+	}
+	else // no pointer, just a direct_abstract_declarator
+	 fwd::visit(n);
 }
 
 
@@ -964,21 +1030,21 @@ void dumper_t::visit(abstract_declarator_t *n)
 void dumper_t::visit(direct_declarator_id *d)
 {
 	incr_depth_t x(&depth, stream, d->span);
-	stream << "direct declarator 1 (identifier)" << std::endl;
+	stream << "direct declarator (identifier)" << std::endl;
 	fwd::visit(d);
 }
 
 void dumper_t::visit(direct_declarator_decl *d)
 {
 	incr_depth_t x(&depth, stream, d->span);
-	stream << "direct declarator 2 (declaration)" << std::endl;
+	stream << "direct declarator (declaration)" << std::endl;
 	fwd::visit(d);
 }
 
 void dumper_t::visit(direct_declarator_arr *d)
 {
 	incr_depth_t x(&depth, stream, d->span);
-	stream << "direct declarator 3 (array)" << std::endl;
+	stream << "direct declarator (array)" << std::endl;
 	fwd::visit(d);
 }
 
@@ -991,9 +1057,12 @@ void dumper_t::visit(direct_declarator_func *d)
 
 void dumper_t::visit(direct_declarator_idlist *d)
 {
-	incr_depth_t x(&depth, stream, d->span);
-	stream << "direct declarator (identifier list)" << std::endl;
-	fwd::visit(d);
+	if(d->c.size() > 1)
+	{
+		incr_depth_t x(&depth, stream, d->span);
+		stream << "direct declarator (identifier list)" << std::endl;
+		fwd::visit(d);
+	} else fwd::visit(d);
 }
 
 

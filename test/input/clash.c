@@ -6,3 +6,6 @@ int main()
 	typedef int t;
 	sizeof(t);
 }
+
+void f(int t) {}
+

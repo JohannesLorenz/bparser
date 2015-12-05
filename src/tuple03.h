@@ -180,6 +180,8 @@ public:
 	Next& set(const type& _value) { return value = _value, get_next(); }
 	Next& set(const skip& ) { return get_next(); }
 
+	std::size_t size() const { return get_next().size(); }
+
 	// access:
 
 	template<std::size_t Idx>
@@ -212,6 +214,8 @@ public:
 	{
 		value = _value;
 	}
+
+	std::size_t size() const { return 1; }
 
 //	template<class T1>
 //	void fill(const T1& e1) { set(e1); }

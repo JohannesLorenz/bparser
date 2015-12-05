@@ -50,7 +50,7 @@ void run_test(const char* str,
 	const char* out_name)
 {
 	//std::cout << "code: " << std::endl << str << std::endl;
-	translation_unit_t *e = get_ast(str);
+	translation_unit_t *e = get_ast(str, out_name);
 
 	std::ostringstream os;
 	dumper_t dumper(os);
@@ -63,6 +63,7 @@ void run_test(const char* str,
 	{
 		std::string out_name_with_path = "test/output/";
 		out_name_with_path += out_name;
+		out_name_with_path += ".out";
 		std::ifstream infile(out_name_with_path.c_str());
 		if(!infile)
 		 throw "Could not open input file.";
@@ -134,11 +135,13 @@ void run_test_file(const char* file,
 }
 
 
-void run()
+void run(int argc, char** argv)
 {
 	translation_unit_t *e = NULL;
 	//    char test[]=" 4 + 2*10 + 3*( 5 + 1 )";
 
+if(argc == 1)
+{
 #if 0
 	char test[] = "int main()\n"
 		"{\n"
@@ -186,7 +189,7 @@ void run()
 	
 	run_test("typedef struct { int x; } s;\n"
 		"typedef s (*g)(int);",
-		"typedefs.out"
+		"typedefs"
 		);
 
 	/*labeled_statement { $$=$1; }
@@ -207,7 +210,7 @@ void run()
 		"int g(a, b) int a,b; {}\n"
 		"int main() {\n"
 		"}",
-		"basics.out"
+		"basics"
 		);
 
 	//
@@ -217,32 +220,32 @@ void run()
 	//
 	run_test_file("statements.c",
 		NULL
-		//"statements.out"
+		//"statements"
 		);
 
 	run_test_file("initializers.c",
 		NULL
-		//"statements.out"
+		//"statements"
 		);
 
 	run_test_file("abstract_declarators.c",
 		NULL
-		//"statements.out"
+		//"statements"
 		);
 
 	run_test_file("direct_declarators.c",
 		NULL
-		//"statements.out"
+		//"statements"
 		);
 
 	run_test_file("declaration_specifiers.c",
 		NULL
-		//"statements.out"
+		//"statements"
 		);
 
 	run_test_file("structs.c",
 		NULL
-		//"statements.out"
+		//"statements"
 		);
 
 	run_test_file("enums.c",
@@ -262,12 +265,21 @@ void run()
 
 	run_test("int main() { int x; y = x + (x); }", NULL);
 }
+else
+{
+	std::string testfile = argv[1];
+	testfile += ".c";
+	run_test_file(testfile.c_str(), NULL);
 
-int main(void)
+}
+
+}
+
+int main(int argc, char** argv)
 {
 	int exit_value = EXIT_SUCCESS;
 	try {
-		run();
+		run(argc, argv);
 	} catch (const char* err_msg) {
 		std::cout << "FEHLER: " << std::endl;
 		std::cout << err_msg << std::endl;

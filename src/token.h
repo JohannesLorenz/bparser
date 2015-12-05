@@ -112,5 +112,6 @@ enum token_id
 
 const char* name_of(int token_id);
 std::size_t token_length(token_id t);
+bool has_alpha(int t_id);
 
 #endif // TOKEN_H
