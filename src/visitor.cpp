@@ -1001,13 +1001,15 @@ void dumper_t::visit(designator_list_t* d) {
 
 void dumper_t::visit(designator_id* d) {
 	incr_depth_t x(&depth, stream, d->span);
-	stream << "designator: ." << d->c.get_next().value << std::endl;
+	//stream << "designator: ." << d->c.get_next().value << std::endl;
+	stream << "designator (struct)" << std::endl;
 	fwd::visit(d);
 }
 
-void dumper_t::visit(designator_constant_expr* d) {
+void dumper_t::visit(designator_constant_expr* d) { // FEATURE: rename designator_array?
 	incr_depth_t x(&depth, stream, d->span);
-	stream << "designator: [" << d->c.get_next().value << ']' << std::endl;
+	//stream << "designator: [" << d->c.get_next().value << ']' << std::endl;
+	stream << "designator (array)" << std::endl;
 	fwd::visit(d);
 }
 

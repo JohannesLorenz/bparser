@@ -10,7 +10,7 @@ void func(int a[],
 	int (*k)(int, const char* const s)
 );
 
-void func2(x, y) int x, y; {}
+void func2(x, y) int x, y; { sizeof(x); }
 
 int main()
 {

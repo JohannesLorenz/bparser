@@ -64,30 +64,37 @@ void run_test(const char* str,
 		std::string out_name_with_path = "test/output/";
 		out_name_with_path += out_name;
 		out_name_with_path += ".out";
-		std::ifstream infile(out_name_with_path.c_str());
-		if(!infile)
-		 throw "Could not open input file.";
-
-		const char* res = res_str.data();
-		std::string line;
-		std::size_t line_no = 0;
-		while (std::getline(infile, line))
+		std::ifstream outfile(out_name_with_path.c_str());
+		if(outfile)
 		{
-			++line_no;
-			for(const char* exp = line.data(); *exp; ++exp, ++res)
+			const char* res = res_str.data();
+			std::string line;
+			std::size_t line_no = 0;
+			while (std::getline(outfile, line))
 			{
-				if(*exp != *res) {
-					std::cout << "line " << line_no
-						<< ": expecting: " << exp
-						<< ", got: " << res << std::endl;
-					throw "lines not equal";
+				++line_no;
+				for(const char* exp = line.data(); *exp; ++exp, ++res)
+				{
+					if(*exp != *res) {
+						std::cout << "line " << line_no
+							<< ": expecting: " << exp
+							<< ", got: " << res << std::endl;
+						throw "lines not equal";
+					}
 				}
+				if(*res != '\n')
+				 throw "expected newline";
+				++res; // newline char is discarded in line
 			}
-			if(*res != '\n')
-			 throw "expected newline";
-			++res; // newline char is discarded in line
+		}
+		else
+		{
+			std::ofstream of(out_name_with_path.c_str());
+			of << res_str;
 		}
 	}
+	else
+	 throw "outfile name required";
 
 	typedef std::vector<terminal_t*> term_v;
 	{
@@ -110,11 +117,10 @@ void run_test(const char* str,
 	}
 
 	char c;
-	std::cin >> c;
+	//std::cin >> c;
 }
 
-void run_test_file(const char* file,
-	const char* out_name)
+void run_test_file(const char* file)
 {
 	std::cout << ":::::::::::::::" << std::endl;
 	std::cout << "running test: " << file << std::endl;
@@ -122,6 +128,7 @@ void run_test_file(const char* file,
 
 	std::string in_name_with_path = "test/input/";
 	in_name_with_path += file;
+	in_name_with_path += ".c";
 
 	std::ifstream t(in_name_with_path.c_str());
 	if(!t)
@@ -131,7 +138,7 @@ void run_test_file(const char* file,
 	buffer << t.rdbuf();
 	std::string buffer_res = buffer.str();
 
-	run_test(buffer_res.c_str(), out_name);
+	run_test(buffer_res.c_str(), file);
 }
 
 
@@ -140,138 +147,103 @@ void run(int argc, char** argv)
 	translation_unit_t *e = NULL;
 	//    char test[]=" 4 + 2*10 + 3*( 5 + 1 )";
 
-if(argc == 1)
-{
-#if 0
-	char test[] = "int main()\n"
-		"{\n"
-	//        "int x = 0;\n"
-	//        "return x < 3;\n"
-		"return 42 + 0;"
-		"}\n";
-#else
-	char test[] = "enum { I_AM_AN_ENUM };\n"
-		"int main(int) {\n"
-		"\t\tfor(;;) {;}\n"
-		"\t\twhile(1) {;}\n"
-		"\t\tdo {;} while (1);\n"
-		"\t\tint x = 3 + 0 * 4;\n"
-		"\t\tx++;\n"
-		"# 4 test.c 3 2\n"
-		"# 7 test.c 3 2\n"
-		"\t\t42uLL;\n"
-		"\t\t'c';\n"
-		"\t\t10.0e+3f;\n"
-		"\t\t0xDEADBEEF;\n"
-//		"\t\t41.999f;\n"
-		"# 6 test.c 5 4\n"
-		"\t\tI_AM_AN_ENUM;\n"
-//		"\t\t'c';\n"
-		"\t\t\"Hallo Welt! Das ist keine newline: \\\\n.\";\n"
-		"\t\tsizeof(unsigned int);\n"
-		"\t}";
-#endif
-	std::cerr << test << std::endl;
+	if(argc == 1)
+	{
+	#if 0
+		char test[] = "int main()\n"
+			"{\n"
+		//        "int x = 0;\n"
+		//        "return x < 3;\n"
+			"return 42 + 0;"
+			"}\n";
+	#else
+		char test[] = "enum { I_AM_AN_ENUM };\n"
+			"int main(int) {\n"
+			"\t\tfor(;;) {;}\n"
+			"\t\twhile(1) {;}\n"
+			"\t\tdo {;} while (1);\n"
+			"\t\tint x = 3 + 0 * 4;\n"
+			"\t\tx++;\n"
+			"# 4 test.c 3 2\n"
+			"# 7 test.c 3 2\n"
+			"\t\t42uLL;\n"
+			"\t\t'c';\n"
+			"\t\t10.0e+3f;\n"
+			"\t\t0xDEADBEEF;\n"
+	//		"\t\t41.999f;\n"
+			"# 6 test.c 5 4\n"
+			"\t\tI_AM_AN_ENUM;\n"
+	//		"\t\t'c';\n"
+			"\t\t\"Hallo Welt! Das ist keine newline: \\\\n.\";\n"
+			"\t\tsizeof(unsigned int);\n"
+			"\t}";
+	#endif
+		std::cerr << test << std::endl;
 
-	int result = 0;
-#if 0	
-	e = get_ast(test);
-	
-	//    result = evaluate(e);
-	
-	//    printf("Result of '%s' is %d\n", test, result);
-	std::cout << "Result:" << std::endl;
-	dumper_t dumper;
-	e->accept(dumper);
-	cleaner_t cleaner;
-	e->accept(cleaner);
-#endif
-	
-	run_test("typedef struct { int x; } s;\n"
-		"typedef s (*g)(int);",
-		"typedefs"
-		);
+		int result = 0;
+	#if 0
+		e = get_ast(test);
 
-	/*labeled_statement { $$=$1; }
-	| compound_statement { $$=$1; }
-	| expression_statement { $$=$1; }
-	| selection_statement { $$=$1; }
-	| iteration_statement { $$=$1; }
-	| jump_statement { $$=$1; }*/
+		//    result = evaluate(e);
+
+		//    printf("Result of '%s' is %d\n", test, result);
+		std::cout << "Result:" << std::endl;
+		dumper_t dumper;
+		e->accept(dumper);
+		cleaner_t cleaner;
+		e->accept(cleaner);
+	#endif
+
+		run_test("typedef struct { int x; } s;\n"
+			"typedef s (*g)(int);",
+			"typedefs"
+			);
+
+		/*labeled_statement { $$=$1; }
+		| compound_statement { $$=$1; }
+		| expression_statement { $$=$1; }
+		| selection_statement { $$=$1; }
+		| iteration_statement { $$=$1; }
+		| jump_statement { $$=$1; }*/
 
 
-	// translation_unit
-	// external_declaration
-	// function_definition
-	// declaration_list
-	// compound_statement
-	run_test("int x;\n"
-		"int f(int, char* c) {}\n"
-		"int g(a, b) int a,b; {}\n"
-		"int main() {\n"
-		"}",
-		"basics"
-		);
+		// translation_unit
+		// external_declaration
+		// function_definition
+		// declaration_list
+		// compound_statement
+		run_test("int x;\n"
+			"int f(int, char* c) {}\n"
+			"int g(a, b) int a,b; {}\n"
+			"int main() {\n"
+			"}",
+			"basics"
+			);
 
-	//
-	//
-	//
-	//
-	//
-	run_test_file("statements.c",
-		NULL
-		//"statements"
-		);
+		//
+		//
+		//
+		//
+		//
+		run_test_file("statements");
+		run_test_file("initializers");
+		run_test_file("abstract_declarators");
+		run_test_file("direct_declarators");
+		run_test_file("declaration_specifiers");
+		run_test_file("structs");
+		run_test_file("enums");
+		run_test_file("expressions");
+		run_test_file("constants");
+		run_test_file("clash");
+	//	run_test_file("clash_2");
+		run_test_file("scopes");
+	//	run_test_file("nested");
+	}
+	else // argc > 1
+	{
+		run_test_file(argv[1]);
 
-	run_test_file("initializers.c",
-		NULL
-		//"statements"
-		);
-
-	run_test_file("abstract_declarators.c",
-		NULL
-		//"statements"
-		);
-
-	run_test_file("direct_declarators.c",
-		NULL
-		//"statements"
-		);
-
-	run_test_file("declaration_specifiers.c",
-		NULL
-		//"statements"
-		);
-
-	run_test_file("structs.c",
-		NULL
-		//"statements"
-		);
-
-	run_test_file("enums.c",
-		NULL
-		);
-
-	run_test_file("expressions.c",
-		NULL
-		);
-
-	run_test_file("constants.c",
-		NULL
-		);
-
-	run_test_file("clash.c", NULL);
-	run_test_file("scopes.c", NULL);
-
-	run_test("int main() { int x; y = x + (x); }", NULL);
-}
-else
-{
-	std::string testfile = argv[1];
-	testfile += ".c";
-	run_test_file(testfile.c_str(), NULL);
-
-}
+	}
 
 }
 

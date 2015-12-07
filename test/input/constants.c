@@ -6,6 +6,8 @@ typedef enum
 int main()
 {
 	e_t e = first;
+	sizeof(first);
+	sizeof(e);
 
 	int i=(0) + 0xDEADBEEFu + 0777l + 123ul + 456lu + 78llu + 910ull + 11ll;
 	char c = u'1';

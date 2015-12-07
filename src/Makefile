@@ -27,7 +27,7 @@ parser.c: parser.y lexer.c
 #main.o: main.cpp lexer.c parser.c
 #	$(CXX) $(FLAGS) $(CFLAGS) -c $< -o $@
 # rule to compile lexer and parser:
-%.o: %.c lexer.c parser.c node.h
+%.o: %.c lexer.c parser.c node.h lexer_common.h
 	$(CXX) $(FLAGS) $(CFLAGS) -ansi -c $< -o $@
 clean:
 	rm -f *.o *~ lexer.c lexer.h parser.c parser.h libbparser.so # main
