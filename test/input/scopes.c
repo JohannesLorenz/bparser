@@ -4,7 +4,7 @@ struct s_t {
 
 int main()
 {
-	int v;
+	int z;
 	
 	{
 		int x;

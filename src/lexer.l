@@ -76,7 +76,7 @@ static int check_type(const char* text);
 "static"				{ return app3(yylval->token, STATIC, yytext); }
 "struct"				{ return app3(yylval->token, STRUCT, yytext); }
 "switch"				{ return app3(yylval->token, SWITCH, yytext); }
-"typedef"				{ recent_typedef_keyword = true;
+"typedef"				{ recent_typedef_keyword = states.get_brack_count();
 						braces_since_typedef = 0;
 						return app3(yylval->token, TYPEDEF, yytext); }
 "union"					{ return app3(yylval->token, UNION, yytext); }
@@ -330,10 +330,17 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 
 	std::cout << "STATE NOW: " << declaration_state << std::endl;
 
+	if(recent_tokens[-1] == '.' || recent_tokens[-1] == PTR_OP)
+	{
+		std::cout << "STRUCTACC" << std::endl;
+		return IDENTIFIER;
+	}
 
 	if(recent_tokens[-1] == STRUCT || recent_tokens[-1] == UNION || recent_tokens[-1] == ENUM)
 	{
-		states.flag_symbol(text, lt_struct_bound);
+		states.recent_was_flagged_unknown = text;
+		states.maybe_struct_declaration();
+		//states.flag_symbol(text, lt_struct_bound);
 		return IDENTIFIER;
 	}
 	/*
@@ -341,12 +348,24 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 		lookup table does not matter, since this could be an identifier with the same name
 		this comparison is reliable in all cases:
 	*/
-	else if(!declaration_state_braces && declaration_state == declarator_found)
+	else if(states.enum_state() == 1)
 	{
-		states.flag_symbol(text, recent_typedef_keyword
-							? lt_typedef_name
-							: lt_identifier);
-		recent_typedef_keyword = false;
+		// the last IF found *all* declarations, except all inside of enum {}
+		// find these manually, this is easy
+		states.flag_symbol(text,lt_enumeration);
+		std::cout << " -> declaration, enum" << std::endl;
+		return IDENTIFIER;
+	}
+	else if(declaration_state == declarator_found)
+	{
+		// typedefs can not occur in structs
+		if(recent_typedef_keyword == states.get_brack_count())
+		{
+			states.flag_symbol(text, lt_typedef_name);
+			recent_typedef_keyword = -1;
+		}
+		else
+			states.flag_symbol(text, lt_identifier);
 
 //		declaration_state = expect_type_specifier; // reset for next declaration
 		std::cout << " -> declaration, no braces" << std::endl;
@@ -355,7 +374,9 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 
 		return IDENTIFIER;
 	}
-	else if(declaration_state_braces)
+
+#if 0
+	else if(states.get_brack_count())
 	{
 		// the last IF found *all* declarations, except all inside of enum {} and struct {}
 		// find these manually, this is easy
@@ -368,7 +389,9 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 // TODO: the comma might be from the comma op ! error !
 		std::cout << " -> declaration, braces" << std::endl;
 		return IDENTIFIER;
-	}/* else if(states.declaration_state_pars_after > 0)
+	}
+#endif
+	/* else if(states.declaration_state_pars_after > 0)
 	{
 		// must be a function. all identifiers must be declarators
 		states.flag_symbol(text, lt_identifier);

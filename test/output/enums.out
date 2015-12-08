@@ -1,0 +1,139 @@
+                           enums (l   1 c   1) (l  24 c   2) translation unit
+                           enums (l   1 c   1) (l   5 c   3)   external declaration
+                           enums (l   1 c   1) (l   5 c   3)     declaration
+                           enums (l   1 c   1) (l   5 c   2)       declaration specifiers
+                           enums (l   1 c   1) (l   5 c   2)         type specifier
+                           enums (l   1 c   1) (l   5 c   2)           enum specifier
+                           enums (l   1 c   1) (l   1 c   5)             "enum"
+                           enums (l   1 c   6) (l   1 c   8)             identifier: e1
+                           enums (l   2 c   1) (l   2 c   2)             {
+                           enums (l   3 c   2) (l   3 c  15)             enumerator
+                           enums (l   3 c   2) (l   3 c   7)               identifier: first
+                           enums (l   3 c   8) (l   3 c   9)               =
+                           enums (l   3 c  10) (l   3 c  15)               binary expression 
+                           enums (l   3 c  10) (l   3 c  11)                 primary expression
+                           enums (l   3 c  10) (l   3 c  11)                   int constant: 0
+                           enums (l   3 c  12) (l   3 c  13)                 +
+                           enums (l   3 c  14) (l   3 c  15)                 primary expression
+                           enums (l   3 c  14) (l   3 c  15)                   int constant: 1
+                           enums (l   3 c  15) (l   3 c  16)             ,
+                           enums (l   4 c   2) (l   4 c   8)             identifier: second
+                           enums (l   4 c   8) (l   4 c   9)             ,
+                           enums (l   5 c   1) (l   5 c   2)             }
+                           enums (l   5 c   2) (l   5 c   3)       ;
+                           enums (l   7 c   1) (l  10 c   3)   external declaration
+                           enums (l   7 c   1) (l  10 c   3)     declaration
+                           enums (l   7 c   1) (l  10 c   2)       declaration specifiers
+                           enums (l   7 c   1) (l  10 c   2)         type specifier
+                           enums (l   7 c   1) (l  10 c   2)           enum specifier
+                           enums (l   7 c   1) (l   7 c   5)             "enum"
+                           enums (l   7 c   6) (l   7 c   8)             identifier: e2
+                           enums (l   8 c   1) (l   8 c   2)             {
+                           enums (l   9 c   2) (l   9 c  14)             enumerator
+                           enums (l   9 c   2) (l   9 c   6)               identifier: zero
+                           enums (l   9 c   7) (l   9 c   8)               =
+                           enums (l   9 c   9) (l   9 c  14)               primary expression
+                           enums (l   9 c   9) (l   9 c  14)                 enumeration constant: first
+                           enums (l  10 c   1) (l  10 c   2)             }
+                           enums (l  10 c   2) (l  10 c   3)       ;
+                           enums (l  12 c   1) (l  24 c   2)   external declaration
+                           enums (l  12 c   1) (l  24 c   2)     function definition
+                           enums (l  12 c   1) (l  12 c   4)       declaration specifiers
+                           enums (l  12 c   1) (l  12 c   4)         type specifier
+                           enums (l  12 c   1) (l  12 c   4)           "int"
+                           enums (l  12 c   5) (l  12 c  11)       direct declarator (function)
+                           enums (l  12 c   5) (l  12 c   9)         direct declarator (identifier)
+                           enums (l  12 c   5) (l  12 c   9)           identifier: main
+                           enums (l  12 c   9) (l  12 c  10)         (
+                           enums (l  12 c  10) (l  12 c  11)         )
+                           enums (l  13 c   1) (l  24 c   2)       compound statement
+                           enums (l  13 c   1) (l  13 c   2)         {
+                           enums (l  14 c   2) (l  14 c  36)         declaration
+                           enums (l  14 c   2) (l  14 c  23)           declaration specifiers
+                           enums (l  14 c   2) (l  14 c  23)             type specifier
+                           enums (l  14 c   2) (l  14 c  23)               enum specifier
+                           enums (l  14 c   2) (l  14 c   6)                 "enum"
+                           enums (l  14 c   7) (l  14 c   9)                 identifier: e3
+                           enums (l  14 c  10) (l  14 c  11)                 {
+                           enums (l  14 c  12) (l  14 c  20)                 identifier: e3_first
+                           enums (l  14 c  20) (l  14 c  21)                 ,
+                           enums (l  14 c  22) (l  14 c  23)                 }
+                           enums (l  14 c  24) (l  14 c  35)           direct declarator (identifier)
+                           enums (l  14 c  24) (l  14 c  35)             identifier: e3_variable
+                           enums (l  14 c  35) (l  14 c  36)           ;
+                           enums (l  15 c   2) (l  15 c  35)         declaration
+                           enums (l  15 c   2) (l  15 c  22)           declaration specifiers
+                           enums (l  15 c   2) (l  15 c  22)             type specifier
+                           enums (l  15 c   2) (l  15 c  22)               enum specifier
+                           enums (l  15 c   2) (l  15 c   6)                 "enum"
+                           enums (l  15 c   7) (l  15 c   9)                 identifier: e4
+                           enums (l  15 c  10) (l  15 c  11)                 {
+                           enums (l  15 c  12) (l  15 c  20)                 identifier: e4_first
+                           enums (l  15 c  21) (l  15 c  22)                 }
+                           enums (l  15 c  23) (l  15 c  34)           direct declarator (identifier)
+                           enums (l  15 c  23) (l  15 c  34)             identifier: e4_variable
+                           enums (l  15 c  34) (l  15 c  35)           ;
+                           enums (l  17 c   2) (l  17 c  15)         expression statement
+                           enums (l  17 c   2) (l  17 c  14)           sizeof ...
+                           enums (l  17 c   2) (l  17 c   8)             "sizeof"
+                           enums (l  17 c   8) (l  17 c  14)             primary expression
+                           enums (l  17 c   8) (l  17 c   9)               (
+                           enums (l  17 c   9) (l  17 c  13)               primary expression
+                           enums (l  17 c   9) (l  17 c  13)                 enumeration constant: zero
+                           enums (l  17 c  13) (l  17 c  14)               )
+                           enums (l  17 c  14) (l  17 c  15)           ;
+                           enums (l  18 c   2) (l  18 c  16)         expression statement
+                           enums (l  18 c   2) (l  18 c  15)           sizeof ...
+                           enums (l  18 c   2) (l  18 c   8)             "sizeof"
+                           enums (l  18 c   8) (l  18 c  15)             primary expression
+                           enums (l  18 c   8) (l  18 c   9)               (
+                           enums (l  18 c   9) (l  18 c  14)               primary expression
+                           enums (l  18 c   9) (l  18 c  14)                 enumeration constant: first
+                           enums (l  18 c  14) (l  18 c  15)               )
+                           enums (l  18 c  15) (l  18 c  16)           ;
+                           enums (l  19 c   2) (l  19 c  17)         expression statement
+                           enums (l  19 c   2) (l  19 c  16)           sizeof ...
+                           enums (l  19 c   2) (l  19 c   8)             "sizeof"
+                           enums (l  19 c   8) (l  19 c  16)             primary expression
+                           enums (l  19 c   8) (l  19 c   9)               (
+                           enums (l  19 c   9) (l  19 c  15)               primary expression
+                           enums (l  19 c   9) (l  19 c  15)                 enumeration constant: second
+                           enums (l  19 c  15) (l  19 c  16)               )
+                           enums (l  19 c  16) (l  19 c  17)           ;
+                           enums (l  20 c   2) (l  20 c  19)         expression statement
+                           enums (l  20 c   2) (l  20 c  18)           sizeof ...
+                           enums (l  20 c   2) (l  20 c   8)             "sizeof"
+                           enums (l  20 c   8) (l  20 c  18)             primary expression
+                           enums (l  20 c   8) (l  20 c   9)               (
+                           enums (l  20 c   9) (l  20 c  17)               primary expression
+                           enums (l  20 c   9) (l  20 c  17)                 enumeration constant: e3_first
+                           enums (l  20 c  17) (l  20 c  18)               )
+                           enums (l  20 c  18) (l  20 c  19)           ;
+                           enums (l  21 c   2) (l  21 c  19)         expression statement
+                           enums (l  21 c   2) (l  21 c  18)           sizeof ...
+                           enums (l  21 c   2) (l  21 c   8)             "sizeof"
+                           enums (l  21 c   8) (l  21 c  18)             primary expression
+                           enums (l  21 c   8) (l  21 c   9)               (
+                           enums (l  21 c   9) (l  21 c  17)               primary expression
+                           enums (l  21 c   9) (l  21 c  17)                 enumeration constant: e4_first
+                           enums (l  21 c  17) (l  21 c  18)               )
+                           enums (l  21 c  18) (l  21 c  19)           ;
+                           enums (l  22 c   2) (l  22 c  22)         expression statement
+                           enums (l  22 c   2) (l  22 c  21)           sizeof ...
+                           enums (l  22 c   2) (l  22 c   8)             "sizeof"
+                           enums (l  22 c   8) (l  22 c  21)             primary expression
+                           enums (l  22 c   8) (l  22 c   9)               (
+                           enums (l  22 c   9) (l  22 c  20)               primary expression
+                           enums (l  22 c   9) (l  22 c  20)                 identifier: e3_variable
+                           enums (l  22 c  20) (l  22 c  21)               )
+                           enums (l  22 c  21) (l  22 c  22)           ;
+                           enums (l  23 c   2) (l  23 c  22)         expression statement
+                           enums (l  23 c   2) (l  23 c  21)           sizeof ...
+                           enums (l  23 c   2) (l  23 c   8)             "sizeof"
+                           enums (l  23 c   8) (l  23 c  21)             primary expression
+                           enums (l  23 c   8) (l  23 c   9)               (
+                           enums (l  23 c   9) (l  23 c  20)               primary expression
+                           enums (l  23 c   9) (l  23 c  20)                 identifier: e4_variable
+                           enums (l  23 c  20) (l  23 c  21)               )
+                           enums (l  23 c  21) (l  23 c  22)           ;
+                           enums (l  24 c   1) (l  24 c   2)         }

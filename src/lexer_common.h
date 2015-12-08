@@ -181,8 +181,8 @@ class lookup_table_t
 	static std::size_t bracket_depth;
 
 public:
-	static void inc_bracket_depth() { std::cout << "INC to: " << bracket_depth + 1 << std::endl; ++bracket_depth; }
-	static void dec_bracket_depth() {
+	static void inc_bracket_depth() { /*std::cout << "INC to: " << bracket_depth + 1 << std::endl; ++bracket_depth;*/ }
+	static void dec_bracket_depth() {/*
 		std::cout << "DEC to: " << bracket_depth - 1 << std::endl;
 		table_t::iterator itr = table.begin(),
 			next = table.begin();
@@ -215,7 +215,43 @@ public:
 			else if(itr->second.back().second > (bracket_depth + 1))
 			 throw "overseen last scope end";
 		}
-		--bracket_depth;
+		--bracket_depth;*/
+	}
+
+	static void notify_dec_decl_depth(int new_depth)
+	{
+		std::cout << "DEPTH decreased to: " << new_depth << std::endl;
+		table_t::iterator itr = table.begin(),
+			next = table.begin();
+		for(table_t::const_iterator itr = table.begin();
+			itr != table.end(); ++itr)
+		{
+			std::cout << itr->first << ": ";
+			if(itr->second.size() > 1)
+			 std::cout << std::endl;
+			for(value_t::const_iterator itr2 = itr->second.begin();
+				itr2 != itr->second.end(); ++itr2)
+				std::cout << " -> at depth " << itr2->second
+					<< ": type " << itr2->first
+					<< std::endl;
+		}
+		for(itr = table.begin(); itr != table.end(); itr = next)
+		{
+			// invariant: itr == next
+			if(next != table.end())
+			 ++next;
+			// invariant: ++itr == next || next == table.end()
+			//std::cout << itr->second.second << " <-> " << bracket_depth << std::endl;
+			if(itr->second.back().second == new_depth + 1)
+			{
+				// out of scope
+				itr->second.pop_back();
+				if(itr->second.empty())
+				 table.erase(itr);
+			}
+			else if(itr->second.back().second > (new_depth + 2))
+			 throw "overseen last scope end";
+		}
 	}
 
 	static std::string internal_name_of_new_id(const char* new_id, lookup_type lt) {
@@ -223,9 +259,9 @@ public:
 		return rval += new_id;
 	}
 
-	static void flag_symbol(const char* str, lookup_type type, int add = 0)
+	static void flag_symbol(const char* str, lookup_type type, int new_depth = 0)
 	{
-		int new_depth = bracket_depth + add;
+		std::cout << "NEWDEPTH: " << new_depth << std::endl;
 		std::string new_name = internal_name_of_new_id(str, type);
 
 		table_t::iterator itr = table.find(new_name);
@@ -237,16 +273,18 @@ public:
 				if(type != lt_identifier && type != lt_identifier_list)
 				 throw "declarator type must be identifier if it follows an identifier list.";
 				else {
-					std::cout << "found *LATE DEFINED* identifier: " << str << std::endl;
+					std::cout << "found *LATE DEFINED* identifier: " << new_name << std::endl;
 					itr->second.back().first = type;
+					++itr->second.back().second;
 				}
 			} else
 			{
-				if(new_depth != stack.back().second
-				|| (stack.back().first == lt_struct_bound &&
+				if(stack.back().second != new_depth // just declared in an inner scope
+					||
+					(stack.back().first == lt_struct_bound && // TODO: not only stack.back?
 					type == lt_struct_bound))
 				{
-					std::cout << "flagging: " << str << " as " << type << " (" << get_pos() << ")" <<  std::endl;
+					std::cout << "flagging: " << new_name << " as " << type << " (" << get_pos() << ")" <<  std::endl;
 					stack.push_back(value_entry_t(type, new_depth));
 				}
 				else
@@ -336,40 +374,122 @@ enum declaration_state_t
 	declarator_found, //! < this will only be used for a short time
 	expect_initializer_or_comma
 } declaration_state = expect_type_specifier;
-int declaration_state_braces = 0;
+//int declaration_state_braces = 0;
 
 enum { MAYBE_IDENTIFIER = 4242 } ; // some value that has not been used
 
 class states_t
 {
-	int declaration_state_pars_after;
-	int declaration_state_braces_after;
+//	int declaration_state_pars_after;
+//	int declaration_state_braces_after;
+/*	int after_decl_pars_depth;
+	int after_decl_braces_depth;*/
+	int decl_depth;
 	bool in_for_header;
 	int par_count;
+	int brack_count;
+	bool recent_declaration;
+	int lazy_decr_decl_depth;
+	bool _maybe_struct_declaration;
+	int in_enum;
+
+	/*
+	( direct declarator:
+		=> case 1: function paramter: increase decl_depth
+		=> case 2: int (i); -> do not increase
+		=> case 3: FOR( -> do not increase
+			i.e.: increase <=> after decl
+
+	direct declarator )
+		=> case 1: function parameter list end
+		=> case 2:
+	*/
 public:
 	states_t() :
-		declaration_state_pars_after(0),
-		declaration_state_braces_after(0),
-		in_for_header(false)
+		decl_depth(0),
+		in_for_header(false),
+		par_count(0),
+		brack_count(0),
+		recent_declaration(false),
+		lazy_decr_decl_depth(0),
+		_maybe_struct_declaration(false),
+		in_enum(0)
 		{}
+
+	void reset()
+	{
+		if(decl_depth) throw "decl_depth";
+		if(in_for_header) throw "in_for_header";
+		if(par_count) throw "par_count";
+		if(brack_count) throw "brack_count";
+	//	if(recent_declaration) throw "recent_declaration";
+		if(lazy_decr_decl_depth) throw "lazy_decr_decl_depth";
+		if(_maybe_struct_declaration) throw "_maybe_struct_declaration";
+		if(in_enum) throw "in_enum";
+	}
+
+	int get_brack_count() const { return brack_count; }
+	int get_decl_depth() const { return decl_depth; }
+	void maybe_struct_declaration() { _maybe_struct_declaration = true; }
+	int enum_state() const { return in_enum; }
 
 	std::string recent_was_flagged_unknown;
 
 	int add_number(lookup_type lt) {
-		return (int)(in_for_header) - (lt == lt_enumeration) + declaration_state_pars_after;
+		// parantheses after are only valid
+		return (int)(in_for_header) - (lt == lt_enumeration) /*+ declaration_state_pars_after*/
+			- (lt == lt_identifier_list);
 	}
 
 	void set_state(const char* text, int token_id)
 	{
 	if(token_id != ' ' && token_id != '\n' && token_id != '\t')
 	{
+		if(lazy_decr_decl_depth)
+		{
+			std::cout << "DECR DECR DECR" << std::endl;
+			--lazy_decr_decl_depth;
+			decl_depth--;
+		}
 
+		// count tokens, do not yet read or change decl state
 		switch(token_id)
 		{
-			case '(': ++par_count; break;
-			case ')': if(!--par_count) in_for_header = false; break;
+			case '(': ++par_count;
+				if(recent_declaration)
+				{
+					++decl_depth;
+					recent_declaration = false;
+				} break;
+			case ')': if(decl_depth == par_count) {
+					if(token_id != '{') // keep parameters in function
+					// --decl_depth;
+						lazy_decr_decl_depth = 2;
+					lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
+					}
+				if(!--par_count)
+				if(in_for_header)
+				{
+					in_for_header = false;
+					lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
+				}
+				break;
+			case ENUM:
+				in_enum = 1; break;
+			case '=':
+				if(in_enum)
+					in_enum = 2; break;
+			case ',':
+				if(in_enum)
+					in_enum = 1;
+				recent_declaration = false;
+				break;
+
 			case FOR: in_for_header = true; break;
 			case ';':
+				recent_declaration = false;
+				break;
+			/*case ';':
 				if(recent_tokens[0] == ')')
 				{
 					// can be end of function or for
@@ -377,9 +497,26 @@ public:
 					lookup_table_t::inc_bracket_depth();
 					lookup_table_t::dec_bracket_depth();
 				}
+				break;*/
+			case '{':
+				++brack_count;
 				break;
+			case '}':
+				--brack_count;
+				lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
 		}
 
+		if(recent_tokens[0] == '}')
+		 in_enum = false; // enums always end on next }
+
+		if(lazy_decr_decl_depth == 1)
+		{
+			lazy_decr_decl_depth = 0;
+			lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
+		}
+
+
+#if 0
 		if(declaration_state_braces) // structs, enums
 		{
 			// ignore everything, except closing braces
@@ -405,9 +542,14 @@ public:
 					++declaration_state_pars_after; break;
 			}
 		}
+#endif
 
-
-		if(!declaration_state_braces /*&& declaration_state_braces_after && !declaration_state_pars_after*/)
+		//if(!declaration_state_braces /*&& declaration_state_braces_after && !declaration_state_pars_after*/)
+		if(enum_state()) {
+			if(token_id == '}')
+				declaration_state = expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
+		}
+		else
 		{
 			declaration_state_t next_state = expect_type_specifier;
 			switch(declaration_state)
@@ -445,6 +587,10 @@ public:
 				case expect_braces_pointers_type_qualifiers_identifier:
 					switch(token_id)
 					{
+						case ':':
+							// special case: anonymous bitfields in structs
+							next_state = expect_initializer_or_comma;
+							break;
 						case '(':
 						case '*':
 						// type qualifiers
@@ -466,10 +612,14 @@ public:
 					{
 						// these mark the end of a declaration
 						case ';':
-						case '}':
+					//	case '}':
 					//	case ')':
 							std::cout << "CASE 1" << std::endl;
-							next_state = expect_type_specifier;
+							next_state = (enum_state())
+								// end of enum block can be reached right
+								// after declarator was found:
+								? expect_braces_pointers_type_qualifiers_identifier
+								: expect_type_specifier;
 							break;
 						case ')':
 							std::cout << "CASE 1.1" << std::endl;
@@ -478,16 +628,15 @@ public:
 								: expect_type_specifier;*/
 							next_state = expect_type_specifier;
 
-							if(declaration_state_pars_after > 0)
-							 throw "impossible";
+						//	if(declaration_state_pars_after > 0)
+						//	 throw "impossible";
 						case '(':
 							std::cout << "CASE 1.2" << std::endl;
 							next_state = expect_type_specifier;
 							break;
 						case ',':
 							std::cout << "CASE 2" << std::endl;
-							std::cout << declaration_state_pars_after << std::endl;
-							next_state = (declaration_state_pars_after > 0)
+							next_state = (decl_depth > 0)
 								// in a function, a comma separates identifiers: "void f(int a, int b)"
 								? expect_type_specifier
 								// outside a function, we may have multiple declarators of
@@ -499,14 +648,11 @@ public:
 							next_state = expect_initializer_or_comma;
 					}
 			}
-			if(next_state == declarator_found)
-			{
-				declaration_state_pars_after
-				= declaration_state_braces_after
-				= 0;
-			}
+
 
 			declaration_state = next_state;
+			if (declaration_state == declarator_found)
+			 recent_declaration = true;
 		}
 
 		std::cout << "SET STATE NOW: " << declaration_state << " after text: "<< text << std::endl;
@@ -514,18 +660,35 @@ public:
 		add_recent_token(token_id);
 
 		// handle labels
-		if(token_id == ':' && recent_was_flagged_unknown.size())
+		// TODO: above everything
+		if(recent_was_flagged_unknown.size())
 		{
-			// re-flag
-			flag_symbol(recent_was_flagged_unknown.c_str(), lt_identifier);
+			switch(token_id)
+			{
+				case ':': // flag goto-label
+					flag_symbol(recent_was_flagged_unknown.c_str(), lt_identifier);
+					break;
+				case '{':
+					if(_maybe_struct_declaration)
+						// -1 because the depth has already been increased
+						flag_symbol(recent_was_flagged_unknown.c_str(), lt_struct_bound, -1);
+						declaration_state = expect_type_specifier;
+					break;
+				default: ;
+			}
 		}
 		recent_was_flagged_unknown.clear();
+		_maybe_struct_declaration = false;
+
 	}
 	}
 
-	void flag_symbol(const char* symbol, lookup_type lt)
+	void flag_symbol(const char* symbol, lookup_type lt, int special = 0)
 	{
-		lookup_table_t::flag_symbol(symbol, lt, add_number(lt));
+		std::cout << "flag: brack_count: " << brack_count << ", decl_depth: " << decl_depth << std::endl;
+		lookup_table_t::flag_symbol(symbol, lt, add_number(lt) + brack_count + decl_depth + special);
+		if(lt != lt_identifier_list)
+		 declaration_state = expect_initializer_or_comma;
 	}
 
 	bool is_type_specifier(const char* text, int token_id, bool id_is_decl)
@@ -557,18 +720,7 @@ public:
 				 return true;
 				else
 				return (!id_is_decl) && lookup_table_t::type_of(text) == lt_typedef_name;
-			case '{':
-				if(recent_tokens[0] == ENUM
-				|| recent_tokens[0] == STRUCT
-				|| recent_tokens[0] == UNION
-				|| recent_tokens[-1] == ENUM
-				|| recent_tokens[-1] == STRUCT
-				|| recent_tokens[-1] == UNION)
-				{
-					++declaration_state_braces;
-				}
-				return false;
-			case '}': // has already been increased
+			case '}':
 				return true;
 			default:
 				return false;
@@ -578,6 +730,8 @@ public:
 };
 
 states_t states;
+
+void reset_states() { states.reset(); }
 
 //! creates a new token and appends it
 int app3(token_t*& token, int token_id, const char* text)
@@ -728,16 +882,21 @@ int app_int(iconstant_t*& token, const char* text, char scanf_type)
 }
 
 bool recent_struct_access = false;
-bool recent_typedef_keyword = false;
+int recent_typedef_keyword = -1;
 bool in_enum_block = false;
 int braces_since_typedef = 0;
 
 void reset_variables()
 {
 	recent_struct_access = false;
-	recent_typedef_keyword = false;
+	recent_typedef_keyword = -1;
 	in_enum_block = false;
 	braces_since_typedef = 0;
+	reset_states();
+	add_recent_token(-1);
+	add_recent_token(-1);
+	add_recent_token(-1);
+	add_recent_token(-1);
 }
 
 #endif // LEXER_COMMON_H

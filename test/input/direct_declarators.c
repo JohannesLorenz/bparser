@@ -14,6 +14,6 @@ void func2(x, y) int x, y; { sizeof(x); }
 
 int main()
 {
-	int a;
+	int a, b, c, d, e, f, g, h, j, k, x, y;
 	func2(a);
 }

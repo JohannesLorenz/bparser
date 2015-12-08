@@ -12,4 +12,5 @@ int main()
 	my_int g;
 	struct { _Complex f; } s;
 	enum { first } h;
+	int f;
 }

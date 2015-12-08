@@ -21,6 +21,8 @@ int main() {
 			enum { t };
 			sizeof(t);
 		}
+
+		int a;
 	}
 }
 

@@ -194,6 +194,7 @@ void run(int argc, char** argv)
 		e->accept(cleaner);
 	#endif
 
+
 		run_test("typedef struct { int x; } s;\n"
 			"typedef s (*g)(int);",
 			"typedefs"
@@ -225,6 +226,7 @@ void run(int argc, char** argv)
 		//
 		//
 		//
+
 		run_test_file("statements");
 		run_test_file("initializers");
 		run_test_file("abstract_declarators");
@@ -235,9 +237,9 @@ void run(int argc, char** argv)
 		run_test_file("expressions");
 		run_test_file("constants");
 		run_test_file("clash");
-	//	run_test_file("clash_2");
+		run_test_file("clash_2");
 		run_test_file("scopes");
-	//	run_test_file("nested");
+		run_test_file("nested");
 	}
 	else // argc > 1
 	{

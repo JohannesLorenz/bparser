@@ -1,0 +1,189 @@
+                         structs (l   1 c   1) (l  24 c   2) translation unit
+                         structs (l   1 c   1) (l   3 c   5)   external declaration
+                         structs (l   1 c   1) (l   3 c   5)     declaration
+                         structs (l   1 c   1) (l   3 c   2)       declaration specifiers
+                         structs (l   1 c   1) (l   1 c   8)         "typedef"
+                         structs (l   1 c   9) (l   3 c   2)         type specifier
+                         structs (l   1 c   9) (l   3 c   2)           union specifier
+                         structs (l   1 c   9) (l   1 c  14)             "union"
+                         structs (l   1 c  15) (l   1 c  16)             {
+                         structs (l   2 c   2) (l   2 c   8)             struct declaration
+                         structs (l   2 c   2) (l   2 c   5)               type specifier
+                         structs (l   2 c   2) (l   2 c   5)                 "int"
+                         structs (l   2 c   6) (l   2 c   7)               direct declarator (identifier)
+                         structs (l   2 c   6) (l   2 c   7)                 identifier: x
+                         structs (l   2 c   7) (l   2 c   8)               ;
+                         structs (l   3 c   1) (l   3 c   2)             }
+                         structs (l   3 c   3) (l   3 c   4)       direct declarator (identifier)
+                         structs (l   3 c   3) (l   3 c   4)         identifier: u
+                         structs (l   3 c   4) (l   3 c   5)       ;
+                         structs (l   5 c   1) (l   8 c   3)   external declaration
+                         structs (l   5 c   1) (l   8 c   3)     declaration
+                         structs (l   5 c   1) (l   8 c   2)       declaration specifiers
+                         structs (l   5 c   1) (l   8 c   2)         type specifier
+                         structs (l   5 c   1) (l   8 c   2)           struct specifier
+                         structs (l   5 c   1) (l   5 c   7)             "struct"
+                         structs (l   5 c   8) (l   5 c   9)             identifier: b
+                         structs (l   5 c  10) (l   5 c  11)             {
+                         structs (l   6 c   2) (l   7 c  21)             struct declaration list
+                         structs (l   6 c   2) (l   6 c  13)               struct declaration
+                         structs (l   6 c   2) (l   6 c  12)                 specifier-qualifier-list
+                         structs (l   6 c   2) (l   6 c   7)                   type qualifier
+                         structs (l   6 c   2) (l   6 c   7)                     "const"
+                         structs (l   6 c   8) (l   6 c  12)                   type specifier
+                         structs (l   6 c   8) (l   6 c  12)                     "char"
+                         structs (l   6 c  12) (l   6 c  13)                 ;
+                         structs (l   7 c   2) (l   7 c  21)               struct declaration
+                         structs (l   7 c   2) (l   7 c   5)                 type specifier
+                         structs (l   7 c   2) (l   7 c   5)                   "int"
+                         structs (l   7 c   6) (l   7 c   7)                 direct declarator (identifier)
+                         structs (l   7 c   6) (l   7 c   7)                   identifier: x
+                         structs (l   7 c   7) (l   7 c   8)                 ,
+                         structs (l   7 c   9) (l   7 c  12)                 struct declarator
+                         structs (l   7 c   9) (l   7 c  10)                   :
+                         structs (l   7 c  10) (l   7 c  12)                   primary expression
+                         structs (l   7 c  10) (l   7 c  12)                     int constant: 15
+                         structs (l   7 c  12) (l   7 c  13)                 ,
+                         structs (l   7 c  14) (l   7 c  20)                 struct declarator
+                         structs (l   7 c  14) (l   7 c  18)                   direct declarator (identifier)
+                         structs (l   7 c  14) (l   7 c  18)                     identifier: rest
+                         structs (l   7 c  18) (l   7 c  19)                   :
+                         structs (l   7 c  19) (l   7 c  20)                   primary expression
+                         structs (l   7 c  19) (l   7 c  20)                     int constant: 1
+                         structs (l   7 c  20) (l   7 c  21)                 ;
+                         structs (l   8 c   1) (l   8 c   2)             }
+                         structs (l   8 c   2) (l   8 c   3)       ;
+                         structs (l  10 c   1) (l  10 c  24)   external declaration
+                         structs (l  10 c   1) (l  10 c  24)     declaration
+                         structs (l  10 c   1) (l  10 c  22)       declaration specifiers
+                         structs (l  10 c   1) (l  10 c  22)         type specifier
+                         structs (l  10 c   1) (l  10 c  22)           struct specifier
+                         structs (l  10 c   1) (l  10 c   7)             "struct"
+                         structs (l  10 c   8) (l  10 c   9)             identifier: c
+                         structs (l  10 c  10) (l  10 c  11)             {
+                         structs (l  10 c  12) (l  10 c  20)             struct declaration
+                         structs (l  10 c  12) (l  10 c  17)               type specifier
+                         structs (l  10 c  12) (l  10 c  17)                 "float"
+                         structs (l  10 c  18) (l  10 c  19)               direct declarator (identifier)
+                         structs (l  10 c  18) (l  10 c  19)                 identifier: f
+                         structs (l  10 c  19) (l  10 c  20)               ;
+                         structs (l  10 c  21) (l  10 c  22)             }
+                         structs (l  10 c  23) (l  10 c  24)       ;
+                         structs (l  11 c   1) (l  11 c  31)   external declaration
+                         structs (l  11 c   1) (l  11 c  31)     declaration
+                         structs (l  11 c   1) (l  11 c  28)       declaration specifiers
+                         structs (l  11 c   1) (l  11 c   8)         "typedef"
+                         structs (l  11 c   9) (l  11 c  28)         type specifier
+                         structs (l  11 c   9) (l  11 c  28)           struct specifier
+                         structs (l  11 c   9) (l  11 c  15)             "struct"
+                         structs (l  11 c  16) (l  11 c  17)             {
+                         structs (l  11 c  18) (l  11 c  26)             struct declaration
+                         structs (l  11 c  18) (l  11 c  23)               type specifier
+                         structs (l  11 c  18) (l  11 c  23)                 "float"
+                         structs (l  11 c  24) (l  11 c  25)               direct declarator (identifier)
+                         structs (l  11 c  24) (l  11 c  25)                 identifier: f
+                         structs (l  11 c  25) (l  11 c  26)               ;
+                         structs (l  11 c  27) (l  11 c  28)             }
+                         structs (l  11 c  29) (l  11 c  30)       direct declarator (identifier)
+                         structs (l  11 c  29) (l  11 c  30)         identifier: d
+                         structs (l  11 c  30) (l  11 c  31)       ;
+                         structs (l  13 c   1) (l  24 c   2)   external declaration
+                         structs (l  13 c   1) (l  24 c   2)     function definition
+                         structs (l  13 c   1) (l  13 c   4)       declaration specifiers
+                         structs (l  13 c   1) (l  13 c   4)         type specifier
+                         structs (l  13 c   1) (l  13 c   4)           "int"
+                         structs (l  13 c   5) (l  13 c  11)       direct declarator (function)
+                         structs (l  13 c   5) (l  13 c   9)         direct declarator (identifier)
+                         structs (l  13 c   5) (l  13 c   9)           identifier: main
+                         structs (l  13 c   9) (l  13 c  10)         (
+                         structs (l  13 c  10) (l  13 c  11)         )
+                         structs (l  14 c   1) (l  24 c   2)       compound statement
+                         structs (l  14 c   1) (l  14 c   2)         {
+                         structs (l  15 c   2) (l  15 c  22)         declaration
+                         structs (l  15 c   2) (l  15 c  10)           declaration specifiers
+                         structs (l  15 c   2) (l  15 c  10)             type specifier
+                         structs (l  15 c   2) (l  15 c  10)               struct specifier
+                         structs (l  15 c   2) (l  15 c   8)                 "struct"
+                         structs (l  15 c   9) (l  15 c  10)                 identifier: b
+                         structs (l  15 c  11) (l  15 c  21)           direct declarator (identifier)
+                         structs (l  15 c  11) (l  15 c  21)             identifier: b_variable
+                         structs (l  15 c  21) (l  15 c  22)           ;
+                         structs (l  16 c   2) (l  16 c  15)         declaration
+                         structs (l  16 c   2) (l  16 c   3)           declaration specifiers
+                         structs (l  16 c   2) (l  16 c   3)             type specifier
+                         structs (l  16 c   2) (l  16 c   3)               typedef name: u
+                         structs (l  16 c   4) (l  16 c  14)           direct declarator (identifier)
+                         structs (l  16 c   4) (l  16 c  14)             identifier: u_variable
+                         structs (l  16 c  14) (l  16 c  15)           ;
+                         structs (l  17 c   2) (l  17 c  17)         declaration
+                         structs (l  17 c   2) (l  17 c   5)           declaration specifiers
+                         structs (l  17 c   2) (l  17 c   5)             type specifier
+                         structs (l  17 c   2) (l  17 c   5)               "int"
+                         structs (l  17 c   6) (l  17 c   7)           direct declarator (identifier)
+                         structs (l  17 c   6) (l  17 c   7)             identifier: x
+                         structs (l  17 c   7) (l  17 c   8)           ,
+                         structs (l  17 c   9) (l  17 c  13)           direct declarator (identifier)
+                         structs (l  17 c   9) (l  17 c  13)             identifier: rest
+                         structs (l  17 c  13) (l  17 c  14)           ,
+                         structs (l  17 c  15) (l  17 c  16)           direct declarator (identifier)
+                         structs (l  17 c  15) (l  17 c  16)             identifier: f
+                         structs (l  17 c  16) (l  17 c  17)           ;
+                         structs (l  18 c   2) (l  18 c  12)         expression statement
+                         structs (l  18 c   2) (l  18 c  11)           sizeof ...
+                         structs (l  18 c   2) (l  18 c   8)             "sizeof"
+                         structs (l  18 c   8) (l  18 c   9)             (
+                         structs (l  18 c   9) (l  18 c  10)             type name
+                         structs (l  18 c   9) (l  18 c  10)               type specifier
+                         structs (l  18 c   9) (l  18 c  10)                 typedef name: u
+                         structs (l  18 c  10) (l  18 c  11)             )
+                         structs (l  18 c  11) (l  18 c  12)           ;
+                         structs (l  19 c   2) (l  19 c  19)         expression statement
+                         structs (l  19 c   2) (l  19 c  18)           sizeof ...
+                         structs (l  19 c   2) (l  19 c   8)             "sizeof"
+                         structs (l  19 c   8) (l  19 c   9)             (
+                         structs (l  19 c   9) (l  19 c  17)             type name
+                         structs (l  19 c   9) (l  19 c  17)               type specifier
+                         structs (l  19 c   9) (l  19 c  17)                 struct specifier
+                         structs (l  19 c   9) (l  19 c  15)                   "struct"
+                         structs (l  19 c  16) (l  19 c  17)                   identifier: b
+                         structs (l  19 c  17) (l  19 c  18)             )
+                         structs (l  19 c  18) (l  19 c  19)           ;
+                         structs (l  20 c   2) (l  20 c  19)         expression statement
+                         structs (l  20 c   2) (l  20 c  18)           sizeof ...
+                         structs (l  20 c   2) (l  20 c   8)             "sizeof"
+                         structs (l  20 c   8) (l  20 c   9)             (
+                         structs (l  20 c   9) (l  20 c  17)             type name
+                         structs (l  20 c   9) (l  20 c  17)               type specifier
+                         structs (l  20 c   9) (l  20 c  17)                 struct specifier
+                         structs (l  20 c   9) (l  20 c  15)                   "struct"
+                         structs (l  20 c  16) (l  20 c  17)                   identifier: c
+                         structs (l  20 c  17) (l  20 c  18)             )
+                         structs (l  20 c  18) (l  20 c  19)           ;
+                         structs (l  21 c   2) (l  21 c  12)         expression statement
+                         structs (l  21 c   2) (l  21 c  11)           sizeof ...
+                         structs (l  21 c   2) (l  21 c   8)             "sizeof"
+                         structs (l  21 c   8) (l  21 c   9)             (
+                         structs (l  21 c   9) (l  21 c  10)             type name
+                         structs (l  21 c   9) (l  21 c  10)               type specifier
+                         structs (l  21 c   9) (l  21 c  10)                 typedef name: d
+                         structs (l  21 c  10) (l  21 c  11)             )
+                         structs (l  21 c  11) (l  21 c  12)           ;
+                         structs (l  22 c   2) (l  22 c  21)         expression statement
+                         structs (l  22 c   2) (l  22 c  20)           sizeof ...
+                         structs (l  22 c   2) (l  22 c   8)             "sizeof"
+                         structs (l  22 c   8) (l  22 c  20)             primary expression
+                         structs (l  22 c   8) (l  22 c   9)               (
+                         structs (l  22 c   9) (l  22 c  19)               primary expression
+                         structs (l  22 c   9) (l  22 c  19)                 identifier: b_variable
+                         structs (l  22 c  19) (l  22 c  20)               )
+                         structs (l  22 c  20) (l  22 c  21)           ;
+                         structs (l  23 c   2) (l  23 c  21)         expression statement
+                         structs (l  23 c   2) (l  23 c  20)           sizeof ...
+                         structs (l  23 c   2) (l  23 c   8)             "sizeof"
+                         structs (l  23 c   8) (l  23 c  20)             primary expression
+                         structs (l  23 c   8) (l  23 c   9)               (
+                         structs (l  23 c   9) (l  23 c  19)               primary expression
+                         structs (l  23 c   9) (l  23 c  19)                 identifier: u_variable
+                         structs (l  23 c  19) (l  23 c  20)               )
+                         structs (l  23 c  20) (l  23 c  21)           ;
+                         structs (l  24 c   1) (l  24 c   2)         }
