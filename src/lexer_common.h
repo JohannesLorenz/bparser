@@ -240,17 +240,31 @@ public:
 			// invariant: itr == next
 			if(next != table.end())
 			 ++next;
-			// invariant: ++itr == next || next == table.end()
-			//std::cout << itr->second.second << " <-> " << bracket_depth << std::endl;
-			if(itr->second.back().second == new_depth + 1)
+			// FEATURE: only the last element should be affected
+			// this is just for the lazy thing with )) working wrong
+
+			for(bool find_more = true; find_more; )
 			{
-				// out of scope
-				itr->second.pop_back();
-				if(itr->second.empty())
-				 table.erase(itr);
+				find_more = false;
+
+				// invariant: ++itr == next || next == table.end()
+				//std::cout << itr->second.second << " <-> " << bracket_depth << std::endl;
+				if(itr->second.back().second >= new_depth + 1)
+				{
+				//	std::cout << itr->first << ": " << itr->second.back().first << std::endl;
+					if(itr->second.back().first == lt_identifier_list)
+					 throw "Left scope with undefined variable!";
+
+					// out of scope
+					itr->second.pop_back();
+					if(itr->second.empty())
+					 table.erase(itr);
+					else
+					 find_more = true;
+				}
 			}
-			else if(itr->second.back().second > (new_depth + 2))
-			 throw "overseen last scope end";
+		//	else if(itr->second.back().second > (new_depth + 2))
+		//	 throw "overseen last scope end";
 		}
 	}
 
@@ -437,7 +451,7 @@ public:
 
 	int add_number(lookup_type lt) {
 		// parantheses after are only valid
-		return (int)(in_for_header) - (lt == lt_enumeration) /*+ declaration_state_pars_after*/
+		return /*(int)(in_for_header)*/ - (lt == lt_enumeration) /*+ declaration_state_pars_after*/
 			- (lt == lt_identifier_list);
 	}
 
@@ -456,22 +470,24 @@ public:
 		switch(token_id)
 		{
 			case '(': ++par_count;
-				if(recent_declaration)
+				if(recent_declaration || in_for_header)
 				{
 					++decl_depth;
 					recent_declaration = false;
 				} break;
-			case ')': if(decl_depth == par_count) {
-					if(token_id != '{') // keep parameters in function
+			case ')':
+				if(decl_depth == par_count) {
+					//if(token_id != '{') // keep parameters in function
 					// --decl_depth;
-						lazy_decr_decl_depth = 2;
-					lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
-					}
+					lazy_decr_decl_depth = 2;
+//					lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
+				}
 				if(!--par_count)
 				if(in_for_header)
 				{
 					in_for_header = false;
-					lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
+					// might need to smash out variables
+					//lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
 				}
 				break;
 			case ENUM:
@@ -512,7 +528,19 @@ public:
 		if(lazy_decr_decl_depth == 1)
 		{
 			lazy_decr_decl_depth = 0;
-			lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
+
+			switch(token_id)
+			{
+				case '(':
+					// erase temporary
+					lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count-1);
+				default:
+					// keep variables from for loop or function header (TODO: useless?)
+					// otherwise, the brace is not reopening, so smash out
+					//   (in this case decl_depth + brack_count is smaller than in the
+					//   first case)
+					lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
+			}
 		}
 
 

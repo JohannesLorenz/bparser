@@ -127,7 +127,7 @@
                            clash (l   9 c   9) (l   9 c  12)                 primary expression
                            clash (l   9 c   9) (l   9 c  10)                   (
                            clash (l   9 c  10) (l   9 c  11)                   primary expression
-                           clash (l   9 c  10) (l   9 c  11)                     enumeration constant: t
+                           clash (l   9 c  10) (l   9 c  11)                     identifier: t
                            clash (l   9 c  11) (l   9 c  12)                   )
                            clash (l   9 c  12) (l   9 c  13)               ;
                            clash (l  10 c   2) (l  10 c   3)             }

@@ -32,6 +32,6 @@ int main()
 	for(; x; ) ;
 	for(; x; ++x) ;
 	for(int y; y; ) ;
-	for(int y; y; ++y) ;	
-	int y;
+	for(int y; y; ++y) ;
+	for(int y; y; ++y) { x = y; }
 }
