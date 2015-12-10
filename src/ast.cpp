@@ -27,6 +27,7 @@
 #include "ast.h"
 
 extern int strict_mode;
+extern bool bparser_debug;
 extern int yydebug;
 extern std::vector<terminal_t*>& get_token_vector();
 
@@ -36,6 +37,7 @@ translation_unit_t *get_ast(const char *input, const char* fname,
 	bool _strict_mode)
 {
 	strict_mode = _strict_mode;
+	bparser_debug = false;
 
 	init_parser(fname);
 

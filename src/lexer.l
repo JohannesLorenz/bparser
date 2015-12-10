@@ -189,7 +189,7 @@ static int check_type(const char* text);
 							} while(ok);
 							++p; // "'"
 
-							for(; *p == ' ' || *p == '\t' || *p == '\n'; ++p);
+							for(; *p == ' ' || *p == '\t' || *p == '\n' || *p == '\v' || *p == '\f'; ++p);
 
 
 						} while (*p == '"'
@@ -263,8 +263,8 @@ return app3(yylval->token, '{', yytext); }
 
 "\t"					{ app3(yylval->token, '\t', yytext); }
 "\n"					{ app3(yylval->token, '\n', yytext); }
-"\v"					{ throw "non-supported sign \\v"; }
-"\f"					{ throw "non-supported sign \\f"; }
+"\v"					{ app3(yylval->token, '\v', yytext); }
+"\f"					{ app3(yylval->token, '\f', yytext); }
 " "					{ app3(yylval->token, ' ', yytext); }
 "#"([^\\\n])*"\n"			{ pos_counter::parse_ppline(yytext); }
 .					{ std::cerr << "At: " << yytext << std::endl; throw "bad character"; }

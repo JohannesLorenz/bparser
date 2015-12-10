@@ -30,6 +30,7 @@
 #include <map>
 
 int strict_mode;
+bool bparser_debug;
 int _recent_tokens[4] = { -1, -1, -1, -1 }; // FEATURE: better initial numbers?
 int* recent_tokens = _recent_tokens + 3;
 int add_recent_token(int new_one) {
@@ -90,6 +91,11 @@ public:
 		++p; // skip #
 		for(; *p==' '; ++p) ;
 		last_col = 1;
+		
+		// no line number - ignore such macros
+		if( *p < '0' || *p > '9')
+		 return;
+
 		{
 			int n;
 			sscanf(p, "%d%n", &last_line, &n);
@@ -169,11 +175,9 @@ class lookup_table_t
 	static std::size_t bracket_depth;
 
 public:
-	static void notify_dec_decl_depth(int new_depth)
+	static void dump()
 	{
-		std::cout << "DEPTH decreased to: " << new_depth << std::endl;
-		table_t::iterator itr = table.begin(),
-			next = table.begin();
+		std::cout << "LOOKUP TABLE: " << std::endl;
 		for(table_t::const_iterator itr = table.begin();
 			itr != table.end(); ++itr)
 		{
@@ -186,6 +190,15 @@ public:
 					<< ": type " << itr2->first
 					<< std::endl;
 		}
+	}
+	
+	static void notify_dec_decl_depth(int new_depth)
+	{
+		std::cout << "DEPTH decreased to: " << new_depth << std::endl;
+		table_t::iterator itr = table.begin(),
+			next = table.begin();
+		if(bparser_debug)
+		 dump();
 		for(itr = table.begin(); itr != table.end(); itr = next)
 		{
 			// invariant: itr == next
@@ -204,7 +217,11 @@ public:
 				{
 				//	std::cout << itr->first << ": " << itr->second.back().first << std::endl;
 					if(itr->second.back().first == lt_identifier_list)
-					 throw "Left scope with undefined variable!";
+					{
+						dump();
+						std::cout << "undefined: " << itr->first << std::endl;
+						throw "Left scope with undefined variable!";
+					}
 
 					// out of scope
 					itr->second.pop_back();
@@ -248,7 +265,7 @@ public:
 					(stack.back().first == lt_struct_bound && // TODO: not only stack.back?
 					type == lt_struct_bound))
 				{
-					std::cout << "flagging: " << new_name << " as " << type << " (" << get_pos() << ")" <<  std::endl;
+					std::cout << "flagging: " << new_name << " as " << type << " (" << get_pos() << ", depth " << new_depth <<  ")" <<  std::endl;
 					stack.push_back(value_entry_t(type, new_depth));
 				}
 				else
@@ -263,7 +280,7 @@ public:
 		}
 		else
 		{
-			std::cout << "flagging: " << str << " as " << type << " (" << get_pos() << ")" <<  std::endl;
+			std::cout << "flagging: " << str << " as " << type << " (" << get_pos() << ", depth " << new_depth << ")" <<  std::endl;
 
 			table[new_name].push_back(value_entry_t(type, new_depth));
 			//table.insert(entry_t(str, value_t()))
@@ -272,20 +289,11 @@ public:
 	}
 
 	static lookup_type type_of(const char* str) {
-		std::cout << "LOOKUP TABLE: " << std::endl;
-		for(table_t::const_iterator itr = table.begin();
-			itr != table.end(); ++itr)
+		if(bparser_debug)
 		{
-			std::cout << itr->first << ": ";
-			if(itr->second.size() > 1)
-			 std::cout << std::endl;
-			for(value_t::const_iterator itr2 = itr->second.begin();
-				itr2 != itr->second.end(); ++itr2)
-				std::cout << " -> at depth " << itr2->second
-					<< ": type " << itr2->first
-					<< std::endl;
+			dump();
+			std::cout << "... looking for: " << str << std::endl;
 		}
-		std::cout << "... looking for: " << str << std::endl;
 		table_t::const_iterator itr = table.find(str);
 		return (itr == table.end()) ? lt_undefined : itr->second.back().first;
 	}
@@ -306,6 +314,11 @@ public:
 		}
 		table.clear(); }
 };
+
+void dump_lookup_table()
+{
+	lookup_table_t::dump();
+}
 
 lookup_table_t::table_t lookup_table_t::table;
 std::size_t lookup_table_t::bracket_depth = 0;
@@ -347,6 +360,8 @@ class states_t
 	int lazy_decr_decl_depth;
 	bool _maybe_struct_declaration;
 	int in_enum;
+	int struct_depth;
+	bool struct_depth_decreased;
 
 	/*
 	( direct declarator:
@@ -368,7 +383,8 @@ public:
 		recent_declaration(false),
 		lazy_decr_decl_depth(0),
 		_maybe_struct_declaration(false),
-		in_enum(0)
+		in_enum(0),
+		struct_depth(0)
 		{}
 
 	void reset()
@@ -381,6 +397,8 @@ public:
 		if(lazy_decr_decl_depth) throw "lazy_decr_decl_depth";
 		if(_maybe_struct_declaration) throw "_maybe_struct_declaration";
 		if(in_enum) throw "in_enum";
+		if(struct_depth) throw "struct_depth";
+		if(struct_depth_decreased) throw "struct_depth_decreased";
 	}
 
 	int get_brack_count() const { return brack_count; }
@@ -398,8 +416,10 @@ public:
 
 	void set_state(const char* text, int token_id)
 	{
-	if(token_id != ' ' && token_id != '\n' && token_id != '\t')
+	if(token_id != ' ' && token_id != '\n' && token_id != '\t' && token_id != '\v' && token_id != '\f')
 	{
+		struct_depth_decreased = false;
+		
 		if(lazy_decr_decl_depth)
 		{
 			std::cout << "DECR DECR DECR" << std::endl;
@@ -456,10 +476,25 @@ public:
 				}
 				break;*/
 			case '{':
+				{
+					int check = recent_tokens[(recent_tokens[0] == IDENTIFIER || recent_tokens[0] == MAYBE_IDENTIFIER) ? -1 : 0];
+					std::cout << "check: " << ((recent_tokens[0] == IDENTIFIER) ? -1 : 0) << ", val: "
+						<< recent_tokens[(recent_tokens[0] == IDENTIFIER) ? -1 : 0] << ", " << IDENTIFIER << "; "
+						<< STRUCT << "/" << UNION << "/" << ENUM << std::endl;
+						
+					if(check == STRUCT || check == UNION || check == ENUM)
+					{
+						// -1 because the depth has already been increased
+						++struct_depth;
+						std::cout << "P1" << std::endl;
+					}
+				}
 				++brack_count;
 				break;
 			case '}':
 				--brack_count;
+				if(struct_depth)
+				 --struct_depth, struct_depth_decreased = true, std::cout << "M1" << std::endl;;
 				lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
 		}
 
@@ -639,9 +674,8 @@ public:
 					break;
 				case '{':
 					if(_maybe_struct_declaration)
-						// -1 because the depth has already been increased
-						flag_symbol(recent_was_flagged_unknown.c_str(), lt_struct_bound, -1);
-						declaration_state = expect_type_specifier;
+					 flag_symbol(recent_was_flagged_unknown.c_str(), lt_struct_bound, -1);
+					declaration_state = expect_type_specifier;
 					break;
 				default: ;
 			}
@@ -690,7 +724,7 @@ public:
 				else
 				return (!id_is_decl) && lookup_table_t::type_of(text) == lt_typedef_name;
 			case '}':
-				return true;
+				return struct_depth_decreased;
 			default:
 				return false;
 		}

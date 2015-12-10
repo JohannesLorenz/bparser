@@ -25,7 +25,10 @@
 #include "parser.h"
 #include "lexer.h"
 
+extern void dump_lookup_table();
+
 int yyerror(translation_unit_t ** /*expression*/, yyscan_t scanner, const char *msg) {
+	dump_lookup_table();
 	fprintf(stderr,"At: %s,\n  line %d, column %d: Error:%s\n", yyget_text(scanner), yyget_lineno(scanner), yyget_column(scanner), msg); return 0;
 	// Add error handling routine as needed
 }
