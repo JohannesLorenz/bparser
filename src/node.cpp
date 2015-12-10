@@ -51,13 +51,13 @@ void init_parser(const char* fname)
 //void type_specifier_simple_t::accept(visitor_t& v) { v.visit(this); }
 
 identifier_t::identifier_t(const char* name, geom_t geom) :
-	noconst_1line_terminal_t(geom, t_identifier, name) {}
+	defined_t(geom, t_identifier, name) {}
 
 typedef_name_t::typedef_name_t(const char* name, geom_t geom) :
-	noconst_1line_terminal_t(geom, t_identifier, name) {}
+	defined_t(geom, t_identifier, name) {}
 
 enumeration_constant_t::enumeration_constant_t(const char* name, geom_t geom) :
-	noconst_1line_terminal_t(geom, t_identifier, name) {}
+	defined_t(geom, t_identifier, name) {}
 
 attr_name_t::attr_name_t(const char* name, geom_t geom) :
 	noconst_1line_terminal_t(geom, t_attr_name, name) {}
@@ -72,6 +72,23 @@ std::size_t token_t::length() const
 std::size_t token_t::newlines() const
 {
 	return (std::size_t)(value() == '\n');
+}
+
+std::ostream& operator<<(std::ostream& stream, const token_t& t)
+{
+	int value = t.value();
+	bool _has_alpha = has_alpha(value);
+	if(_has_alpha)
+	 stream << '"';
+
+	if(value <= 255)
+		stream << (char)value;
+	else
+		stream << name_of(value);
+
+	if(_has_alpha)
+	 stream << '"';
+	return stream;
 }
 
 std::size_t string_literal_t::length() const { return _length; }

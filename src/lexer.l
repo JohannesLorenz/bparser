@@ -117,16 +117,16 @@ static int check_type(const char* text);
 						switch(type)
 						{
 							case IDENTIFIER:
-							std::cout << " -> IDENTIFIER" << std::endl;
+							std::cout << " -> IDENTIFIER: " << res << std::endl;
 							return app(yylval->name = new identifier_t(res, get_pos()), type);
 							case TYPEDEF_NAME:
-							std::cout << " -> TYPEDEF NAME" << std::endl;
+							std::cout << " -> TYPEDEF NAME: " << res << std::endl;
 							return app(yylval->typedef_name = new typedef_name_t(res, get_pos()), type);
 							case ENUMERATION_CONSTANT:
-							std::cout << " -> ENUMERATION_CONSTANT" << std::endl;
+							std::cout << " -> ENUMERATION_CONSTANT: " << res << std::endl;
 							return app(yylval->enumeration_constant = new enumeration_constant_t(res, get_pos()), type);
 							case ATTR_NAME:
-							std::cout << " -> ATTR_NAME" << std::endl;
+							std::cout << " -> ATTR_NAME: " << res << std::endl;
 							return app(yylval->attr_name = new attr_name_t(res, get_pos()), type);
 						}
 					}
@@ -231,13 +231,11 @@ static int check_type(const char* text);
 ("{"|"<%")				{
 if(recent_tokens[0] == ENUM || recent_tokens[-1] == ENUM)
  in_enum_block = true;
-lookup_table_t::inc_bracket_depth();
 ++braces_since_typedef;
 return app3(yylval->token, '{', yytext); }
 ("}"|"%>")				{
 						if(in_enum_block)
 						 in_enum_block = false;
-						lookup_table_t::dec_bracket_depth();
 						--braces_since_typedef;
 						return app3(yylval->token, '}', yytext);
 }
@@ -264,7 +262,7 @@ return app3(yylval->token, '{', yytext); }
 "?"					{ return app3(yylval->token, '?', yytext); }
 
 "\t"					{ app3(yylval->token, '\t', yytext); }
-"\n"					{ app3(yylval->token, '\n', yytext); pos_counter::newline(yytext); }
+"\n"					{ app3(yylval->token, '\n', yytext); }
 "\v"					{ throw "non-supported sign \\v"; }
 "\f"					{ throw "non-supported sign \\f"; }
 " "					{ app3(yylval->token, ' ', yytext); }

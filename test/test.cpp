@@ -194,6 +194,7 @@ void run(int argc, char** argv)
 		e->accept(cleaner);
 	#endif
 
+		run_test("int main() {}", "minimal");
 
 		run_test("typedef struct { int x; } s;\n"
 			"typedef s (*g)(int);",

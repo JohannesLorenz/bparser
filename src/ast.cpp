@@ -26,13 +26,17 @@
 #include "lexer.h"
 #include "ast.h"
 
+extern int strict_mode;
 extern int yydebug;
 extern std::vector<terminal_t*>& get_token_vector();
 
 int yyparse(translation_unit_t **expression, yyscan_t scanner);
 
-translation_unit_t *get_ast(const char *input, const char* fname)
+translation_unit_t *get_ast(const char *input, const char* fname,
+	bool _strict_mode)
 {
+	strict_mode = _strict_mode;
+
 	init_parser(fname);
 
 	translation_unit_t *transl_unit;
@@ -78,7 +82,7 @@ translation_unit_t *get_ast(const char *input, const char* fname)
 	
 	yylex_destroy(scanner);
 
-	func_visitor<type_completor> f;
+	io_visitor<type_completor> f;
 	transl_unit->accept(f);
 
 	std::vector<terminal_t*>& tv = get_token_vector();

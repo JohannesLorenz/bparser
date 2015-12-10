@@ -24,6 +24,10 @@
 #include <list>
 #include <limits>
 
+// FEATURE: only type completor -> move to other file
+#include <vector>
+#include <map>
+
 #include "tuple03.h"
 #include "node_fwd.h"
 #include "node.h" // FEATURE: can this be omitted?
@@ -330,7 +334,7 @@ public:
 	void visit(direct_declarator_t* n) { f(n); }
 };
 
-class ftor_base
+class ftor_base // FEATURE: rename ftor_utils
 {
 	visitor_t* vref; // FEATURE: this can not be avoided?
 			// required for the accept() calls?
@@ -402,8 +406,9 @@ public:
 	ftor_base(visitor_t* vref) : vref(vref) {}
 };
 
-struct enter {};
-struct leave {};
+struct direction_t {};
+struct enter : public direction_t {};
+struct leave : public direction_t {};
 
 template<class Functor2>
 class io_visitor;
@@ -437,7 +442,7 @@ public:
 	template<class F2Constr> // FEATURE: solution with variable args
 	io_visitor(const F2Constr& constr)
 		: func_visitor< io_functor<Functor2> >(constr) {}
-
+	io_visitor() {}
 	/*template<class NodeType>
 	void operator()(NodeType& n) { iof(n); }*/
 };
@@ -568,40 +573,155 @@ public:
 	}
 };
 
+namespace scope_types
+{
+	template<class T>
+	struct inc_depth
+	{
+		static const bool value = false;
+	};
+
+	struct do_inc_depth
+	{
+		static const bool value = true;
+	};
+
+	template<> struct inc_depth<iteration_statement_t> :
+		public do_inc_depth {};
+	template<> struct inc_depth<compound_statement_t> :
+		public do_inc_depth {};
+	template<> struct inc_depth<parameter_type_list_t> :
+		public do_inc_depth {};
+	template<> struct inc_depth<struct_or_union_specifier_t> :
+		public do_inc_depth {};
+
+}
+
 class type_completor : ftor_base
 {
+	std::size_t decl_depth;
+
+	struct
+	{
+		typedef std::pair<std::size_t, identifier_t*> value_entry_t; // depth, declaration
+		typedef std::vector<value_entry_t> value_t;
+		typedef std::pair<std::string, value_t> entry_t;
+		typedef std::map<std::string, value_t> table_t;
+		table_t table;
+
+		std::string internal_name_of_new_id(const char* new_id, bool struct_bound) {
+			std::string rval = (struct_bound) ? "struct " : "";
+			return rval += new_id;
+		}
+
+		void flag_symbol(identifier_t* id, int new_depth, bool struct_bound)
+		{
+			if(id)
+			{
+				std::string new_name = internal_name_of_new_id(id->raw.c_str(), struct_bound);
+				table[new_name].push_back(value_entry_t(new_depth, id));
+			}
+		}
+
+		identifier_t* declaration_of(const char* str) {
+			table_t::const_iterator itr = table.find(str);
+			if(itr == table.end())
+			 throw "Identifier not found";
+			else
+			 return itr->second.back().second;
+		}
+
+		void notify_dec_decl_depth(std::size_t new_depth)
+		{
+			std::cout << "DEPTH decreased to: " << new_depth << std::endl;
+			table_t::iterator itr = table.begin(),
+				next = table.begin();
+			for(itr = table.begin(); itr != table.end(); itr = next)
+			{
+				// invariant: itr == next
+				if(next != table.end())
+				 ++next;
+
+				// invariant: ++itr == next || next == table.end()
+				//std::cout << itr->second.second << " <-> " << bracket_depth << std::endl;
+				if(itr->second.back().first == new_depth + 1)
+				{
+					// out of scope
+					itr->second.pop_back();
+					if(itr->second.empty())
+					 table.erase(itr);
+				}
+				else if(itr->second.back().first >= (new_depth + 2))
+				 throw "overseen last scope end";
+			}
+		}
+
+	} v_lookup_table;
+
 public:
-	type_completor(visitor_t* vref) : ftor_base(vref) {}
+	type_completor(visitor_t* vref) :
+		ftor_base(vref),
+		decl_depth(0) {}
+
+	~type_completor() {
+		if(decl_depth) throw "Declaration depth counted wrong";
+	}
 
 	// expressions...
-	void on(unary_expression_l& );
-	void on(unary_expression_r& );
-	void on(binary_expression_t& );
+	void on(unary_expression_l& , enter);
+	void on(unary_expression_r& , enter);
+	void on(binary_expression_t& , enter);
 
 	// FEATURE: float, int
 
 	// statements...
-	void on(iteration_statement_t& );
-	void on(labeled_statement_t& );
-	void on(jump_statement_t& );
+	void on(iteration_statement_t& , enter);
+	void on(labeled_statement_t& , enter);
+	void on(jump_statement_t& , enter);
 
 	// structs...
-	void on(struct_or_union_specifier_t& );
-	void on(struct_access_expression_t& );
+	void on(struct_or_union_specifier_t& , enter);
+	void on(struct_access_expression_t& , enter);
+
+	// declarators
+	void on(enum_specifier_t& , enter);
+	void on(direct_declarator_id&, leave);
+	void on(enumerator_t&, leave);
+
+	// variables
+	//void on(primary_identifier_t&, enter);
+	//void on(designator_id&, enter);
+	// jump, struct_access, id list
+	// type_specifier_t
+	// enumeration_constant_t
 
 	// default case
-	template<class NodeType>
-	void on(/*const*/ NodeType& ) { }
+	void on(node_base& , direction_t ) {}
+
+//	template<class NodeType>
+//	void on(/*const*/ NodeType& ) { }
 #if 0	
 	template<class NodeType>
 	void on(const NodeType&) 
 #endif
 	template<class NodeType>
-	void operator()(NodeType& n) {
+	void handle_depth(NodeType& , enter)
+	{
+		decl_depth += scope_types::inc_depth<NodeType>::value;
+	}
+
+	template<class NodeType>
+	void handle_depth(NodeType& , leave)
+	{
+		decl_depth -= scope_types::inc_depth<NodeType>::value;
+	}
+
+	template<class NodeType, class Direction>
+	void operator()(NodeType& n, Direction d) {
 		//parent_assigner<NodeType> pa(&n);
 		//foreach(n.c, pa);
-		on(n);
-		xaccept(n.c);
+		on(n, d);
+		handle_depth(n, d);
 	}
 };
 

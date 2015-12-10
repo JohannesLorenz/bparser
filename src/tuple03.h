@@ -191,6 +191,7 @@ public:
 template<class T>
 class tpl<T, null_type>
 {
+	typedef tpl<T, null_type> self;
 public:
 	typedef T type;
 	typedef null_type next;
@@ -216,6 +217,11 @@ public:
 	}
 
 	std::size_t size() const { return 1; }
+
+	template<std::size_t Idx>
+	typename type_at<self, Idx>::type& get() {
+		if(Idx > 0) throw "tuple index out of range";
+		return value_at<0, self>(*this); }
 
 //	template<class T1>
 //	void fill(const T1& e1) { set(e1); }

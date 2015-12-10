@@ -1,0 +1,14 @@
+                         minimal (l   1 c   1) (l   1 c  14) translation unit
+                         minimal (l   1 c   1) (l   1 c  14)   external declaration
+                         minimal (l   1 c   1) (l   1 c  14)     function definition
+                         minimal (l   1 c   1) (l   1 c   4)       declaration specifiers
+                         minimal (l   1 c   1) (l   1 c   4)         type specifier
+                         minimal (l   1 c   1) (l   1 c   4)           "int"
+                         minimal (l   1 c   5) (l   1 c  11)       direct declarator (function)
+                         minimal (l   1 c   5) (l   1 c   9)         direct declarator (identifier)
+                         minimal (l   1 c   5) (l   1 c   9)           identifier: main
+                         minimal (l   1 c   9) (l   1 c  10)         (
+                         minimal (l   1 c  10) (l   1 c  11)         )
+                         minimal (l   1 c  12) (l   1 c  14)       compound statement
+                         minimal (l   1 c  12) (l   1 c  13)         {
+                         minimal (l   1 c  13) (l   1 c  14)         }

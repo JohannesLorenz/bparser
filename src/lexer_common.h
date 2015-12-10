@@ -29,6 +29,7 @@
 #include <cstring>
 #include <map>
 
+int strict_mode;
 int _recent_tokens[4] = { -1, -1, -1, -1 }; // FEATURE: better initial numbers?
 int* recent_tokens = _recent_tokens + 3;
 int add_recent_token(int new_one) {
@@ -78,19 +79,6 @@ public:
 		}
 		return span_t();
 	}
-
-	// -1 because we are before char -1 respective to the new line
-	static void newline(const char* text_pos) {
-#if 0
-	++last_line; /*last_col=FIRST_COL-1;*/
-		/*
-		we are actually before the first char of the next line,
-		since this is the newline. this is already correct, since the first
-		char of the next line must be counted as column 1.
-		*/
-		last_linebreak = text_pos;
-#endif
-}
 
 	static geom_t pos() {
 		//std::cout << "pos call, last_linebreak was: " << *last_linebreak << std::endl;
@@ -181,43 +169,6 @@ class lookup_table_t
 	static std::size_t bracket_depth;
 
 public:
-	static void inc_bracket_depth() { /*std::cout << "INC to: " << bracket_depth + 1 << std::endl; ++bracket_depth;*/ }
-	static void dec_bracket_depth() {/*
-		std::cout << "DEC to: " << bracket_depth - 1 << std::endl;
-		table_t::iterator itr = table.begin(),
-			next = table.begin();
-		for(table_t::const_iterator itr = table.begin();
-			itr != table.end(); ++itr)
-		{
-			std::cout << itr->first << ": ";
-			if(itr->second.size() > 1)
-			 std::cout << std::endl;
-			for(value_t::const_iterator itr2 = itr->second.begin();
-				itr2 != itr->second.end(); ++itr2)
-				std::cout << " -> at depth " << itr2->second
-					<< ": type " << itr2->first
-					<< std::endl;
-		}
-		for(itr = table.begin(); itr != table.end(); itr = next)
-		{
-			// invariant: itr == next
-			if(next != table.end())
-			 ++next;
-			// invariant: ++itr == next || next == table.end()
-			//std::cout << itr->second.second << " <-> " << bracket_depth << std::endl;
-			if(itr->second.back().second == bracket_depth)
-			{
-				// out of scope
-				itr->second.pop_back();
-				if(itr->second.empty())
-				 table.erase(itr);
-			}
-			else if(itr->second.back().second > (bracket_depth + 1))
-			 throw "overseen last scope end";
-		}
-		--bracket_depth;*/
-	}
-
 	static void notify_dec_decl_depth(int new_depth)
 	{
 		std::cout << "DEPTH decreased to: " << new_depth << std::endl;
@@ -275,7 +226,6 @@ public:
 
 	static void flag_symbol(const char* str, lookup_type type, int new_depth = 0)
 	{
-		std::cout << "NEWDEPTH: " << new_depth << std::endl;
 		std::string new_name = internal_name_of_new_id(str, type);
 
 		table_t::iterator itr = table.find(new_name);
@@ -302,7 +252,12 @@ public:
 					stack.push_back(value_entry_t(type, new_depth));
 				}
 				else
-				 throw "identifier has already been declared in this scope!";
+				{
+					if(strict_mode)
+					 throw "identifier has already been declared in this scope!";
+					else
+					 { /* Nothing to do - the variable is already defined */ }
+				}
 			}
 
 		}
@@ -314,15 +269,6 @@ public:
 			//table.insert(entry_t(str, value_t()))
 			//value_entry_t(type, new_depth)));
 		}
-	}
-
-	static void leave_scope(const node_base* scope)
-	{
-	/*	for(table_t::iterator itr = table.begin();
-			itr != table.end(); ++itr)
-		if(itr->second.first != lt_undefined &&
-			itr->second.second == scope)
-		 itr->second.first = lt_undefined;*/
 	}
 
 	static lookup_type type_of(const char* str) {
@@ -363,11 +309,6 @@ public:
 
 lookup_table_t::table_t lookup_table_t::table;
 std::size_t lookup_table_t::bracket_depth = 0;
-
-void leave_scope(const node_base* scope)
-{
-	lookup_table_t::leave_scope(scope);
-}
 
 int type_of(const char* str) {
 	return lookup_table_t::type_of(str);

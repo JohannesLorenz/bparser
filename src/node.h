@@ -105,7 +105,10 @@ struct token_t : public terminal_t
 public:
 	token_t(const geom_t& pos, int value) : terminal_t(pos, value) {}
 	virtual void accept(class visitor_t& v);
+	friend std::ostream& operator<<(std::ostream& , const token_t& );
 };
+
+std::ostream& operator<<(std::ostream& , const token_t& );
 
 struct noconst_terminal_t : public terminal_t
 {
@@ -125,19 +128,28 @@ public:
 		noconst_terminal_t(geom, value, raw) {}
 };
 
-struct identifier_t : public noconst_1line_terminal_t
+struct defined_t : public noconst_1line_terminal_t
+{
+public:
+	struct identifier_t* _definition;
+	defined_t(const geom_t& geom, int value,
+		const char* raw) :
+		noconst_1line_terminal_t(geom, value, raw) {}
+};
+
+struct identifier_t : public defined_t
 {
 	virtual void accept(class visitor_t& v);
 	identifier_t(const char* name, geom_t geom);
 };
 
-struct typedef_name_t : public noconst_1line_terminal_t
+struct typedef_name_t : public defined_t
 {
 	virtual void accept(class visitor_t& v);
 	typedef_name_t(const char* name, geom_t geom);
 };
 
-struct enumeration_constant_t : public noconst_1line_terminal_t
+struct enumeration_constant_t : public defined_t
 {
 	virtual void accept(class visitor_t& v);
 	enumeration_constant_t(const char* name, geom_t geom);

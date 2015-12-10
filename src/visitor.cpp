@@ -648,19 +648,7 @@ void dumper_t::visit(token_t* e)
 
 	//stream << "token: ";
 
-	bool _has_alpha = has_alpha(e->value());
-	if(_has_alpha)
-	 stream << '"';
-
-	int value = e->value();
-	if(value <= 255)
-		stream << (char)value;
-	else
-		stream << name_of(value);
-
-	if(_has_alpha)
-	 stream << '"';
-	stream << std::endl;
+	stream << *e << std::endl;
 }
 
 void dumper_t::visit(unary_expression_l *e)
@@ -1176,20 +1164,20 @@ binary_op_t binary_op_of(int c)
 	}
 }
 
-void type_completor::on(unary_expression_l& u)
+void type_completor::on(unary_expression_l& u, enter)
 {
 	u.op_id = unary_op_l(u.c.get<0>()->value());
 }
-void type_completor::on(unary_expression_r& u)
+void type_completor::on(unary_expression_r& u, enter)
 {
 	u.op_id = unary_op_r(u.c.get<1>()->value());
 }
-void type_completor::on(binary_expression_t& b) {
+void type_completor::on(binary_expression_t& b, enter) {
 	b.op_id = binary_op_of(b.c.get<1>()->value());
 }
 
 
-void type_completor::on(iteration_statement_t& i)
+void type_completor::on(iteration_statement_t& i, enter)
 {
 	i.type =
 		i.c.get<iteration_statement_t::for_cond>()
@@ -1211,7 +1199,7 @@ void type_completor::on(iteration_statement_t& i)
 
 }
 
-void type_completor::on(labeled_statement_t& l)
+void type_completor::on(labeled_statement_t& l, enter)
 {
 	l.type =
 		l.c.get<labeled_statement_t::keyword>()
@@ -1219,9 +1207,12 @@ void type_completor::on(labeled_statement_t& l)
 				? labeled_statement_t::case_label
 				: labeled_statement_t::default_label)
 			: labeled_statement_t::jump_label;
+
+	v_lookup_table.flag_symbol(l.c.get<labeled_statement_t::identifier>(),
+		decl_depth, false);
 }
 
-void type_completor::on(jump_statement_t& j)
+void type_completor::on(jump_statement_t& j, enter)
 {
 	const int keyword = j.c.get<jump_statement_t::keyword>()->value();
 	j.type =
@@ -1238,17 +1229,31 @@ void type_completor::on(jump_statement_t& j)
 			);
 }
 
-void type_completor::on(struct_or_union_specifier_t& s)
+void type_completor::on(struct_or_union_specifier_t& s, enter)
 {
 	const int keyword = s.c.get<struct_or_union_specifier_t::keyword>()->value();
 	s.is_union_type = (keyword == t_union);
+
+	v_lookup_table.flag_symbol(s.c.get<struct_or_union_specifier_t::identifier>(),
+		decl_depth, true);
 }
 
-void type_completor::on(struct_access_expression_t& s)
+void type_completor::on(struct_access_expression_t& s, enter)
 {
 	const int optype = s.c.get<1>()->value();
 	s.pointer_access = (optype == t_ptr_op);
 }
 
+void type_completor::on(direct_declarator_id& d, leave)
+{
+	v_lookup_table.flag_symbol(d.c.get<0>(), decl_depth, false);
+}
 
+void type_completor::on(enum_specifier_t& e, enter) {
+	v_lookup_table.flag_symbol(e.c.get<enum_specifier_t::identifier>(), decl_depth, false);
+}
+
+void type_completor::on(enumerator_t& e, leave) {
+	v_lookup_table.flag_symbol(e.c.get<0>(), decl_depth, false);
+}
 
