@@ -12,17 +12,17 @@
                     initializers (l   1 c  18) (l   1 c  21)                 type specifier
                     initializers (l   1 c  18) (l   1 c  21)                   "int"
                     initializers (l   1 c  22) (l   1 c  23)                 direct declarator (identifier)
-                    initializers (l   1 c  22) (l   1 c  23)                   identifier: x
+                    initializers (l   1 c  22) (l   1 c  23)                   identifier (definition): x
                     initializers (l   1 c  23) (l   1 c  24)                 ;
                     initializers (l   1 c  25) (l   1 c  31)               struct declaration
                     initializers (l   1 c  25) (l   1 c  28)                 type specifier
                     initializers (l   1 c  25) (l   1 c  28)                   "int"
                     initializers (l   1 c  29) (l   1 c  30)                 direct declarator (identifier)
-                    initializers (l   1 c  29) (l   1 c  30)                   identifier: y
+                    initializers (l   1 c  29) (l   1 c  30)                   identifier (definition): y
                     initializers (l   1 c  30) (l   1 c  31)                 ;
                     initializers (l   1 c  32) (l   1 c  33)             }
                     initializers (l   1 c  34) (l   1 c  37)       direct declarator (identifier)
-                    initializers (l   1 c  34) (l   1 c  37)         identifier: s_t
+                    initializers (l   1 c  34) (l   1 c  37)         identifier (definition): s_t
                     initializers (l   1 c  37) (l   1 c  38)       ;
                     initializers (l   3 c   1) (l  11 c   2)   external declaration
                     initializers (l   3 c   1) (l  11 c   2)     function definition
@@ -31,7 +31,7 @@
                     initializers (l   3 c   1) (l   3 c   4)           "int"
                     initializers (l   3 c   5) (l   3 c  11)       direct declarator (function)
                     initializers (l   3 c   5) (l   3 c   9)         direct declarator (identifier)
-                    initializers (l   3 c   5) (l   3 c   9)           identifier: main
+                    initializers (l   3 c   5) (l   3 c   9)           identifier (definition): main
                     initializers (l   3 c   9) (l   3 c  10)         (
                     initializers (l   3 c  10) (l   3 c  11)         )
                     initializers (l   3 c  12) (l  11 c   2)       compound statement
@@ -47,26 +47,26 @@
                     initializers (l   5 c   2) (l   5 c   5)               "int"
                     initializers (l   5 c   6) (l   5 c  11)           init declarator
                     initializers (l   5 c   6) (l   5 c   7)             direct declarator (identifier)
-                    initializers (l   5 c   6) (l   5 c   7)               identifier: a
+                    initializers (l   5 c   6) (l   5 c   7)               identifier (definition): a
                     initializers (l   5 c   8) (l   5 c   9)             =
                     initializers (l   5 c  10) (l   5 c  11)             initializer
                     initializers (l   5 c  10) (l   5 c  11)               primary expression
                     initializers (l   5 c  10) (l   5 c  11)                 int constant: 3
                     initializers (l   5 c  11) (l   5 c  12)           ,
                     initializers (l   5 c  13) (l   5 c  14)           direct declarator (identifier)
-                    initializers (l   5 c  13) (l   5 c  14)             identifier: b
+                    initializers (l   5 c  13) (l   5 c  14)             identifier (definition): b
                     initializers (l   5 c  14) (l   5 c  15)           ,
                     initializers (l   5 c  16) (l   5 c  18)           declarator
                     initializers (l   5 c  16) (l   5 c  17)             pointer
                     initializers (l   5 c  16) (l   5 c  17)               *
                     initializers (l   5 c  17) (l   5 c  18)             direct declarator (identifier)
-                    initializers (l   5 c  17) (l   5 c  18)               identifier: c
+                    initializers (l   5 c  17) (l   5 c  18)               identifier (definition): c
                     initializers (l   5 c  18) (l   5 c  19)           ,
                     initializers (l   5 c  20) (l   5 c  21)           direct declarator (identifier)
-                    initializers (l   5 c  20) (l   5 c  21)             identifier: x
+                    initializers (l   5 c  20) (l   5 c  21)             identifier (definition): x
                     initializers (l   5 c  21) (l   5 c  22)           ,
                     initializers (l   5 c  23) (l   5 c  24)           direct declarator (identifier)
-                    initializers (l   5 c  23) (l   5 c  24)             identifier: y
+                    initializers (l   5 c  23) (l   5 c  24)             identifier (definition): y
                     initializers (l   5 c  24) (l   5 c  25)           ;
                     initializers (l   6 c   2) (l   6 c  30)         declaration
                     initializers (l   6 c   2) (l   6 c   5)           declaration specifiers
@@ -75,7 +75,7 @@
                     initializers (l   6 c   6) (l   6 c  29)           init declarator
                     initializers (l   6 c   6) (l   6 c  12)             direct declarator (array)
                     initializers (l   6 c   6) (l   6 c   9)               direct declarator (identifier)
-                    initializers (l   6 c   6) (l   6 c   9)                 identifier: arr
+                    initializers (l   6 c   6) (l   6 c   9)                 identifier (definition): arr
                     initializers (l   6 c   9) (l   6 c  10)               [
                     initializers (l   6 c  10) (l   6 c  11)               primary expression
                     initializers (l   6 c  10) (l   6 c  11)                 int constant: 2
@@ -105,7 +105,7 @@
                     initializers (l   7 c   6) (l   7 c  31)           init declarator
                     initializers (l   7 c   6) (l   7 c  13)             direct declarator (array)
                     initializers (l   7 c   6) (l   7 c  10)               direct declarator (identifier)
-                    initializers (l   7 c   6) (l   7 c  10)                 identifier: arr2
+                    initializers (l   7 c   6) (l   7 c  10)                 identifier (definition): arr2
                     initializers (l   7 c  10) (l   7 c  11)               [
                     initializers (l   7 c  11) (l   7 c  12)               primary expression
                     initializers (l   7 c  11) (l   7 c  12)                 int constant: 3
@@ -136,7 +136,7 @@
                     initializers (l   8 c   6) (l   8 c  16)             direct declarator (array)
                     initializers (l   8 c   6) (l   8 c  13)               direct declarator (array)
                     initializers (l   8 c   6) (l   8 c  10)                 direct declarator (identifier)
-                    initializers (l   8 c   6) (l   8 c  10)                   identifier: arr3
+                    initializers (l   8 c   6) (l   8 c  10)                   identifier (definition): arr3
                     initializers (l   8 c  10) (l   8 c  11)                 [
                     initializers (l   8 c  11) (l   8 c  12)                 primary expression
                     initializers (l   8 c  11) (l   8 c  12)                   int constant: 1
@@ -166,21 +166,21 @@
                     initializers (l   8 c  32) (l   8 c  33)               }
                     initializers (l   8 c  33) (l   8 c  34)           ,
                     initializers (l   8 c  35) (l   8 c  39)           direct declarator (identifier)
-                    initializers (l   8 c  35) (l   8 c  39)             identifier: arr4
+                    initializers (l   8 c  35) (l   8 c  39)             identifier (definition): arr4
                     initializers (l   8 c  39) (l   8 c  40)           ;
                     initializers (l   9 c   2) (l   9 c  37)         declaration
                     initializers (l   9 c   2) (l   9 c   5)           declaration specifiers
                     initializers (l   9 c   2) (l   9 c   5)             type specifier
-                    initializers (l   9 c   2) (l   9 c   5)               typedef name: s_t
+                    initializers (l   9 c   2) (l   9 c   5)               typedef name: s_t (definition: initializers: l1, c34-37)
                     initializers (l   9 c   6) (l   9 c  36)           init declarator
                     initializers (l   9 c   6) (l   9 c   7)             direct declarator (identifier)
-                    initializers (l   9 c   6) (l   9 c   7)               identifier: s
+                    initializers (l   9 c   6) (l   9 c   7)               identifier (definition): s
                     initializers (l   9 c   8) (l   9 c   9)             =
                     initializers (l   9 c  10) (l   9 c  36)             initializer
                     initializers (l   9 c  10) (l   9 c  11)               {
                     initializers (l   9 c  12) (l   9 c  14)               designator (struct)
                     initializers (l   9 c  12) (l   9 c  13)                 .
-                    initializers (l   9 c  13) (l   9 c  14)                 identifier: x
+                    initializers (l   9 c  13) (l   9 c  14)                 identifier (definition MISSING)
                     initializers (l   9 c  15) (l   9 c  16)               =
                     initializers (l   9 c  17) (l   9 c  18)               initializer
                     initializers (l   9 c  17) (l   9 c  18)                 primary expression
@@ -188,7 +188,7 @@
                     initializers (l   9 c  18) (l   9 c  19)               ,
                     initializers (l   9 c  20) (l   9 c  22)               designator (struct)
                     initializers (l   9 c  20) (l   9 c  21)                 .
-                    initializers (l   9 c  21) (l   9 c  22)                 identifier: y
+                    initializers (l   9 c  21) (l   9 c  22)                 identifier (definition MISSING)
                     initializers (l   9 c  23) (l   9 c  24)               =
                     initializers (l   9 c  25) (l   9 c  34)               initializer
                     initializers (l   9 c  25) (l   9 c  34)                 sizeof ...
@@ -196,7 +196,7 @@
                     initializers (l   9 c  31) (l   9 c  34)                   primary expression
                     initializers (l   9 c  31) (l   9 c  32)                     (
                     initializers (l   9 c  32) (l   9 c  33)                     primary expression
-                    initializers (l   9 c  32) (l   9 c  33)                       identifier: x
+                    initializers (l   9 c  32) (l   9 c  33)                       identifier: x (definition: initializers: l5, c20-21)
                     initializers (l   9 c  33) (l   9 c  34)                     )
                     initializers (l   9 c  35) (l   9 c  36)               }
                     initializers (l   9 c  36) (l   9 c  37)           ;
@@ -206,7 +206,7 @@
                     initializers (l  10 c   8) (l  10 c   9)             (
                     initializers (l  10 c   9) (l  10 c  12)             type name
                     initializers (l  10 c   9) (l  10 c  12)               type specifier
-                    initializers (l  10 c   9) (l  10 c  12)                 typedef name: s_t
+                    initializers (l  10 c   9) (l  10 c  12)                 typedef name: s_t (definition: initializers: l1, c34-37)
                     initializers (l  10 c  12) (l  10 c  13)             )
                     initializers (l  10 c  13) (l  10 c  14)           ;
                     initializers (l  11 c   1) (l  11 c   2)         }

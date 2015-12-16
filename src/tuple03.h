@@ -101,8 +101,31 @@ struct _foreach<null_type> {
 	static void exec(const null_type& , F&) {}
 };
 
+template<class T>
+struct _foreach< std::list<T> > {
+	template<class F>
+	static void exec(std::list<T>& l, F& f) {
+		for(typename std::list<T>::iterator itr = l.begin();
+			itr != l.end(); ++itr)
+			f(*itr);
+	}
+};
+
+template<class T>
+struct _foreach< std::list<T>* > {
+	template<class F>
+	static void exec(std::list<T>* const& l, F& f) {
+		// redirect to non-pointer version
+		if(l)
+		 _foreach< std::list<T> >::exec(*l, f);
+	}
+};
+
 template<class Tpl, class F>
 void foreach(Tpl& tpl, F& f) { _foreach<Tpl>::exec(tpl, f); }
+
+template<class F>
+void foreach(null_type, F& ) { }
 
 class skip{};
 
@@ -222,6 +245,8 @@ public:
 	typename type_at<self, Idx>::type& get() {
 		if(Idx > 0) throw "tuple index out of range";
 		return value_at<0, self>(*this); }
+
+	null_type get_next() const { return null_type(); }
 
 //	template<class T1>
 //	void fill(const T1& e1) { set(e1); }

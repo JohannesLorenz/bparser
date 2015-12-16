@@ -17,6 +17,12 @@
 /* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
 /*************************************************************************/
 
+/**
+	@file lexer_common.h
+	Common routines for the lexer, only included by it
+	This header contains complicated logic and is not easy to understand
+*/
+
 #ifndef LEXER_COMMON_H
 #define LEXER_COMMON_H
 
@@ -672,7 +678,7 @@ public:
 				case ':': // flag goto-label
 					flag_symbol(recent_was_flagged_unknown.c_str(), lt_identifier);
 					break;
-				case '{':
+				case '{': // C99: struct + { => struct declaration
 					if(_maybe_struct_declaration)
 					 flag_symbol(recent_was_flagged_unknown.c_str(), lt_struct_bound, -1);
 					declaration_state = expect_type_specifier;

@@ -6,7 +6,7 @@
                          minimal (l   1 c   1) (l   1 c   4)           "int"
                          minimal (l   1 c   5) (l   1 c  11)       direct declarator (function)
                          minimal (l   1 c   5) (l   1 c   9)         direct declarator (identifier)
-                         minimal (l   1 c   5) (l   1 c   9)           identifier: main
+                         minimal (l   1 c   5) (l   1 c   9)           identifier (definition): main
                          minimal (l   1 c   9) (l   1 c  10)         (
                          minimal (l   1 c  10) (l   1 c  11)         )
                          minimal (l   1 c  12) (l   1 c  14)       compound statement

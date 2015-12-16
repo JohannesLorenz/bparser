@@ -17,6 +17,11 @@
 /* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
 /*************************************************************************/
 
+/**
+	@file token.h This file defines IDs for tokens (nodes of the AST
+		with no children) and label strings.
+*/
+
 #ifndef TOKEN_H
 #define TOKEN_H
 
@@ -111,7 +116,9 @@ enum token_id
 };
 
 const char* name_of(int token_id);
+//! returns the length of the string that's bound to a token
 std::size_t token_length(token_id t);
+//! returns whether the token string has alphanumeric chars (A-Z, a-z)
 bool has_alpha(int t_id);
 
 #endif // TOKEN_H

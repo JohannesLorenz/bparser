@@ -10,7 +10,10 @@ INCLUDEPATH += . src
 # Input
 HEADERS += src/lexer.h src/node.h src/visitor.h src/tuple03.h \
     src/token.h src/ast.h \
-    src/lexer_common.h
+    src/lexer_common.h \
+    src/type_completor.h \
+    src/function.h \
+    src/utils.h
 LEXSOURCES += src/lexer.l
 YACCSOURCES += src/parser.y
 SOURCES += src/lexer.c test/test.cpp src/node.cpp src/visitor.cpp \
@@ -27,6 +30,9 @@ SOURCES += src/lexer.c test/test.cpp src/node.cpp src/visitor.cpp \
     test/input/scopes.c \
     test/input/clash.c \
     test/input/clash_2.c \
-    test/input/nested.c
+    test/input/nested.c \
+    src/type_completor.cpp \
+    src/function.cpp \
+    test/input/struct_fwd.c
 OTHER_FILES += Makefile src/Makefile test/Makefile
 

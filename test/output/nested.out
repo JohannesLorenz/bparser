@@ -11,11 +11,11 @@
                           nested (l   1 c  18) (l   1 c  21)               type specifier
                           nested (l   1 c  18) (l   1 c  21)                 "int"
                           nested (l   1 c  22) (l   1 c  23)               direct declarator (identifier)
-                          nested (l   1 c  22) (l   1 c  23)                 identifier: x
+                          nested (l   1 c  22) (l   1 c  23)                 identifier (definition): x
                           nested (l   1 c  23) (l   1 c  24)               ;
                           nested (l   1 c  25) (l   1 c  26)             }
                           nested (l   1 c  27) (l   1 c  28)       direct declarator (identifier)
-                          nested (l   1 c  27) (l   1 c  28)         identifier: s
+                          nested (l   1 c  27) (l   1 c  28)         identifier (definition): s
                           nested (l   1 c  28) (l   1 c  29)       ;
                           nested (l   3 c   1) (l   3 c  27)   external declaration
                           nested (l   3 c   1) (l   3 c  27)     declaration
@@ -35,24 +35,24 @@
                           nested (l   3 c   8) (l   3 c   9)                   pointer
                           nested (l   3 c   8) (l   3 c   9)                     *
                           nested (l   3 c   9) (l   3 c  12)                   direct declarator (identifier)
-                          nested (l   3 c   9) (l   3 c  12)                     identifier: _f2
+                          nested (l   3 c   9) (l   3 c  12)                     identifier (definition): _f2
                           nested (l   3 c  12) (l   3 c  13)                 )
                           nested (l   3 c  13) (l   3 c  14)               (
                           nested (l   3 c  14) (l   3 c  18)               parameter declaration
                           nested (l   3 c  14) (l   3 c  15)                 declaration specifiers
                           nested (l   3 c  14) (l   3 c  15)                   type specifier
-                          nested (l   3 c  14) (l   3 c  15)                     typedef name: s
+                          nested (l   3 c  14) (l   3 c  15)                     typedef name: s (definition: nested: l1, c27-28)
                           nested (l   3 c  16) (l   3 c  18)                 direct declarator (identifier)
-                          nested (l   3 c  16) (l   3 c  18)                   identifier: s1
+                          nested (l   3 c  16) (l   3 c  18)                   identifier (definition): s1
                           nested (l   3 c  18) (l   3 c  19)               )
                           nested (l   3 c  19) (l   3 c  20)           )
                           nested (l   3 c  20) (l   3 c  21)         (
                           nested (l   3 c  21) (l   3 c  25)         parameter declaration
                           nested (l   3 c  21) (l   3 c  22)           declaration specifiers
                           nested (l   3 c  21) (l   3 c  22)             type specifier
-                          nested (l   3 c  21) (l   3 c  22)               typedef name: s
+                          nested (l   3 c  21) (l   3 c  22)               typedef name: s (definition: nested: l1, c27-28)
                           nested (l   3 c  23) (l   3 c  25)           direct declarator (identifier)
-                          nested (l   3 c  23) (l   3 c  25)             identifier: s1
+                          nested (l   3 c  23) (l   3 c  25)             identifier (definition): s1
                           nested (l   3 c  25) (l   3 c  26)         )
                           nested (l   3 c  26) (l   3 c  27)       ;
                           nested (l   5 c   1) (l   5 c  26)   external declaration
@@ -67,7 +67,7 @@
                           nested (l   5 c   6) (l   5 c   7)             pointer
                           nested (l   5 c   6) (l   5 c   7)               *
                           nested (l   5 c   7) (l   5 c   8)             direct declarator (identifier)
-                          nested (l   5 c   7) (l   5 c   8)               identifier: f
+                          nested (l   5 c   7) (l   5 c   8)               identifier (definition): f
                           nested (l   5 c   8) (l   5 c   9)           )
                           nested (l   5 c   9) (l   5 c  10)         (
                           nested (l   5 c  10) (l   5 c  24)         parameter declaration
@@ -81,7 +81,7 @@
                           nested (l   5 c  15) (l   5 c  16)                 pointer
                           nested (l   5 c  15) (l   5 c  16)                   *
                           nested (l   5 c  16) (l   5 c  17)                 direct declarator (identifier)
-                          nested (l   5 c  16) (l   5 c  17)                   identifier: g
+                          nested (l   5 c  16) (l   5 c  17)                   identifier (definition): g
                           nested (l   5 c  17) (l   5 c  18)               )
                           nested (l   5 c  18) (l   5 c  19)             (
                           nested (l   5 c  19) (l   5 c  23)             parameter declaration
@@ -98,7 +98,7 @@
                           nested (l   7 c   1) (l   7 c   4)           "int"
                           nested (l   7 c   5) (l   7 c  42)       direct declarator (function)
                           nested (l   7 c   5) (l   7 c   7)         direct declarator (identifier)
-                          nested (l   7 c   5) (l   7 c   7)           identifier: f2
+                          nested (l   7 c   5) (l   7 c   7)           identifier (definition): f2
                           nested (l   7 c   7) (l   7 c   8)         (
                           nested (l   7 c   8) (l   7 c  41)         parameter declaration
                           nested (l   7 c   8) (l   7 c  11)           declaration specifiers
@@ -111,7 +111,7 @@
                           nested (l   7 c  13) (l   7 c  14)                 pointer
                           nested (l   7 c  13) (l   7 c  14)                   *
                           nested (l   7 c  14) (l   7 c  15)                 direct declarator (identifier)
-                          nested (l   7 c  14) (l   7 c  15)                   identifier: g
+                          nested (l   7 c  14) (l   7 c  15)                   identifier (definition): g
                           nested (l   7 c  15) (l   7 c  16)               )
                           nested (l   7 c  16) (l   7 c  17)             (
                           nested (l   7 c  17) (l   7 c  22)             parameter declaration
@@ -119,7 +119,7 @@
                           nested (l   7 c  17) (l   7 c  20)                 type specifier
                           nested (l   7 c  17) (l   7 c  20)                   "int"
                           nested (l   7 c  21) (l   7 c  22)               direct declarator (identifier)
-                          nested (l   7 c  21) (l   7 c  22)                 identifier: a
+                          nested (l   7 c  21) (l   7 c  22)                 identifier (definition): a
                           nested (l   7 c  22) (l   7 c  23)             ,
                           nested (l   7 c  24) (l   7 c  40)             parameter declaration
                           nested (l   7 c  24) (l   7 c  27)               declaration specifiers
@@ -127,14 +127,14 @@
                           nested (l   7 c  24) (l   7 c  27)                   "int"
                           nested (l   7 c  28) (l   7 c  40)               direct declarator (array)
                           nested (l   7 c  28) (l   7 c  29)                 direct declarator (identifier)
-                          nested (l   7 c  28) (l   7 c  29)                   identifier: b
+                          nested (l   7 c  28) (l   7 c  29)                   identifier (definition): b
                           nested (l   7 c  29) (l   7 c  30)                 [
                           nested (l   7 c  30) (l   7 c  39)                 sizeof ...
                           nested (l   7 c  30) (l   7 c  36)                   "sizeof"
                           nested (l   7 c  36) (l   7 c  39)                   primary expression
                           nested (l   7 c  36) (l   7 c  37)                     (
                           nested (l   7 c  37) (l   7 c  38)                     primary expression
-                          nested (l   7 c  37) (l   7 c  38)                       identifier: a
+                          nested (l   7 c  37) (l   7 c  38)                       identifier: a (definition: nested: l7, c21-22)
                           nested (l   7 c  38) (l   7 c  39)                     )
                           nested (l   7 c  39) (l   7 c  40)                 ]
                           nested (l   7 c  40) (l   7 c  41)             )
@@ -144,7 +144,7 @@
                           nested (l   9 c   1) (l   9 c  33)     declaration
                           nested (l   9 c   1) (l   9 c   2)       declaration specifiers
                           nested (l   9 c   1) (l   9 c   2)         type specifier
-                          nested (l   9 c   1) (l   9 c   2)           typedef name: s
+                          nested (l   9 c   1) (l   9 c   2)           typedef name: s (definition: nested: l1, c27-28)
                           nested (l   9 c   3) (l   9 c  32)       direct declarator (function)
                           nested (l   9 c   3) (l   9 c  26)         direct declarator (declaration)
                           nested (l   9 c   3) (l   9 c   4)           (
@@ -164,33 +164,33 @@
                           nested (l   9 c   8) (l   9 c   9)                         pointer
                           nested (l   9 c   8) (l   9 c   9)                           *
                           nested (l   9 c   9) (l   9 c  11)                         direct declarator (identifier)
-                          nested (l   9 c   9) (l   9 c  11)                           identifier: f3
+                          nested (l   9 c   9) (l   9 c  11)                           identifier (definition): f3
                           nested (l   9 c  11) (l   9 c  12)                       )
                           nested (l   9 c  12) (l   9 c  13)                     (
                           nested (l   9 c  13) (l   9 c  17)                     parameter declaration
                           nested (l   9 c  13) (l   9 c  14)                       declaration specifiers
                           nested (l   9 c  13) (l   9 c  14)                         type specifier
-                          nested (l   9 c  13) (l   9 c  14)                           typedef name: s
+                          nested (l   9 c  13) (l   9 c  14)                           typedef name: s (definition: nested: l1, c27-28)
                           nested (l   9 c  15) (l   9 c  17)                       direct declarator (identifier)
-                          nested (l   9 c  15) (l   9 c  17)                         identifier: s1
+                          nested (l   9 c  15) (l   9 c  17)                         identifier (definition): s1
                           nested (l   9 c  17) (l   9 c  18)                     )
                           nested (l   9 c  18) (l   9 c  19)                 )
                           nested (l   9 c  19) (l   9 c  20)               (
                           nested (l   9 c  20) (l   9 c  24)               parameter declaration
                           nested (l   9 c  20) (l   9 c  21)                 declaration specifiers
                           nested (l   9 c  20) (l   9 c  21)                   type specifier
-                          nested (l   9 c  20) (l   9 c  21)                     typedef name: s
+                          nested (l   9 c  20) (l   9 c  21)                     typedef name: s (definition: nested: l1, c27-28)
                           nested (l   9 c  22) (l   9 c  24)                 direct declarator (identifier)
-                          nested (l   9 c  22) (l   9 c  24)                   identifier: s1
+                          nested (l   9 c  22) (l   9 c  24)                   identifier (definition): s1
                           nested (l   9 c  24) (l   9 c  25)               )
                           nested (l   9 c  25) (l   9 c  26)           )
                           nested (l   9 c  26) (l   9 c  27)         (
                           nested (l   9 c  27) (l   9 c  31)         parameter declaration
                           nested (l   9 c  27) (l   9 c  28)           declaration specifiers
                           nested (l   9 c  27) (l   9 c  28)             type specifier
-                          nested (l   9 c  27) (l   9 c  28)               typedef name: s
+                          nested (l   9 c  27) (l   9 c  28)               typedef name: s (definition: nested: l1, c27-28)
                           nested (l   9 c  29) (l   9 c  31)           direct declarator (identifier)
-                          nested (l   9 c  29) (l   9 c  31)             identifier: s1
+                          nested (l   9 c  29) (l   9 c  31)             identifier (definition): s1
                           nested (l   9 c  31) (l   9 c  32)         )
                           nested (l   9 c  32) (l   9 c  33)       ;
                           nested (l  11 c   1) (l  16 c   2)   external declaration
@@ -200,7 +200,7 @@
                           nested (l  11 c   1) (l  11 c   4)           "int"
                           nested (l  11 c   5) (l  11 c  11)       direct declarator (function)
                           nested (l  11 c   5) (l  11 c   9)         direct declarator (identifier)
-                          nested (l  11 c   5) (l  11 c   9)           identifier: main
+                          nested (l  11 c   5) (l  11 c   9)           identifier (definition): main
                           nested (l  11 c   9) (l  11 c  10)         (
                           nested (l  11 c  10) (l  11 c  11)         )
                           nested (l  11 c  12) (l  16 c   2)       compound statement
@@ -210,13 +210,13 @@
                           nested (l  12 c   2) (l  12 c   5)             type specifier
                           nested (l  12 c   2) (l  12 c   5)               "int"
                           nested (l  12 c   6) (l  12 c   7)           direct declarator (identifier)
-                          nested (l  12 c   6) (l  12 c   7)             identifier: x
+                          nested (l  12 c   6) (l  12 c   7)             identifier (definition): x
                           nested (l  12 c   7) (l  12 c   8)           ,
                           nested (l  12 c   9) (l  12 c  10)           direct declarator (identifier)
-                          nested (l  12 c   9) (l  12 c  10)             identifier: g
+                          nested (l  12 c   9) (l  12 c  10)             identifier (definition): g
                           nested (l  12 c  10) (l  12 c  11)           ,
                           nested (l  12 c  12) (l  12 c  14)           direct declarator (identifier)
-                          nested (l  12 c  12) (l  12 c  14)             identifier: s1
+                          nested (l  12 c  12) (l  12 c  14)             identifier (definition): s1
                           nested (l  12 c  14) (l  12 c  15)           ;
                           nested (l  13 c   2) (l  13 c  12)         expression statement
                           nested (l  13 c   2) (l  13 c  11)           sizeof ...
@@ -224,7 +224,7 @@
                           nested (l  13 c   8) (l  13 c   9)             (
                           nested (l  13 c   9) (l  13 c  10)             type name
                           nested (l  13 c   9) (l  13 c  10)               type specifier
-                          nested (l  13 c   9) (l  13 c  10)                 typedef name: s
+                          nested (l  13 c   9) (l  13 c  10)                 typedef name: s (definition: nested: l1, c27-28)
                           nested (l  13 c  10) (l  13 c  11)             )
                           nested (l  13 c  11) (l  13 c  12)           ;
                           nested (l  14 c   2) (l  14 c  12)         expression statement
@@ -233,7 +233,7 @@
                           nested (l  14 c   8) (l  14 c  11)             primary expression
                           nested (l  14 c   8) (l  14 c   9)               (
                           nested (l  14 c   9) (l  14 c  10)               primary expression
-                          nested (l  14 c   9) (l  14 c  10)                 identifier: f
+                          nested (l  14 c   9) (l  14 c  10)                 identifier: f (definition: nested: l5, c7-8)
                           nested (l  14 c  10) (l  14 c  11)               )
                           nested (l  14 c  11) (l  14 c  12)           ;
                           nested (l  15 c   2) (l  15 c  13)         expression statement
@@ -242,7 +242,7 @@
                           nested (l  15 c   8) (l  15 c  12)             primary expression
                           nested (l  15 c   8) (l  15 c   9)               (
                           nested (l  15 c   9) (l  15 c  11)               primary expression
-                          nested (l  15 c   9) (l  15 c  11)                 identifier: f3
+                          nested (l  15 c   9) (l  15 c  11)                 identifier: f3 (definition: nested: l9, c9-11)
                           nested (l  15 c  11) (l  15 c  12)               )
                           nested (l  15 c  12) (l  15 c  13)           ;
                           nested (l  16 c   1) (l  16 c   2)         }

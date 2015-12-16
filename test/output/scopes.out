@@ -5,13 +5,13 @@
                           scopes (l   1 c   1) (l   3 c   2)         type specifier
                           scopes (l   1 c   1) (l   3 c   2)           struct specifier
                           scopes (l   1 c   1) (l   1 c   7)             "struct"
-                          scopes (l   1 c   8) (l   1 c  11)             identifier: s_t
+                          scopes (l   1 c   8) (l   1 c  11)             identifier (definition): s_t
                           scopes (l   1 c  12) (l   1 c  13)             {
                           scopes (l   2 c   2) (l   2 c   8)             struct declaration
                           scopes (l   2 c   2) (l   2 c   5)               type specifier
                           scopes (l   2 c   2) (l   2 c   5)                 "int"
                           scopes (l   2 c   6) (l   2 c   7)               direct declarator (identifier)
-                          scopes (l   2 c   6) (l   2 c   7)                 identifier: z
+                          scopes (l   2 c   6) (l   2 c   7)                 identifier (definition): z
                           scopes (l   2 c   7) (l   2 c   8)               ;
                           scopes (l   3 c   1) (l   3 c   2)             }
                           scopes (l   3 c   2) (l   3 c   3)       ;
@@ -22,7 +22,7 @@
                           scopes (l   5 c   1) (l   5 c   4)           "int"
                           scopes (l   5 c   5) (l   5 c  11)       direct declarator (function)
                           scopes (l   5 c   5) (l   5 c   9)         direct declarator (identifier)
-                          scopes (l   5 c   5) (l   5 c   9)           identifier: main
+                          scopes (l   5 c   5) (l   5 c   9)           identifier (definition): main
                           scopes (l   5 c   9) (l   5 c  10)         (
                           scopes (l   5 c  10) (l   5 c  11)         )
                           scopes (l   6 c   1) (l  17 c   2)       compound statement
@@ -32,7 +32,7 @@
                           scopes (l   7 c   2) (l   7 c   5)             type specifier
                           scopes (l   7 c   2) (l   7 c   5)               "int"
                           scopes (l   7 c   6) (l   7 c   7)           direct declarator (identifier)
-                          scopes (l   7 c   6) (l   7 c   7)             identifier: z
+                          scopes (l   7 c   6) (l   7 c   7)             identifier (definition): z
                           scopes (l   7 c   7) (l   7 c   8)           ;
                           scopes (l   9 c   2) (l  11 c   3)         compound statement
                           scopes (l   9 c   2) (l   9 c   3)           {
@@ -41,7 +41,7 @@
                           scopes (l  10 c   3) (l  10 c   6)               type specifier
                           scopes (l  10 c   3) (l  10 c   6)                 "int"
                           scopes (l  10 c   7) (l  10 c   8)             direct declarator (identifier)
-                          scopes (l  10 c   7) (l  10 c   8)               identifier: x
+                          scopes (l  10 c   7) (l  10 c   8)               identifier (definition): x
                           scopes (l  10 c   8) (l  10 c   9)             ;
                           scopes (l  11 c   2) (l  11 c   3)           }
                           scopes (l  13 c   2) (l  15 c   3)         compound statement
@@ -51,7 +51,7 @@
                           scopes (l  14 c   3) (l  14 c   6)               type specifier
                           scopes (l  14 c   3) (l  14 c   6)                 "int"
                           scopes (l  14 c   7) (l  14 c   8)             direct declarator (identifier)
-                          scopes (l  14 c   7) (l  14 c   8)               identifier: y
+                          scopes (l  14 c   7) (l  14 c   8)               identifier (definition): y
                           scopes (l  14 c   8) (l  14 c   9)             ;
                           scopes (l  15 c   2) (l  15 c   3)           }
                           scopes (l  17 c   1) (l  17 c   2)         }

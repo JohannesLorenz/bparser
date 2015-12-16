@@ -459,7 +459,7 @@ constant_expression
 	;
 
 declaration
-	: declaration_specifiers ';' { $$ = new declaration_t(); $$->c.fill($1, NULL, $2); }
+	: declaration_specifiers ';' { $$ = new declaration_t(); $$->c.fill($1, NULL, $2); } // e.g. forward declaration
 	| declaration_specifiers init_declarator_list ';' { $$ = new declaration_t(); $$->c.fill($1, $2, $3); }
 	| static_assert_declaration { c11(); }
 	;
