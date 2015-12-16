@@ -1,0 +1,46 @@
+                      struct_fwd (l   1 c   1) (l   5 c  14) translation unit
+                      struct_fwd (l   1 c   1) (l   1 c  14)   external declaration
+                      struct_fwd (l   1 c   1) (l   1 c  14)     declaration
+                      struct_fwd (l   1 c   1) (l   1 c  13)       declaration specifiers
+                      struct_fwd (l   1 c   1) (l   1 c  13)         type specifier
+                      struct_fwd (l   1 c   1) (l   1 c  13)           struct specifier
+                      struct_fwd (l   1 c   1) (l   1 c   7)             "struct"
+                      struct_fwd (l   1 c   8) (l   1 c  13)             identifier (definition MISSING)
+                      struct_fwd (l   1 c  13) (l   1 c  14)       ;
+                      struct_fwd (l   3 c   1) (l   3 c  26)   external declaration
+                      struct_fwd (l   3 c   1) (l   3 c  26)     function definition
+                      struct_fwd (l   3 c   1) (l   3 c   4)       declaration specifiers
+                      struct_fwd (l   3 c   1) (l   3 c   4)         type specifier
+                      struct_fwd (l   3 c   1) (l   3 c   4)           "int"
+                      struct_fwd (l   3 c   5) (l   3 c  23)       direct declarator (function)
+                      struct_fwd (l   3 c   5) (l   3 c   6)         direct declarator (identifier)
+                      struct_fwd (l   3 c   5) (l   3 c   6)           identifier (definition): f
+                      struct_fwd (l   3 c   6) (l   3 c   7)         (
+                      struct_fwd (l   3 c   7) (l   3 c  22)         parameter declaration
+                      struct_fwd (l   3 c   7) (l   3 c  19)           declaration specifiers
+                      struct_fwd (l   3 c   7) (l   3 c  19)             type specifier
+                      struct_fwd (l   3 c   7) (l   3 c  19)               struct specifier
+                      struct_fwd (l   3 c   7) (l   3 c  13)                 "struct"
+                      struct_fwd (l   3 c  14) (l   3 c  19)                 identifier (definition MISSING)
+                      struct_fwd (l   3 c  19) (l   3 c  22)           declarator
+                      struct_fwd (l   3 c  19) (l   3 c  20)             pointer
+                      struct_fwd (l   3 c  19) (l   3 c  20)               *
+                      struct_fwd (l   3 c  21) (l   3 c  22)             direct declarator (identifier)
+                      struct_fwd (l   3 c  21) (l   3 c  22)               identifier (definition): p
+                      struct_fwd (l   3 c  22) (l   3 c  23)         )
+                      struct_fwd (l   3 c  24) (l   3 c  26)       compound statement
+                      struct_fwd (l   3 c  24) (l   3 c  25)         {
+                      struct_fwd (l   3 c  25) (l   3 c  26)         }
+                      struct_fwd (l   5 c   1) (l   5 c  14)   external declaration
+                      struct_fwd (l   5 c   1) (l   5 c  14)     function definition
+                      struct_fwd (l   5 c   1) (l   5 c   4)       declaration specifiers
+                      struct_fwd (l   5 c   1) (l   5 c   4)         type specifier
+                      struct_fwd (l   5 c   1) (l   5 c   4)           "int"
+                      struct_fwd (l   5 c   5) (l   5 c  11)       direct declarator (function)
+                      struct_fwd (l   5 c   5) (l   5 c   9)         direct declarator (identifier)
+                      struct_fwd (l   5 c   5) (l   5 c   9)           identifier (definition): main
+                      struct_fwd (l   5 c   9) (l   5 c  10)         (
+                      struct_fwd (l   5 c  10) (l   5 c  11)         )
+                      struct_fwd (l   5 c  12) (l   5 c  14)       compound statement
+                      struct_fwd (l   5 c  12) (l   5 c  13)         {
+                      struct_fwd (l   5 c  13) (l   5 c  14)         }
