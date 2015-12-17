@@ -58,6 +58,36 @@ class pos_counter
 	static int last_file;
 	static int last_line;
 	static int last_col;
+
+	static bool is_whitespace_no_newline(int c)
+	{
+		switch(c)
+		{
+			case ' ':
+			case '\t':
+			case '\v':
+			case '\f':
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	static bool is_whitespace(int c)
+	{
+		switch(c)
+		{
+			case ' ':
+			case '\t':
+			case '\v':
+			case '\f':
+			case '\n':
+				return true;
+			default:
+				return false;
+		}
+	}
+
 public:
 	static span_t count()
 	{
@@ -89,7 +119,7 @@ public:
 	static void parse_ppline(const char* p)
 	{
 		++p; // skip #
-		for(; *p==' '; ++p) ;
+		for(; is_whitespace_no_newline(*p); ++p) ;
 		last_col = 1;
 		
 		// no line number - ignore such macros
@@ -104,9 +134,14 @@ public:
 		// the last token in the token vector is \n,
 		// so we add a decrement manually:
 		--last_line;
-		for(; *p==' '; ++p) ;
+		for(; is_whitespace_no_newline(*p); ++p) ;
 		std::string fname;
-		for(; *p!=' '; ++p) fname += *p;
+		if(*p == '\"') ++p;
+		for(; !is_whitespace(*p); ++p) {
+			if(*p == '\"' && is_whitespace(p[1])) {}
+			else
+			 fname += *p;
+		}
 		int v_id = -1, count = 0;
 		for(std::vector<std::string>::const_iterator
 			itr = get_files().begin();
