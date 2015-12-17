@@ -65,8 +65,10 @@ void run_test(const char* str,
 		out_name_with_path += out_name;
 		out_name_with_path += ".out";
 		std::ifstream outfile(out_name_with_path.c_str());
+
 		if(outfile)
 		{
+		try{
 			const char* res = res_str.data();
 			std::string line;
 			std::size_t line_no = 0;
@@ -82,10 +84,31 @@ void run_test(const char* str,
 						throw "lines not equal";
 					}
 				}
-				if(*res != '\n')
-				 throw "expected newline";
+				if(*res != '\n') {
+					throw std::string("expected newline, got: ") + res;
+				}
 				++res; // newline char is discarded in line
 			}
+		}
+		catch(const char* s)
+		{
+			std::cout << "Error, dumping result to tmp_result.txt!" << std::endl;
+			std::cout << "Try diff " << out_name_with_path << " tmp_result.txt" << std::endl;
+			std::cout << "If the new result is better, do: mv tmp_result.txt " << out_name_with_path << std::endl;
+			std::ofstream of("tmp_result.txt");
+			of << res_str;
+			throw s;
+		}
+		catch(const std::string s)
+		{
+			std::cout << "Error, dumping result to tmp_result.txt!" << std::endl;
+			std::cout << "Try diff " << out_name_with_path << " tmp_result.txt" << std::endl;
+			std::cout << "If the new result is better, do: mv tmp_result.txt " << out_name_with_path << std::endl;
+			std::ofstream of("tmp_result.txt");
+			of << res_str;
+			throw s;
+		}
+
 		}
 		else
 		{
@@ -227,13 +250,13 @@ void run(int argc, char** argv)
 		//
 		//
 		//
-
 		run_test_file("statements");
 		run_test_file("initializers");
 		run_test_file("abstract_declarators");
 		run_test_file("direct_declarators");
 		run_test_file("declaration_specifiers");
 		run_test_file("structs");
+		run_test_file("struct_fwd"); // this is a bug which does not harm
 		run_test_file("enums");
 		run_test_file("expressions");
 		run_test_file("constants");
@@ -256,6 +279,11 @@ int main(int argc, char** argv)
 	try {
 		run(argc, argv);
 	} catch (const char* err_msg) {
+		std::cout << "FEHLER: " << std::endl;
+		std::cout << err_msg << std::endl;
+		std::cout << "ABBRUCH." << std::endl;
+		exit_value = EXIT_FAILURE;
+	} catch (std::string& err_msg) { // FEATURE: code factorize
 		std::cout << "FEHLER: " << std::endl;
 		std::cout << err_msg << std::endl;
 		std::cout << "ABBRUCH." << std::endl;

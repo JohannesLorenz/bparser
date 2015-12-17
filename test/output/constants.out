@@ -7,10 +7,10 @@
                        constants (l   1 c   9) (l   4 c   2)           enum specifier
                        constants (l   1 c   9) (l   1 c  13)             "enum"
                        constants (l   2 c   1) (l   2 c   2)             {
-                       constants (l   3 c   2) (l   3 c   7)             identifier: first
+                       constants (l   3 c   2) (l   3 c   7)             identifier (definition): first
                        constants (l   4 c   1) (l   4 c   2)             }
                        constants (l   4 c   3) (l   4 c   6)       direct declarator (identifier)
-                       constants (l   4 c   3) (l   4 c   6)         identifier: e_t
+                       constants (l   4 c   3) (l   4 c   6)         identifier (definition): e_t
                        constants (l   4 c   6) (l   4 c   7)       ;
                        constants (l   6 c   1) (l  24 c   2)   external declaration
                        constants (l   6 c   1) (l  24 c   2)     function definition
@@ -19,7 +19,7 @@
                        constants (l   6 c   1) (l   6 c   4)           "int"
                        constants (l   6 c   5) (l   6 c  11)       direct declarator (function)
                        constants (l   6 c   5) (l   6 c   9)         direct declarator (identifier)
-                       constants (l   6 c   5) (l   6 c   9)           identifier: main
+                       constants (l   6 c   5) (l   6 c   9)           identifier (definition): main
                        constants (l   6 c   9) (l   6 c  10)         (
                        constants (l   6 c  10) (l   6 c  11)         )
                        constants (l   7 c   1) (l  24 c   2)       compound statement
@@ -27,14 +27,14 @@
                        constants (l   8 c   2) (l   8 c  16)         declaration
                        constants (l   8 c   2) (l   8 c   5)           declaration specifiers
                        constants (l   8 c   2) (l   8 c   5)             type specifier
-                       constants (l   8 c   2) (l   8 c   5)               typedef name: e_t
+                       constants (l   8 c   2) (l   8 c   5)               typedef name: e_t (definition: constants: l4, c3-6)
                        constants (l   8 c   6) (l   8 c  15)           init declarator
                        constants (l   8 c   6) (l   8 c   7)             direct declarator (identifier)
-                       constants (l   8 c   6) (l   8 c   7)               identifier: e
+                       constants (l   8 c   6) (l   8 c   7)               identifier (definition): e
                        constants (l   8 c   8) (l   8 c   9)             =
                        constants (l   8 c  10) (l   8 c  15)             initializer
                        constants (l   8 c  10) (l   8 c  15)               primary expression
-                       constants (l   8 c  10) (l   8 c  15)                 enumeration constant: first
+                       constants (l   8 c  10) (l   8 c  15)                 enumeration constant: first (definition: constants: l3, c2-7)
                        constants (l   8 c  15) (l   8 c  16)           ;
                        constants (l   9 c   2) (l   9 c  16)         expression statement
                        constants (l   9 c   2) (l   9 c  15)           sizeof ...
@@ -42,7 +42,7 @@
                        constants (l   9 c   8) (l   9 c  15)             primary expression
                        constants (l   9 c   8) (l   9 c   9)               (
                        constants (l   9 c   9) (l   9 c  14)               primary expression
-                       constants (l   9 c   9) (l   9 c  14)                 enumeration constant: first
+                       constants (l   9 c   9) (l   9 c  14)                 enumeration constant: first (definition: constants: l3, c2-7)
                        constants (l   9 c  14) (l   9 c  15)               )
                        constants (l   9 c  15) (l   9 c  16)           ;
                        constants (l  10 c   2) (l  10 c  12)         expression statement
@@ -51,7 +51,7 @@
                        constants (l  10 c   8) (l  10 c  11)             primary expression
                        constants (l  10 c   8) (l  10 c   9)               (
                        constants (l  10 c   9) (l  10 c  10)               primary expression
-                       constants (l  10 c   9) (l  10 c  10)                 identifier: e
+                       constants (l  10 c   9) (l  10 c  10)                 identifier: e (definition: constants: l8, c6-7)
                        constants (l  10 c  10) (l  10 c  11)               )
                        constants (l  10 c  11) (l  10 c  12)           ;
                        constants (l  12 c   2) (l  12 c  74)         declaration
@@ -60,7 +60,7 @@
                        constants (l  12 c   2) (l  12 c   5)               "int"
                        constants (l  12 c   6) (l  12 c  73)           init declarator
                        constants (l  12 c   6) (l  12 c   7)             direct declarator (identifier)
-                       constants (l  12 c   6) (l  12 c   7)               identifier: i
+                       constants (l  12 c   6) (l  12 c   7)               identifier (definition): i
                        constants (l  12 c   7) (l  12 c   8)             =
                        constants (l  12 c   8) (l  12 c  73)             initializer
                        constants (l  12 c   8) (l  12 c  73)               binary expression 
@@ -103,7 +103,7 @@
                        constants (l  13 c   2) (l  13 c   6)               "char"
                        constants (l  13 c   7) (l  13 c  15)           init declarator
                        constants (l  13 c   7) (l  13 c   8)             direct declarator (identifier)
-                       constants (l  13 c   7) (l  13 c   8)               identifier: c
+                       constants (l  13 c   7) (l  13 c   8)               identifier (definition): c
                        constants (l  13 c   9) (l  13 c  10)             =
                        constants (l  13 c  11) (l  13 c  15)             initializer
                        constants (l  13 c  11) (l  13 c  15)               primary expression
@@ -112,7 +112,7 @@
                        constants (l  14 c   2) (l  14 c  11)         expression statement
                        constants (l  14 c   2) (l  14 c  10)           binary expression 
                        constants (l  14 c   2) (l  14 c   3)             primary expression
-                       constants (l  14 c   2) (l  14 c   3)               identifier: c
+                       constants (l  14 c   2) (l  14 c   3)               identifier: c (definition: constants: l13, c7-8)
                        constants (l  14 c   4) (l  14 c   5)             =
                        constants (l  14 c   6) (l  14 c  10)             primary expression
                        constants (l  14 c   6) (l  14 c  10)               int constant: U'2'
@@ -120,7 +120,7 @@
                        constants (l  15 c   2) (l  15 c  12)         expression statement
                        constants (l  15 c   2) (l  15 c  11)           binary expression 
                        constants (l  15 c   2) (l  15 c   3)             primary expression
-                       constants (l  15 c   2) (l  15 c   3)               identifier: c
+                       constants (l  15 c   2) (l  15 c   3)               identifier: c (definition: constants: l13, c7-8)
                        constants (l  15 c   4) (l  15 c   5)             =
                        constants (l  15 c   6) (l  15 c  11)             primary expression
                        constants (l  15 c   6) (l  15 c  11)               int constant: L'\''
@@ -131,7 +131,7 @@
                        constants (l  16 c   2) (l  16 c  10)               "unsigned"
                        constants (l  16 c  11) (l  16 c  25)           init declarator
                        constants (l  16 c  11) (l  16 c  16)             direct declarator (identifier)
-                       constants (l  16 c  11) (l  16 c  16)               identifier: multi
+                       constants (l  16 c  11) (l  16 c  16)               identifier (definition): multi
                        constants (l  16 c  17) (l  16 c  18)             =
                        constants (l  16 c  19) (l  16 c  25)             initializer
                        constants (l  16 c  19) (l  16 c  25)               primary expression
@@ -143,7 +143,7 @@
                        constants (l  18 c   2) (l  18 c   7)               "float"
                        constants (l  18 c   8) (l  18 c  71)           init declarator
                        constants (l  18 c   8) (l  18 c   9)             direct declarator (identifier)
-                       constants (l  18 c   8) (l  18 c   9)               identifier: f
+                       constants (l  18 c   8) (l  18 c   9)               identifier (definition): f
                        constants (l  18 c  10) (l  18 c  11)             =
                        constants (l  18 c  12) (l  18 c  71)             initializer
                        constants (l  18 c  12) (l  18 c  71)               binary expression 
@@ -188,7 +188,7 @@
                        constants (l  19 c  12) (l  19 c  13)               pointer
                        constants (l  19 c  12) (l  19 c  13)                 *
                        constants (l  19 c  14) (l  19 c  24)               direct declarator (identifier)
-                       constants (l  19 c  14) (l  19 c  24)                 identifier: simple_str
+                       constants (l  19 c  14) (l  19 c  24)                 identifier (definition): simple_str
                        constants (l  19 c  25) (l  19 c  26)             =
                        constants (l  19 c  27) (l  19 c  40)             initializer
                        constants (l  19 c  27) (l  19 c  40)               primary expression
@@ -205,7 +205,7 @@
                        constants (l  20 c  12) (l  20 c  13)               pointer
                        constants (l  20 c  12) (l  20 c  13)                 *
                        constants (l  20 c  14) (l  20 c  23)               direct declarator (identifier)
-                       constants (l  20 c  14) (l  20 c  23)                 identifier: multi_str
+                       constants (l  20 c  14) (l  20 c  23)                 identifier (definition): multi_str
                        constants (l  20 c  24) (l  20 c  25)             =
                        constants (l  20 c  26) (l  22 c   6)             initializer
                        constants (l  20 c  26) (l  22 c   6)               primary expression
@@ -224,7 +224,7 @@
                        constants (l  23 c  12) (l  23 c  13)               pointer
                        constants (l  23 c  12) (l  23 c  13)                 *
                        constants (l  23 c  14) (l  23 c  25)               direct declarator (identifier)
-                       constants (l  23 c  14) (l  23 c  25)                 identifier: complex_str
+                       constants (l  23 c  14) (l  23 c  25)                 identifier (definition): complex_str
                        constants (l  23 c  26) (l  23 c  27)             =
                        constants (l  23 c  28) (l  23 c  59)             initializer
                        constants (l  23 c  28) (l  23 c  59)               primary expression

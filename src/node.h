@@ -18,9 +18,12 @@
 /*************************************************************************/
 
 /**
- * @file node.h
- * definition of a node of the resulting AST
- */
+	@file node.h
+	definition of a node of the resulting AST
+	A node is a node of the AST graph depicting a precompiled-ANSII-C99
+	program. Nodes can be declarations, definitions, expressions etc.
+	The header defines the basic node class and its derived classes.
+*/
 #ifndef NODE_H
 #define NODE_H
 
@@ -134,7 +137,8 @@ public:
 	struct identifier_t* _definition;
 	defined_t(const geom_t& geom, int value,
 		const char* raw) :
-		noconst_1line_terminal_t(geom, value, raw) {}
+		noconst_1line_terminal_t(geom, value, raw),
+		_definition(NULL) {}
 };
 
 struct identifier_t : public defined_t
@@ -266,7 +270,7 @@ struct expression_t : public node_t<> {};
 struct unary_expression_r : public expression_t
 {
 	unary_op_t op_id;
-	ptn<	node_base, // FEATURE: more exactly?
+	ptn<	expression_t, // FEATURE: more exactly?
 			end_token > c;
 
 	virtual void accept(class visitor_t& v);
@@ -276,7 +280,7 @@ struct unary_expression_l : public expression_t
 {
 	unary_op_t op_id;
 	ptn<	token_t,
-		ptn<	node_base> > c;
+		ptn<	expression_t> > c;
 
 	virtual void accept(class visitor_t& v);
 };
@@ -284,9 +288,9 @@ struct unary_expression_l : public expression_t
 struct binary_expression_t : public expression_t
 {
 	binary_op_t op_id;
-	ptn<	node_base,
+	ptn<	expression_t,
 		ptn<	token_t,
-			ptn<	node_base> > > c;
+			ptn<	expression_t> > > c;
 	virtual void accept(class visitor_t& v);
 };
 
@@ -295,11 +299,11 @@ struct ternary_expression_t : public expression_t
 	void accept_children(visitor_t& v);
 	virtual void accept(class visitor_t& v);
 
-	ptn<	node_base,
+	ptn<	expression_t,
 		ptn<	token_t,
-			ptn<	node_base,
+			ptn<	expression_t,
 				ptn<	token_t,
-					ptn<	node_base > > > > > c;
+					ptn<	expression_t > > > > > c;
 
 //	expression_t(op_t op, token_t* op_token, token_t* op_token_2, node_t *n1, node_t* n2 = NULL, node_t* n3 = NULL) :
 //		op(op), op_token(op_token), op_token_2(op_token_2), n1(n1), n2(n2), n3(n3) {}
@@ -314,7 +318,7 @@ struct abstract_declarator_t : public node_t<>
 
 struct type_specifier_t : public declaration_specifier_type
 {
-	ptn<	node_base> c; // FEATURE: more granular?
+	ptn<	node_t<> > c; // FEATURE: more granular?
 	virtual void accept(class visitor_t& v);
 };
 
@@ -393,6 +397,7 @@ struct struct_declarator_list_t : public node_t<> // FEATURE: when alt list
 
 struct struct_declarator_t : public node_t<struct_declarator_list_t>
 {
+	// careful! all optional!
 	ptn<	struct declarator_t,
 		ptn<	token_t, // :
 			ptn<	expression_t
@@ -563,7 +568,7 @@ struct fconstant_t : public noconst_1line_terminal_t
 struct primary_expression_t : public expression_t
 {
 	ptn<	noconst_terminal_t,
-		ptn<	struct identifier_t,
+		ptn<	struct identifier_t, // variable or function
 			ptn<	token_t,
 				ptn<	expression_t,
 						end_token
@@ -692,17 +697,17 @@ struct declaration_list_t : public node_t<struct function_definition_t>
 	std::list<struct declaration_t*> c;
 };
 
-
-struct block_item_t : public node_t<struct compound_statement_t> {
+// FEATURE: use compound_statement_t here as a parent and put declaration into wrapper?
+struct block_item_t : public node_t<> {
 	virtual void accept(class visitor_t& v);
 };
 
 struct statement_t : public block_item_t {};
 
-struct conditional_expression_t : public expression_t
+/*struct conditional_expression_t : public expression_t
 {
 	virtual void accept(class visitor_t& v);
-};
+};*/
 
 struct labeled_statement_t : public statement_t
 {
@@ -876,7 +881,7 @@ struct init_declarator_t : public node_t<> // FEATURE: node<init_declarator_list
 	virtual void accept(class visitor_t& v);
 };
 
-struct init_declarator_list_t : public node_t<struct declaration_t>
+struct init_declarator_list_t : public node_t<> // FEATURE: struct declaration_t
 {
 	ptn<	init_declarator_list_t,
 		ptn<	token_t,
@@ -1064,7 +1069,7 @@ struct declarator_t : public node_t<>
 struct declaration_specifiers_t : public node_t<>
 {
 	virtual void accept(class visitor_t& v);
-	std::list<node_base*> c;
+	std::list< node_t<>*> c;
 };
 
 struct function_definition_t : public node_t<struct external_declaration_t>

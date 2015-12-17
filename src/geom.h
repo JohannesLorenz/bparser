@@ -1,8 +1,12 @@
+//! @file geom.h This file defines the layout classes for AST nodes
+//!	geometry means: which lines, columns and files are the nodes in
+
 #ifndef GEOM_H
 #define GEOM_H
 
 #include <iosfwd>
 
+//! This class contains a specific position in a file
 struct geom_t
 {
 	int file_id;
@@ -21,10 +25,10 @@ inline bool operator<(const geom_t& g1, const geom_t& g2) {
 			: g1.line < g2.line;
 }
 
+//! This class contains a starting and ending position for a node
 struct span_t
 {
-	geom_t first;
-	geom_t second;
+	geom_t first, second;
 	span_t(int file_id, int line, int col, std::size_t width) :
 		first(file_id, line, col),
 		second(file_id, line, col + width)

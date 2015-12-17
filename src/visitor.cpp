@@ -26,327 +26,325 @@
 #include "node.h"
 #include "visitor.h"
 
-#include "token.h"
-
 extern std::vector<std::string>& get_files();
 
-void fwd::visit(type_name_t *t)
+void fwd::visit(type_name_t &t)
 {
-	visit_all(t->c);
+	visit_all(t.c);
 }
 
-void fwd::visit(specifier_qualifier_list_t *s)
+void fwd::visit(specifier_qualifier_list_t &s)
 {
-	vaccept(s->c);
+	vaccept(s.c);
 }
 
-void fwd::visit(struct_or_union_specifier_t *s)
+void fwd::visit(struct_or_union_specifier_t &s)
 {
-	visit_all(s->c);
+	visit_all(s.c);
 }
 
-void fwd::visit(struct_declaration_list_t* n)
+void fwd::visit(struct_declaration_list_t& n)
 {
-	vvisit(n->c);
+	vvisit(n.c);
 }
 
-void fwd::visit(struct_declaration_t* n)
+void fwd::visit(struct_declaration_t& n)
 {
-	visit_all(n->c);
+	visit_all(n.c);
 }
 
-void fwd::visit(struct_declarator_list_t* n)
+void fwd::visit(struct_declarator_list_t& n)
 {
-	visit_all(n->c);
+	visit_all(n.c);
 }
 
-void fwd::visit(struct_declarator_t* n)
+void fwd::visit(struct_declarator_t& n)
 {
-	accept_all(n->c);
+	accept_all(n.c);
 }
 
-void fwd::visit(enum_specifier_t* n)
+void fwd::visit(enum_specifier_t& n)
 {
-	visit_all(n->c);
+	visit_all(n.c);
 }
 
-void fwd::visit(enumerator_list_t* n)
+void fwd::visit(enumerator_list_t& n)
 {
-	visit_all(n->c);
+	visit_all(n.c);
 }
 
-void fwd::visit(enumerator_t* n)
+void fwd::visit(enumerator_t& n)
 {
-	accept_all(n->c);
+	accept_all(n.c);
 }
 
-void fwd::visit(parameter_type_list_t* n)
+void fwd::visit(parameter_type_list_t& n)
 {
-	visit_all(n->c);
+	visit_all(n.c);
 }
 
-void fwd::visit(parameter_list_t* n)
+void fwd::visit(parameter_list_t& n)
 {
-	visit_all(n->c);
+	visit_all(n.c);
 }
 
-void fwd::visit(parameter_declaration_t* n)
+void fwd::visit(parameter_declaration_t& n)
 {
-	visit_all(n->c);
+	visit_all(n.c);
 }
 
-void fwd::visit(identifier_list_t* n)
+void fwd::visit(identifier_list_t& n)
 {
-	visit_all(n->c);
+	visit_all(n.c);
 }
 
-void fwd::visit(primary_expression_t* p) {
-	accept_all(p->c);
+void fwd::visit(primary_expression_t& p) {
+	accept_all(p.c);
 }
 
-/*void fwd::visit(primary_identifier_t* n)
+/*void fwd::visit(primary_identifier_t& n)
 {
-	visit_all(n->c);
+	visit_all(n.c);
 }
 
-void fwd::visit(primary_expression_expression_t* n)
+void fwd::visit(primary_expression_expression_t& n)
 {
-	accept_all(n->c);
+	accept_all(n.c);
 }*/
 
-void fwd::visit(array_access_expression_t *e)
+void fwd::visit(array_access_expression_t &e)
 {
-	accept_all(e->c);
+	accept_all(e.c);
 }
 
-void fwd::visit(argument_expression_list_t *e)
+void fwd::visit(argument_expression_list_t &e)
 {
-	accept_all(e->c);
+	accept_all(e.c);
 }
 
-void fwd::visit(function_call_expression_t *e)
+void fwd::visit(function_call_expression_t &e)
 {
-	accept_all(e->c);
+	accept_all(e.c);
 }
 
-void fwd::visit(struct_access_expression_t *e)
+void fwd::visit(struct_access_expression_t &e)
 {
-	accept_all(e->c);
+	accept_all(e.c);
 }
 
-void fwd::visit(compound_literal_t *e)
+void fwd::visit(compound_literal_t &e)
 {
-	accept_all(e->c);
+	accept_all(e.c);
 }
 
-void fwd::visit(cast_expression_t *e)
+void fwd::visit(cast_expression_t &e)
 {
-	accept_all(e->c);
+	accept_all(e.c);
 }
 
-/*void fwd::visit(type_specifier_simple_t* e)
+/*void fwd::visit(type_specifier_simple_t& e)
 {
-	incr_depth_t x(&depth, stream, e->span);
-	stream << "simple type specifier, type: " << e->id << std::endl;
+	incr_depth_t x(&depth, stream, e.span);
+	stream << "simple type specifier, type: " << e.id << std::endl;
 }
 
-void fwd::visit(number_t* e)
+void fwd::visit(number_t& e)
 {
-	incr_depth_t x(&depth, stream, e->span);
-	stream << "number, value: " << e->value << std::endl;
+	incr_depth_t x(&depth, stream, e.span);
+	stream << "number, value: " << e.value << std::endl;
 }*/
 
-void fwd::visit(token_t* ) {}
+void fwd::visit(token_t& ) {}
 
-void fwd::visit(unary_expression_l *e)
+void fwd::visit(unary_expression_l &e)
 {
-	accept_all(e->c);
+	accept_all(e.c);
 }
 
-void fwd::visit(unary_expression_r *e)
+void fwd::visit(unary_expression_r &e)
 {
-	accept_all(e->c);
+	accept_all(e.c);
 }
 
-void fwd::visit(binary_expression_t *e)
+void fwd::visit(binary_expression_t &e)
 {
-	accept_all(e->c);
+	accept_all(e.c);
 }
 
-void fwd::visit(ternary_expression_t *e)
+void fwd::visit(ternary_expression_t &e)
 {
 /*	on(e);
-	e->n1->accept(*this);
+	e.n1.accept(*this);
 	on(e, 1);
-	if(e->n2) { e->n2->accept(*this); on(e, 2); }
-	if(e->n3) { e->n3->accept(*this); on(e, 3); }*/
+	if(e.n2) { e.n2.accept(*this); on(e, 2); }
+	if(e.n3) { e.n3.accept(*this); on(e, 3); }*/
 
-	accept_all(e->c);
+	accept_all(e.c);
 }
 
-void fwd::visit(expression_statement_t *e)
+void fwd::visit(expression_statement_t &e)
 {
-	accept_all(e->c);
+	accept_all(e.c);
 }
 
-void fwd::visit(selection_statement_t *e)
+void fwd::visit(selection_statement_t &e)
 {
-	accept_all(e->c);
+	accept_all(e.c);
 }
 
-void fwd::visit(labeled_statement_t *s)
+void fwd::visit(labeled_statement_t &s)
 {
-	accept_all(s->c);
+	accept_all(s.c);
 }
 
-void fwd::visit(jump_statement_t *s)
+void fwd::visit(jump_statement_t &s)
 {
-	accept_all(s->c);
+	accept_all(s.c);
 }
 
-void fwd::visit(storage_class_specifier_t* ) { /* FEATURE: remove? */ }
+void fwd::visit(storage_class_specifier_t& ) { /* FEATURE: remove? */ }
 
-void fwd::visit(iteration_statement_t* i) { accept_all(i->c); }
+void fwd::visit(iteration_statement_t& i) { accept_all(i.c); }
 
-/*void fwd::visit(primary_expression_t* p)
+/*void fwd::visit(primary_expression_t& p)
 {
-	accept_all(p->c);
+	accept_all(p.c);
 }*/
 
-void fwd::visit(attribute_t* n)
+void fwd::visit(attribute_t& n)
 {
-	visit_all(n->c);
+	visit_all(n.c);
 }
 
-void fwd::visit(sizeof_expression_t* n)
+void fwd::visit(sizeof_expression_t& n)
 {
-	accept_all(n->c);
+	accept_all(n.c);
 }
 
-void fwd::visit(type_specifier_t *t) { accept_all(t->c); }
-//void fwd::visit(type_identifier *t) { visit_all(t->c); }
-void fwd::visit(type_qualifier_t *t) { visit_all(t->c); }
+void fwd::visit(type_specifier_t &t) { accept_all(t.c); }
+//void fwd::visit(type_identifier &t) { visit_all(t.c); }
+void fwd::visit(type_qualifier_t &t) { visit_all(t.c); }
 
-void fwd::visit(type_qualifier_list_t *n)
+void fwd::visit(type_qualifier_list_t &n)
 {
-	vvisit(n->c);
+	vvisit(n.c);
 }
-void fwd::visit(function_specifier_t* ) { // FEATURE: remove?
+void fwd::visit(function_specifier_t& ) { // FEATURE: remove?
 }
-void fwd::visit(alignment_specifier_t* ) { // FEATURE: remove?
+void fwd::visit(alignment_specifier_t& ) { // FEATURE: remove?
 }
-void fwd::visit(declaration_list_t* d) { vvisit(d->c); }
-void fwd::visit(compound_statement_t* n) {
-		accept_all(n->c);
-		/*tvisit(n->c.value);
-		vaccept(*n->c.get_next().value);
-		tvisit(n->c.get_next().get_next().value);*/
+void fwd::visit(declaration_list_t& d) { vvisit(d.c); }
+void fwd::visit(compound_statement_t& n) {
+		accept_all(n.c);
+		/*tvisit(n.c.value);
+		vaccept(*n.c.get_next().value);
+		tvisit(n.c.get_next().get_next().value);*/
 		}
 
-void fwd::visit(pointer_t* p) { visit_all(p->c); }
+void fwd::visit(pointer_t& p) { visit_all(p.c); }
 
-void fwd::visit(declarator_t* n) { accept_all(n->c); }
+void fwd::visit(declarator_t& n) { accept_all(n.c); }
 
-void fwd::visit(declaration_specifiers_t* n)
+void fwd::visit(declaration_specifiers_t& n)
 {
-	vaccept(n->c);
+	vaccept(n.c);
 }
-void fwd::visit(function_definition_t* n)
+void fwd::visit(function_definition_t& n)
 {
-	visit_all(n->c);
+	visit_all(n.c);
 }
-void fwd::visit(external_declaration_t* n)
+void fwd::visit(external_declaration_t& n)
 {
-	visit_all(n->c);
-}
-
-void fwd::visit(translation_unit_t* n)
-{
-	vvisit(n->c);
+	visit_all(n.c);
 }
 
-void fwd::visit(declaration_t* n) { visit_all(n->c); }
-
-/*void fwd::visit(constant_t* n)
+void fwd::visit(translation_unit_t& n)
 {
-	visit_all(n->c);
+	vvisit(n.c);
+}
+
+void fwd::visit(declaration_t& n) { visit_all(n.c); }
+
+/*void fwd::visit(constant_t& n)
+{
+	visit_all(n.c);
 }*/
 
-void fwd::visit(init_declarator_t *i)
+void fwd::visit(init_declarator_t &i)
 {
-	visit_all(i->c);
+	visit_all(i.c);
 }
 
-void fwd::visit(init_declarator_list_t *i)
+void fwd::visit(init_declarator_list_t &i)
 {
-	visit_all(i->c);
+	visit_all(i.c);
 }
 
-void fwd::visit(initializer_t *i)
+void fwd::visit(initializer_t &i)
 {
-	accept_all(i->c);
+	accept_all(i.c);
 }
 
-void fwd::visit(initializer_list_t *i)
-{ visit_all(i->c);
+void fwd::visit(initializer_list_t &i)
+{ visit_all(i.c);
 }
 
 
-void fwd::visit(designator_list_t* d) {
-	vaccept(d->c);
+void fwd::visit(designator_list_t& d) {
+	vaccept(d.c);
 }
 
-void fwd::visit(designator_id* d) {
-	visit_all(d->c);
+void fwd::visit(designator_id& d) {
+	visit_all(d.c);
 }
 
-void fwd::visit(designator_constant_expr* d) { accept_all(d->c); }
+void fwd::visit(designator_constant_expr& d) { accept_all(d.c); }
 
-void fwd::visit(abstract_declarator_t *d)
+void fwd::visit(abstract_declarator_t &d)
 {
-	accept_all(d->c);
+	accept_all(d.c);
 }
 
 
 
-void fwd::visit(direct_declarator_id *d)
+void fwd::visit(direct_declarator_id &d)
 {
-	visit_all(d->c);
+	visit_all(d.c);
 }
 
-void fwd::visit(direct_declarator_decl *d)
+void fwd::visit(direct_declarator_decl &d)
 {
-	visit_all(d->c);
+	visit_all(d.c);
 }
 
-void fwd::visit(direct_declarator_arr *d)
+void fwd::visit(direct_declarator_arr &d)
 {
-	accept_all(d->c);
+	accept_all(d.c);
 }
 
-void fwd::visit(direct_declarator_func *d)
+void fwd::visit(direct_declarator_func &d)
 {
-	accept_all(d->c);
+	accept_all(d.c);
 }
 
-void fwd::visit(direct_declarator_idlist* d)
+void fwd::visit(direct_declarator_idlist& d)
 {
-	accept_all(d->c);
+	accept_all(d.c);
 }
 
-void fwd::visit(direct_abstract_declarator_decl *d)
+void fwd::visit(direct_abstract_declarator_decl &d)
 {
-	visit_all(d->c);
+	visit_all(d.c);
 }
 
-void fwd::visit(direct_abstract_declarator_arr *d)
+void fwd::visit(direct_abstract_declarator_arr &d)
 {
-	accept_all(d->c);
+	accept_all(d.c);
 }
 
-void fwd::visit(direct_abstract_declarator_func *d)
+void fwd::visit(direct_abstract_declarator_func &d)
 {
-	accept_all(d->c);
+	accept_all(d.c);
 }
 
 
@@ -403,310 +401,310 @@ public:
 
 
 
-void dumper_t::visit(type_name_t *t)
+void dumper_t::visit(type_name_t &t)
 {
-	incr_depth_t x(&depth, stream, t->span);
+	incr_depth_t x(&depth, stream, t.span);
 	stream << "type name" << std::endl;
 	fwd::visit(t);
 }
 
-void dumper_t::visit(specifier_qualifier_list_t *s)
+void dumper_t::visit(specifier_qualifier_list_t &s)
 {
-	if(s->c.size() > 1)
+	if(s.c.size() > 1)
 	{
-		incr_depth_t x(&depth, stream, s->span);
+		incr_depth_t x(&depth, stream, s.span);
 		stream << "specifier-qualifier-list" << std::endl;
 		fwd::visit(s);
 	} else fwd::visit(s);
 }
 
-void dumper_t::visit(struct_or_union_specifier_t *s)
+void dumper_t::visit(struct_or_union_specifier_t &s)
 {
-	incr_depth_t x(&depth, stream, s->span);
-	stream << (s->is_union_type
+	incr_depth_t x(&depth, stream, s.span);
+	stream << (s.is_union_type
 		? "union specifier"
 		: "struct specifier")
 		<< std::endl;
 	fwd::visit(s);
 }
 
-void dumper_t::visit(struct_declaration_t* n)
+void dumper_t::visit(struct_declaration_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "struct declaration" << std::endl; // FEATURE: good name?
 	fwd::visit(n);
 }
 
-void dumper_t::visit(struct_declaration_list_t* n)
+void dumper_t::visit(struct_declaration_list_t& n)
 {
-	if(n->c.size() > 1)
+	if(n.c.size() > 1)
 	{
-		incr_depth_t x(&depth, stream, n->span);
+		incr_depth_t x(&depth, stream, n.span);
 		stream << "struct declaration list" << std::endl; // FEATURE: good name?
 		fwd::visit(n);
 	} else fwd::visit(n);
 }
 
-void dumper_t::visit(struct_declarator_list_t* n)
+void dumper_t::visit(struct_declarator_list_t& n)
 {
-	if(n->c.size() > 1)
+	if(n.c.size() > 1)
 	{
-		incr_depth_t x(&depth, stream, n->span);
+		incr_depth_t x(&depth, stream, n.span);
 		stream << "struct declarator list" << std::endl; // FEATURE: endl autom?
 		fwd::visit(n);
 	}
 	else fwd::visit(n);
 }
 
-void dumper_t::visit(struct_declarator_t* n)
+void dumper_t::visit(struct_declarator_t& n)
 {
-	if(n->c.get<2>())
+	if(n.c.get<2>())
 	{
-		incr_depth_t x(&depth, stream, n->span);
+		incr_depth_t x(&depth, stream, n.span);
 		stream << "struct declarator" << std::endl;
 		fwd::visit(n);
 	} else fwd::visit(n);
 }
 
-void dumper_t::visit(enum_specifier_t* n)
+void dumper_t::visit(enum_specifier_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "enum specifier" << std::endl;
 	fwd::visit(n);
 }
 
-void dumper_t::visit(enumerator_list_t* n)
+void dumper_t::visit(enumerator_list_t& n)
 {
-	if(n->c.size() > 1)
+	if(n.c.size() > 1)
 	{
-		incr_depth_t x(&depth, stream, n->span);
+		incr_depth_t x(&depth, stream, n.span);
 		stream << "enumerator list" << std::endl;
 		fwd::visit(n);
 	}
 	else fwd::visit(n);
 }
 
-void dumper_t::visit(enumerator_t* n)
+void dumper_t::visit(enumerator_t& n)
 {
-	if(n->c.get<2>())
+	if(n.c.get<2>())
 	{
-		incr_depth_t x(&depth, stream, n->span);
+		incr_depth_t x(&depth, stream, n.span);
 		stream << "enumerator" << std::endl;
 		fwd::visit(n);
 	} else fwd::visit(n);
 }
 
-void dumper_t::visit(parameter_type_list_t* n)
+void dumper_t::visit(parameter_type_list_t& n)
 {
-	if(n->c.size() > 1)
+	if(n.c.size() > 1)
 	{
-		incr_depth_t x(&depth, stream, n->span);
+		incr_depth_t x(&depth, stream, n.span);
 		stream << "parameter type list" << std::endl; // FEATURE: better description?
 		fwd::visit(n);
 	} else fwd::visit(n);
 }
 
-void dumper_t::visit(parameter_list_t* n)
+void dumper_t::visit(parameter_list_t& n)
 {
-	if(n->c.size() > 1)
+	if(n.c.size() > 1)
 	{
-		incr_depth_t x(&depth, stream, n->span);
+		incr_depth_t x(&depth, stream, n.span);
 		stream << "parameter list" << std::endl;
 		fwd::visit(n);
 	} else fwd::visit(n);
 }
 
-void dumper_t::visit(parameter_declaration_t* n)
+void dumper_t::visit(parameter_declaration_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "parameter declaration" << std::endl;
 	fwd::visit(n);
 }
 
-void dumper_t::visit(identifier_list_t* n)
+void dumper_t::visit(identifier_list_t& n)
 {
-	if(n->c.size() > 1)
+	if(n.c.size() > 1)
 	{
-		incr_depth_t x(&depth, stream, n->span);
+		incr_depth_t x(&depth, stream, n.span);
 		stream << "identifier list" << std::endl;
 		fwd::visit(n);
 	} else fwd::visit(n);
 }
 
-void dumper_t::visit(primary_expression_t* p) {
-	incr_depth_t x(&depth, stream, p->span);
+void dumper_t::visit(primary_expression_t& p) {
+	incr_depth_t x(&depth, stream, p.span);
 	stream << "primary expression" << std::endl;
 	fwd::visit(p);
 }
 
 #if 0
-void dumper_t::visit(constant_t<int>* c)
+void dumper_t::visit(constant_t<int>& c)
 {
-	incr_depth_t x(&depth, stream, c->span);
-	stream << "int constant: " << c->value << std::endl;
+	incr_depth_t x(&depth, stream, c.span);
+	stream << "int constant: " << c.value << std::endl;
 }
 #endif
 
-void dumper_t::visit(iconstant_t* c) {
-	incr_depth_t x(&depth, stream, c->span);
-	stream << "int constant: " << c->raw << std::endl; // FEATURE...
+void dumper_t::visit(iconstant_t& c) {
+	incr_depth_t x(&depth, stream, c.span);
+	stream << "int constant: " << c.raw << std::endl; // FEATURE...
 }
 
-void dumper_t::visit(fconstant_t* c) {
-	incr_depth_t x(&depth, stream, c->span);
-	stream << "float constant: " << c->raw << std::endl; // FEATURE...
+void dumper_t::visit(fconstant_t& c) {
+	incr_depth_t x(&depth, stream, c.span);
+	stream << "float constant: " << c.raw << std::endl; // FEATURE...
 }
 
 #if 0
-void dumper_t::visit(constant_t<float>* c)
+void dumper_t::visit(constant_t<float>& c)
 {
-	incr_depth_t x(&depth, stream, c->span);
-	stream << "float constant: " << c->value << std::endl;
+	incr_depth_t x(&depth, stream, c.span);
+	stream << "float constant: " << c.value << std::endl;
 }
 
-void dumper_t::visit(constant_t<std::string>* c)
+void dumper_t::visit(constant_t<std::string>& c)
 {
-	incr_depth_t x(&depth, stream, c->span);
-	stream << "string constant: " << c->value << std::endl;
+	incr_depth_t x(&depth, stream, c.span);
+	stream << "string constant: " << c.value << std::endl;
 }
 #endif
 
-/*void dumper_t::visit(primary_identifier_t* p)
+/*void dumper_t::visit(primary_identifier_t& p)
 {
-	incr_depth_t x(&depth, stream, p->span);
+	incr_depth_t x(&depth, stream, p.span);
 	stream << "primary expression" << std::endl;
 	fwd::visit(p);
 }
 
-void dumper_t::visit(primary_expression_expression_t* p)
+void dumper_t::visit(primary_expression_expression_t& p)
 {
-	incr_depth_t x(&depth, stream, p->span);
+	incr_depth_t x(&depth, stream, p.span);
 	stream << "primary expression" << std::endl;
 	fwd::visit(p);
 }*/
 
-void dumper_t::visit(array_access_expression_t *e)
+void dumper_t::visit(array_access_expression_t &e)
 {
-	incr_depth_t x(&depth, stream, e->span);
+	incr_depth_t x(&depth, stream, e.span);
 	stream << "array access op" << std::endl;
 	fwd::visit(e);
 }
 
-void dumper_t::visit(argument_expression_list_t *e)
+void dumper_t::visit(argument_expression_list_t &e)
 {
-	if(e->c.size() > 1)
+	if(e.c.size() > 1)
 	{
-		incr_depth_t x(&depth, stream, e->span);
+		incr_depth_t x(&depth, stream, e.span);
 		stream << "argument expression list" << std::endl;
 		fwd::visit(e);
 	} else fwd::visit(e);
 }
 
-void dumper_t::visit(function_call_expression_t *e)
+void dumper_t::visit(function_call_expression_t &e)
 {
-	incr_depth_t x(&depth, stream, e->span);
+	incr_depth_t x(&depth, stream, e.span);
 	stream << "function call" << std::endl;
 	fwd::visit(e);
 }
 
-void dumper_t::visit(struct_access_expression_t *e)
+void dumper_t::visit(struct_access_expression_t &e)
 {
-	incr_depth_t x(&depth, stream, e->span);
+	incr_depth_t x(&depth, stream, e.span);
 	stream << "struct access" << std::endl;
 	fwd::visit(e);
 }
 
-void dumper_t::visit(compound_literal_t *e)
+void dumper_t::visit(compound_literal_t &e)
 {
-	incr_depth_t x(&depth, stream, e->span);
+	incr_depth_t x(&depth, stream, e.span);
 	stream << "compound literal" << std::endl;
 	fwd::visit(e);
 }
 
-void dumper_t::visit(cast_expression_t *e)
+void dumper_t::visit(cast_expression_t &e)
 {
-	incr_depth_t x(&depth, stream, e->span);
+	incr_depth_t x(&depth, stream, e.span);
 	stream << "cast" << std::endl;
 	fwd::visit(e);
 }
 
-/*void dumper_t::visit(type_specifier_simple_t* e)
+/*void dumper_t::visit(type_specifier_simple_t& e)
 {
-	incr_depth_t x(&depth, stream, e->span);
-	stream << "simple type specifier, type: " << e->id << std::endl;
+	incr_depth_t x(&depth, stream, e.span);
+	stream << "simple type specifier, type: " << e.id << std::endl;
 }
 
-void dumper_t::visit(number_t* e)
+void dumper_t::visit(number_t& e)
 {
-	incr_depth_t x(&depth, stream, e->span);
-	stream << "number, value: " << e->value << std::endl;
+	incr_depth_t x(&depth, stream, e.span);
+	stream << "number, value: " << e.value << std::endl;
 }*/
 
-void dumper_t::visit(token_t* e)
+void dumper_t::visit(token_t& e)
 {
-	incr_depth_t x(&depth, stream, e->span);
+	incr_depth_t x(&depth, stream, e.span);
 
 	//stream << "token: ";
 
-	stream << *e << std::endl;
+	stream << e << std::endl;
 }
 
-void dumper_t::visit(unary_expression_l *e)
+void dumper_t::visit(unary_expression_l &e)
 {
 	// FEATURE: full op names
-	incr_depth_t x(&depth, stream, e->span);
+	incr_depth_t x(&depth, stream, e.span);
 	stream << "unary_expression (prefix)" << std::endl;
 	fwd::visit(e);
 }
 
-void dumper_t::visit(unary_expression_r *e)
+void dumper_t::visit(unary_expression_r &e)
 {
-	incr_depth_t x(&depth, stream, e->span);
+	incr_depth_t x(&depth, stream, e.span);
 	stream << "unary_expression (postfix)" << std::endl;
 	fwd::visit(e);
 }
 
-void dumper_t::visit(binary_expression_t *e)
+void dumper_t::visit(binary_expression_t &e)
 {
-	incr_depth_t x(&depth, stream, e->span);
+	incr_depth_t x(&depth, stream, e.span);
 	stream << "binary expression " << std::endl;
 	fwd::visit(e);
 }
 
-void dumper_t::visit(ternary_expression_t *e)
+void dumper_t::visit(ternary_expression_t &e)
 {
 /*	on(e);
-	e->n1->accept(*);
+	e.n1.accept(*);
 	on(e, 1);
-	if(e->n2) { e->n2->accept(*); on(e, 2); }
-	if(e->n3) { e->n3->accept(*); on(e, 3); }*/
+	if(e.n2) { e.n2.accept(*); on(e, 2); }
+	if(e.n3) { e.n3.accept(*); on(e, 3); }*/
 
-	incr_depth_t x(&depth, stream, e->span);
+	incr_depth_t x(&depth, stream, e.span);
 	stream << "ternary expression" << std::endl;
 	fwd::visit(e);
 }
 
-void dumper_t::visit(expression_statement_t *e)
+void dumper_t::visit(expression_statement_t &e)
 {
-	incr_depth_t x(&depth, stream, e->span);
+	incr_depth_t x(&depth, stream, e.span);
 	stream << "expression statement" << std::endl;
 	fwd::visit(e);
 }
 
-void dumper_t::visit(selection_statement_t *e)
+void dumper_t::visit(selection_statement_t &e)
 {
-	incr_depth_t x(&depth, stream, e->span);
+	incr_depth_t x(&depth, stream, e.span);
 	stream << "selection statement" << std::endl;
 	fwd::visit(e);
 }
 
-void dumper_t::visit(labeled_statement_t *s)
+void dumper_t::visit(labeled_statement_t &s)
 {
-	incr_depth_t x(&depth, stream, s->span);
+	incr_depth_t x(&depth, stream, s.span);
 	stream << "labeled statement (type ";
-	switch(s->type)
+	switch(s.type)
 	{
-		case labeled_statement_t::case_label: stream << "case label"; break; // FEATURE: type->string func in node.h
+		case labeled_statement_t::case_label: stream << "case label"; break; // FEATURE: type.string func in node.h
 		case labeled_statement_t::default_label: stream << "default label"; break;
 		case labeled_statement_t::jump_label: stream << "jump label"; break;
 	}
@@ -714,13 +712,13 @@ void dumper_t::visit(labeled_statement_t *s)
 	fwd::visit(s);
 }
 
-void dumper_t::visit(jump_statement_t *s)
+void dumper_t::visit(jump_statement_t &s)
 {
-	incr_depth_t x(&depth, stream, s->span);
+	incr_depth_t x(&depth, stream, s.span);
 	stream << "jump statement (type ";
-	switch(s->type)
+	switch(s.type)
 	{
-		case jump_statement_t::goto_type: stream << "goto"; break; // FEATURE: type->string func in node.h
+		case jump_statement_t::goto_type: stream << "goto"; break; // FEATURE: type.string func in node.h
 		case jump_statement_t::continue_type: stream << "continue"; break;
 		case jump_statement_t::break_type: stream << "break"; break;
 		case jump_statement_t::return_void: stream << "return"; break;
@@ -730,28 +728,28 @@ void dumper_t::visit(jump_statement_t *s)
 	fwd::visit(s);
 }
 
-void dumper_t::visit(storage_class_specifier_t* )
+void dumper_t::visit(storage_class_specifier_t& )
 {
 }
 
-void dumper_t::visit(iteration_statement_t* n)
+void dumper_t::visit(iteration_statement_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
+	incr_depth_t x(&depth, stream, n.span);
 	const char* loop_type =
-		n->type == iteration_statement_t::for_type
+		n.type == iteration_statement_t::for_type
 			? "for"
-			: (n->type == iteration_statement_t::do_type
+			: (n.type == iteration_statement_t::do_type
 				? "do-while"
 				: "while");
 	stream << "iteration statement (type " << loop_type << ")" << std::endl;
 	fwd::visit(n);
 }
 
-/*void dumper_t::visit(primary_expression_t* n)
+/*void dumper_t::visit(primary_expression_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "primary expression";
-	switch(n->type)
+	switch(n.type)
 	{
 		case pt_expression:
 			stream << std::endl;
@@ -760,120 +758,136 @@ void dumper_t::visit(iteration_statement_t* n)
 			stream << std::endl;
 			break;
 		case pt_id:
-			stream << ": identifier: " << n->c.value->name << std::endl;
+			stream << ": identifier: " << n.c.value.name << std::endl;
 			break;
 		case pt_string:
-			stream << ": string constant: " << n->c.get_next().value->name << std::endl;
+			stream << ": string constant: " << n.c.get_next().value.name << std::endl;
 			break;
 	}
 
 	fwd::visit(n);
 }*/
 
-void dumper_t::visit(sizeof_expression_t* n)
+void dumper_t::visit(sizeof_expression_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "sizeof ..." << std::endl;
 	fwd::visit(n);
 }
 
-void dumper_t::visit(attr_name_t* n)
+void dumper_t::visit(attr_name_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "attribute name: " << n->raw << std::endl;
+	incr_depth_t x(&depth, stream, n.span);
+	stream << "attribute name: " << n.raw << std::endl;
 }
-void dumper_t::visit(attribute_t* n)
+void dumper_t::visit(attribute_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "attribute" << std::endl;
 	fwd::visit(n);
 }
 
-void dumper_t::visit(identifier_t *n)
+void dumper_t::visit(identifier_t &n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "identifier: " << n->raw << std::endl;
+	incr_depth_t x(&depth, stream, n.span);
+	if(!n._definition)
+	{
+		stream << "identifier (definition MISSING)" << std::endl;
+	} // should not happen
+	else
+	{
+	if(n._definition == &n)
+		stream << "identifier (definition): " << n.raw << std::endl;
+	else
+		stream << "identifier: " << n.raw
+			<< " (definition: " << n._definition->span
+			<< ")" << std::endl;
+	}
 }
 
-void dumper_t::visit(enumeration_constant_t* n)
+void dumper_t::visit(enumeration_constant_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "enumeration constant: " << n->raw << std::endl;
+	incr_depth_t x(&depth, stream, n.span);
+	stream << "enumeration constant: " << n.raw
+		<< " (definition: " << n._definition->span
+		<< ")" << std::endl;
 	fwd::visit(n);
 }
 
-void dumper_t::visit(typedef_name_t* n)
+void dumper_t::visit(typedef_name_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	stream << "typedef name: " << n->raw << std::endl;
+	incr_depth_t x(&depth, stream, n.span);
+	stream << "typedef name: " << n.raw
+		<< " (definition: " << n._definition->span
+		<< ")" << std::endl;
 	fwd::visit(n);
 }
 
-void dumper_t::visit(string_literal_t *s)
+void dumper_t::visit(string_literal_t &s)
 {
-	incr_depth_t x(&depth, stream, s->span);
-	stream << "string literal: " << s->raw << std::endl;
+	incr_depth_t x(&depth, stream, s.span);
+	stream << "string literal: " << s.raw << std::endl;
 	fwd::visit(s);
 }
 
-void dumper_t::visit(type_specifier_t *t)
+void dumper_t::visit(type_specifier_t &t)
 {
-	incr_depth_t x(&depth, stream, t->span);
+	incr_depth_t x(&depth, stream, t.span);
 	stream << "type specifier" << std::endl;
 	fwd::visit(t);
 }
 
-/*void dumper_t::visit(type_identifier *t)
+/*void dumper_t::visit(type_identifier &t)
 {
-	incr_depth_t x(&depth, stream, t->span);
-	stream << "type identifier: " << t->c.value->raw << std::endl;
+	incr_depth_t x(&depth, stream, t.span);
+	stream << "type identifier: " << t.c.value.raw << std::endl;
 }*/
 
-void dumper_t::visit(type_qualifier_t* n) {
-	incr_depth_t x(&depth, stream, n->span);
+void dumper_t::visit(type_qualifier_t& n) {
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "type qualifier" << std::endl;
 	fwd::visit(n);
 }
-void dumper_t::visit(function_specifier_t* ) {
+void dumper_t::visit(function_specifier_t& ) {
 #if 0
-	incr_depth_t x(&depth, stream, n->span);
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "function specifier" << std::endl;
 	fwd::visit(n);
 #endif
 }
-void dumper_t::visit(alignment_specifier_t* ) {
+void dumper_t::visit(alignment_specifier_t& ) {
 #if 0
-	incr_depth_t x(&depth, stream, n->span);
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "alignment specifier" << std::endl;
 	fwd::visit(n);
 #endif
 }
-void dumper_t::visit(declaration_list_t* n) {
-	if(n->c.size() > 1)
+void dumper_t::visit(declaration_list_t& n) {
+	if(n.c.size() > 1)
 	{
-		incr_depth_t x(&depth, stream, n->span);
+		incr_depth_t x(&depth, stream, n.span);
 		stream << "declaration list" << std::endl;
 		fwd::visit(n);
 	} else fwd::visit(n);
 }
-void dumper_t::visit(compound_statement_t* n)
+void dumper_t::visit(compound_statement_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "compound statement" << std::endl;
 	fwd::visit(n);
 }
 
-void dumper_t::visit(pointer_t* n) {
-	incr_depth_t x(&depth, stream, n->span);
+void dumper_t::visit(pointer_t& n) {
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "pointer" << std::endl;
 	fwd::visit(n);
 }
 
-void dumper_t::visit(declarator_t* n)
+void dumper_t::visit(declarator_t& n)
 {
-	if(n->c.get<0>()) // pointer prepended?
+	if(n.c.get<0>()) // pointer prepended?
 	{
-		incr_depth_t x(&depth, stream, n->span);
+		incr_depth_t x(&depth, stream, n.span);
 		stream << "declarator" << std::endl;
 		fwd::visit(n);
 	}
@@ -881,55 +895,55 @@ void dumper_t::visit(declarator_t* n)
 	 fwd::visit(n);
 }
 
-void dumper_t::visit(declaration_specifiers_t* n)
+void dumper_t::visit(declaration_specifiers_t& n)
 {
-	if(n->c.size())
+	if(n.c.size())
 	{
-		incr_depth_t x(&depth, stream, n->span);
+		incr_depth_t x(&depth, stream, n.span);
 		stream << "declaration specifiers" << std::endl;
 		fwd::visit(n);
 	}
 	else
 		fwd::visit(n);
 }
-void dumper_t::visit(function_definition_t* n)
+void dumper_t::visit(function_definition_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "function definition" << std::endl;
 	fwd::visit(n);
 }
-void dumper_t::visit(external_declaration_t* n)
+void dumper_t::visit(external_declaration_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "external declaration" << std::endl;
 
 	fwd::visit(n);
 }
 
-void dumper_t::visit(translation_unit_t* n)
+void dumper_t::visit(translation_unit_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "translation unit" << std::endl;
 	fwd::visit(n);
 }
 
-void dumper_t::visit(declaration_t* n)
+void dumper_t::visit(declaration_t& n)
 {	
-	incr_depth_t x(&depth, stream, n->span);
+	incr_depth_t x(&depth, stream, n.span);
 	stream << "declaration" << std::endl;
 	fwd::visit(n);
 }
 
-/*void dumper_t::visit(constant_t* n)
+/*void dumper_t::visit(constant_t& n)
 {
-	incr_depth_t x(&depth, stream, n->span);
-	switch(n->type)
+	incr_depth_t x(&depth, stream, n.span);
+	switch(n.type)
 	{
 		case ct_int:
-			stream << "int constant: " << n->value.i << std::endl;
+			stream << "int constant: " << n.value.i << std::endl;
 			break;
 		case ct_float:
-			stream << "float constant: " << n->value.f << std::endl;
+			stream << "float constant: " << n.value.f << std::endl;
 			break;
 		case ct_enum:
 			stream << "enumeration constant" << std::endl;
@@ -939,75 +953,75 @@ void dumper_t::visit(declaration_t* n)
 	fwd::visit(n);
 }*/
 
-void dumper_t::visit(init_declarator_t *i)
+void dumper_t::visit(init_declarator_t &i)
 {
-	if(i->c.get<2>())
+	if(i.c.get<2>())
 	{
-		incr_depth_t x(&depth, stream, i->span);
+		incr_depth_t x(&depth, stream, i.span);
 		stream << "init declarator" << std::endl;
 		fwd::visit(i);
 	}
 	else fwd::visit(i);
 }
 
-void dumper_t::visit(init_declarator_list_t *i)
+void dumper_t::visit(init_declarator_list_t &i)
 {
-	if(i->c.size() > 1)
+	if(i.c.size() > 1)
 	{
-		incr_depth_t x(&depth, stream, i->span);
+		incr_depth_t x(&depth, stream, i.span);
 		stream << "init declarator list" << std::endl;
 		fwd::visit(i);
 	} else fwd::visit(i);
 }
 
-void dumper_t::visit(initializer_t *i)
+void dumper_t::visit(initializer_t &i)
 {
-	incr_depth_t x(&depth, stream, i->span);
+	incr_depth_t x(&depth, stream, i.span);
 	stream << "initializer" << std::endl;
 	fwd::visit(i);
 }
 
-void dumper_t::visit(initializer_list_t *i)
+void dumper_t::visit(initializer_list_t &i)
 {
-	if(i->c.size() > 1)
+	if(i.c.size() > 1)
 	{
-		incr_depth_t x(&depth, stream, i->span);
+		incr_depth_t x(&depth, stream, i.span);
 		stream << "initializer list" << std::endl;
 		fwd::visit(i);
 	} else fwd::visit(i);
 }
 
 
-void dumper_t::visit(designator_list_t* d) {
-	if(d->c.size() > 1)
+void dumper_t::visit(designator_list_t& d) {
+	if(d.c.size() > 1)
 	{
-		incr_depth_t x(&depth, stream, d->span);
+		incr_depth_t x(&depth, stream, d.span);
 		stream << "designator list" << std::endl;
 		fwd::visit(d);
 	} else fwd::visit(d);
 }
 
-void dumper_t::visit(designator_id* d) {
-	incr_depth_t x(&depth, stream, d->span);
-	//stream << "designator: ." << d->c.get_next().value << std::endl;
+void dumper_t::visit(designator_id& d) {
+	incr_depth_t x(&depth, stream, d.span);
+	//stream << "designator: ." << d.c.get_next().value << std::endl;
 	stream << "designator (struct)" << std::endl;
 	fwd::visit(d);
 }
 
-void dumper_t::visit(designator_constant_expr* d) { // FEATURE: rename designator_array?
-	incr_depth_t x(&depth, stream, d->span);
-	//stream << "designator: [" << d->c.get_next().value << ']' << std::endl;
+void dumper_t::visit(designator_constant_expr& d) { // FEATURE: rename designator_array?
+	incr_depth_t x(&depth, stream, d.span);
+	//stream << "designator: [" << d.c.get_next().value << ']' << std::endl;
 	stream << "designator (array)" << std::endl;
 	fwd::visit(d);
 }
 
 
 
-void dumper_t::visit(abstract_declarator_t *n)
+void dumper_t::visit(abstract_declarator_t &n)
 {
-	if(n->c.get<0>()) // pointer prepended?
+	if(n.c.get<0>()) // pointer prepended?
 	{
-		incr_depth_t x(&depth, stream, n->span);
+		incr_depth_t x(&depth, stream, n.span);
 		stream << "abstract declarator" << std::endl;
 		fwd::visit(n);
 	}
@@ -1017,243 +1031,82 @@ void dumper_t::visit(abstract_declarator_t *n)
 
 
 
-void dumper_t::visit(direct_declarator_id *d)
+void dumper_t::visit(direct_declarator_id &d)
 {
-	incr_depth_t x(&depth, stream, d->span);
+	incr_depth_t x(&depth, stream, d.span);
 	stream << "direct declarator (identifier)" << std::endl;
 	fwd::visit(d);
 }
 
-void dumper_t::visit(direct_declarator_decl *d)
+void dumper_t::visit(direct_declarator_decl &d)
 {
-	incr_depth_t x(&depth, stream, d->span);
+	incr_depth_t x(&depth, stream, d.span);
 	stream << "direct declarator (declaration)" << std::endl;
 	fwd::visit(d);
 }
 
-void dumper_t::visit(direct_declarator_arr *d)
+void dumper_t::visit(direct_declarator_arr &d)
 {
-	incr_depth_t x(&depth, stream, d->span);
+	incr_depth_t x(&depth, stream, d.span);
 	stream << "direct declarator (array)" << std::endl;
 	fwd::visit(d);
 }
 
-void dumper_t::visit(direct_declarator_func *d)
+void dumper_t::visit(direct_declarator_func &d)
 {
-	incr_depth_t x(&depth, stream, d->span);
+	incr_depth_t x(&depth, stream, d.span);
 	stream << "direct declarator (function)" << std::endl;
 	fwd::visit(d);
 }
 
-void dumper_t::visit(direct_declarator_idlist *d)
+void dumper_t::visit(direct_declarator_idlist &d)
 {
-	if(d->c.size() > 1)
+	if(d.c.size() > 1)
 	{
-		incr_depth_t x(&depth, stream, d->span);
+		incr_depth_t x(&depth, stream, d.span);
 		stream << "direct declarator (identifier list)" << std::endl;
 		fwd::visit(d);
 	} else fwd::visit(d);
 }
 
 
-void dumper_t::visit(direct_abstract_declarator_decl *d)
+void dumper_t::visit(direct_abstract_declarator_decl &d)
 {
-	incr_depth_t x(&depth, stream, d->span);
+	incr_depth_t x(&depth, stream, d.span);
 	stream << "direct abstract declarator (declaration)" << std::endl;
 	fwd::visit(d);
 }
 
-void dumper_t::visit(direct_abstract_declarator_arr *d)
+void dumper_t::visit(direct_abstract_declarator_arr &d)
 {
-	incr_depth_t x(&depth, stream, d->span);
+	incr_depth_t x(&depth, stream, d.span);
 	stream << "direct abstract declarator (array)" << std::endl;
 	fwd::visit(d);
 }
 
-void dumper_t::visit(direct_abstract_declarator_func *d)
+void dumper_t::visit(direct_abstract_declarator_func &d)
 {
-	incr_depth_t x(&depth, stream, d->span);
+	incr_depth_t x(&depth, stream, d.span);
 	stream << "direct abstract declarator (function)" << std::endl;
 	fwd::visit(d);
 }
 
 
-void cleaner_t::visit(binary_expression_t* e)
+void cleaner_t::visit(binary_expression_t& e)
 {
-	//e->accept_children(*this);
-	accept_all(e->c);
-	delete e;
+	//e.accept_children(*this);
+	accept_all(e.c);
+	delete &e;
 }
 
 /*
-node_t* echo(node_t* e)
+node_t& echo(node_t& e)
 {
 	printf("echo:\n");
 	dumper_t dumper;
-	e->accept(dumper);
+	e.accept(dumper);
 	return e;
 }
 */
 
-unary_op_t unary_op_l(int c)
-{
-	switch(c)
-	{
-		case '&': return op_addr; 
-		case '*': return op_ptr;
-		case '+': return op_pos;
-		case '-': return op_neg;
-		case '~': return op_compl;
-		case '!': return op_not;
-		case t_inc_op: return op_inc_pre;
-		case t_dec_op: return op_dec_pre;
-		default: assert(false);
-	}
-}
-
-unary_op_t unary_op_r(int c)
-{
-	switch(c)
-	{
-		case t_inc_op: return op_inc_post;
-		case t_dec_op: return op_dec_post;
-		default: assert(false);
-	}
-}
-
-binary_op_t binary_op_of(int c)
-{
-	switch(c)
-	{
-		case '=': return op_asn;
-		case t_mul_asn: return op_asn_mul;
-		case t_div_asn: return op_asn_div;
-		case t_mod_asn: return op_asn_mod;
-		case t_add_asn: return op_asn_add;
-		case t_sub_asn: return op_asn_sub;
-		case t_left_asn: return op_asn_left;
-		case t_right_asn: return op_asn_right;
-		case t_and_asn: return op_asn_and;
-		case t_xor_asn: return op_asn_xor;
-		case t_or_asn: return op_asn_or;
-	
-		case t_or_op: return op_or;
-		case t_and_op: return op_and;
-		case '|': return op_bor;
-		case '&': return op_band;
-		case '^': return op_xor;
-		case t_left_op: return op_lshift;
-		case t_right_op: return op_rshift;
-	
-		case '<': return op_lt;
-		case '>': return op_gt;
-		case t_le_op: return op_le;
-		case t_ge_op: return op_ge;
-		case t_eq_op: return op_eq;
-		case t_ne_op: return op_ne;
-	
-		case '+': return op_plus;
-		case '-': return op_minus;
-		case '*': return op_mult;
-		case '/': return op_div;
-		case '%': return op_mod;
-
-		case ',': return op_com;
-
-		default: std::cout << +c << std::endl; assert(false);
-	}
-}
-
-void type_completor::on(unary_expression_l& u, enter)
-{
-	u.op_id = unary_op_l(u.c.get<0>()->value());
-}
-void type_completor::on(unary_expression_r& u, enter)
-{
-	u.op_id = unary_op_r(u.c.get<1>()->value());
-}
-void type_completor::on(binary_expression_t& b, enter) {
-	b.op_id = binary_op_of(b.c.get<1>()->value());
-}
-
-
-void type_completor::on(iteration_statement_t& i, enter)
-{
-	i.type =
-		i.c.get<iteration_statement_t::for_cond>()
-			? iteration_statement_t::for_type // FEATURE: better ("global") names: for_loop ?
-			: (i.c.get<iteration_statement_t::do_keyword>()
-				? iteration_statement_t::do_type
-				: iteration_statement_t::while_type);
-
-	bool for_type_iter = i.c.get<iteration_statement_t::for_iter>();
-
-	i._for_type =
-		i.c.get<iteration_statement_t::for_init>()
-			? (for_type_iter
-				? iteration_statement_t::for_type_init_iter
-				: iteration_statement_t::for_type_init_niter)
-			: (for_type_iter
-				? iteration_statement_t::for_type_decl_iter
-				: iteration_statement_t::for_type_decl_niter);
-
-}
-
-void type_completor::on(labeled_statement_t& l, enter)
-{
-	l.type =
-		l.c.get<labeled_statement_t::keyword>()
-			? (l.c.get<labeled_statement_t::case_expr>()
-				? labeled_statement_t::case_label
-				: labeled_statement_t::default_label)
-			: labeled_statement_t::jump_label;
-
-	v_lookup_table.flag_symbol(l.c.get<labeled_statement_t::identifier>(),
-		decl_depth, false);
-}
-
-void type_completor::on(jump_statement_t& j, enter)
-{
-	const int keyword = j.c.get<jump_statement_t::keyword>()->value();
-	j.type =
-		(keyword == t_return)
-			? (j.c.get<jump_statement_t::expression>()
-				? jump_statement_t::return_type
-				: jump_statement_t::return_void)
-			: ((keyword == t_break)
-				? jump_statement_t::break_type
-				: ((keyword == t_continue)
-					? jump_statement_t::continue_type
-					: jump_statement_t::goto_type
-				)
-			);
-}
-
-void type_completor::on(struct_or_union_specifier_t& s, enter)
-{
-	const int keyword = s.c.get<struct_or_union_specifier_t::keyword>()->value();
-	s.is_union_type = (keyword == t_union);
-
-	v_lookup_table.flag_symbol(s.c.get<struct_or_union_specifier_t::identifier>(),
-		decl_depth, true);
-}
-
-void type_completor::on(struct_access_expression_t& s, enter)
-{
-	const int optype = s.c.get<1>()->value();
-	s.pointer_access = (optype == t_ptr_op);
-}
-
-void type_completor::on(direct_declarator_id& d, leave)
-{
-	v_lookup_table.flag_symbol(d.c.get<0>(), decl_depth, false);
-}
-
-void type_completor::on(enum_specifier_t& e, enter) {
-	v_lookup_table.flag_symbol(e.c.get<enum_specifier_t::identifier>(), decl_depth, false);
-}
-
-void type_completor::on(enumerator_t& e, leave) {
-	v_lookup_table.flag_symbol(e.c.get<0>(), decl_depth, false);
-}
 

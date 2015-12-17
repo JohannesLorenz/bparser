@@ -22,6 +22,7 @@
 
 #include "node.h"
 #include "visitor.h"
+#include "type_completor.h"
 #include "parser.h"
 #include "lexer.h"
 #include "ast.h"
@@ -84,11 +85,9 @@ translation_unit_t *get_ast(const char *input, const char* fname,
 	
 	yylex_destroy(scanner);
 
-	io_visitor<type_completor> f;
-	transl_unit->accept(f);
-
+	// run geometry visitor at first so other visitors can
+	// show the geometry of an error
 	std::vector<terminal_t*>& tv = get_token_vector();
-
 	func_visitor<geom_completor> g;
 	for(std::vector<terminal_t*>::const_iterator itr = tv.begin();
 		itr != tv.end(); ++itr)
@@ -98,6 +97,10 @@ translation_unit_t *get_ast(const char *input, const char* fname,
 		 (*itr)->accept(g);
 	}
 	transl_unit->accept(g);
+
+	// run the type completor
+	io_visitor<type_completor> f;
+	transl_unit->accept(f);
 
 	return transl_unit;
 }

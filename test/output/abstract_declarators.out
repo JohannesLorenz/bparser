@@ -6,7 +6,7 @@
             abstract_declarators (l   1 c   1) (l   1 c   5)           "void"
             abstract_declarators (l   1 c   6) (l   1 c  19)       direct declarator (function)
             abstract_declarators (l   1 c   6) (l   1 c   7)         direct declarator (identifier)
-            abstract_declarators (l   1 c   6) (l   1 c   7)           identifier: f
+            abstract_declarators (l   1 c   6) (l   1 c   7)           identifier (definition): f
             abstract_declarators (l   1 c   7) (l   1 c   8)         (
             abstract_declarators (l   1 c   8) (l   1 c  18)         parameter declaration
             abstract_declarators (l   1 c   8) (l   1 c  11)           declaration specifiers
@@ -31,7 +31,7 @@
             abstract_declarators (l   2 c   1) (l   2 c   5)           "void"
             abstract_declarators (l   2 c   6) (l   2 c  14)       direct declarator (function)
             abstract_declarators (l   2 c   6) (l   2 c   7)         direct declarator (identifier)
-            abstract_declarators (l   2 c   6) (l   2 c   7)           identifier: g
+            abstract_declarators (l   2 c   6) (l   2 c   7)           identifier (definition): g
             abstract_declarators (l   2 c   7) (l   2 c   8)         (
             abstract_declarators (l   2 c   8) (l   2 c  13)         parameter declaration
             abstract_declarators (l   2 c   8) (l   2 c  11)           declaration specifiers
@@ -49,7 +49,7 @@
             abstract_declarators (l   3 c   1) (l   3 c   5)           "void"
             abstract_declarators (l   3 c   6) (l   3 c  17)       direct declarator (function)
             abstract_declarators (l   3 c   6) (l   3 c   7)         direct declarator (identifier)
-            abstract_declarators (l   3 c   6) (l   3 c   7)           identifier: h
+            abstract_declarators (l   3 c   6) (l   3 c   7)           identifier (definition): h
             abstract_declarators (l   3 c   7) (l   3 c   8)         (
             abstract_declarators (l   3 c   8) (l   3 c  16)         parameter declaration
             abstract_declarators (l   3 c   8) (l   3 c  11)           declaration specifiers
@@ -73,7 +73,7 @@
             abstract_declarators (l   4 c   1) (l   4 c   5)           "void"
             abstract_declarators (l   4 c   6) (l   4 c  16)       direct declarator (function)
             abstract_declarators (l   4 c   6) (l   4 c   7)         direct declarator (identifier)
-            abstract_declarators (l   4 c   6) (l   4 c   7)           identifier: i
+            abstract_declarators (l   4 c   6) (l   4 c   7)           identifier (definition): i
             abstract_declarators (l   4 c   7) (l   4 c   8)         (
             abstract_declarators (l   4 c   8) (l   4 c  15)         parameter declaration
             abstract_declarators (l   4 c   8) (l   4 c  11)           declaration specifiers
@@ -92,7 +92,7 @@
             abstract_declarators (l   5 c   1) (l   5 c   5)           "void"
             abstract_declarators (l   5 c   6) (l   5 c  16)       direct declarator (function)
             abstract_declarators (l   5 c   6) (l   5 c   7)         direct declarator (identifier)
-            abstract_declarators (l   5 c   6) (l   5 c   7)           identifier: j
+            abstract_declarators (l   5 c   6) (l   5 c   7)           identifier (definition): j
             abstract_declarators (l   5 c   7) (l   5 c   8)         (
             abstract_declarators (l   5 c   8) (l   5 c  15)         parameter declaration
             abstract_declarators (l   5 c   8) (l   5 c  11)           declaration specifiers
@@ -113,7 +113,7 @@
             abstract_declarators (l   6 c   1) (l   6 c   5)           "void"
             abstract_declarators (l   6 c   6) (l   6 c  23)       direct declarator (function)
             abstract_declarators (l   6 c   6) (l   6 c   7)         direct declarator (identifier)
-            abstract_declarators (l   6 c   6) (l   6 c   7)           identifier: k
+            abstract_declarators (l   6 c   6) (l   6 c   7)           identifier (definition): k
             abstract_declarators (l   6 c   7) (l   6 c   8)         (
             abstract_declarators (l   6 c   8) (l   6 c  22)         parameter declaration
             abstract_declarators (l   6 c   8) (l   6 c  11)           declaration specifiers
@@ -146,7 +146,7 @@
             abstract_declarators (l   7 c   1) (l   7 c   5)           "void"
             abstract_declarators (l   7 c   6) (l   7 c  16)       direct declarator (function)
             abstract_declarators (l   7 c   6) (l   7 c   7)         direct declarator (identifier)
-            abstract_declarators (l   7 c   6) (l   7 c   7)           identifier: l
+            abstract_declarators (l   7 c   6) (l   7 c   7)           identifier (definition): l
             abstract_declarators (l   7 c   7) (l   7 c   8)         (
             abstract_declarators (l   7 c   8) (l   7 c  15)         parameter declaration
             abstract_declarators (l   7 c   8) (l   7 c  11)           declaration specifiers
@@ -167,7 +167,7 @@
             abstract_declarators (l   8 c   1) (l   8 c   5)           "void"
             abstract_declarators (l   8 c   6) (l   8 c  15)       direct declarator (function)
             abstract_declarators (l   8 c   6) (l   8 c   7)         direct declarator (identifier)
-            abstract_declarators (l   8 c   6) (l   8 c   7)           identifier: m
+            abstract_declarators (l   8 c   6) (l   8 c   7)           identifier (definition): m
             abstract_declarators (l   8 c   7) (l   8 c   8)         (
             abstract_declarators (l   8 c   8) (l   8 c  14)         parameter declaration
             abstract_declarators (l   8 c   8) (l   8 c  11)           declaration specifiers
@@ -185,7 +185,7 @@
             abstract_declarators (l   9 c   1) (l   9 c   5)           "void"
             abstract_declarators (l   9 c   6) (l   9 c  52)       direct declarator (function)
             abstract_declarators (l   9 c   6) (l   9 c   7)         direct declarator (identifier)
-            abstract_declarators (l   9 c   6) (l   9 c   7)           identifier: n
+            abstract_declarators (l   9 c   6) (l   9 c   7)           identifier (definition): n
             abstract_declarators (l   9 c   7) (l   9 c   8)         (
             abstract_declarators (l   9 c   8) (l   9 c  51)         parameter declaration
             abstract_declarators (l   9 c   8) (l   9 c  11)           declaration specifiers
@@ -211,7 +211,7 @@
             abstract_declarators (l   9 c  33) (l   9 c  36)                 type specifier
             abstract_declarators (l   9 c  33) (l   9 c  36)                   "int"
             abstract_declarators (l   9 c  37) (l   9 c  38)               direct declarator (identifier)
-            abstract_declarators (l   9 c  37) (l   9 c  38)                 identifier: x
+            abstract_declarators (l   9 c  37) (l   9 c  38)                 identifier (definition): x
             abstract_declarators (l   9 c  38) (l   9 c  39)             ,
             abstract_declarators (l   9 c  40) (l   9 c  45)             parameter declaration
             abstract_declarators (l   9 c  40) (l   9 c  44)               declaration specifiers
@@ -232,7 +232,7 @@
             abstract_declarators (l  10 c   1) (l  10 c   5)           "void"
             abstract_declarators (l  10 c   6) (l  10 c  18)       direct declarator (function)
             abstract_declarators (l  10 c   6) (l  10 c   7)         direct declarator (identifier)
-            abstract_declarators (l  10 c   6) (l  10 c   7)           identifier: o
+            abstract_declarators (l  10 c   6) (l  10 c   7)           identifier (definition): o
             abstract_declarators (l  10 c   7) (l  10 c   8)         (
             abstract_declarators (l  10 c   8) (l  10 c  17)         parameter declaration
             abstract_declarators (l  10 c   8) (l  10 c  11)           declaration specifiers
@@ -254,7 +254,7 @@
             abstract_declarators (l  11 c   1) (l  11 c   5)           "void"
             abstract_declarators (l  11 c   6) (l  11 c  17)       direct declarator (function)
             abstract_declarators (l  11 c   6) (l  11 c   7)         direct declarator (identifier)
-            abstract_declarators (l  11 c   6) (l  11 c   7)           identifier: p
+            abstract_declarators (l  11 c   6) (l  11 c   7)           identifier (definition): p
             abstract_declarators (l  11 c   7) (l  11 c   8)         (
             abstract_declarators (l  11 c   8) (l  11 c  16)         parameter declaration
             abstract_declarators (l  11 c   8) (l  11 c  11)           declaration specifiers
@@ -277,7 +277,7 @@
             abstract_declarators (l  12 c   1) (l  12 c   5)           "void"
             abstract_declarators (l  12 c   6) (l  12 c  23)       direct declarator (function)
             abstract_declarators (l  12 c   6) (l  12 c   7)         direct declarator (identifier)
-            abstract_declarators (l  12 c   6) (l  12 c   7)           identifier: q
+            abstract_declarators (l  12 c   6) (l  12 c   7)           identifier (definition): q
             abstract_declarators (l  12 c   7) (l  12 c   8)         (
             abstract_declarators (l  12 c   8) (l  12 c  22)         parameter declaration
             abstract_declarators (l  12 c   8) (l  12 c  11)           declaration specifiers
@@ -302,7 +302,7 @@
             abstract_declarators (l  14 c   1) (l  14 c   4)           "int"
             abstract_declarators (l  14 c   5) (l  14 c  11)       direct declarator (function)
             abstract_declarators (l  14 c   5) (l  14 c   9)         direct declarator (identifier)
-            abstract_declarators (l  14 c   5) (l  14 c   9)           identifier: main
+            abstract_declarators (l  14 c   5) (l  14 c   9)           identifier (definition): main
             abstract_declarators (l  14 c   9) (l  14 c  10)         (
             abstract_declarators (l  14 c  10) (l  14 c  11)         )
             abstract_declarators (l  15 c   1) (l  17 c   2)       compound statement
