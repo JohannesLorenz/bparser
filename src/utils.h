@@ -4,6 +4,29 @@
 #include <string>
 #include "visitor.h"
 
+class function_called : public visitor_t
+{
+	identifier_t* _identifier;
+
+	void set_id(identifier_t* i) {
+		if(!_identifier) // has already been found
+		 _identifier = i; }
+public:
+	identifier_t* get_identifier() { return _identifier; }
+	function_called() : _identifier(NULL) {}
+	// maybe future ideas, especially ternary
+	//void visit(unary_expression_r &u);
+	//void visit(unary_expression_l &u);
+	//void visit(binary_expression_t &b);
+	// void visit(ternary_expression_t &t);
+	// interesting
+	void visit(primary_expression_t &p);
+	void visit(cast_expression_t& c);
+	// unlikely...
+	//void visit(array_access_expression_t &a);
+};
+
+
 struct type_specifier_list
 {
 	enum type_t

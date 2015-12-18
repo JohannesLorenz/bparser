@@ -813,6 +813,8 @@ public:
 
 };
 
+std::ostream operator<<(std::ostream&o, node_base& n);
+
 
 
 

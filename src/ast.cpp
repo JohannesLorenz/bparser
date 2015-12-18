@@ -51,16 +51,16 @@ translation_unit_t *get_ast(const char *input, const char* fname,
 		// couldn't initialize
 		return NULL;
 	}
-	std::cerr << "text: " << yyget_text(scanner) << std::endl;
+//	std::cerr << "text: " << yyget_text(scanner) << std::endl;
 	state = yy_scan_string(input, scanner);
 	
-	std::cerr << "text: " << yyget_text(scanner) << std::endl;
+//	std::cerr << "text: " << yyget_text(scanner) << std::endl;
 
 	if (yyparse(&transl_unit, scanner)) {
 		// error parsing
 		return NULL;
 	}
-	std::cerr << "text: " << yyget_text(scanner) << std::endl;
+//	std::cerr << "text: " << yyget_text(scanner) << std::endl;
 
 /*	std::cout << "token vector: " << std::endl;
 	dumper_t dumper;

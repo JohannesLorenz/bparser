@@ -32,16 +32,11 @@ void struct_type_of::visit(binary_expression_t& b)
 
 void struct_type_of::visit(ternary_expression_t& t)
 {
-	t.c.get<0>()->accept(*this);
+	t.c.get<2>()->accept(*this);
 	if(!_identifier)
 	{
-		// return value is what really matters
-		throw "impossible";
-	/*	t.c.get<2>()->accept(*this);
-		if(!identifier)
-		{
-			t.c.get<4>()->accept(*this);
-		}*/
+		// maybe we have better luck here:
+		t.c.get<4>()->accept(*this);
 	}
 }
 
@@ -339,6 +334,7 @@ void type_completor::on(struct_access_expression_t& s, leave)
 	// (already done, since we are leaving!)
 
 	// step 2: get struct type of left identifier
+#if 0
 	struct_type_of struct_type;
 	s.c.get<0>()->accept(struct_type);
 	current_struct_scope = struct_type.get_identifier();
@@ -355,6 +351,7 @@ void type_completor::on(struct_access_expression_t& s, leave)
 	// right identifier
 	// TODO: get struct_...list
 	connect_identifier(s.c.get<2>());
+#endif
 }
 
 void type_completor::on(declaration_t& d, leave)
