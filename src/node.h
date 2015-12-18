@@ -1006,7 +1006,8 @@ struct direct_declarator_func : public direct_declarator_t
 	virtual void accept(class visitor_t& v);
 };
 
-// FEATUR: what is this?
+//! node representing old-C-style identifier list
+//! for example: void f(a, b) int a, b {}
 struct direct_declarator_idlist : public direct_declarator_t
 {
 	ptn<	direct_declarator_t,

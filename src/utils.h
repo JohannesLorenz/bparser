@@ -43,20 +43,26 @@ struct type_specifier_list
 };
 
 template<class T>
-struct is
+struct _is
 {
 	bool value;
 	template<class Unused>
-	is(Unused* const) : value(false) {}
+	_is(Unused* const) : value(false) {}
 	void operator()(T const& ) { value = true; }
 	void operator()(node_base const& ) { value = false; }
 };
 
-bool is_func_id(identifier_t& id)
+template<class T>
+inline bool is(node_base& node)
 {
-	func_visitor< is<function_definition_t> > v;
-	id._definition->parent->accept(v);
+	func_visitor< _is<T> > v;
+	node.accept(v);
 	return v.functor().value;
+}
+
+inline bool is_func_id(identifier_t& id)
+{
+	return is<direct_declarator_func>(*id._definition->parent);
 }
 
 struct get_declarator_t : ftor_base
@@ -74,7 +80,7 @@ struct get_declarator_t : ftor_base
 	void operator()(direct_declarator_idlist& d) { accept(*d.c.get<0>()); }
 };
 
-identifier_t* get_declarator(declarator_t* d)
+inline identifier_t* get_declarator(declarator_t* d)
 {
 	func_visitor< get_declarator_t > v;
 	v.functor()(*d);
@@ -150,20 +156,24 @@ struct declaration_from_declarator_t : ftor_base
 	}
 };
 
-
-void struct_type_specifier_of_declaration_t::visit(typedef_name_t& t) {
-	func_visitor< declaration_from_declarator_t > v0;
-	t._definition->parent->accept(v0);
-	return visit(*v0.functor().declaration_found);
-}
-
-identifier_t* struct_rval_of_func(identifier_t& id)
+inline declaration_t* declaration_from_declarator(declarator_t* dtor)
 {
 	func_visitor< declaration_from_declarator_t > v0;
-	id._definition->parent->accept(v0);
+	dtor->accept(v0);
+	return v0.functor().declaration_found;
+}
 
+inline declaration_t* declaration_from_identifier(identifier_t* id)
+{
+	func_visitor< declaration_from_declarator_t > v0;
+	id->parent->accept(v0);
+	return v0.functor().declaration_found;
+}
+
+inline identifier_t* struct_rval_of_func(identifier_t& id)
+{
 	struct_type_specifier_of_declaration_t v;
-	v0.functor().declaration_found->accept(v);
+	declaration_from_identifier(id._definition)->accept(v);
 
 	return v.result;
 

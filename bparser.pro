@@ -33,6 +33,7 @@ SOURCES += src/lexer.c test/test.cpp src/node.cpp src/visitor.cpp \
     test/input/nested.c \
     src/type_completor.cpp \
     src/function.cpp \
-    test/input/struct_fwd.c
+    test/input/struct_fwd.c \
+    src/utils.cpp
 OTHER_FILES += Makefile src/Makefile test/Makefile
 
