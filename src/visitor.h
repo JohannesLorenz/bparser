@@ -17,6 +17,12 @@
 /* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
 /*************************************************************************/
 
+/**
+	@file This file declares the visitor class, from which all visitors
+		inherit. Also, it includes the functor visitor class,
+		which redirects the virtual visit calls to a functor template
+*/
+
 #include <cstddef>
 #include <iosfwd>
 #include <cassert>
@@ -813,7 +819,7 @@ public:
 
 };
 
-std::ostream operator<<(std::ostream&o, node_base& n);
+std::ostream& operator<<(std::ostream& o, node_base& n);
 
 
 

@@ -1,3 +1,6 @@
+//! @file This file only declares the @a type_completor class, which
+//! completes the AST (abstract syntax tree) after it has been built
+
 #ifndef TYPE_COMPLETOR_H
 #define TYPE_COMPLETOR_H
 
@@ -7,6 +10,7 @@
 
 #include "visitor.h"
 
+//! only for internal use of type_completor
 class struct_type_of : public visitor_t
 {
 	// TODO: set_identifier function that checks if it's null
@@ -33,6 +37,7 @@ public:
 	void visit(cast_expression_t& c);
 	void visit(type_name_t& t);
 	void visit(specifier_qualifier_list_t& s);
+	void visit(declaration_specifiers_t& s);
 	void visit(type_specifier_t& t);
 	void visit(struct_or_union_specifier_t& s);
 	void visit(typedef_name_t& t);
@@ -62,6 +67,21 @@ namespace scope_types
 
 }
 
+/*
+	The main task of the parser+lexer is to do anything necessary, but not more.
+	This is because the parser+lexer are ugly old-style C code; also the rest
+	should be independent of bison+yacc.
+
+	Thus, the type_completor's job is to complete the whole AST (abstract syntax tree)
+	after parser+lexer have built it. Completing means: Adding additional info to
+	nodes, such as
+	 * location of definition of identifiers
+	 * practical things, e.g. a flag for whether a struct_or_union_specifier is a struct
+	   or a union, or what operator a binary expression has.
+	
+	After the type completor has run, all nodes should have all their variables set to
+	some useful value.
+*/
 class type_completor : ftor_base
 {
 	std::size_t decl_depth;

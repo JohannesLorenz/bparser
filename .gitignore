@@ -3,4 +3,5 @@ lexer.h
 parser.c
 parser.h
 test/test
+tmp_result.txt
 

@@ -1,9 +1,16 @@
+/*
+	This file specifies useful visitors for the finished AST, as well as
+	functions to use them easily.
+*/
+
 #ifndef UTILS_H
 #define UTILS_H
 
 #include <string>
 #include "visitor.h"
 
+//! This class trys to find the funtion identifier of a function call expression
+//! E.g. f in f(x), but also in (f)(x) or ((fptr)f)(x)
 class function_called : public visitor_t
 {
 	identifier_t* _identifier;
@@ -26,7 +33,7 @@ public:
 	//void visit(array_access_expression_t &a);
 };
 
-
+//! not yet finished
 struct type_specifier_list
 {
 	enum type_t
@@ -52,6 +59,7 @@ struct _is
 	void operator()(node_base const& ) { value = false; }
 };
 
+//! returns true iff node is of type T (similar to dynamic_cast, but faster)
 template<class T>
 inline bool is(node_base& node)
 {
@@ -60,9 +68,30 @@ inline bool is(node_base& node)
 	return v.functor().value;
 }
 
+//! Returns true if the identifier is a function identifier
 inline bool is_func_id(identifier_t& id)
 {
 	return is<direct_declarator_func>(*id._definition->parent);
+}
+
+template<class T>
+struct _dcast
+{
+	T* value;
+	template<class Unused>
+	_dcast(Unused* const) : value(NULL) {}
+	void operator()(T& ref) { value = &ref; }
+	void operator()(node_base& ) { value = NULL; }
+};
+
+//! returns a pointer of type T if it is of exactly that type
+//! (similar to dynamic_cast, but faster)
+template<class T>
+inline T* dcast(node_base& node)
+{
+	func_visitor< _dcast<T> > v;
+	node.accept(v);
+	return v.functor().value;
 }
 
 struct get_declarator_t : ftor_base
@@ -80,11 +109,12 @@ struct get_declarator_t : ftor_base
 	void operator()(direct_declarator_idlist& d) { accept(*d.c.get<0>()); }
 };
 
-inline identifier_t* get_declarator(declarator_t* d)
+//! Returns the identifier of the innermost declarator, e.g. f in void (const *f[3])(int)
+inline identifier_t& get_declarator(declarator_t& d)
 {
 	func_visitor< get_declarator_t > v;
-	v.functor()(*d);
-	return v.functor().value;
+	v.functor()(d);
+	return *v.functor().value;
 }
 
 #if 0
@@ -104,6 +134,8 @@ struct struct_return_value_of_function
 };
 #endif
 
+// trys to find the struct or union type of a declaration, ignoring pointers etc.
+// e.g., in const struct s* , it should return s 
 struct struct_type_specifier_of_declaration_t : visitor_t
 {
 	identifier_t* result;
@@ -113,7 +145,7 @@ struct struct_type_specifier_of_declaration_t : visitor_t
 	void visit(type_specifier_t & t) { t.c.get<0>()->accept(*this); }
 	void visit(struct_or_union_specifier_t& s) {
 		result = s.c.get<struct_or_union_specifier_t::identifier>(); }
-	void visit(typedef_name_t& t); // see below
+	void visit(typedef_name_t& t);
 };
 
 // FEATURE: structs etc?
@@ -156,26 +188,28 @@ struct declaration_from_declarator_t : ftor_base
 	}
 };
 
-inline declaration_t* declaration_from_declarator(declarator_t* dtor)
+//! returns the declaration in which the given declarator is
+inline declaration_t& declaration_from_declarator(declarator_t& dtor)
 {
 	func_visitor< declaration_from_declarator_t > v0;
-	dtor->accept(v0);
-	return v0.functor().declaration_found;
+	dtor.accept(v0);
+	return *v0.functor().declaration_found;
 }
 
-inline declaration_t* declaration_from_identifier(identifier_t* id)
+//! returns the declaration in which the given identifier is the declarator
+inline declaration_t& declaration_from_identifier(identifier_t& id)
 {
 	func_visitor< declaration_from_declarator_t > v0;
-	id->parent->accept(v0);
-	return v0.functor().declaration_found;
+	id.parent->accept(v0);
+	return *v0.functor().declaration_found;
 }
 
-inline identifier_t* struct_rval_of_func(identifier_t& id)
+inline identifier_t& struct_rval_of_func(identifier_t& id)
 {
 	struct_type_specifier_of_declaration_t v;
-	declaration_from_identifier(id._definition)->accept(v);
+	declaration_from_identifier(*id._definition).accept(v);
 
-	return v.result;
+	return *v.result;
 
 /*	func_visitor< is<struct_return_value_of_function> > v;
 

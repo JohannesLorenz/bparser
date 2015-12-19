@@ -17,6 +17,17 @@
 /* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
 /*************************************************************************/
 
+/**
+	@file tuple03.h
+	C++03 implements tuples, however, in C++03, they don't exist.i
+	This file implements tuples, however, they are made with type lists
+
+	There are 3 types of tuples in this header:
+	 * tpl - tuple of the specified types
+	 * pt - tuple of pointers to the spec. types
+	 * ptn - like pt, but the pointers are initialized to 0
+*/
+
 #ifndef TUPLE03_H
 #define TUPLE03_H
 
@@ -24,6 +35,7 @@
 
 struct no_fill {};
 
+//! dummy type which is typically at the end of lists
 class null_type
 {
 public:

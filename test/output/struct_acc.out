@@ -1,0 +1,91 @@
+                      struct_acc (l   1 c   1) (l  13 c   2) translation unit
+                      struct_acc (l   1 c   1) (l   4 c   9)   external declaration
+                      struct_acc (l   1 c   1) (l   4 c   9)     declaration
+                      struct_acc (l   1 c   1) (l   4 c   2)       declaration specifiers
+                      struct_acc (l   1 c   1) (l   1 c   8)         "typedef"
+                      struct_acc (l   1 c   9) (l   4 c   2)         type specifier
+                      struct_acc (l   1 c   9) (l   4 c   2)           struct specifier
+                      struct_acc (l   1 c   9) (l   1 c  15)             "struct"
+                      struct_acc (l   1 c  16) (l   1 c  19)             identifier (definition): a_t
+                      struct_acc (l   2 c   1) (l   2 c   2)             {
+                      struct_acc (l   3 c   2) (l   3 c   8)             struct declaration
+                      struct_acc (l   3 c   2) (l   3 c   5)               type specifier
+                      struct_acc (l   3 c   2) (l   3 c   5)                 "int"
+                      struct_acc (l   3 c   6) (l   3 c   7)               direct declarator (identifier)
+                      struct_acc (l   3 c   6) (l   3 c   7)                 identifier (definition): b
+                      struct_acc (l   3 c   7) (l   3 c   8)               ;
+                      struct_acc (l   4 c   1) (l   4 c   2)             }
+                      struct_acc (l   4 c   3) (l   4 c   8)       direct declarator (identifier)
+                      struct_acc (l   4 c   3) (l   4 c   8)         identifier (definition): a_t_1
+                      struct_acc (l   4 c   8) (l   4 c   9)       ;
+                      struct_acc (l   6 c   1) (l   6 c  24)   external declaration
+                      struct_acc (l   6 c   1) (l   6 c  24)     declaration
+                      struct_acc (l   6 c   1) (l   6 c  14)       declaration specifiers
+                      struct_acc (l   6 c   1) (l   6 c   8)         "typedef"
+                      struct_acc (l   6 c   9) (l   6 c  14)         type specifier
+                      struct_acc (l   6 c   9) (l   6 c  14)           typedef name: a_t_1 (definition: struct_acc: l4, c3-8)
+                      struct_acc (l   6 c  15) (l   6 c  23)       direct declarator (array)
+                      struct_acc (l   6 c  15) (l   6 c  20)         direct declarator (identifier)
+                      struct_acc (l   6 c  15) (l   6 c  20)           identifier (definition): a_t_2
+                      struct_acc (l   6 c  20) (l   6 c  21)         [
+                      struct_acc (l   6 c  21) (l   6 c  22)         primary expression
+                      struct_acc (l   6 c  21) (l   6 c  22)           int constant: 1
+                      struct_acc (l   6 c  22) (l   6 c  23)         ]
+                      struct_acc (l   6 c  23) (l   6 c  24)       ;
+                      struct_acc (l   7 c   1) (l   7 c   9)   external declaration
+                      struct_acc (l   7 c   1) (l   7 c   9)     declaration
+                      struct_acc (l   7 c   1) (l   7 c   6)       declaration specifiers
+                      struct_acc (l   7 c   1) (l   7 c   6)         type specifier
+                      struct_acc (l   7 c   1) (l   7 c   6)           typedef name: a_t_2 (definition: struct_acc: l6, c15-20)
+                      struct_acc (l   7 c   7) (l   7 c   8)       direct declarator (identifier)
+                      struct_acc (l   7 c   7) (l   7 c   8)         identifier (definition): a
+                      struct_acc (l   7 c   8) (l   7 c   9)       ;
+                      struct_acc (l   9 c   1) (l  13 c   2)   external declaration
+                      struct_acc (l   9 c   1) (l  13 c   2)     function definition
+                      struct_acc (l   9 c   1) (l   9 c   4)       declaration specifiers
+                      struct_acc (l   9 c   1) (l   9 c   4)         type specifier
+                      struct_acc (l   9 c   1) (l   9 c   4)           "int"
+                      struct_acc (l   9 c   5) (l   9 c  11)       direct declarator (function)
+                      struct_acc (l   9 c   5) (l   9 c   9)         direct declarator (identifier)
+                      struct_acc (l   9 c   5) (l   9 c   9)           identifier (definition): main
+                      struct_acc (l   9 c   9) (l   9 c  10)         (
+                      struct_acc (l   9 c  10) (l   9 c  11)         )
+                      struct_acc (l  10 c   1) (l  13 c   2)       compound statement
+                      struct_acc (l  10 c   1) (l  10 c   2)         {
+                      struct_acc (l  11 c   2) (l  11 c   8)         declaration
+                      struct_acc (l  11 c   2) (l  11 c   5)           declaration specifiers
+                      struct_acc (l  11 c   2) (l  11 c   5)             type specifier
+                      struct_acc (l  11 c   2) (l  11 c   5)               "int"
+                      struct_acc (l  11 c   6) (l  11 c   7)           direct declarator (identifier)
+                      struct_acc (l  11 c   6) (l  11 c   7)             identifier (definition): b
+                      struct_acc (l  11 c   7) (l  11 c   8)           ;
+                      struct_acc (l  12 c   2) (l  12 c  21)         expression statement
+                      struct_acc (l  12 c   2) (l  12 c  20)           struct access
+                      struct_acc (l  12 c   2) (l  12 c  18)             primary expression
+                      struct_acc (l  12 c   2) (l  12 c   3)               (
+                      struct_acc (l  12 c   3) (l  12 c  17)               unary_expression (prefix)
+                      struct_acc (l  12 c   3) (l  12 c   4)                 *
+                      struct_acc (l  12 c   4) (l  12 c  17)                 primary expression
+                      struct_acc (l  12 c   4) (l  12 c   5)                   (
+                      struct_acc (l  12 c   5) (l  12 c  16)                   binary expression 
+                      struct_acc (l  12 c   5) (l  12 c   6)                     primary expression
+                      struct_acc (l  12 c   5) (l  12 c   6)                       int constant: 1
+                      struct_acc (l  12 c   7) (l  12 c   8)                     +
+                      struct_acc (l  12 c   9) (l  12 c  16)                     primary expression
+                      struct_acc (l  12 c   9) (l  12 c  10)                       (
+                      struct_acc (l  12 c  10) (l  12 c  15)                       unary_expression (prefix)
+                      struct_acc (l  12 c  10) (l  12 c  11)                         &
+                      struct_acc (l  12 c  11) (l  12 c  15)                         array access op
+                      struct_acc (l  12 c  11) (l  12 c  12)                           primary expression
+                      struct_acc (l  12 c  11) (l  12 c  12)                             identifier: a (definition: struct_acc: l7, c7-8)
+                      struct_acc (l  12 c  12) (l  12 c  13)                           [
+                      struct_acc (l  12 c  13) (l  12 c  14)                           primary expression
+                      struct_acc (l  12 c  13) (l  12 c  14)                             int constant: 0
+                      struct_acc (l  12 c  14) (l  12 c  15)                           ]
+                      struct_acc (l  12 c  15) (l  12 c  16)                       )
+                      struct_acc (l  12 c  16) (l  12 c  17)                   )
+                      struct_acc (l  12 c  17) (l  12 c  18)               )
+                      struct_acc (l  12 c  18) (l  12 c  19)             .
+                      struct_acc (l  12 c  19) (l  12 c  20)             identifier: b (definition: struct_acc: l3, c6-7)
+                      struct_acc (l  12 c  20) (l  12 c  21)           ;
+                      struct_acc (l  13 c   1) (l  13 c   2)         }

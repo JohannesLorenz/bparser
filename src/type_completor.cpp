@@ -45,7 +45,7 @@ void struct_type_of::visit(primary_expression_t& p)
 	identifier_t* id = p.c.get<1>();
 	if(id)
 	{
-		set_id(struct_rval_of_func(*id));
+		set_id(struct_rval_of_func(*id)._definition);
 		/*if(is_func_id(*id))
 		 {}
 		else
@@ -86,6 +86,11 @@ void struct_type_of::visit(type_name_t &t)
 	tvisit(t.c.get<0>());
 }
 
+void struct_type_of::visit(declaration_specifiers_t &s)
+{
+	vaccept(s.c);
+}
+
 void struct_type_of::visit(specifier_qualifier_list_t &s)
 {
 	vaccept(s.c);
@@ -110,10 +115,10 @@ void struct_type_of::visit(typedef_name_t &t)
 	//				=>... declaration
 	//					~> get type specifier
 	//				=> function_definition
+	//					~> not useful ;)
 	//		=> struct_or_union_specifier
 	//			~> can not be (typedef ~> would be declaration)
-
-	throw "not yet...";
+	visit(*declaration_from_identifier(*t._definition).c.get<0>()); // FEATURE: ref func for tuple?
 	//t->_definition->parent->parent->accept(*this);
 }
 
@@ -319,7 +324,7 @@ void type_completor::on(struct_declaration_list_t& l, leave)
 		for(; cur; cur = cur->c.get<0>()) {
 			declarator_t* dtor = cur->c.get<2>()->c.get<0>();
 			if(dtor)
-			 v_lookup_table.flag_symbol(get_declarator(dtor), decl_depth, false);
+			 v_lookup_table.flag_symbol(&get_declarator(*dtor), decl_depth, false);
 		}
 
 	}
@@ -334,7 +339,7 @@ void type_completor::on(struct_access_expression_t& s, leave)
 	// (already done, since we are leaving!)
 
 	// step 2: get struct type of left identifier
-#if 0
+#if 1
 	struct_type_of struct_type;
 	s.c.get<0>()->accept(struct_type);
 	current_struct_scope = struct_type.get_identifier();
@@ -350,7 +355,31 @@ void type_completor::on(struct_access_expression_t& s, leave)
 	// of the left expression. use it to connect the
 	// right identifier
 	// TODO: get struct_...list
-	connect_identifier(s.c.get<2>());
+	struct_or_union_specifier_t* spec = dcast<struct_or_union_specifier_t>(*current_struct_scope->parent);
+	if(! spec)
+	 throw "Unable to cast parent of struct identifier to struct_or_union_specifier_t";
+	std::cout << "ACC ACC:" << *spec << std::endl;
+	struct_declaration_list_t& l = *spec->c.get<struct_or_union_specifier_t::declaration_list>();
+	bool searching = true;
+	for(std::list<struct_declaration_t*>::const_iterator itr = l.c.begin(); searching && itr != l.c.end(); ++itr)
+	{
+		struct_declarator_list_t* cur = (*itr)->c.get<1>();
+		for(; cur && searching; cur = cur->c.get<0>()) {
+			declarator_t* dtor = cur->c.get<2>()->c.get<0>();
+			if(dtor) { // FEATURE: never NULL?
+			std::cout << "connecting id: " << *dtor << std::endl;
+			 s.c.get<2>()->_definition = &get_declarator(*dtor); // FEATURE: rename: id_from_declarator?
+			searching = false;
+			}
+			//if(dtor)
+			// v_lookup_table.flag_symbol(&get_declarator(*dtor), decl_depth, false);
+		}
+
+	}
+	if(searching)
+	 throw "Identifier not found in struct!";
+
+	//connect_identifier(s.c.get<2>());
 #endif
 }
 
@@ -360,19 +389,19 @@ void type_completor::on(declaration_t& d, leave)
 	{
 		init_declarator_list_t* cur = d.c.get<1>();
 		for(; cur; cur = cur->c.get<0>()) {
-			v_lookup_table.flag_symbol(get_declarator(cur->c.get<2>()->c.get<0>()), decl_depth, false);
+			v_lookup_table.flag_symbol(&get_declarator(*cur->c.get<2>()->c.get<0>()), decl_depth, false);
 		}
 	}
 }
 
 void type_completor::on(function_definition_t& f, leave)
 {
-	v_lookup_table.flag_symbol(get_declarator(f.c.get<1>()), decl_depth, false);
+	v_lookup_table.flag_symbol(&get_declarator(*f.c.get<1>()), decl_depth, false);
 }
 
 void type_completor::on(parameter_declaration_t& p, leave) {
 	if(p.c.get<1>())
-	 v_lookup_table.flag_symbol(get_declarator(p.c.get<1>()), decl_depth, false);
+	 v_lookup_table.flag_symbol(&get_declarator(*p.c.get<1>()), decl_depth, false);
 }
 
 void type_completor::on(enum_specifier_t& e, enter) {

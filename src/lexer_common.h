@@ -29,6 +29,7 @@
 #include "node.h"
 #include "parser.h"
 
+#include <cassert>
 #include <cctype>
 #include <iostream>
 #include <vector>
@@ -254,7 +255,7 @@ public:
 
 				// invariant: ++itr == next || next == table.end()
 				//std::cout << itr->second.second << " <-> " << bracket_depth << std::endl;
-				if(itr->second.back().second >= new_depth + 1)
+				if(itr->second.back().second >= (std::size_t)new_depth + 1)
 				{
 				//	std::cout << itr->first << ": " << itr->second.back().first << std::endl;
 					if(itr->second.back().first == lt_identifier_list)
@@ -301,7 +302,7 @@ public:
 				}
 			} else
 			{
-				if(stack.back().second != new_depth // just declared in an inner scope
+				if(stack.back().second != (std::size_t)new_depth // just declared in an inner scope
 					||
 					(stack.back().first == lt_struct_bound && // TODO: not only stack.back?
 					type == lt_struct_bound))
@@ -393,13 +394,18 @@ class states_t
 //	int declaration_state_braces_after;
 /*	int after_decl_pars_depth;
 	int after_decl_braces_depth;*/
-	int decl_depth;
+	int decl_depth; //!< used for scoping
 	bool in_for_header;
-	int par_count;
-	int brack_count;
+	int par_count; //!< counts parantheses depth: )(
+	int brack_count; //!< counts bracket depth: }{
+
+	//! marked from declarator to first of ,;(
+	//! used to increase depth on the first ( after declarator, but not after subsequent ones
+	//! removed for subsequent declarators like b in 'int a, b;'
+	//! for initializers, it does not matter, since the declaration depth is irrelevant
 	bool recent_declaration;
 	int lazy_decr_decl_depth;
-	bool _maybe_struct_declaration;
+	bool _maybe_struct_definition; //!< some struct keywords introduce declarations, others don't
 	int in_enum;
 	int struct_depth;
 	bool struct_depth_decreased;
@@ -423,20 +429,23 @@ public:
 		brack_count(0),
 		recent_declaration(false),
 		lazy_decr_decl_depth(0),
-		_maybe_struct_declaration(false),
+		_maybe_struct_definition(false),
 		in_enum(0),
 		struct_depth(0)
 		{}
 
+	//! resets all variables to initial states
 	void reset()
 	{
+		// actually, no variables are reset - they are assumed to already
+		// carry initial values, if not, we exit
 		if(decl_depth) throw "decl_depth";
 		if(in_for_header) throw "in_for_header";
 		if(par_count) throw "par_count";
 		if(brack_count) throw "brack_count";
 	//	if(recent_declaration) throw "recent_declaration";
 		if(lazy_decr_decl_depth) throw "lazy_decr_decl_depth";
-		if(_maybe_struct_declaration) throw "_maybe_struct_declaration";
+		if(_maybe_struct_definition) throw "_maybe_struct_definition";
 		if(in_enum) throw "in_enum";
 		if(struct_depth) throw "struct_depth";
 		if(struct_depth_decreased) throw "struct_depth_decreased";
@@ -444,12 +453,13 @@ public:
 
 	int get_brack_count() const { return brack_count; }
 	int get_decl_depth() const { return decl_depth; }
-	void maybe_struct_declaration() { _maybe_struct_declaration = true; }
+	void maybe_struct_definition() { _maybe_struct_definition = true; }
 	int enum_state() const { return in_enum; }
 
-	std::string recent_was_flagged_unknown;
+	std::string recent_was_flagged_unknown; // FEATURE: use token pointer
 
-	int add_number(lookup_type lt) {
+	//! returns additional number to add to the declaration depth
+	int get_add_number(lookup_type lt) {
 		// parantheses after are only valid
 		return /*(int)(in_for_header)*/ - (lt == lt_enumeration) /*+ declaration_state_pars_after*/
 			- (lt == lt_identifier_list);
@@ -457,13 +467,18 @@ public:
 
 	void set_state(const char* text, int token_id)
 	{
-	if(token_id != ' ' && token_id != '\n' && token_id != '\t' && token_id != '\v' && token_id != '\f')
-	{
+		// called on all tokens except whitespace
+		assert(token_id != ' ' && token_id != '\n' && token_id != '\t' && token_id != '\v' && token_id != '\f');
+		
+		bool brack_depth_decreased = false;
 		struct_depth_decreased = false;
 		
+		/*
+			step 1: recent tokens -> variables
+		*/
+		// decrease declaration depth if requested from last token
 		if(lazy_decr_decl_depth)
 		{
-			std::cout << "DECR DECR DECR" << std::endl;
 			--lazy_decr_decl_depth;
 			decl_depth--;
 		}
@@ -485,8 +500,8 @@ public:
 //					lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
 				}
 				if(!--par_count)
-				if(in_for_header)
-				{
+				if(in_for_header) // for headers can not be in parantheses, so
+				{ // !par_count is the exact condition (CITE)
 					in_for_header = false;
 					// might need to smash out variables
 					//lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
@@ -519,79 +534,55 @@ public:
 			case '{':
 				{
 					int check = recent_tokens[(recent_tokens[0] == IDENTIFIER || recent_tokens[0] == MAYBE_IDENTIFIER) ? -1 : 0];
-					std::cout << "check: " << ((recent_tokens[0] == IDENTIFIER) ? -1 : 0) << ", val: "
-						<< recent_tokens[(recent_tokens[0] == IDENTIFIER) ? -1 : 0] << ", " << IDENTIFIER << "; "
-						<< STRUCT << "/" << UNION << "/" << ENUM << std::endl;
-						
 					if(check == STRUCT || check == UNION || check == ENUM)
-					{
-						// -1 because the depth has already been increased
-						++struct_depth;
-						std::cout << "P1" << std::endl;
-					}
+					 ++struct_depth;
 				}
 				++brack_count;
 				break;
 			case '}':
-				--brack_count;
-				if(struct_depth)
-				 --struct_depth, struct_depth_decreased = true, std::cout << "M1" << std::endl;;
-				lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
+				--brack_count, brack_depth_decreased = true;
+				if(struct_depth) // this is no C++ ;) }{ inside structs means: another struct
+				 --struct_depth, struct_depth_decreased = true;
 		}
 
 		if(recent_tokens[0] == '}')
 		 in_enum = false; // enums always end on next }
-
-		if(lazy_decr_decl_depth == 1)
+		
+		/*
+			step 2: variables -> notify lookup_table about decreasing decl_depth
+		*/
+		// there are two such cases: } and )
+		// basically, in almost all cases, } and ) (from previous token) decrease the lookup table,
+		// except for ){, which can only occur after for loops and function headers
+		// FEATURE: only one function call, set parameters in if-else
+		if(brack_depth_decreased)
+		 lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
+		else if(lazy_decr_decl_depth == 1)
 		{
 			lazy_decr_decl_depth = 0;
 
+			// declaration depth has changed see above), notify lookup table now
 			switch(token_id)
 			{
+				// the calculations differ because decl_depth or brack_count may
+				// already have changed since last token
 				case '(':
-					// erase temporary
-					lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count-1);
+					// erase temporarily
+					lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count - 1);
 				default:
-					// keep variables from for loop or function header (TODO: useless?)
+					// keep variables from for loop or function header (FEATURE: useless?)
 					// otherwise, the brace is not reopening, so smash out
 					//   (in this case decl_depth + brack_count is smaller than in the
 					//   first case)
 					lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count);
 			}
 		}
-
-
-#if 0
-		if(declaration_state_braces) // structs, enums
-		{
-			// ignore everything, except closing braces
-			if(token_id == '}')
-			 --declaration_state_braces;
-		}
-		else if(declaration_state_braces_after || declaration_state_pars_after)
-		{
-			if(token_id == '}')
-			 --declaration_state_braces_after;
-			else if(token_id == ')')
-			 --declaration_state_pars_after;
-		} // TODO: remove this or put together with lower part?
-
-		if(declaration_state == expect_initializer_or_comma
-			|| declaration_state == declarator_found)
-		{
-			switch(token_id)
-			{
-				case '{':
-					++declaration_state_braces_after; break;
-				case '(':
-					++declaration_state_pars_after; break;
-			}
-		}
-#endif
-
-		//if(!declaration_state_braces /*&& declaration_state_braces_after && !declaration_state_pars_after*/)
+		
+		/*
+			step 3: variables -> set next declaration state
+		*/
 		if(enum_state()) {
-			if(token_id == '}')
+			if(token_id == '}') // can not be in enum (TODO?) => end of enum => type specifier
 				declaration_state = expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
 		}
 		else
@@ -600,7 +591,7 @@ public:
 			switch(declaration_state)
 			{
 				case expect_type_specifier:
-					if(is_type_specifier(text, token_id, false))
+					if(is_type_specifier(text, token_id, false)) // TODO: put this together with enum_state() ?
 						next_state =
 							expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
 					break;
@@ -634,6 +625,8 @@ public:
 					{
 						case ':':
 							// special case: anonymous bitfields in structs
+							// this is the only case where an initializer can follow
+							// *without* a declarator identifier
 							next_state = expect_initializer_or_comma;
 							break;
 						case '(':
@@ -647,6 +640,8 @@ public:
 							break;
 						case MAYBE_IDENTIFIER:
 							next_state = declarator_found;
+							// of course, we expect initializer or comma
+							// declarator_found will be changed to that below
 							break;
 					}
 					break;
@@ -663,6 +658,7 @@ public:
 							next_state = (enum_state())
 								// end of enum block can be reached right
 								// after declarator was found:
+								// TODO: bad comment, is this a bug??
 								? expect_braces_pointers_type_qualifiers_identifier
 								: expect_type_specifier;
 							break;
@@ -672,7 +668,7 @@ public:
 								? expect_braces_pointers_type_qualifiers_identifier
 								: expect_type_specifier;*/
 							next_state = expect_type_specifier;
-
+							// TODO: put these cases together
 						//	if(declaration_state_pars_after > 0)
 						//	 throw "impossible";
 						case '(':
@@ -701,10 +697,10 @@ public:
 		}
 
 		std::cout << "SET STATE NOW: " << declaration_state << " after text: "<< text << std::endl;
+		
+		add_recent_token(token_id); // updates recent_tokens
 
-		add_recent_token(token_id);
-
-		// handle labels
+		// handle earlier defined labels, maybe flag symbols + set declaration state
 		// TODO: above everything
 		if(recent_was_flagged_unknown.size())
 		{
@@ -714,7 +710,7 @@ public:
 					flag_symbol(recent_was_flagged_unknown.c_str(), lt_identifier);
 					break;
 				case '{': // C99: struct + { => struct declaration
-					if(_maybe_struct_declaration)
+					if(_maybe_struct_definition)
 					 flag_symbol(recent_was_flagged_unknown.c_str(), lt_struct_bound, -1);
 					declaration_state = expect_type_specifier;
 					break;
@@ -722,19 +718,20 @@ public:
 			}
 		}
 		recent_was_flagged_unknown.clear();
-		_maybe_struct_declaration = false;
+		_maybe_struct_definition = false;
 
-	}
 	}
 
 	void flag_symbol(const char* symbol, lookup_type lt, int special = 0)
 	{
 		std::cout << "flag: brack_count: " << brack_count << ", decl_depth: " << decl_depth << std::endl;
-		lookup_table_t::flag_symbol(symbol, lt, add_number(lt) + brack_count + decl_depth + special);
+		lookup_table_t::flag_symbol(symbol, lt, get_add_number(lt) + brack_count + decl_depth + special);
 		if(lt != lt_identifier_list)
 		 declaration_state = expect_initializer_or_comma;
 	}
 
+	//! @param id_is_decl this means that if the token is maybe an identifier,
+	//!  then this means that the token makes a declarator
 	bool is_type_specifier(const char* text, int token_id, bool id_is_decl)
 	{
 		switch(token_id)
@@ -755,16 +752,16 @@ public:
 			//case TYPEDEF_NAME:
 			//	return true;
 			case MAYBE_IDENTIFIER:
-
-				// if id => decl, than we have a declaration, no type_specifier
-				// otherwise, we have no declaration, so the maybe-id must be known
-				// then, it is only a type specifier if it is a typedef name
 				if(recent_tokens[0] == STRUCT || recent_tokens[0] == UNION
-					|| recent_tokens[0] == ENUM) // TODO: ENUM?
+					|| recent_tokens[0] == ENUM) // FEATURE: remove or keep the ENUM check?
 				 return true;
 				else
-				return (!id_is_decl) && lookup_table_t::type_of(text) == lt_typedef_name;
+				// if identifier is a declarator, than we have a declaration, no type_specifier
+				// otherwise, we have no declaration, so the maybe-id must be known
+				// then, it is only a type specifier if it is a typedef name
+				 return (!id_is_decl) && lookup_table_t::type_of(text) == lt_typedef_name;
 			case '}':
+				// only structs + enums, but enums currently bypass this function
 				return struct_depth_decreased;
 			default:
 				return false;
@@ -777,14 +774,21 @@ states_t states;
 
 void reset_states() { states.reset(); }
 
+// TODO: fwd declare overloaded?
+
 //! creates a new token and appends it
-int app3(token_t*& token, int token_id, const char* text)
-{ // FEATURE: rename to app() or app_token()
-	states.set_state(text, token_id);
+int app2(token_t*& token, int token_id)
+{
 	cnt();
 	token = new token_t(get_pos(), token_id);
 	token_str::value.push_back(token);
 	return token_id;
+}
+
+int app3(token_t*& token, int token_id, const char* text)
+{ // FEATURE: rename to app() or app_token()
+	states.set_state(text, token_id);
+	return app2(token, token_id);
 }
 
 //! appends an already created terminal

@@ -448,7 +448,7 @@
                      expressions (l  36 c   2) (l  36 c   3)               primary expression
                      expressions (l  36 c   2) (l  36 c   3)                 identifier: s (definition: expressions: l35, c13-14)
                      expressions (l  36 c   3) (l  36 c   4)               .
-                     expressions (l  36 c   4) (l  36 c   5)               identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  36 c   4) (l  36 c   5)               identifier: x (definition: expressions: l1, c18-19)
                      expressions (l  36 c   6) (l  36 c   7)             +
                      expressions (l  36 c   8) (l  36 c  15)             struct access
                      expressions (l  36 c   8) (l  36 c  12)               primary expression
@@ -459,7 +459,7 @@
                      expressions (l  36 c  10) (l  36 c  11)                     identifier: s (definition: expressions: l35, c13-14)
                      expressions (l  36 c  11) (l  36 c  12)                 )
                      expressions (l  36 c  12) (l  36 c  14)               ->
-                     expressions (l  36 c  14) (l  36 c  15)               identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  36 c  14) (l  36 c  15)               identifier: x (definition: expressions: l1, c18-19)
                      expressions (l  36 c  15) (l  36 c  16)           ;
                      expressions (l  37 c   2) (l  37 c  28)         expression statement
                      expressions (l  37 c   2) (l  37 c  27)           function call

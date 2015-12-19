@@ -1,3 +1,5 @@
+//! @file forward declarations for node classes
+
 // virtual nodes:
 class node_base;
 struct statement_t;

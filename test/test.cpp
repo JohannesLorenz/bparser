@@ -264,6 +264,8 @@ void run(int argc, char** argv)
 		run_test_file("clash_2");
 		run_test_file("scopes");
 		run_test_file("nested");
+
+		run_test_file("struct_acc");
 	}
 	else // argc > 1
 	{

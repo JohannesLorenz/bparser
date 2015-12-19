@@ -18,8 +18,8 @@
 /*************************************************************************/
 
 /**
-	@file token.h This file defines IDs for tokens (nodes of the AST
-		with no children) and label strings.
+	@file token.h This file defines IDs for tokens (they are all
+		nodes of the AST with no children) and label strings.
 */
 
 #ifndef TOKEN_H

@@ -261,11 +261,11 @@ return app3(yylval->token, '{', yytext); }
 "|"					{ return app3(yylval->token, '|', yytext); }
 "?"					{ return app3(yylval->token, '?', yytext); }
 
-"\t"					{ app3(yylval->token, '\t', yytext); }
-"\n"					{ app3(yylval->token, '\n', yytext); }
-"\v"					{ app3(yylval->token, '\v', yytext); }
-"\f"					{ app3(yylval->token, '\f', yytext); }
-" "					{ app3(yylval->token, ' ', yytext); }
+"\t"					{ app2(yylval->token, '\t'); }
+"\n"					{ app2(yylval->token, '\n'); }
+"\v"					{ app2(yylval->token, '\v'); }
+"\f"					{ app2(yylval->token, '\f'); }
+" "					{ app2(yylval->token, ' '); }
 "#"([^\\\n])*"\n"			{ pos_counter::parse_ppline(yytext); }
 .					{ std::cerr << "At: " << yytext << std::endl; throw "bad character"; }
 
@@ -330,14 +330,13 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 
 	if(recent_tokens[-1] == '.' || recent_tokens[-1] == PTR_OP)
 	{
-		std::cout << "STRUCTACC" << std::endl;
 		return IDENTIFIER;
 	}
 
 	if(recent_tokens[-1] == STRUCT || recent_tokens[-1] == UNION || recent_tokens[-1] == ENUM)
 	{
 		states.recent_was_flagged_unknown = text;
-		states.maybe_struct_declaration();
+		states.maybe_struct_definition();
 		//states.flag_symbol(text, lt_struct_bound);
 		return IDENTIFIER;
 	}

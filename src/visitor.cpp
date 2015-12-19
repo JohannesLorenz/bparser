@@ -1109,9 +1109,10 @@ node_t& echo(node_t& e)
 }
 */
 
-std::ostream operator<<(std::ostream&o, node_base& n)
+std::ostream& operator<<(std::ostream& o, node_base& n)
 {
 	dumper_t d(o);
 	n.accept(d);
+	return o;
 }
 
