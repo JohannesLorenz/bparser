@@ -50,6 +50,8 @@ void init_parser(const char* fname)
 //template<>
 //void type_specifier_simple_t::accept(visitor_t& v) { v.vis(this); }
 
+namespace nodes {
+
 identifier_t::identifier_t(const char* name, geom_t geom) :
 	defined_t(geom, t_identifier, name) {}
 
@@ -233,4 +235,6 @@ void identifier_list_t::accept(visitor_t &v) { v.vis(this); }
 
 void iconstant_t::accept(visitor_t &v) { v.vis(this); }
 void fconstant_t::accept(visitor_t &v) { v.vis(this); }
+
+}
 

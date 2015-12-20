@@ -1,4 +1,4 @@
-//! @file geom.h This file defines the layout classes for AST nodes
+//! @file geom.h Layout classes for AST nodes
 //!	geometry means: which lines, columns and files are the nodes in
 
 #ifndef GEOM_H

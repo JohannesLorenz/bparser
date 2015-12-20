@@ -18,16 +18,13 @@
 /*************************************************************************/
 
 /**
-	@file lexer_common.h
-	Common routines for the lexer, only included by it
-	This header contains complicated logic and is not easy to understand
+	@file lexer_common.h Common routines for the lexer.
+	Only included by the lexer.
+	Contains complicated logic and is not easy to understand.
 */
 
 #ifndef LEXER_COMMON_H
 #define LEXER_COMMON_H
-
-#include "node.h"
-#include "parser.h"
 
 #include <cassert>
 #include <cctype>
@@ -35,6 +32,10 @@
 #include <vector>
 #include <cstring>
 #include <map>
+
+#include "node.h"
+#include "parser.h"
+using namespace nodes;
 
 int strict_mode;
 bool bparser_debug;

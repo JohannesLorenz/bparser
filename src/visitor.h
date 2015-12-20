@@ -18,7 +18,7 @@
 /*************************************************************************/
 
 /**
-	@file This file declares the visitor class, from which all visitors
+	@file visitor.h This file declares the visitor class, from which all visitors
 		inherit. Also, it includes the functor visitor class,
 		which redirects the virtual visit calls to a functor template
 */
@@ -34,6 +34,7 @@
 #include "node_fwd.h"
 #include "node.h" // FEATURE: can this be omitted?
 #include "geom.h"
+using namespace nodes;
 
 #ifndef VISITOR_H
 #define VISITOR_H

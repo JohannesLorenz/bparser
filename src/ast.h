@@ -17,6 +17,8 @@
 /* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
 /*************************************************************************/
 
+//! @file ast.h functionality to build complete ASTs
+
 //! returns an AST (abstract syntax tree) from given C99 input string
 //! This is the function most application will want to access
 //! @param input precompiled-ANSII-C99 input string

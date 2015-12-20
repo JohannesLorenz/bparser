@@ -1,5 +1,5 @@
-/*
-	This file specifies useful visitors for the finished AST, as well as
+/**
+	@file utils.h This file specifies useful visitors for the finished AST, as well as
 	functions to use them easily.
 */
 

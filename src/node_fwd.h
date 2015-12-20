@@ -1,8 +1,12 @@
-//! @file forward declarations for node classes
+//! @file node_fwd.h forward declarations for node classes
+
+class node_base;
+
+namespace nodes {
 
 // virtual nodes:
-class node_base;
 struct statement_t;
+struct noconst_terminal_t;
 
 // other nodes:
 struct type_name_t;
@@ -23,6 +27,7 @@ struct identifier_list_t;
 
 struct primary_expression_t;
 struct iconstant_t;
+struct fconstant_t;
 //template<class T>
 //struct constant_t;
 struct primary_identifier_t;
@@ -71,6 +76,8 @@ struct block_item_t;
 struct attr_name_t;
 struct attribute_t;
 struct identifier_t;
+struct typedef_name_t;
+struct enumeration_constant_t;
 struct string_literal_t;
 struct sizeof_expression_t;
 struct init_declarator_list_t;
@@ -78,6 +85,7 @@ struct init_declarator_t;
 struct initializer_t;
 struct initializer_list_t;
 struct designator_list_t;
+struct designator_t;
 struct designator_id;
 struct designator_constant_expr;
 
@@ -92,3 +100,6 @@ struct direct_abstract_declarator_decl;
 struct direct_abstract_declarator_arr;
 struct direct_abstract_declarator_func;
 struct direct_declarator_t;
+
+}
+

@@ -89,6 +89,8 @@ public:
 };
 #endif
 
+namespace nodes {
+
 class terminal_t : public node_t<>
 {
 	int _value;
@@ -1106,5 +1108,7 @@ struct translation_unit_t : public node_t<translation_unit_t> // FEATURE: inheri
 	std::list<external_declaration_t*> c;
 	virtual void accept(class visitor_t& v);
 };
+
+}
 
 #endif // NODE_H
