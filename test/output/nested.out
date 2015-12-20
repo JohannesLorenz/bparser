@@ -1,4 +1,4 @@
-                          nested (l   1 c   1) (l  16 c   2) translation unit
+                          nested (l   1 c   1) (l  21 c   2) translation unit
                           nested (l   1 c   1) (l   1 c  29)   external declaration
                           nested (l   1 c   1) (l   1 c  29)     declaration
                           nested (l   1 c   1) (l   1 c  26)       declaration specifiers
@@ -193,56 +193,140 @@
                           nested (l   9 c  29) (l   9 c  31)             identifier (definition): s1
                           nested (l   9 c  31) (l   9 c  32)         )
                           nested (l   9 c  32) (l   9 c  33)       ;
-                          nested (l  11 c   1) (l  16 c   2)   external declaration
-                          nested (l  11 c   1) (l  16 c   2)     function definition
-                          nested (l  11 c   1) (l  11 c   4)       declaration specifiers
-                          nested (l  11 c   1) (l  11 c   4)         type specifier
-                          nested (l  11 c   1) (l  11 c   4)           "int"
-                          nested (l  11 c   5) (l  11 c  11)       direct declarator (function)
-                          nested (l  11 c   5) (l  11 c   9)         direct declarator (identifier)
-                          nested (l  11 c   5) (l  11 c   9)           identifier (definition): main
-                          nested (l  11 c   9) (l  11 c  10)         (
-                          nested (l  11 c  10) (l  11 c  11)         )
-                          nested (l  11 c  12) (l  16 c   2)       compound statement
-                          nested (l  11 c  12) (l  11 c  13)         {
-                          nested (l  12 c   2) (l  12 c  15)         declaration
-                          nested (l  12 c   2) (l  12 c   5)           declaration specifiers
-                          nested (l  12 c   2) (l  12 c   5)             type specifier
-                          nested (l  12 c   2) (l  12 c   5)               "int"
-                          nested (l  12 c   6) (l  12 c   7)           direct declarator (identifier)
-                          nested (l  12 c   6) (l  12 c   7)             identifier (definition): x
-                          nested (l  12 c   7) (l  12 c   8)           ,
-                          nested (l  12 c   9) (l  12 c  10)           direct declarator (identifier)
-                          nested (l  12 c   9) (l  12 c  10)             identifier (definition): g
-                          nested (l  12 c  10) (l  12 c  11)           ,
-                          nested (l  12 c  12) (l  12 c  14)           direct declarator (identifier)
-                          nested (l  12 c  12) (l  12 c  14)             identifier (definition): s1
-                          nested (l  12 c  14) (l  12 c  15)           ;
-                          nested (l  13 c   2) (l  13 c  12)         expression statement
-                          nested (l  13 c   2) (l  13 c  11)           sizeof ...
-                          nested (l  13 c   2) (l  13 c   8)             "sizeof"
-                          nested (l  13 c   8) (l  13 c   9)             (
-                          nested (l  13 c   9) (l  13 c  10)             type name
-                          nested (l  13 c   9) (l  13 c  10)               type specifier
-                          nested (l  13 c   9) (l  13 c  10)                 typedef name: s (definition: nested: l1, c27-28)
-                          nested (l  13 c  10) (l  13 c  11)             )
-                          nested (l  13 c  11) (l  13 c  12)           ;
-                          nested (l  14 c   2) (l  14 c  12)         expression statement
-                          nested (l  14 c   2) (l  14 c  11)           sizeof ...
-                          nested (l  14 c   2) (l  14 c   8)             "sizeof"
-                          nested (l  14 c   8) (l  14 c  11)             primary expression
-                          nested (l  14 c   8) (l  14 c   9)               (
-                          nested (l  14 c   9) (l  14 c  10)               primary expression
-                          nested (l  14 c   9) (l  14 c  10)                 identifier: f (definition: nested: l5, c7-8)
-                          nested (l  14 c  10) (l  14 c  11)               )
-                          nested (l  14 c  11) (l  14 c  12)           ;
-                          nested (l  15 c   2) (l  15 c  13)         expression statement
-                          nested (l  15 c   2) (l  15 c  12)           sizeof ...
-                          nested (l  15 c   2) (l  15 c   8)             "sizeof"
-                          nested (l  15 c   8) (l  15 c  12)             primary expression
-                          nested (l  15 c   8) (l  15 c   9)               (
-                          nested (l  15 c   9) (l  15 c  11)               primary expression
-                          nested (l  15 c   9) (l  15 c  11)                 identifier: f3 (definition: nested: l9, c9-11)
-                          nested (l  15 c  11) (l  15 c  12)               )
-                          nested (l  15 c  12) (l  15 c  13)           ;
-                          nested (l  16 c   1) (l  16 c   2)         }
+                          nested (l  11 c   1) (l  11 c  24)   external declaration
+                          nested (l  11 c   1) (l  11 c  24)     declaration
+                          nested (l  11 c   1) (l  11 c   5)       declaration specifiers
+                          nested (l  11 c   1) (l  11 c   5)         type specifier
+                          nested (l  11 c   1) (l  11 c   5)           "void"
+                          nested (l  11 c   6) (l  11 c  23)       direct declarator (function)
+                          nested (l  11 c   6) (l  11 c  17)         direct declarator (declaration)
+                          nested (l  11 c   6) (l  11 c   7)           (
+                          nested (l  11 c   7) (l  11 c  16)           declarator
+                          nested (l  11 c   7) (l  11 c   8)             pointer
+                          nested (l  11 c   7) (l  11 c   8)               *
+                          nested (l  11 c   8) (l  11 c  16)             direct declarator (function)
+                          nested (l  11 c   8) (l  11 c  10)               direct declarator (identifier)
+                          nested (l  11 c   8) (l  11 c  10)                 identifier (definition): f4
+                          nested (l  11 c  10) (l  11 c  11)               (
+                          nested (l  11 c  11) (l  11 c  15)               parameter declaration
+                          nested (l  11 c  11) (l  11 c  12)                 declaration specifiers
+                          nested (l  11 c  11) (l  11 c  12)                   type specifier
+                          nested (l  11 c  11) (l  11 c  12)                     typedef name: s (definition: nested: l1, c27-28)
+                          nested (l  11 c  13) (l  11 c  15)                 direct declarator (identifier)
+                          nested (l  11 c  13) (l  11 c  15)                   identifier (definition): s1
+                          nested (l  11 c  15) (l  11 c  16)               )
+                          nested (l  11 c  16) (l  11 c  17)           )
+                          nested (l  11 c  17) (l  11 c  18)         (
+                          nested (l  11 c  18) (l  11 c  22)         parameter declaration
+                          nested (l  11 c  18) (l  11 c  19)           declaration specifiers
+                          nested (l  11 c  18) (l  11 c  19)             type specifier
+                          nested (l  11 c  18) (l  11 c  19)               typedef name: s (definition: nested: l1, c27-28)
+                          nested (l  11 c  20) (l  11 c  22)           direct declarator (identifier)
+                          nested (l  11 c  20) (l  11 c  22)             identifier (definition): s1
+                          nested (l  11 c  22) (l  11 c  23)         )
+                          nested (l  11 c  23) (l  11 c  24)       ;
+                          nested (l  12 c   1) (l  12 c  26)   external declaration
+                          nested (l  12 c   1) (l  12 c  26)     function definition
+                          nested (l  12 c   1) (l  12 c   5)       declaration specifiers
+                          nested (l  12 c   1) (l  12 c   5)         type specifier
+                          nested (l  12 c   1) (l  12 c   5)           "void"
+                          nested (l  12 c   6) (l  12 c  23)       direct declarator (function)
+                          nested (l  12 c   6) (l  12 c  17)         direct declarator (declaration)
+                          nested (l  12 c   6) (l  12 c   7)           (
+                          nested (l  12 c   7) (l  12 c  16)           declarator
+                          nested (l  12 c   7) (l  12 c   8)             pointer
+                          nested (l  12 c   7) (l  12 c   8)               *
+                          nested (l  12 c   8) (l  12 c  16)             direct declarator (function)
+                          nested (l  12 c   8) (l  12 c  10)               direct declarator (identifier)
+                          nested (l  12 c   8) (l  12 c  10)                 identifier (definition): f5
+                          nested (l  12 c  10) (l  12 c  11)               (
+                          nested (l  12 c  11) (l  12 c  15)               parameter declaration
+                          nested (l  12 c  11) (l  12 c  12)                 declaration specifiers
+                          nested (l  12 c  11) (l  12 c  12)                   type specifier
+                          nested (l  12 c  11) (l  12 c  12)                     typedef name: s (definition: nested: l1, c27-28)
+                          nested (l  12 c  13) (l  12 c  15)                 direct declarator (identifier)
+                          nested (l  12 c  13) (l  12 c  15)                   identifier (definition): s1
+                          nested (l  12 c  15) (l  12 c  16)               )
+                          nested (l  12 c  16) (l  12 c  17)           )
+                          nested (l  12 c  17) (l  12 c  18)         (
+                          nested (l  12 c  18) (l  12 c  22)         parameter declaration
+                          nested (l  12 c  18) (l  12 c  19)           declaration specifiers
+                          nested (l  12 c  18) (l  12 c  19)             type specifier
+                          nested (l  12 c  18) (l  12 c  19)               typedef name: s (definition: nested: l1, c27-28)
+                          nested (l  12 c  20) (l  12 c  22)           direct declarator (identifier)
+                          nested (l  12 c  20) (l  12 c  22)             identifier (definition): s1
+                          nested (l  12 c  22) (l  12 c  23)         )
+                          nested (l  12 c  24) (l  12 c  26)       compound statement
+                          nested (l  12 c  24) (l  12 c  25)         {
+                          nested (l  12 c  25) (l  12 c  26)         }
+                          nested (l  14 c   1) (l  21 c   2)   external declaration
+                          nested (l  14 c   1) (l  21 c   2)     function definition
+                          nested (l  14 c   1) (l  14 c   4)       declaration specifiers
+                          nested (l  14 c   1) (l  14 c   4)         type specifier
+                          nested (l  14 c   1) (l  14 c   4)           "int"
+                          nested (l  14 c   5) (l  14 c  11)       direct declarator (function)
+                          nested (l  14 c   5) (l  14 c   9)         direct declarator (identifier)
+                          nested (l  14 c   5) (l  14 c   9)           identifier (definition): main
+                          nested (l  14 c   9) (l  14 c  10)         (
+                          nested (l  14 c  10) (l  14 c  11)         )
+                          nested (l  14 c  12) (l  21 c   2)       compound statement
+                          nested (l  14 c  12) (l  14 c  13)         {
+                          nested (l  15 c   2) (l  15 c  15)         declaration
+                          nested (l  15 c   2) (l  15 c   5)           declaration specifiers
+                          nested (l  15 c   2) (l  15 c   5)             type specifier
+                          nested (l  15 c   2) (l  15 c   5)               "int"
+                          nested (l  15 c   6) (l  15 c   7)           direct declarator (identifier)
+                          nested (l  15 c   6) (l  15 c   7)             identifier (definition): x
+                          nested (l  15 c   7) (l  15 c   8)           ,
+                          nested (l  15 c   9) (l  15 c  10)           direct declarator (identifier)
+                          nested (l  15 c   9) (l  15 c  10)             identifier (definition): g
+                          nested (l  15 c  10) (l  15 c  11)           ,
+                          nested (l  15 c  12) (l  15 c  14)           direct declarator (identifier)
+                          nested (l  15 c  12) (l  15 c  14)             identifier (definition): s1
+                          nested (l  15 c  14) (l  15 c  15)           ;
+                          nested (l  16 c   2) (l  16 c  12)         expression statement
+                          nested (l  16 c   2) (l  16 c  11)           sizeof ...
+                          nested (l  16 c   2) (l  16 c   8)             "sizeof"
+                          nested (l  16 c   8) (l  16 c   9)             (
+                          nested (l  16 c   9) (l  16 c  10)             type name
+                          nested (l  16 c   9) (l  16 c  10)               type specifier
+                          nested (l  16 c   9) (l  16 c  10)                 typedef name: s (definition: nested: l1, c27-28)
+                          nested (l  16 c  10) (l  16 c  11)             )
+                          nested (l  16 c  11) (l  16 c  12)           ;
+                          nested (l  17 c   2) (l  17 c  12)         expression statement
+                          nested (l  17 c   2) (l  17 c  11)           sizeof ...
+                          nested (l  17 c   2) (l  17 c   8)             "sizeof"
+                          nested (l  17 c   8) (l  17 c  11)             primary expression
+                          nested (l  17 c   8) (l  17 c   9)               (
+                          nested (l  17 c   9) (l  17 c  10)               primary expression
+                          nested (l  17 c   9) (l  17 c  10)                 identifier: f (definition: nested: l5, c7-8)
+                          nested (l  17 c  10) (l  17 c  11)               )
+                          nested (l  17 c  11) (l  17 c  12)           ;
+                          nested (l  18 c   2) (l  18 c  13)         expression statement
+                          nested (l  18 c   2) (l  18 c  12)           sizeof ...
+                          nested (l  18 c   2) (l  18 c   8)             "sizeof"
+                          nested (l  18 c   8) (l  18 c  12)             primary expression
+                          nested (l  18 c   8) (l  18 c   9)               (
+                          nested (l  18 c   9) (l  18 c  11)               primary expression
+                          nested (l  18 c   9) (l  18 c  11)                 identifier: f3 (definition: nested: l9, c9-11)
+                          nested (l  18 c  11) (l  18 c  12)               )
+                          nested (l  18 c  12) (l  18 c  13)           ;
+                          nested (l  19 c   2) (l  19 c  13)         expression statement
+                          nested (l  19 c   2) (l  19 c  12)           sizeof ...
+                          nested (l  19 c   2) (l  19 c   8)             "sizeof"
+                          nested (l  19 c   8) (l  19 c  12)             primary expression
+                          nested (l  19 c   8) (l  19 c   9)               (
+                          nested (l  19 c   9) (l  19 c  11)               primary expression
+                          nested (l  19 c   9) (l  19 c  11)                 identifier: f4 (definition: nested: l11, c8-10)
+                          nested (l  19 c  11) (l  19 c  12)               )
+                          nested (l  19 c  12) (l  19 c  13)           ;
+                          nested (l  20 c   2) (l  20 c  13)         expression statement
+                          nested (l  20 c   2) (l  20 c  12)           sizeof ...
+                          nested (l  20 c   2) (l  20 c   8)             "sizeof"
+                          nested (l  20 c   8) (l  20 c  12)             primary expression
+                          nested (l  20 c   8) (l  20 c   9)               (
+                          nested (l  20 c   9) (l  20 c  11)               primary expression
+                          nested (l  20 c   9) (l  20 c  11)                 identifier: f5 (definition: nested: l12, c8-10)
+                          nested (l  20 c  11) (l  20 c  12)               )
+                          nested (l  20 c  12) (l  20 c  13)           ;
+                          nested (l  21 c   1) (l  21 c   2)         }
