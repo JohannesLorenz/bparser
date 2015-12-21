@@ -64,7 +64,7 @@ void struct_type_of::visit(primary_expression_t& p)
 	identifier_t* id = p.c.get<1>();
 	if(id)
 	{
-		set_id(struct_rval_of_func(*id)._definition);
+		set_id(struct_rval_of_func(*id).c.get<struct_or_union_specifier_t::identifier>()->_definition);
 		/*if(is_func_id(*id))
 		 {}
 		else
@@ -139,6 +139,11 @@ void struct_type_of::visit(typedef_name_t &t)
 	//			~> can not be (typedef ~> would be declaration)
 	visit(declaration_from_identifier(*t._definition).decl_spec()); // FEATURE: ref func for tuple?
 	//t->_definition->parent->parent->accept(*this);
+}
+
+void struct_type_of::visit(identifier_t& t)
+{
+	visit(*t._definition);
 }
 
 #if 0
@@ -360,9 +365,9 @@ void type_completor::on(struct_access_expression_t& s, leave)
 	// step 2: get struct type of left identifier
 #if 1
 	struct_type_of struct_type;
-	s.c.get<0>()->accept(struct_type);
+	s.c.get<0>()->accept(struct_type); // <- this does almost all the work, including typedef resolution
 	current_struct_scope = struct_type.get_identifier();
-	std::cout << "STRUCT ACCESS: SCOPE: " << current_struct_scope->raw << std::endl;
+	std::cout << "STRUCT ACCESS: SCOPE: " << *current_struct_scope << std::endl;
 	if(!current_struct_scope) {
 		std::cout << "struct access expression at " << s.span
 			<< "implicits a struct left of the operator,"
@@ -374,9 +379,18 @@ void type_completor::on(struct_access_expression_t& s, leave)
 	// of the left expression. use it to connect the
 	// right identifier
 	// TODO: get struct_...list
+	//declaration_from_identifier(*current_struct_scope).decl_spec();
+	//struct_or_union_specifier_t* spec = dcast<struct_or_union_specifier_t>(*current_struct_scope->parent);
+	// A: declared in a struct specifier?
 	struct_or_union_specifier_t* spec = dcast<struct_or_union_specifier_t>(*current_struct_scope->parent);
-	if(! spec)
-	 throw "Unable to cast parent of struct identifier to struct_or_union_specifier_t";
+	if(! spec) { // B : declared as a declarator?
+		spec = dcast<struct_or_union_specifier_t>(struct_rval_of_func(*current_struct_scope));
+		if(! spec)
+		{
+			std::cout << "ABORT INFO: " << *current_struct_scope->parent << std::endl;
+			throw "Unable to cast parent of struct identifier to struct_or_union_specifier_t";
+		}
+	}
 	std::cout << "ACC ACC:" << *spec << std::endl;
 	struct_declaration_list_t& l = *spec->c.get<struct_or_union_specifier_t::declaration_list>();
 	bool searching = true;

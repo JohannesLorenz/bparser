@@ -34,6 +34,7 @@ SOURCES += src/lexer.c test/test.cpp src/node.cpp src/visitor.cpp \
     src/type_completor.cpp \
     src/function.cpp \
     test/input/struct_fwd.c \
+    test/input/struct_typedefs.c \
     src/utils.cpp
 OTHER_FILES += Makefile src/Makefile test/Makefile
 

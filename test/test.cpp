@@ -93,7 +93,8 @@ void run_test(const char* str,
 		catch(const char* s)
 		{
 			std::cout << "Error, dumping result to tmp_result.txt!" << std::endl;
-			std::cout << "Try diff " << out_name_with_path << " tmp_result.txt" << std::endl;
+			std::cout << "Try kdiff3 " << out_name_with_path << " tmp_result.txt" << std::endl;
+			system(("diff -b " + out_name_with_path + " tmp_result.txt").c_str());
 			std::cout << "If the new result is better, do: mv tmp_result.txt " << out_name_with_path << std::endl;
 			std::ofstream of("tmp_result.txt");
 			of << res_str;

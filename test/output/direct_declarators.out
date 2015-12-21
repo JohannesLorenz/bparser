@@ -1,17 +1,15 @@
               direct_declarators (l   1 c   1) (l  19 c   2) translation unit
               direct_declarators (l   1 c   1) (l  11 c   3)   external declaration
               direct_declarators (l   1 c   1) (l  11 c   3)     declaration
-              direct_declarators (l   1 c   1) (l   1 c   5)       declaration specifiers
-              direct_declarators (l   1 c   1) (l   1 c   5)         type specifier
-              direct_declarators (l   1 c   1) (l   1 c   5)           "void"
+              direct_declarators (l   1 c   1) (l   1 c   5)       type specifier
+              direct_declarators (l   1 c   1) (l   1 c   5)         "void"
               direct_declarators (l   1 c   6) (l  11 c   2)       direct declarator (function)
               direct_declarators (l   1 c   6) (l   1 c  10)         direct declarator (identifier)
               direct_declarators (l   1 c   6) (l   1 c  10)           identifier (definition): func
               direct_declarators (l   1 c  10) (l   1 c  11)         (
               direct_declarators (l   1 c  11) (l   1 c  18)         parameter declaration
-              direct_declarators (l   1 c  11) (l   1 c  14)           declaration specifiers
-              direct_declarators (l   1 c  11) (l   1 c  14)             type specifier
-              direct_declarators (l   1 c  11) (l   1 c  14)               "int"
+              direct_declarators (l   1 c  11) (l   1 c  14)           type specifier
+              direct_declarators (l   1 c  11) (l   1 c  14)             "int"
               direct_declarators (l   1 c  15) (l   1 c  18)           direct declarator (array)
               direct_declarators (l   1 c  15) (l   1 c  16)             direct declarator (identifier)
               direct_declarators (l   1 c  15) (l   1 c  16)               identifier (definition): a
@@ -19,9 +17,8 @@
               direct_declarators (l   1 c  17) (l   1 c  18)             ]
               direct_declarators (l   1 c  18) (l   1 c  19)         ,
               direct_declarators (l   2 c   2) (l   2 c  10)         parameter declaration
-              direct_declarators (l   2 c   2) (l   2 c   5)           declaration specifiers
-              direct_declarators (l   2 c   2) (l   2 c   5)             type specifier
-              direct_declarators (l   2 c   2) (l   2 c   5)               "int"
+              direct_declarators (l   2 c   2) (l   2 c   5)           type specifier
+              direct_declarators (l   2 c   2) (l   2 c   5)             "int"
               direct_declarators (l   2 c   6) (l   2 c  10)           direct declarator (array)
               direct_declarators (l   2 c   6) (l   2 c   7)             direct declarator (identifier)
               direct_declarators (l   2 c   6) (l   2 c   7)               identifier (definition): b
@@ -30,9 +27,8 @@
               direct_declarators (l   2 c   9) (l   2 c  10)             ]
               direct_declarators (l   2 c  10) (l   2 c  11)         ,
               direct_declarators (l   3 c   2) (l   3 c  25)         parameter declaration
-              direct_declarators (l   3 c   2) (l   3 c   5)           declaration specifiers
-              direct_declarators (l   3 c   2) (l   3 c   5)             type specifier
-              direct_declarators (l   3 c   2) (l   3 c   5)               "int"
+              direct_declarators (l   3 c   2) (l   3 c   5)           type specifier
+              direct_declarators (l   3 c   2) (l   3 c   5)             "int"
               direct_declarators (l   3 c   6) (l   3 c  25)           direct declarator (array)
               direct_declarators (l   3 c   6) (l   3 c   7)             direct declarator (identifier)
               direct_declarators (l   3 c   6) (l   3 c   7)               identifier (definition): c
@@ -49,9 +45,8 @@
               direct_declarators (l   3 c  24) (l   3 c  25)             ]
               direct_declarators (l   3 c  25) (l   3 c  26)         ,
               direct_declarators (l   4 c   2) (l   4 c  25)         parameter declaration
-              direct_declarators (l   4 c   2) (l   4 c   5)           declaration specifiers
-              direct_declarators (l   4 c   2) (l   4 c   5)             type specifier
-              direct_declarators (l   4 c   2) (l   4 c   5)               "int"
+              direct_declarators (l   4 c   2) (l   4 c   5)           type specifier
+              direct_declarators (l   4 c   2) (l   4 c   5)             "int"
               direct_declarators (l   4 c   6) (l   4 c  25)           direct declarator (array)
               direct_declarators (l   4 c   6) (l   4 c   7)             direct declarator (identifier)
               direct_declarators (l   4 c   6) (l   4 c   7)               identifier (definition): d
@@ -68,9 +63,8 @@
               direct_declarators (l   4 c  24) (l   4 c  25)             ]
               direct_declarators (l   4 c  25) (l   4 c  26)         ,
               direct_declarators (l   5 c   2) (l   5 c  24)         parameter declaration
-              direct_declarators (l   5 c   2) (l   5 c   5)           declaration specifiers
-              direct_declarators (l   5 c   2) (l   5 c   5)             type specifier
-              direct_declarators (l   5 c   2) (l   5 c   5)               "int"
+              direct_declarators (l   5 c   2) (l   5 c   5)           type specifier
+              direct_declarators (l   5 c   2) (l   5 c   5)             "int"
               direct_declarators (l   5 c   6) (l   5 c  24)           direct declarator (array)
               direct_declarators (l   5 c   6) (l   5 c   7)             direct declarator (identifier)
               direct_declarators (l   5 c   6) (l   5 c   7)               identifier (definition): e
@@ -83,9 +77,8 @@
               direct_declarators (l   5 c  23) (l   5 c  24)             ]
               direct_declarators (l   5 c  24) (l   5 c  25)         ,
               direct_declarators (l   6 c   2) (l   6 c  18)         parameter declaration
-              direct_declarators (l   6 c   2) (l   6 c   5)           declaration specifiers
-              direct_declarators (l   6 c   2) (l   6 c   5)             type specifier
-              direct_declarators (l   6 c   2) (l   6 c   5)               "int"
+              direct_declarators (l   6 c   2) (l   6 c   5)           type specifier
+              direct_declarators (l   6 c   2) (l   6 c   5)             "int"
               direct_declarators (l   6 c   6) (l   6 c  18)           direct declarator (array)
               direct_declarators (l   6 c   6) (l   6 c   7)             direct declarator (identifier)
               direct_declarators (l   6 c   6) (l   6 c   7)               identifier (definition): f
@@ -101,9 +94,8 @@
               direct_declarators (l   6 c  17) (l   6 c  18)             ]
               direct_declarators (l   6 c  18) (l   6 c  19)         ,
               direct_declarators (l   7 c   2) (l   7 c  14)         parameter declaration
-              direct_declarators (l   7 c   2) (l   7 c   5)           declaration specifiers
-              direct_declarators (l   7 c   2) (l   7 c   5)             type specifier
-              direct_declarators (l   7 c   2) (l   7 c   5)               "int"
+              direct_declarators (l   7 c   2) (l   7 c   5)           type specifier
+              direct_declarators (l   7 c   2) (l   7 c   5)             "int"
               direct_declarators (l   7 c   6) (l   7 c  14)           direct declarator (array)
               direct_declarators (l   7 c   6) (l   7 c   7)             direct declarator (identifier)
               direct_declarators (l   7 c   6) (l   7 c   7)               identifier (definition): g
@@ -113,9 +105,8 @@
               direct_declarators (l   7 c  13) (l   7 c  14)             ]
               direct_declarators (l   7 c  14) (l   7 c  15)         ,
               direct_declarators (l   8 c   2) (l   8 c  12)         parameter declaration
-              direct_declarators (l   8 c   2) (l   8 c   5)           declaration specifiers
-              direct_declarators (l   8 c   2) (l   8 c   5)             type specifier
-              direct_declarators (l   8 c   2) (l   8 c   5)               "int"
+              direct_declarators (l   8 c   2) (l   8 c   5)           type specifier
+              direct_declarators (l   8 c   2) (l   8 c   5)             "int"
               direct_declarators (l   8 c   6) (l   8 c  12)           direct declarator (array)
               direct_declarators (l   8 c   6) (l   8 c   7)             direct declarator (identifier)
               direct_declarators (l   8 c   6) (l   8 c   7)               identifier (definition): h
@@ -129,9 +120,8 @@
               direct_declarators (l   8 c  11) (l   8 c  12)             ]
               direct_declarators (l   8 c  12) (l   8 c  13)         ,
               direct_declarators (l   9 c   2) (l   9 c  12)         parameter declaration
-              direct_declarators (l   9 c   2) (l   9 c   5)           declaration specifiers
-              direct_declarators (l   9 c   2) (l   9 c   5)             type specifier
-              direct_declarators (l   9 c   2) (l   9 c   5)               "int"
+              direct_declarators (l   9 c   2) (l   9 c   5)           type specifier
+              direct_declarators (l   9 c   2) (l   9 c   5)             "int"
               direct_declarators (l   9 c   6) (l   9 c  12)           direct declarator (function)
               direct_declarators (l   9 c   6) (l   9 c  10)             direct declarator (declaration)
               direct_declarators (l   9 c   6) (l   9 c   7)               (
@@ -145,9 +135,8 @@
               direct_declarators (l   9 c  11) (l   9 c  12)             )
               direct_declarators (l   9 c  12) (l   9 c  13)         ,
               direct_declarators (l  10 c   2) (l  10 c  36)         parameter declaration
-              direct_declarators (l  10 c   2) (l  10 c   5)           declaration specifiers
-              direct_declarators (l  10 c   2) (l  10 c   5)             type specifier
-              direct_declarators (l  10 c   2) (l  10 c   5)               "int"
+              direct_declarators (l  10 c   2) (l  10 c   5)           type specifier
+              direct_declarators (l  10 c   2) (l  10 c   5)             "int"
               direct_declarators (l  10 c   6) (l  10 c  36)           direct declarator (function)
               direct_declarators (l  10 c   6) (l  10 c  10)             direct declarator (declaration)
               direct_declarators (l  10 c   6) (l  10 c   7)               (
@@ -159,9 +148,8 @@
               direct_declarators (l  10 c   9) (l  10 c  10)               )
               direct_declarators (l  10 c  10) (l  10 c  11)             (
               direct_declarators (l  10 c  11) (l  10 c  14)             parameter declaration
-              direct_declarators (l  10 c  11) (l  10 c  14)               declaration specifiers
-              direct_declarators (l  10 c  11) (l  10 c  14)                 type specifier
-              direct_declarators (l  10 c  11) (l  10 c  14)                   "int"
+              direct_declarators (l  10 c  11) (l  10 c  14)               type specifier
+              direct_declarators (l  10 c  11) (l  10 c  14)                 "int"
               direct_declarators (l  10 c  14) (l  10 c  15)             ,
               direct_declarators (l  10 c  16) (l  10 c  35)             parameter declaration
               direct_declarators (l  10 c  16) (l  10 c  26)               declaration specifiers
@@ -181,9 +169,8 @@
               direct_declarators (l  11 c   2) (l  11 c   3)       ;
               direct_declarators (l  13 c   1) (l  13 c  42)   external declaration
               direct_declarators (l  13 c   1) (l  13 c  42)     function definition
-              direct_declarators (l  13 c   1) (l  13 c   5)       declaration specifiers
-              direct_declarators (l  13 c   1) (l  13 c   5)         type specifier
-              direct_declarators (l  13 c   1) (l  13 c   5)           "void"
+              direct_declarators (l  13 c   1) (l  13 c   5)       type specifier
+              direct_declarators (l  13 c   1) (l  13 c   5)         "void"
               direct_declarators (l  13 c   6) (l  13 c  11)       direct declarator (identifier)
               direct_declarators (l  13 c   6) (l  13 c  11)         identifier (definition): func2
               direct_declarators (l  13 c  11) (l  13 c  12)       (
@@ -192,9 +179,8 @@
               direct_declarators (l  13 c  15) (l  13 c  16)       identifier (definition MISSING)
               direct_declarators (l  13 c  16) (l  13 c  17)       )
               direct_declarators (l  13 c  18) (l  13 c  27)       declaration
-              direct_declarators (l  13 c  18) (l  13 c  21)         declaration specifiers
-              direct_declarators (l  13 c  18) (l  13 c  21)           type specifier
-              direct_declarators (l  13 c  18) (l  13 c  21)             "int"
+              direct_declarators (l  13 c  18) (l  13 c  21)         type specifier
+              direct_declarators (l  13 c  18) (l  13 c  21)           "int"
               direct_declarators (l  13 c  22) (l  13 c  23)         direct declarator (identifier)
               direct_declarators (l  13 c  22) (l  13 c  23)           identifier (definition): x
               direct_declarators (l  13 c  23) (l  13 c  24)         ,
@@ -215,9 +201,8 @@
               direct_declarators (l  13 c  41) (l  13 c  42)         }
               direct_declarators (l  15 c   1) (l  19 c   2)   external declaration
               direct_declarators (l  15 c   1) (l  19 c   2)     function definition
-              direct_declarators (l  15 c   1) (l  15 c   4)       declaration specifiers
-              direct_declarators (l  15 c   1) (l  15 c   4)         type specifier
-              direct_declarators (l  15 c   1) (l  15 c   4)           "int"
+              direct_declarators (l  15 c   1) (l  15 c   4)       type specifier
+              direct_declarators (l  15 c   1) (l  15 c   4)         "int"
               direct_declarators (l  15 c   5) (l  15 c  11)       direct declarator (function)
               direct_declarators (l  15 c   5) (l  15 c   9)         direct declarator (identifier)
               direct_declarators (l  15 c   5) (l  15 c   9)           identifier (definition): main
@@ -226,9 +211,8 @@
               direct_declarators (l  16 c   1) (l  19 c   2)       compound statement
               direct_declarators (l  16 c   1) (l  16 c   2)         {
               direct_declarators (l  17 c   2) (l  17 c  41)         declaration
-              direct_declarators (l  17 c   2) (l  17 c   5)           declaration specifiers
-              direct_declarators (l  17 c   2) (l  17 c   5)             type specifier
-              direct_declarators (l  17 c   2) (l  17 c   5)               "int"
+              direct_declarators (l  17 c   2) (l  17 c   5)           type specifier
+              direct_declarators (l  17 c   2) (l  17 c   5)             "int"
               direct_declarators (l  17 c   6) (l  17 c   7)           direct declarator (identifier)
               direct_declarators (l  17 c   6) (l  17 c   7)             identifier (definition): a
               direct_declarators (l  17 c   7) (l  17 c   8)           ,

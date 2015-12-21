@@ -19,55 +19,53 @@
                          structs (l   3 c   4) (l   3 c   5)       ;
                          structs (l   5 c   1) (l   8 c   3)   external declaration
                          structs (l   5 c   1) (l   8 c   3)     declaration
-                         structs (l   5 c   1) (l   8 c   2)       declaration specifiers
-                         structs (l   5 c   1) (l   8 c   2)         type specifier
-                         structs (l   5 c   1) (l   8 c   2)           struct specifier
-                         structs (l   5 c   1) (l   5 c   7)             "struct"
-                         structs (l   5 c   8) (l   5 c   9)             identifier (definition): b
-                         structs (l   5 c  10) (l   5 c  11)             {
-                         structs (l   6 c   2) (l   7 c  21)             struct declaration list
-                         structs (l   6 c   2) (l   6 c  13)               struct declaration
-                         structs (l   6 c   2) (l   6 c  12)                 specifier-qualifier-list
-                         structs (l   6 c   2) (l   6 c   7)                   type qualifier
-                         structs (l   6 c   2) (l   6 c   7)                     "const"
-                         structs (l   6 c   8) (l   6 c  12)                   type specifier
-                         structs (l   6 c   8) (l   6 c  12)                     "char"
-                         structs (l   6 c  12) (l   6 c  13)                 ;
-                         structs (l   7 c   2) (l   7 c  21)               struct declaration
-                         structs (l   7 c   2) (l   7 c   5)                 type specifier
-                         structs (l   7 c   2) (l   7 c   5)                   "int"
-                         structs (l   7 c   6) (l   7 c   7)                 direct declarator (identifier)
-                         structs (l   7 c   6) (l   7 c   7)                   identifier (definition): x
-                         structs (l   7 c   7) (l   7 c   8)                 ,
-                         structs (l   7 c   9) (l   7 c  12)                 struct declarator
-                         structs (l   7 c   9) (l   7 c  10)                   :
-                         structs (l   7 c  10) (l   7 c  12)                   primary expression
-                         structs (l   7 c  10) (l   7 c  12)                     int constant: 15
-                         structs (l   7 c  12) (l   7 c  13)                 ,
-                         structs (l   7 c  14) (l   7 c  20)                 struct declarator
-                         structs (l   7 c  14) (l   7 c  18)                   direct declarator (identifier)
-                         structs (l   7 c  14) (l   7 c  18)                     identifier (definition): rest
-                         structs (l   7 c  18) (l   7 c  19)                   :
-                         structs (l   7 c  19) (l   7 c  20)                   primary expression
-                         structs (l   7 c  19) (l   7 c  20)                     int constant: 1
-                         structs (l   7 c  20) (l   7 c  21)                 ;
-                         structs (l   8 c   1) (l   8 c   2)             }
+                         structs (l   5 c   1) (l   8 c   2)       type specifier
+                         structs (l   5 c   1) (l   8 c   2)         struct specifier
+                         structs (l   5 c   1) (l   5 c   7)           "struct"
+                         structs (l   5 c   8) (l   5 c   9)           identifier (definition): b
+                         structs (l   5 c  10) (l   5 c  11)           {
+                         structs (l   6 c   2) (l   7 c  21)           struct declaration list
+                         structs (l   6 c   2) (l   6 c  13)             struct declaration
+                         structs (l   6 c   2) (l   6 c  12)               declaration specifiers
+                         structs (l   6 c   2) (l   6 c   7)                 type qualifier
+                         structs (l   6 c   2) (l   6 c   7)                   "const"
+                         structs (l   6 c   8) (l   6 c  12)                 type specifier
+                         structs (l   6 c   8) (l   6 c  12)                   "char"
+                         structs (l   6 c  12) (l   6 c  13)               ;
+                         structs (l   7 c   2) (l   7 c  21)             struct declaration
+                         structs (l   7 c   2) (l   7 c   5)               type specifier
+                         structs (l   7 c   2) (l   7 c   5)                 "int"
+                         structs (l   7 c   6) (l   7 c   7)               direct declarator (identifier)
+                         structs (l   7 c   6) (l   7 c   7)                 identifier (definition): x
+                         structs (l   7 c   7) (l   7 c   8)               ,
+                         structs (l   7 c   9) (l   7 c  12)               struct declarator
+                         structs (l   7 c   9) (l   7 c  10)                 :
+                         structs (l   7 c  10) (l   7 c  12)                 primary expression
+                         structs (l   7 c  10) (l   7 c  12)                   int constant: 15
+                         structs (l   7 c  12) (l   7 c  13)               ,
+                         structs (l   7 c  14) (l   7 c  20)               struct declarator
+                         structs (l   7 c  14) (l   7 c  18)                 direct declarator (identifier)
+                         structs (l   7 c  14) (l   7 c  18)                   identifier (definition): rest
+                         structs (l   7 c  18) (l   7 c  19)                 :
+                         structs (l   7 c  19) (l   7 c  20)                 primary expression
+                         structs (l   7 c  19) (l   7 c  20)                   int constant: 1
+                         structs (l   7 c  20) (l   7 c  21)               ;
+                         structs (l   8 c   1) (l   8 c   2)           }
                          structs (l   8 c   2) (l   8 c   3)       ;
                          structs (l  10 c   1) (l  10 c  24)   external declaration
                          structs (l  10 c   1) (l  10 c  24)     declaration
-                         structs (l  10 c   1) (l  10 c  22)       declaration specifiers
-                         structs (l  10 c   1) (l  10 c  22)         type specifier
-                         structs (l  10 c   1) (l  10 c  22)           struct specifier
-                         structs (l  10 c   1) (l  10 c   7)             "struct"
-                         structs (l  10 c   8) (l  10 c   9)             identifier (definition): c
-                         structs (l  10 c  10) (l  10 c  11)             {
-                         structs (l  10 c  12) (l  10 c  20)             struct declaration
-                         structs (l  10 c  12) (l  10 c  17)               type specifier
-                         structs (l  10 c  12) (l  10 c  17)                 "float"
-                         structs (l  10 c  18) (l  10 c  19)               direct declarator (identifier)
-                         structs (l  10 c  18) (l  10 c  19)                 identifier (definition): f
-                         structs (l  10 c  19) (l  10 c  20)               ;
-                         structs (l  10 c  21) (l  10 c  22)             }
+                         structs (l  10 c   1) (l  10 c  22)       type specifier
+                         structs (l  10 c   1) (l  10 c  22)         struct specifier
+                         structs (l  10 c   1) (l  10 c   7)           "struct"
+                         structs (l  10 c   8) (l  10 c   9)           identifier (definition): c
+                         structs (l  10 c  10) (l  10 c  11)           {
+                         structs (l  10 c  12) (l  10 c  20)           struct declaration
+                         structs (l  10 c  12) (l  10 c  17)             type specifier
+                         structs (l  10 c  12) (l  10 c  17)               "float"
+                         structs (l  10 c  18) (l  10 c  19)             direct declarator (identifier)
+                         structs (l  10 c  18) (l  10 c  19)               identifier (definition): f
+                         structs (l  10 c  19) (l  10 c  20)             ;
+                         structs (l  10 c  21) (l  10 c  22)           }
                          structs (l  10 c  23) (l  10 c  24)       ;
                          structs (l  11 c   1) (l  11 c  31)   external declaration
                          structs (l  11 c   1) (l  11 c  31)     declaration
@@ -89,9 +87,8 @@
                          structs (l  11 c  30) (l  11 c  31)       ;
                          structs (l  13 c   1) (l  24 c   2)   external declaration
                          structs (l  13 c   1) (l  24 c   2)     function definition
-                         structs (l  13 c   1) (l  13 c   4)       declaration specifiers
-                         structs (l  13 c   1) (l  13 c   4)         type specifier
-                         structs (l  13 c   1) (l  13 c   4)           "int"
+                         structs (l  13 c   1) (l  13 c   4)       type specifier
+                         structs (l  13 c   1) (l  13 c   4)         "int"
                          structs (l  13 c   5) (l  13 c  11)       direct declarator (function)
                          structs (l  13 c   5) (l  13 c   9)         direct declarator (identifier)
                          structs (l  13 c   5) (l  13 c   9)           identifier (definition): main
@@ -100,25 +97,22 @@
                          structs (l  14 c   1) (l  24 c   2)       compound statement
                          structs (l  14 c   1) (l  14 c   2)         {
                          structs (l  15 c   2) (l  15 c  22)         declaration
-                         structs (l  15 c   2) (l  15 c  10)           declaration specifiers
-                         structs (l  15 c   2) (l  15 c  10)             type specifier
-                         structs (l  15 c   2) (l  15 c  10)               struct specifier
-                         structs (l  15 c   2) (l  15 c   8)                 "struct"
-                         structs (l  15 c   9) (l  15 c  10)                 identifier: b (definition: structs: l5, c8-9)
+                         structs (l  15 c   2) (l  15 c  10)           type specifier
+                         structs (l  15 c   2) (l  15 c  10)             struct specifier
+                         structs (l  15 c   2) (l  15 c   8)               "struct"
+                         structs (l  15 c   9) (l  15 c  10)               identifier: b (definition: structs: l5, c8-9)
                          structs (l  15 c  11) (l  15 c  21)           direct declarator (identifier)
                          structs (l  15 c  11) (l  15 c  21)             identifier (definition): b_variable
                          structs (l  15 c  21) (l  15 c  22)           ;
                          structs (l  16 c   2) (l  16 c  15)         declaration
-                         structs (l  16 c   2) (l  16 c   3)           declaration specifiers
-                         structs (l  16 c   2) (l  16 c   3)             type specifier
-                         structs (l  16 c   2) (l  16 c   3)               typedef name: u (definition: structs: l3, c3-4)
+                         structs (l  16 c   2) (l  16 c   3)           type specifier
+                         structs (l  16 c   2) (l  16 c   3)             typedef name: u (definition: structs: l3, c3-4)
                          structs (l  16 c   4) (l  16 c  14)           direct declarator (identifier)
                          structs (l  16 c   4) (l  16 c  14)             identifier (definition): u_variable
                          structs (l  16 c  14) (l  16 c  15)           ;
                          structs (l  17 c   2) (l  17 c  17)         declaration
-                         structs (l  17 c   2) (l  17 c   5)           declaration specifiers
-                         structs (l  17 c   2) (l  17 c   5)             type specifier
-                         structs (l  17 c   2) (l  17 c   5)               "int"
+                         structs (l  17 c   2) (l  17 c   5)           type specifier
+                         structs (l  17 c   2) (l  17 c   5)             "int"
                          structs (l  17 c   6) (l  17 c   7)           direct declarator (identifier)
                          structs (l  17 c   6) (l  17 c   7)             identifier (definition): x
                          structs (l  17 c   7) (l  17 c   8)           ,

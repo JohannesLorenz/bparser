@@ -26,9 +26,8 @@
                     initializers (l   1 c  37) (l   1 c  38)       ;
                     initializers (l   3 c   1) (l  11 c   2)   external declaration
                     initializers (l   3 c   1) (l  11 c   2)     function definition
-                    initializers (l   3 c   1) (l   3 c   4)       declaration specifiers
-                    initializers (l   3 c   1) (l   3 c   4)         type specifier
-                    initializers (l   3 c   1) (l   3 c   4)           "int"
+                    initializers (l   3 c   1) (l   3 c   4)       type specifier
+                    initializers (l   3 c   1) (l   3 c   4)         "int"
                     initializers (l   3 c   5) (l   3 c  11)       direct declarator (function)
                     initializers (l   3 c   5) (l   3 c   9)         direct declarator (identifier)
                     initializers (l   3 c   5) (l   3 c   9)           identifier (definition): main
@@ -37,14 +36,12 @@
                     initializers (l   3 c  12) (l  11 c   2)       compound statement
                     initializers (l   3 c  12) (l   3 c  13)         {
                     initializers (l   4 c   2) (l   4 c   6)         declaration
-                    initializers (l   4 c   2) (l   4 c   5)           declaration specifiers
-                    initializers (l   4 c   2) (l   4 c   5)             type specifier
-                    initializers (l   4 c   2) (l   4 c   5)               "int"
+                    initializers (l   4 c   2) (l   4 c   5)           type specifier
+                    initializers (l   4 c   2) (l   4 c   5)             "int"
                     initializers (l   4 c   5) (l   4 c   6)           ;
                     initializers (l   5 c   2) (l   5 c  25)         declaration
-                    initializers (l   5 c   2) (l   5 c   5)           declaration specifiers
-                    initializers (l   5 c   2) (l   5 c   5)             type specifier
-                    initializers (l   5 c   2) (l   5 c   5)               "int"
+                    initializers (l   5 c   2) (l   5 c   5)           type specifier
+                    initializers (l   5 c   2) (l   5 c   5)             "int"
                     initializers (l   5 c   6) (l   5 c  11)           init declarator
                     initializers (l   5 c   6) (l   5 c   7)             direct declarator (identifier)
                     initializers (l   5 c   6) (l   5 c   7)               identifier (definition): a
@@ -69,9 +66,8 @@
                     initializers (l   5 c  23) (l   5 c  24)             identifier (definition): y
                     initializers (l   5 c  24) (l   5 c  25)           ;
                     initializers (l   6 c   2) (l   6 c  30)         declaration
-                    initializers (l   6 c   2) (l   6 c   5)           declaration specifiers
-                    initializers (l   6 c   2) (l   6 c   5)             type specifier
-                    initializers (l   6 c   2) (l   6 c   5)               "int"
+                    initializers (l   6 c   2) (l   6 c   5)           type specifier
+                    initializers (l   6 c   2) (l   6 c   5)             "int"
                     initializers (l   6 c   6) (l   6 c  29)           init declarator
                     initializers (l   6 c   6) (l   6 c  12)             direct declarator (array)
                     initializers (l   6 c   6) (l   6 c   9)               direct declarator (identifier)
@@ -99,9 +95,8 @@
                     initializers (l   6 c  28) (l   6 c  29)               }
                     initializers (l   6 c  29) (l   6 c  30)           ;
                     initializers (l   7 c   2) (l   7 c  32)         declaration
-                    initializers (l   7 c   2) (l   7 c   5)           declaration specifiers
-                    initializers (l   7 c   2) (l   7 c   5)             type specifier
-                    initializers (l   7 c   2) (l   7 c   5)               "int"
+                    initializers (l   7 c   2) (l   7 c   5)           type specifier
+                    initializers (l   7 c   2) (l   7 c   5)             "int"
                     initializers (l   7 c   6) (l   7 c  31)           init declarator
                     initializers (l   7 c   6) (l   7 c  13)             direct declarator (array)
                     initializers (l   7 c   6) (l   7 c  10)               direct declarator (identifier)
@@ -129,9 +124,8 @@
                     initializers (l   7 c  30) (l   7 c  31)               }
                     initializers (l   7 c  31) (l   7 c  32)           ;
                     initializers (l   8 c   2) (l   8 c  40)         declaration
-                    initializers (l   8 c   2) (l   8 c   5)           declaration specifiers
-                    initializers (l   8 c   2) (l   8 c   5)             type specifier
-                    initializers (l   8 c   2) (l   8 c   5)               "int"
+                    initializers (l   8 c   2) (l   8 c   5)           type specifier
+                    initializers (l   8 c   2) (l   8 c   5)             "int"
                     initializers (l   8 c   6) (l   8 c  33)           init declarator
                     initializers (l   8 c   6) (l   8 c  16)             direct declarator (array)
                     initializers (l   8 c   6) (l   8 c  13)               direct declarator (array)
@@ -169,9 +163,8 @@
                     initializers (l   8 c  35) (l   8 c  39)             identifier (definition): arr4
                     initializers (l   8 c  39) (l   8 c  40)           ;
                     initializers (l   9 c   2) (l   9 c  37)         declaration
-                    initializers (l   9 c   2) (l   9 c   5)           declaration specifiers
-                    initializers (l   9 c   2) (l   9 c   5)             type specifier
-                    initializers (l   9 c   2) (l   9 c   5)               typedef name: s_t (definition: initializers: l1, c34-37)
+                    initializers (l   9 c   2) (l   9 c   5)           type specifier
+                    initializers (l   9 c   2) (l   9 c   5)             typedef name: s_t (definition: initializers: l1, c34-37)
                     initializers (l   9 c   6) (l   9 c  36)           init declarator
                     initializers (l   9 c   6) (l   9 c   7)             direct declarator (identifier)
                     initializers (l   9 c   6) (l   9 c   7)               identifier (definition): s

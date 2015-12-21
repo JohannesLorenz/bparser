@@ -1,9 +1,8 @@
                       statements (l   1 c   1) (l  37 c   2) translation unit
                       statements (l   1 c   1) (l  37 c   2)   external declaration
                       statements (l   1 c   1) (l  37 c   2)     function definition
-                      statements (l   1 c   1) (l   1 c   4)       declaration specifiers
-                      statements (l   1 c   1) (l   1 c   4)         type specifier
-                      statements (l   1 c   1) (l   1 c   4)           "int"
+                      statements (l   1 c   1) (l   1 c   4)       type specifier
+                      statements (l   1 c   1) (l   1 c   4)         "int"
                       statements (l   1 c   5) (l   1 c  11)       direct declarator (function)
                       statements (l   1 c   5) (l   1 c   9)         direct declarator (identifier)
                       statements (l   1 c   5) (l   1 c   9)           identifier (definition): main
@@ -116,9 +115,8 @@
                       statements (l  29 c   5) (l  29 c   6)               int constant: 1
                       statements (l  29 c   6) (l  29 c   7)             ;
                       statements (l  31 c   2) (l  31 c   8)         declaration
-                      statements (l  31 c   2) (l  31 c   5)           declaration specifiers
-                      statements (l  31 c   2) (l  31 c   5)             type specifier
-                      statements (l  31 c   2) (l  31 c   5)               "int"
+                      statements (l  31 c   2) (l  31 c   5)           type specifier
+                      statements (l  31 c   2) (l  31 c   5)             "int"
                       statements (l  31 c   6) (l  31 c   7)           direct declarator (identifier)
                       statements (l  31 c   6) (l  31 c   7)             identifier (definition): x
                       statements (l  31 c   7) (l  31 c   8)           ;
@@ -154,9 +152,8 @@
                       statements (l  34 c   2) (l  34 c   5)           "for"
                       statements (l  34 c   5) (l  34 c   6)           (
                       statements (l  34 c   6) (l  34 c  12)           declaration
-                      statements (l  34 c   6) (l  34 c   9)             declaration specifiers
-                      statements (l  34 c   6) (l  34 c   9)               type specifier
-                      statements (l  34 c   6) (l  34 c   9)                 "int"
+                      statements (l  34 c   6) (l  34 c   9)             type specifier
+                      statements (l  34 c   6) (l  34 c   9)               "int"
                       statements (l  34 c  10) (l  34 c  11)             direct declarator (identifier)
                       statements (l  34 c  10) (l  34 c  11)               identifier (definition): y
                       statements (l  34 c  11) (l  34 c  12)             ;
@@ -171,9 +168,8 @@
                       statements (l  35 c   2) (l  35 c   5)           "for"
                       statements (l  35 c   5) (l  35 c   6)           (
                       statements (l  35 c   6) (l  35 c  12)           declaration
-                      statements (l  35 c   6) (l  35 c   9)             declaration specifiers
-                      statements (l  35 c   6) (l  35 c   9)               type specifier
-                      statements (l  35 c   6) (l  35 c   9)                 "int"
+                      statements (l  35 c   6) (l  35 c   9)             type specifier
+                      statements (l  35 c   6) (l  35 c   9)               "int"
                       statements (l  35 c  10) (l  35 c  11)             direct declarator (identifier)
                       statements (l  35 c  10) (l  35 c  11)               identifier (definition): y
                       statements (l  35 c  11) (l  35 c  12)             ;
@@ -192,9 +188,8 @@
                       statements (l  36 c   2) (l  36 c   5)           "for"
                       statements (l  36 c   5) (l  36 c   6)           (
                       statements (l  36 c   6) (l  36 c  12)           declaration
-                      statements (l  36 c   6) (l  36 c   9)             declaration specifiers
-                      statements (l  36 c   6) (l  36 c   9)               type specifier
-                      statements (l  36 c   6) (l  36 c   9)                 "int"
+                      statements (l  36 c   6) (l  36 c   9)             type specifier
+                      statements (l  36 c   6) (l  36 c   9)               "int"
                       statements (l  36 c  10) (l  36 c  11)             direct declarator (identifier)
                       statements (l  36 c  10) (l  36 c  11)               identifier (definition): y
                       statements (l  36 c  11) (l  36 c  12)             ;

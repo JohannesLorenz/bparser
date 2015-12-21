@@ -1,25 +1,23 @@
                      expressions (l   1 c   1) (l  38 c   2) translation unit
                      expressions (l   1 c   1) (l   1 c  23)   external declaration
                      expressions (l   1 c   1) (l   1 c  23)     declaration
-                     expressions (l   1 c   1) (l   1 c  22)       declaration specifiers
-                     expressions (l   1 c   1) (l   1 c  22)         type specifier
-                     expressions (l   1 c   1) (l   1 c  22)           struct specifier
-                     expressions (l   1 c   1) (l   1 c   7)             "struct"
-                     expressions (l   1 c   8) (l   1 c  11)             identifier (definition): s_t
-                     expressions (l   1 c  12) (l   1 c  13)             {
-                     expressions (l   1 c  14) (l   1 c  20)             struct declaration
-                     expressions (l   1 c  14) (l   1 c  17)               type specifier
-                     expressions (l   1 c  14) (l   1 c  17)                 "int"
-                     expressions (l   1 c  18) (l   1 c  19)               direct declarator (identifier)
-                     expressions (l   1 c  18) (l   1 c  19)                 identifier (definition): x
-                     expressions (l   1 c  19) (l   1 c  20)               ;
-                     expressions (l   1 c  21) (l   1 c  22)             }
+                     expressions (l   1 c   1) (l   1 c  22)       type specifier
+                     expressions (l   1 c   1) (l   1 c  22)         struct specifier
+                     expressions (l   1 c   1) (l   1 c   7)           "struct"
+                     expressions (l   1 c   8) (l   1 c  11)           identifier (definition): s_t
+                     expressions (l   1 c  12) (l   1 c  13)           {
+                     expressions (l   1 c  14) (l   1 c  20)           struct declaration
+                     expressions (l   1 c  14) (l   1 c  17)             type specifier
+                     expressions (l   1 c  14) (l   1 c  17)               "int"
+                     expressions (l   1 c  18) (l   1 c  19)             direct declarator (identifier)
+                     expressions (l   1 c  18) (l   1 c  19)               identifier (definition): x
+                     expressions (l   1 c  19) (l   1 c  20)             ;
+                     expressions (l   1 c  21) (l   1 c  22)           }
                      expressions (l   1 c  22) (l   1 c  23)       ;
                      expressions (l   3 c   1) (l   3 c  23)   external declaration
                      expressions (l   3 c   1) (l   3 c  23)     function definition
-                     expressions (l   3 c   1) (l   3 c   4)       declaration specifiers
-                     expressions (l   3 c   1) (l   3 c   4)         type specifier
-                     expressions (l   3 c   1) (l   3 c   4)           "int"
+                     expressions (l   3 c   1) (l   3 c   4)       type specifier
+                     expressions (l   3 c   1) (l   3 c   4)         "int"
                      expressions (l   3 c   5) (l   3 c   8)       direct declarator (function)
                      expressions (l   3 c   5) (l   3 c   6)         direct declarator (identifier)
                      expressions (l   3 c   5) (l   3 c   6)           identifier (definition): f
@@ -35,24 +33,21 @@
                      expressions (l   3 c  22) (l   3 c  23)         }
                      expressions (l   4 c   1) (l   4 c  35)   external declaration
                      expressions (l   4 c   1) (l   4 c  35)     function definition
-                     expressions (l   4 c   1) (l   4 c   4)       declaration specifiers
-                     expressions (l   4 c   1) (l   4 c   4)         type specifier
-                     expressions (l   4 c   1) (l   4 c   4)           "int"
+                     expressions (l   4 c   1) (l   4 c   4)       type specifier
+                     expressions (l   4 c   1) (l   4 c   4)         "int"
                      expressions (l   4 c   5) (l   4 c  20)       direct declarator (function)
                      expressions (l   4 c   5) (l   4 c   6)         direct declarator (identifier)
                      expressions (l   4 c   5) (l   4 c   6)           identifier (definition): g
                      expressions (l   4 c   6) (l   4 c   7)         (
                      expressions (l   4 c   7) (l   4 c  12)         parameter declaration
-                     expressions (l   4 c   7) (l   4 c  10)           declaration specifiers
-                     expressions (l   4 c   7) (l   4 c  10)             type specifier
-                     expressions (l   4 c   7) (l   4 c  10)               "int"
+                     expressions (l   4 c   7) (l   4 c  10)           type specifier
+                     expressions (l   4 c   7) (l   4 c  10)             "int"
                      expressions (l   4 c  11) (l   4 c  12)           direct declarator (identifier)
                      expressions (l   4 c  11) (l   4 c  12)             identifier (definition): x
                      expressions (l   4 c  12) (l   4 c  13)         ,
                      expressions (l   4 c  14) (l   4 c  19)         parameter declaration
-                     expressions (l   4 c  14) (l   4 c  17)           declaration specifiers
-                     expressions (l   4 c  14) (l   4 c  17)             type specifier
-                     expressions (l   4 c  14) (l   4 c  17)               "int"
+                     expressions (l   4 c  14) (l   4 c  17)           type specifier
+                     expressions (l   4 c  14) (l   4 c  17)             "int"
                      expressions (l   4 c  18) (l   4 c  19)           direct declarator (identifier)
                      expressions (l   4 c  18) (l   4 c  19)             identifier (definition): y
                      expressions (l   4 c  19) (l   4 c  20)         )
@@ -66,19 +61,17 @@
                      expressions (l   4 c  34) (l   4 c  35)         }
                      expressions (l   5 c   1) (l   5 c  24)   external declaration
                      expressions (l   5 c   1) (l   5 c  24)     function definition
-                     expressions (l   5 c   1) (l   5 c   5)       declaration specifiers
-                     expressions (l   5 c   1) (l   5 c   5)         type specifier
-                     expressions (l   5 c   1) (l   5 c   5)           "void"
+                     expressions (l   5 c   1) (l   5 c   5)       type specifier
+                     expressions (l   5 c   1) (l   5 c   5)         "void"
                      expressions (l   5 c   6) (l   5 c  21)       direct declarator (function)
                      expressions (l   5 c   6) (l   5 c   7)         direct declarator (identifier)
                      expressions (l   5 c   6) (l   5 c   7)           identifier (definition): h
                      expressions (l   5 c   7) (l   5 c   8)         (
                      expressions (l   5 c   8) (l   5 c  20)         parameter declaration
-                     expressions (l   5 c   8) (l   5 c  18)           declaration specifiers
-                     expressions (l   5 c   8) (l   5 c  18)             type specifier
-                     expressions (l   5 c   8) (l   5 c  18)               struct specifier
-                     expressions (l   5 c   8) (l   5 c  14)                 "struct"
-                     expressions (l   5 c  15) (l   5 c  18)                 identifier: s_t (definition: expressions: l1, c8-11)
+                     expressions (l   5 c   8) (l   5 c  18)           type specifier
+                     expressions (l   5 c   8) (l   5 c  18)             struct specifier
+                     expressions (l   5 c   8) (l   5 c  14)               "struct"
+                     expressions (l   5 c  15) (l   5 c  18)               identifier: s_t (definition: expressions: l1, c8-11)
                      expressions (l   5 c  19) (l   5 c  20)           direct declarator (identifier)
                      expressions (l   5 c  19) (l   5 c  20)             identifier (definition): s
                      expressions (l   5 c  20) (l   5 c  21)         )
@@ -87,9 +80,8 @@
                      expressions (l   5 c  23) (l   5 c  24)         }
                      expressions (l   7 c   1) (l  38 c   2)   external declaration
                      expressions (l   7 c   1) (l  38 c   2)     function definition
-                     expressions (l   7 c   1) (l   7 c   4)       declaration specifiers
-                     expressions (l   7 c   1) (l   7 c   4)         type specifier
-                     expressions (l   7 c   1) (l   7 c   4)           "int"
+                     expressions (l   7 c   1) (l   7 c   4)       type specifier
+                     expressions (l   7 c   1) (l   7 c   4)         "int"
                      expressions (l   7 c   5) (l   7 c  11)       direct declarator (function)
                      expressions (l   7 c   5) (l   7 c   9)         direct declarator (identifier)
                      expressions (l   7 c   5) (l   7 c   9)           identifier (definition): main
@@ -98,9 +90,8 @@
                      expressions (l   8 c   1) (l  38 c   2)       compound statement
                      expressions (l   8 c   1) (l   8 c   2)         {
                      expressions (l   9 c   2) (l   9 c  14)         declaration
-                     expressions (l   9 c   2) (l   9 c   5)           declaration specifiers
-                     expressions (l   9 c   2) (l   9 c   5)             type specifier
-                     expressions (l   9 c   2) (l   9 c   5)               "int"
+                     expressions (l   9 c   2) (l   9 c   5)           type specifier
+                     expressions (l   9 c   2) (l   9 c   5)             "int"
                      expressions (l   9 c   6) (l   9 c   7)           direct declarator (identifier)
                      expressions (l   9 c   6) (l   9 c   7)             identifier (definition): x
                      expressions (l   9 c   7) (l   9 c   8)           ,
@@ -364,9 +355,8 @@
                      expressions (l  26 c  12) (l  26 c  13)             )
                      expressions (l  26 c  13) (l  26 c  14)           ;
                      expressions (l  28 c   2) (l  28 c   9)         declaration
-                     expressions (l  28 c   2) (l  28 c   5)           declaration specifiers
-                     expressions (l  28 c   2) (l  28 c   5)             type specifier
-                     expressions (l  28 c   2) (l  28 c   5)               "int"
+                     expressions (l  28 c   2) (l  28 c   5)           type specifier
+                     expressions (l  28 c   2) (l  28 c   5)             "int"
                      expressions (l  28 c   6) (l  28 c   8)           declarator
                      expressions (l  28 c   6) (l  28 c   7)             pointer
                      expressions (l  28 c   6) (l  28 c   7)               *
@@ -394,9 +384,8 @@
                      expressions (l  30 c   7) (l  30 c   8)               int constant: 3
                      expressions (l  30 c   8) (l  30 c   9)           ;
                      expressions (l  32 c   2) (l  32 c  11)         declaration
-                     expressions (l  32 c   2) (l  32 c   5)           declaration specifiers
-                     expressions (l  32 c   2) (l  32 c   5)             type specifier
-                     expressions (l  32 c   2) (l  32 c   5)               "int"
+                     expressions (l  32 c   2) (l  32 c   5)           type specifier
+                     expressions (l  32 c   2) (l  32 c   5)             "int"
                      expressions (l  32 c   6) (l  32 c  10)           direct declarator (array)
                      expressions (l  32 c   6) (l  32 c   7)             direct declarator (identifier)
                      expressions (l  32 c   6) (l  32 c   7)               identifier (definition): a
@@ -434,11 +423,10 @@
                      expressions (l  33 c  23) (l  33 c  24)               )
                      expressions (l  33 c  24) (l  33 c  25)           ;
                      expressions (l  35 c   2) (l  35 c  15)         declaration
-                     expressions (l  35 c   2) (l  35 c  12)           declaration specifiers
-                     expressions (l  35 c   2) (l  35 c  12)             type specifier
-                     expressions (l  35 c   2) (l  35 c  12)               struct specifier
-                     expressions (l  35 c   2) (l  35 c   8)                 "struct"
-                     expressions (l  35 c   9) (l  35 c  12)                 identifier: s_t (definition: expressions: l1, c8-11)
+                     expressions (l  35 c   2) (l  35 c  12)           type specifier
+                     expressions (l  35 c   2) (l  35 c  12)             struct specifier
+                     expressions (l  35 c   2) (l  35 c   8)               "struct"
+                     expressions (l  35 c   9) (l  35 c  12)               identifier: s_t (definition: expressions: l1, c8-11)
                      expressions (l  35 c  13) (l  35 c  14)           direct declarator (identifier)
                      expressions (l  35 c  13) (l  35 c  14)             identifier (definition): s
                      expressions (l  35 c  14) (l  35 c  15)           ;

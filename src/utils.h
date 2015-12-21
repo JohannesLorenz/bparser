@@ -138,13 +138,15 @@ struct struct_return_value_of_function
 // e.g., in const struct s* , it should return s 
 struct struct_type_specifier_of_declaration_t : visitor_t
 {
-	identifier_t* result;
+	struct_or_union_specifier_t* result;
 	struct_type_specifier_of_declaration_t() : result(NULL) {}
 	void visit(declaration_t & d) { tvisit(d.c.get<0>()); }
+	void visit(struct_declaration_t & d) { tvisit(d.c.get<0>()); }
+	void visit(parameter_declaration_t & d) { tvisit(d.c.get<0>()); }
 	void visit(declaration_specifiers_t & d) { vaccept(d.c); }
 	void visit(type_specifier_t & t) { t.c.get<0>()->accept(*this); }
 	void visit(struct_or_union_specifier_t& s) {
-		result = s.c.get<struct_or_union_specifier_t::identifier>(); }
+		result = &s; }
 	void visit(typedef_name_t& t);
 };
 
@@ -174,11 +176,23 @@ struct declaration_from_declarator_t : ftor_base
 	void operator()(init_declarator_list_t& i) {
 		accept(*i.parent);
 	}
+	void operator()(struct_or_union_specifier_t& i) {
+		accept(*i.parent);
+	}
 	void operator ()(declaration_t& d) {
 		declaration_found = &d;
 	}
 	void operator()(parameter_declaration_t& d) {
 		declaration_found = &d;
+	}
+	void operator()(struct_declarator_list_t& s) {
+		accept(*s.parent);
+	}
+	void operator()(struct_declarator_t& s) {
+		visit(*s.parent);
+	}
+	void operator()(struct_declaration_t& s) {
+		declaration_found = &s;
 	}
 };
 
@@ -197,15 +211,20 @@ inline declaration_base& declaration_from_identifier(identifier_t& id)
 	id.parent->accept(v0);
 	return *v0.functor().declaration_found;
 }
-
-inline identifier_t& struct_rval_of_func(identifier_t& id)
+#include <iostream>
+inline struct_or_union_specifier_t& struct_rval_of_func(identifier_t& id)
 {
 	struct_type_specifier_of_declaration_t v;
 	if(!id._definition)
 	 throw "definition";
 
+	std::cout << "DECLSPEC: " << declaration_from_identifier(*id._definition).decl_spec() << std::endl;
+
 	declaration_from_identifier(*id._definition).decl_spec().accept(v);
 
+
+	if(!v.result)
+	 throw "no result";
 	return *v.result;
 
 /*	func_visitor< is<struct_return_value_of_function> > v;

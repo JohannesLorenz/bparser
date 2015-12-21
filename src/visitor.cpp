@@ -911,7 +911,7 @@ void dumper_t::visit(declarator_t& n)
 
 void dumper_t::visit(declaration_specifiers_t& n)
 {
-	if(n.c.size())
+	if(n.c.size() > 1)
 	{
 		incr_depth_t x(&depth, stream, n.span);
 		stream << "declaration specifiers" << std::endl;

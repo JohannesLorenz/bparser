@@ -378,13 +378,17 @@ struct struct_declaration_list_t : public node_t, public has_par<> // FEATURE: w
 	void accept(class visitor_t& v);
 };
 
-struct struct_declaration_t : public node_t, public has_par<struct_declaration_list_t>
+struct struct_declaration_t : public node_t, public has_par<struct_declaration_list_t>,
+	public declaration_base
 {
-	ptn<	struct specifier_qualifier_list_t,
+	ptn<	struct declaration_specifiers_t, // FEATURE: don't use node_base there
 		ptn<	struct struct_declarator_list_t,
 				end_token > > c;
 	void accept(class visitor_t& v);
+	declaration_specifiers_t& decl_spec() { return *c.value; }
 };
+
+
 
 struct specifier_qualifier_list_t : public node_t, public has_par<>
 {
@@ -488,7 +492,7 @@ struct identifier_list_t : public node_t, public has_par<> // FEATURE: when alt 
 
 struct type_name_t : public node_t, public has_par<>
 {
-	ptn<	specifier_qualifier_list_t,
+	ptn<	declaration_specifiers_t,
 		ptn<	abstract_declarator_t > > c;
 	void accept(class visitor_t& v);
 };

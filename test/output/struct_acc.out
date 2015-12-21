@@ -34,17 +34,15 @@
                       struct_acc (l   6 c  23) (l   6 c  24)       ;
                       struct_acc (l   7 c   1) (l   7 c   9)   external declaration
                       struct_acc (l   7 c   1) (l   7 c   9)     declaration
-                      struct_acc (l   7 c   1) (l   7 c   6)       declaration specifiers
-                      struct_acc (l   7 c   1) (l   7 c   6)         type specifier
-                      struct_acc (l   7 c   1) (l   7 c   6)           typedef name: a_t_2 (definition: struct_acc: l6, c15-20)
+                      struct_acc (l   7 c   1) (l   7 c   6)       type specifier
+                      struct_acc (l   7 c   1) (l   7 c   6)         typedef name: a_t_2 (definition: struct_acc: l6, c15-20)
                       struct_acc (l   7 c   7) (l   7 c   8)       direct declarator (identifier)
                       struct_acc (l   7 c   7) (l   7 c   8)         identifier (definition): a
                       struct_acc (l   7 c   8) (l   7 c   9)       ;
                       struct_acc (l   9 c   1) (l  13 c   2)   external declaration
                       struct_acc (l   9 c   1) (l  13 c   2)     function definition
-                      struct_acc (l   9 c   1) (l   9 c   4)       declaration specifiers
-                      struct_acc (l   9 c   1) (l   9 c   4)         type specifier
-                      struct_acc (l   9 c   1) (l   9 c   4)           "int"
+                      struct_acc (l   9 c   1) (l   9 c   4)       type specifier
+                      struct_acc (l   9 c   1) (l   9 c   4)         "int"
                       struct_acc (l   9 c   5) (l   9 c  11)       direct declarator (function)
                       struct_acc (l   9 c   5) (l   9 c   9)         direct declarator (identifier)
                       struct_acc (l   9 c   5) (l   9 c   9)           identifier (definition): main
@@ -53,9 +51,8 @@
                       struct_acc (l  10 c   1) (l  13 c   2)       compound statement
                       struct_acc (l  10 c   1) (l  10 c   2)         {
                       struct_acc (l  11 c   2) (l  11 c   8)         declaration
-                      struct_acc (l  11 c   2) (l  11 c   5)           declaration specifiers
-                      struct_acc (l  11 c   2) (l  11 c   5)             type specifier
-                      struct_acc (l  11 c   2) (l  11 c   5)               "int"
+                      struct_acc (l  11 c   2) (l  11 c   5)           type specifier
+                      struct_acc (l  11 c   2) (l  11 c   5)             "int"
                       struct_acc (l  11 c   6) (l  11 c   7)           direct declarator (identifier)
                       struct_acc (l  11 c   6) (l  11 c   7)             identifier (definition): b
                       struct_acc (l  11 c   7) (l  11 c   8)           ;

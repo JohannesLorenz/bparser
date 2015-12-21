@@ -14,9 +14,8 @@
                        constants (l   4 c   6) (l   4 c   7)       ;
                        constants (l   6 c   1) (l  24 c   2)   external declaration
                        constants (l   6 c   1) (l  24 c   2)     function definition
-                       constants (l   6 c   1) (l   6 c   4)       declaration specifiers
-                       constants (l   6 c   1) (l   6 c   4)         type specifier
-                       constants (l   6 c   1) (l   6 c   4)           "int"
+                       constants (l   6 c   1) (l   6 c   4)       type specifier
+                       constants (l   6 c   1) (l   6 c   4)         "int"
                        constants (l   6 c   5) (l   6 c  11)       direct declarator (function)
                        constants (l   6 c   5) (l   6 c   9)         direct declarator (identifier)
                        constants (l   6 c   5) (l   6 c   9)           identifier (definition): main
@@ -25,9 +24,8 @@
                        constants (l   7 c   1) (l  24 c   2)       compound statement
                        constants (l   7 c   1) (l   7 c   2)         {
                        constants (l   8 c   2) (l   8 c  16)         declaration
-                       constants (l   8 c   2) (l   8 c   5)           declaration specifiers
-                       constants (l   8 c   2) (l   8 c   5)             type specifier
-                       constants (l   8 c   2) (l   8 c   5)               typedef name: e_t (definition: constants: l4, c3-6)
+                       constants (l   8 c   2) (l   8 c   5)           type specifier
+                       constants (l   8 c   2) (l   8 c   5)             typedef name: e_t (definition: constants: l4, c3-6)
                        constants (l   8 c   6) (l   8 c  15)           init declarator
                        constants (l   8 c   6) (l   8 c   7)             direct declarator (identifier)
                        constants (l   8 c   6) (l   8 c   7)               identifier (definition): e
@@ -55,9 +53,8 @@
                        constants (l  10 c  10) (l  10 c  11)               )
                        constants (l  10 c  11) (l  10 c  12)           ;
                        constants (l  12 c   2) (l  12 c  74)         declaration
-                       constants (l  12 c   2) (l  12 c   5)           declaration specifiers
-                       constants (l  12 c   2) (l  12 c   5)             type specifier
-                       constants (l  12 c   2) (l  12 c   5)               "int"
+                       constants (l  12 c   2) (l  12 c   5)           type specifier
+                       constants (l  12 c   2) (l  12 c   5)             "int"
                        constants (l  12 c   6) (l  12 c  73)           init declarator
                        constants (l  12 c   6) (l  12 c   7)             direct declarator (identifier)
                        constants (l  12 c   6) (l  12 c   7)               identifier (definition): i
@@ -98,9 +95,8 @@
                        constants (l  12 c  69) (l  12 c  73)                   int constant: 11ll
                        constants (l  12 c  73) (l  12 c  74)           ;
                        constants (l  13 c   2) (l  13 c  16)         declaration
-                       constants (l  13 c   2) (l  13 c   6)           declaration specifiers
-                       constants (l  13 c   2) (l  13 c   6)             type specifier
-                       constants (l  13 c   2) (l  13 c   6)               "char"
+                       constants (l  13 c   2) (l  13 c   6)           type specifier
+                       constants (l  13 c   2) (l  13 c   6)             "char"
                        constants (l  13 c   7) (l  13 c  15)           init declarator
                        constants (l  13 c   7) (l  13 c   8)             direct declarator (identifier)
                        constants (l  13 c   7) (l  13 c   8)               identifier (definition): c
@@ -126,9 +122,8 @@
                        constants (l  15 c   6) (l  15 c  11)               int constant: L'\''
                        constants (l  15 c  11) (l  15 c  12)           ;
                        constants (l  16 c   2) (l  16 c  26)         declaration
-                       constants (l  16 c   2) (l  16 c  10)           declaration specifiers
-                       constants (l  16 c   2) (l  16 c  10)             type specifier
-                       constants (l  16 c   2) (l  16 c  10)               "unsigned"
+                       constants (l  16 c   2) (l  16 c  10)           type specifier
+                       constants (l  16 c   2) (l  16 c  10)             "unsigned"
                        constants (l  16 c  11) (l  16 c  25)           init declarator
                        constants (l  16 c  11) (l  16 c  16)             direct declarator (identifier)
                        constants (l  16 c  11) (l  16 c  16)               identifier (definition): multi
@@ -138,9 +133,8 @@
                        constants (l  16 c  19) (l  16 c  25)                 int constant: '1234'
                        constants (l  16 c  25) (l  16 c  26)           ;
                        constants (l  18 c   2) (l  18 c  72)         declaration
-                       constants (l  18 c   2) (l  18 c   7)           declaration specifiers
-                       constants (l  18 c   2) (l  18 c   7)             type specifier
-                       constants (l  18 c   2) (l  18 c   7)               "float"
+                       constants (l  18 c   2) (l  18 c   7)           type specifier
+                       constants (l  18 c   2) (l  18 c   7)             "float"
                        constants (l  18 c   8) (l  18 c  71)           init declarator
                        constants (l  18 c   8) (l  18 c   9)             direct declarator (identifier)
                        constants (l  18 c   8) (l  18 c   9)               identifier (definition): f

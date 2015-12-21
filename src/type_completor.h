@@ -62,6 +62,7 @@ public:
 	void visit(type_specifier_t& t);
 	void visit(struct_or_union_specifier_t& s);
 	void visit(typedef_name_t& t);
+	void visit(identifier_t& t);
 };
 
 namespace detail

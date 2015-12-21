@@ -34,8 +34,7 @@
                         typedefs (l   2 c  14) (l   2 c  15)           )
                         typedefs (l   2 c  15) (l   2 c  16)         (
                         typedefs (l   2 c  16) (l   2 c  19)         parameter declaration
-                        typedefs (l   2 c  16) (l   2 c  19)           declaration specifiers
-                        typedefs (l   2 c  16) (l   2 c  19)             type specifier
-                        typedefs (l   2 c  16) (l   2 c  19)               "int"
+                        typedefs (l   2 c  16) (l   2 c  19)           type specifier
+                        typedefs (l   2 c  16) (l   2 c  19)             "int"
                         typedefs (l   2 c  19) (l   2 c  20)         )
                         typedefs (l   2 c  20) (l   2 c  21)       ;

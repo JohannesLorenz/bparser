@@ -149,7 +149,7 @@ typedef void* yyscan_t;
 	node_t* node;
 
 	type_specifier_t* type_specifier;
-	specifier_qualifier_list_t* specifier_qualifier_list;
+	declaration_specifiers_t* specifier_qualifier_list;
 	expression_t *expression;
 	declaration_specifiers_t* declaration_specifiers;
 	declarator_t* declarator;

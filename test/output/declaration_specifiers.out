@@ -27,9 +27,8 @@
           declaration_specifiers (l   2 c  16) (l   2 c  17)       ;
           declaration_specifiers (l   4 c   1) (l  16 c   2)   external declaration
           declaration_specifiers (l   4 c   1) (l  16 c   2)     function definition
-          declaration_specifiers (l   4 c   1) (l   4 c   4)       declaration specifiers
-          declaration_specifiers (l   4 c   1) (l   4 c   4)         type specifier
-          declaration_specifiers (l   4 c   1) (l   4 c   4)           "int"
+          declaration_specifiers (l   4 c   1) (l   4 c   4)       type specifier
+          declaration_specifiers (l   4 c   1) (l   4 c   4)         "int"
           declaration_specifiers (l   4 c   5) (l   4 c  11)       direct declarator (function)
           declaration_specifiers (l   4 c   5) (l   4 c   9)         direct declarator (identifier)
           declaration_specifiers (l   4 c   5) (l   4 c   9)           identifier (definition): main
@@ -74,57 +73,51 @@
           declaration_specifiers (l   9 c  12) (l   9 c  13)             identifier (definition): c
           declaration_specifiers (l   9 c  13) (l   9 c  14)           ;
           declaration_specifiers (l  10 c   2) (l  10 c  11)         declaration
-          declaration_specifiers (l  10 c   2) (l  10 c   8)           declaration specifiers
-          declaration_specifiers (l  10 c   2) (l  10 c   8)             type specifier
-          declaration_specifiers (l  10 c   2) (l  10 c   8)               "double"
+          declaration_specifiers (l  10 c   2) (l  10 c   8)           type specifier
+          declaration_specifiers (l  10 c   2) (l  10 c   8)             "double"
           declaration_specifiers (l  10 c   9) (l  10 c  10)           direct declarator (identifier)
           declaration_specifiers (l  10 c   9) (l  10 c  10)             identifier (definition): d
           declaration_specifiers (l  10 c  10) (l  10 c  11)           ;
           declaration_specifiers (l  11 c   2) (l  11 c  10)         declaration
-          declaration_specifiers (l  11 c   2) (l  11 c   7)           declaration specifiers
-          declaration_specifiers (l  11 c   2) (l  11 c   7)             type specifier
-          declaration_specifiers (l  11 c   2) (l  11 c   7)               "bool"
+          declaration_specifiers (l  11 c   2) (l  11 c   7)           type specifier
+          declaration_specifiers (l  11 c   2) (l  11 c   7)             "bool"
           declaration_specifiers (l  11 c   8) (l  11 c   9)           direct declarator (identifier)
           declaration_specifiers (l  11 c   8) (l  11 c   9)             identifier (definition): e
           declaration_specifiers (l  11 c   9) (l  11 c  10)           ;
           declaration_specifiers (l  12 c   2) (l  12 c  11)         declaration
-          declaration_specifiers (l  12 c   2) (l  12 c   8)           declaration specifiers
-          declaration_specifiers (l  12 c   2) (l  12 c   8)             type specifier
-          declaration_specifiers (l  12 c   2) (l  12 c   8)               typedef name: my_int (definition: declaration_specifiers: l6, c14-20)
+          declaration_specifiers (l  12 c   2) (l  12 c   8)           type specifier
+          declaration_specifiers (l  12 c   2) (l  12 c   8)             typedef name: my_int (definition: declaration_specifiers: l6, c14-20)
           declaration_specifiers (l  12 c   9) (l  12 c  10)           direct declarator (identifier)
           declaration_specifiers (l  12 c   9) (l  12 c  10)             identifier (definition): g
           declaration_specifiers (l  12 c  10) (l  12 c  11)           ;
           declaration_specifiers (l  13 c   2) (l  13 c  27)         declaration
-          declaration_specifiers (l  13 c   2) (l  13 c  24)           declaration specifiers
-          declaration_specifiers (l  13 c   2) (l  13 c  24)             type specifier
-          declaration_specifiers (l  13 c   2) (l  13 c  24)               struct specifier
-          declaration_specifiers (l  13 c   2) (l  13 c   8)                 "struct"
-          declaration_specifiers (l  13 c   9) (l  13 c  10)                 {
-          declaration_specifiers (l  13 c  11) (l  13 c  22)                 struct declaration
-          declaration_specifiers (l  13 c  11) (l  13 c  19)                   type specifier
-          declaration_specifiers (l  13 c  11) (l  13 c  19)                     "complex"
-          declaration_specifiers (l  13 c  20) (l  13 c  21)                   direct declarator (identifier)
-          declaration_specifiers (l  13 c  20) (l  13 c  21)                     identifier (definition): f
-          declaration_specifiers (l  13 c  21) (l  13 c  22)                   ;
-          declaration_specifiers (l  13 c  23) (l  13 c  24)                 }
+          declaration_specifiers (l  13 c   2) (l  13 c  24)           type specifier
+          declaration_specifiers (l  13 c   2) (l  13 c  24)             struct specifier
+          declaration_specifiers (l  13 c   2) (l  13 c   8)               "struct"
+          declaration_specifiers (l  13 c   9) (l  13 c  10)               {
+          declaration_specifiers (l  13 c  11) (l  13 c  22)               struct declaration
+          declaration_specifiers (l  13 c  11) (l  13 c  19)                 type specifier
+          declaration_specifiers (l  13 c  11) (l  13 c  19)                   "complex"
+          declaration_specifiers (l  13 c  20) (l  13 c  21)                 direct declarator (identifier)
+          declaration_specifiers (l  13 c  20) (l  13 c  21)                   identifier (definition): f
+          declaration_specifiers (l  13 c  21) (l  13 c  22)                 ;
+          declaration_specifiers (l  13 c  23) (l  13 c  24)               }
           declaration_specifiers (l  13 c  25) (l  13 c  26)           direct declarator (identifier)
           declaration_specifiers (l  13 c  25) (l  13 c  26)             identifier (definition): s
           declaration_specifiers (l  13 c  26) (l  13 c  27)           ;
           declaration_specifiers (l  14 c   2) (l  14 c  19)         declaration
-          declaration_specifiers (l  14 c   2) (l  14 c  16)           declaration specifiers
-          declaration_specifiers (l  14 c   2) (l  14 c  16)             type specifier
-          declaration_specifiers (l  14 c   2) (l  14 c  16)               enum specifier
-          declaration_specifiers (l  14 c   2) (l  14 c   6)                 "enum"
-          declaration_specifiers (l  14 c   7) (l  14 c   8)                 {
-          declaration_specifiers (l  14 c   9) (l  14 c  14)                 identifier (definition): first
-          declaration_specifiers (l  14 c  15) (l  14 c  16)                 }
+          declaration_specifiers (l  14 c   2) (l  14 c  16)           type specifier
+          declaration_specifiers (l  14 c   2) (l  14 c  16)             enum specifier
+          declaration_specifiers (l  14 c   2) (l  14 c   6)               "enum"
+          declaration_specifiers (l  14 c   7) (l  14 c   8)               {
+          declaration_specifiers (l  14 c   9) (l  14 c  14)               identifier (definition): first
+          declaration_specifiers (l  14 c  15) (l  14 c  16)               }
           declaration_specifiers (l  14 c  17) (l  14 c  18)           direct declarator (identifier)
           declaration_specifiers (l  14 c  17) (l  14 c  18)             identifier (definition): h
           declaration_specifiers (l  14 c  18) (l  14 c  19)           ;
           declaration_specifiers (l  15 c   2) (l  15 c   8)         declaration
-          declaration_specifiers (l  15 c   2) (l  15 c   5)           declaration specifiers
-          declaration_specifiers (l  15 c   2) (l  15 c   5)             type specifier
-          declaration_specifiers (l  15 c   2) (l  15 c   5)               "int"
+          declaration_specifiers (l  15 c   2) (l  15 c   5)           type specifier
+          declaration_specifiers (l  15 c   2) (l  15 c   5)             "int"
           declaration_specifiers (l  15 c   6) (l  15 c   7)           direct declarator (identifier)
           declaration_specifiers (l  15 c   6) (l  15 c   7)             identifier (definition): f
           declaration_specifiers (l  15 c   7) (l  15 c   8)           ;

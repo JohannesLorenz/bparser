@@ -1,19 +1,17 @@
                            clash (l   1 c   1) (l  22 c   2) translation unit
                            clash (l   1 c   1) (l   1 c  12)   external declaration
                            clash (l   1 c   1) (l   1 c  12)     declaration
-                           clash (l   1 c   1) (l   1 c  11)       declaration specifiers
-                           clash (l   1 c   1) (l   1 c  11)         type specifier
-                           clash (l   1 c   1) (l   1 c  11)           enum specifier
-                           clash (l   1 c   1) (l   1 c   5)             "enum"
-                           clash (l   1 c   6) (l   1 c   7)             {
-                           clash (l   1 c   8) (l   1 c   9)             identifier (definition): t
-                           clash (l   1 c  10) (l   1 c  11)             }
+                           clash (l   1 c   1) (l   1 c  11)       type specifier
+                           clash (l   1 c   1) (l   1 c  11)         enum specifier
+                           clash (l   1 c   1) (l   1 c   5)           "enum"
+                           clash (l   1 c   6) (l   1 c   7)           {
+                           clash (l   1 c   8) (l   1 c   9)           identifier (definition): t
+                           clash (l   1 c  10) (l   1 c  11)           }
                            clash (l   1 c  11) (l   1 c  12)       ;
                            clash (l   3 c   1) (l  18 c   2)   external declaration
                            clash (l   3 c   1) (l  18 c   2)     function definition
-                           clash (l   3 c   1) (l   3 c   4)       declaration specifiers
-                           clash (l   3 c   1) (l   3 c   4)         type specifier
-                           clash (l   3 c   1) (l   3 c   4)           "int"
+                           clash (l   3 c   1) (l   3 c   4)       type specifier
+                           clash (l   3 c   1) (l   3 c   4)         "int"
                            clash (l   3 c   5) (l   3 c  11)       direct declarator (function)
                            clash (l   3 c   5) (l   3 c   9)         direct declarator (identifier)
                            clash (l   3 c   5) (l   3 c   9)           identifier (definition): main
@@ -25,9 +23,8 @@
                            clash (l   5 c   2) (l   5 c   5)           "for"
                            clash (l   5 c   5) (l   5 c   6)           (
                            clash (l   5 c   6) (l   5 c  16)           declaration
-                           clash (l   5 c   6) (l   5 c   9)             declaration specifiers
-                           clash (l   5 c   6) (l   5 c   9)               type specifier
-                           clash (l   5 c   6) (l   5 c   9)                 "int"
+                           clash (l   5 c   6) (l   5 c   9)             type specifier
+                           clash (l   5 c   6) (l   5 c   9)               "int"
                            clash (l   5 c  10) (l   5 c  15)             init declarator
                            clash (l   5 c  10) (l   5 c  11)               direct declarator (identifier)
                            clash (l   5 c  10) (l   5 c  11)                 identifier (definition): t
@@ -55,9 +52,8 @@
                            clash (l   6 c   2) (l   6 c   5)           "for"
                            clash (l   6 c   5) (l   6 c   6)           (
                            clash (l   6 c   6) (l   6 c  16)           declaration
-                           clash (l   6 c   6) (l   6 c   9)             declaration specifiers
-                           clash (l   6 c   6) (l   6 c   9)               type specifier
-                           clash (l   6 c   6) (l   6 c   9)                 "int"
+                           clash (l   6 c   6) (l   6 c   9)             type specifier
+                           clash (l   6 c   6) (l   6 c   9)               "int"
                            clash (l   6 c  10) (l   6 c  15)             init declarator
                            clash (l   6 c  10) (l   6 c  11)               direct declarator (identifier)
                            clash (l   6 c  10) (l   6 c  11)                 identifier (definition): t
@@ -95,9 +91,8 @@
                            clash (l   8 c   2) (l   8 c   5)           "for"
                            clash (l   8 c   5) (l   8 c   6)           (
                            clash (l   8 c   6) (l   8 c  16)           declaration
-                           clash (l   8 c   6) (l   8 c   9)             declaration specifiers
-                           clash (l   8 c   6) (l   8 c   9)               type specifier
-                           clash (l   8 c   6) (l   8 c   9)                 "int"
+                           clash (l   8 c   6) (l   8 c   9)             type specifier
+                           clash (l   8 c   6) (l   8 c   9)               "int"
                            clash (l   8 c  10) (l   8 c  15)             init declarator
                            clash (l   8 c  10) (l   8 c  11)               direct declarator (identifier)
                            clash (l   8 c  10) (l   8 c  11)                 identifier (definition): t
@@ -160,9 +155,8 @@
                            clash (l  14 c   2) (l  17 c   3)         compound statement
                            clash (l  14 c   2) (l  14 c   3)           {
                            clash (l  15 c   3) (l  15 c   7)           declaration
-                           clash (l  15 c   3) (l  15 c   4)             declaration specifiers
-                           clash (l  15 c   3) (l  15 c   4)               type specifier
-                           clash (l  15 c   3) (l  15 c   4)                 typedef name: t (definition: clash: l12, c14-15)
+                           clash (l  15 c   3) (l  15 c   4)             type specifier
+                           clash (l  15 c   3) (l  15 c   4)               typedef name: t (definition: clash: l12, c14-15)
                            clash (l  15 c   5) (l  15 c   6)             direct declarator (identifier)
                            clash (l  15 c   5) (l  15 c   6)               identifier (definition): t
                            clash (l  15 c   6) (l  15 c   7)             ;
@@ -170,9 +164,8 @@
                            clash (l  16 c   3) (l  16 c   6)             "for"
                            clash (l  16 c   6) (l  16 c   7)             (
                            clash (l  16 c   7) (l  16 c  13)             declaration
-                           clash (l  16 c   7) (l  16 c  10)               declaration specifiers
-                           clash (l  16 c   7) (l  16 c  10)                 type specifier
-                           clash (l  16 c   7) (l  16 c  10)                   "int"
+                           clash (l  16 c   7) (l  16 c  10)               type specifier
+                           clash (l  16 c   7) (l  16 c  10)                 "int"
                            clash (l  16 c  11) (l  16 c  12)               direct declarator (identifier)
                            clash (l  16 c  11) (l  16 c  12)                 identifier (definition): t
                            clash (l  16 c  12) (l  16 c  13)               ;
@@ -187,17 +180,15 @@
                            clash (l  18 c   1) (l  18 c   2)         }
                            clash (l  20 c   1) (l  22 c   2)   external declaration
                            clash (l  20 c   1) (l  22 c   2)     function definition
-                           clash (l  20 c   1) (l  20 c   5)       declaration specifiers
-                           clash (l  20 c   1) (l  20 c   5)         type specifier
-                           clash (l  20 c   1) (l  20 c   5)           "void"
+                           clash (l  20 c   1) (l  20 c   5)       type specifier
+                           clash (l  20 c   1) (l  20 c   5)         "void"
                            clash (l  20 c   6) (l  20 c  14)       direct declarator (function)
                            clash (l  20 c   6) (l  20 c   7)         direct declarator (identifier)
                            clash (l  20 c   6) (l  20 c   7)           identifier (definition): f
                            clash (l  20 c   7) (l  20 c   8)         (
                            clash (l  20 c   8) (l  20 c  13)         parameter declaration
-                           clash (l  20 c   8) (l  20 c  11)           declaration specifiers
-                           clash (l  20 c   8) (l  20 c  11)             type specifier
-                           clash (l  20 c   8) (l  20 c  11)               "int"
+                           clash (l  20 c   8) (l  20 c  11)           type specifier
+                           clash (l  20 c   8) (l  20 c  11)             "int"
                            clash (l  20 c  12) (l  20 c  13)           direct declarator (identifier)
                            clash (l  20 c  12) (l  20 c  13)             identifier (definition): t
                            clash (l  20 c  13) (l  20 c  14)         )

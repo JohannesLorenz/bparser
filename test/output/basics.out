@@ -1,30 +1,26 @@
                           basics (l   1 c   1) (l   5 c   2) translation unit
                           basics (l   1 c   1) (l   1 c   7)   external declaration
                           basics (l   1 c   1) (l   1 c   7)     declaration
-                          basics (l   1 c   1) (l   1 c   4)       declaration specifiers
-                          basics (l   1 c   1) (l   1 c   4)         type specifier
-                          basics (l   1 c   1) (l   1 c   4)           "int"
+                          basics (l   1 c   1) (l   1 c   4)       type specifier
+                          basics (l   1 c   1) (l   1 c   4)         "int"
                           basics (l   1 c   5) (l   1 c   6)       direct declarator (identifier)
                           basics (l   1 c   5) (l   1 c   6)         identifier (definition): x
                           basics (l   1 c   6) (l   1 c   7)       ;
                           basics (l   2 c   1) (l   2 c  23)   external declaration
                           basics (l   2 c   1) (l   2 c  23)     function definition
-                          basics (l   2 c   1) (l   2 c   4)       declaration specifiers
-                          basics (l   2 c   1) (l   2 c   4)         type specifier
-                          basics (l   2 c   1) (l   2 c   4)           "int"
+                          basics (l   2 c   1) (l   2 c   4)       type specifier
+                          basics (l   2 c   1) (l   2 c   4)         "int"
                           basics (l   2 c   5) (l   2 c  20)       direct declarator (function)
                           basics (l   2 c   5) (l   2 c   6)         direct declarator (identifier)
                           basics (l   2 c   5) (l   2 c   6)           identifier (definition): f
                           basics (l   2 c   6) (l   2 c   7)         (
                           basics (l   2 c   7) (l   2 c  10)         parameter declaration
-                          basics (l   2 c   7) (l   2 c  10)           declaration specifiers
-                          basics (l   2 c   7) (l   2 c  10)             type specifier
-                          basics (l   2 c   7) (l   2 c  10)               "int"
+                          basics (l   2 c   7) (l   2 c  10)           type specifier
+                          basics (l   2 c   7) (l   2 c  10)             "int"
                           basics (l   2 c  10) (l   2 c  11)         ,
                           basics (l   2 c  12) (l   2 c  19)         parameter declaration
-                          basics (l   2 c  12) (l   2 c  16)           declaration specifiers
-                          basics (l   2 c  12) (l   2 c  16)             type specifier
-                          basics (l   2 c  12) (l   2 c  16)               "char"
+                          basics (l   2 c  12) (l   2 c  16)           type specifier
+                          basics (l   2 c  12) (l   2 c  16)             "char"
                           basics (l   2 c  16) (l   2 c  19)           declarator
                           basics (l   2 c  16) (l   2 c  17)             pointer
                           basics (l   2 c  16) (l   2 c  17)               *
@@ -36,9 +32,8 @@
                           basics (l   2 c  22) (l   2 c  23)         }
                           basics (l   3 c   1) (l   3 c  24)   external declaration
                           basics (l   3 c   1) (l   3 c  24)     function definition
-                          basics (l   3 c   1) (l   3 c   4)       declaration specifiers
-                          basics (l   3 c   1) (l   3 c   4)         type specifier
-                          basics (l   3 c   1) (l   3 c   4)           "int"
+                          basics (l   3 c   1) (l   3 c   4)       type specifier
+                          basics (l   3 c   1) (l   3 c   4)         "int"
                           basics (l   3 c   5) (l   3 c   6)       direct declarator (identifier)
                           basics (l   3 c   5) (l   3 c   6)         identifier (definition): g
                           basics (l   3 c   6) (l   3 c   7)       (
@@ -47,9 +42,8 @@
                           basics (l   3 c  10) (l   3 c  11)       identifier (definition MISSING)
                           basics (l   3 c  11) (l   3 c  12)       )
                           basics (l   3 c  13) (l   3 c  21)       declaration
-                          basics (l   3 c  13) (l   3 c  16)         declaration specifiers
-                          basics (l   3 c  13) (l   3 c  16)           type specifier
-                          basics (l   3 c  13) (l   3 c  16)             "int"
+                          basics (l   3 c  13) (l   3 c  16)         type specifier
+                          basics (l   3 c  13) (l   3 c  16)           "int"
                           basics (l   3 c  17) (l   3 c  18)         direct declarator (identifier)
                           basics (l   3 c  17) (l   3 c  18)           identifier (definition): a
                           basics (l   3 c  18) (l   3 c  19)         ,
@@ -61,9 +55,8 @@
                           basics (l   3 c  23) (l   3 c  24)         }
                           basics (l   4 c   1) (l   5 c   2)   external declaration
                           basics (l   4 c   1) (l   5 c   2)     function definition
-                          basics (l   4 c   1) (l   4 c   4)       declaration specifiers
-                          basics (l   4 c   1) (l   4 c   4)         type specifier
-                          basics (l   4 c   1) (l   4 c   4)           "int"
+                          basics (l   4 c   1) (l   4 c   4)       type specifier
+                          basics (l   4 c   1) (l   4 c   4)         "int"
                           basics (l   4 c   5) (l   4 c  11)       direct declarator (function)
                           basics (l   4 c   5) (l   4 c   9)         direct declarator (identifier)
                           basics (l   4 c   5) (l   4 c   9)           identifier (definition): main
