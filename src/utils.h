@@ -148,34 +148,16 @@ struct struct_type_specifier_of_declaration_t : visitor_t
 	void visit(typedef_name_t& t);
 };
 
-struct declaration_base
-{
-};
-
-#include <iostream> //TODO
 // FEATURE: structs etc?
 struct declaration_from_declarator_t : ftor_base
 {
-	/*enum declaration_type
-	{
-		decl_type_declaration,
-		decl_type_function
-	};
-
-	union
-	{
-		declaration_t* declaration;
-		function_definition_t* function;
-	} declaration_found;*/
-	
-	declaration_t* declaration_found;
+	declaration_base* declaration_found;
 	
 
 	declaration_from_declarator_t(visitor_t* vref) :
 		ftor_base(vref) {}
 
 	void operator()(node_base& ) {
-		std::cout << "node base" << std::endl;
 		declaration_found = NULL; }
 	void operator()(identifier_t& d) {
 		accept(*d.parent);
@@ -196,13 +178,12 @@ struct declaration_from_declarator_t : ftor_base
 		declaration_found = &d;
 	}
 	void operator()(parameter_declaration_t& d) {
-		throw "TODO!";
-		//u.parameter_found = &d;
+		declaration_found = &d;
 	}
 };
 
 //! returns the declaration in which the given declarator is
-inline declaration_t& declaration_from_declarator(declarator_t& dtor)
+inline declaration_base& declaration_from_declarator(declarator_t& dtor)
 {
 	func_visitor< declaration_from_declarator_t > v0;
 	dtor.accept(v0);
@@ -210,10 +191,9 @@ inline declaration_t& declaration_from_declarator(declarator_t& dtor)
 }
 
 //! returns the declaration in which the given identifier is the declarator
-inline declaration_t& declaration_from_identifier(identifier_t& id)
+inline declaration_base& declaration_from_identifier(identifier_t& id)
 {
 	func_visitor< declaration_from_declarator_t > v0;
-	std::cout << "..." << std::endl;
 	id.parent->accept(v0);
 	return *v0.functor().declaration_found;
 }
@@ -224,7 +204,7 @@ inline identifier_t& struct_rval_of_func(identifier_t& id)
 	if(!id._definition)
 	 throw "definition";
 
-	declaration_from_identifier(*id._definition).accept(v);
+	declaration_from_identifier(*id._definition).decl_spec().accept(v);
 
 	return *v.result;
 

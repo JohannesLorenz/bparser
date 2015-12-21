@@ -70,6 +70,7 @@ template<class ParType = node_t>
 class has_par
 {
 public:
+	typedef ParType parent_type;
 	ParType* parent;
 };
 
@@ -326,6 +327,11 @@ struct type_specifier_complex_t : public type_specifier_t {
 	//virtual void accept(class visitor_t& v);
 };
 
+struct declaration_base
+{
+	virtual declaration_specifiers_t& decl_spec() = 0;
+};
+
 struct attr_name_t : public noconst_1line_terminal_t
 {
 	virtual void accept(class visitor_t& v);
@@ -460,12 +466,14 @@ struct parameter_list_t : public node_t, public has_par<> // FEATURE: when alt l
 	void accept(class visitor_t& v);
 };
 
-struct parameter_declaration_t : public node_t, public has_par<parameter_list_t>
+struct parameter_declaration_t : public node_t, public has_par<parameter_list_t>, public declaration_base
 {
 	ptn<	struct declaration_specifiers_t,
 		ptn<	declarator_t,
 			ptn<	abstract_declarator_t
 		> > > c;
+
+	declaration_specifiers_t& decl_spec() { return *c.get<0>(); }
 	void accept(class visitor_t& v);
 };
 
@@ -923,13 +931,15 @@ struct jump_statement_t : public statement_t
 					end_token> > > c;
 };
 
-struct declaration_t : public block_item_t
+struct declaration_t : public block_item_t, public declaration_base
 {
 	virtual void accept(class visitor_t& v);
 
 	ptn<	struct declaration_specifiers_t,
 		ptn<	init_declarator_list_t, // optional
 			end_token> > c; // semicolon
+
+	declaration_specifiers_t& decl_spec() { return *c.get<0>(); }
 };
 
 struct type_qualifier_list_t : public node_t, public has_par<>

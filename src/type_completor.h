@@ -64,35 +64,47 @@ public:
 	void visit(typedef_name_t& t);
 };
 
-template<class T>
+namespace detail
+{
+	template<class C1, class C2> struct asgn {
+		static void exec(C1& , const C2&) { throw "error: incompatible_"; }
+	};
+	template<class C> struct asgn<C, C> {
+		static void exec(C& dest, const C& src) { dest = src; }
+	};
+}
+
 class parent_assigner
 {
-	T* parent;
+	node_t* parent;
 
-	/*class set_parent
+	class set_parent
 	{
-		T* parent;
+		node_t* parent;
+
 	public:
 		template<class C>
 		void operator()(C& child) {
-			child.parent = parent; } // :-(((
+			child.parent = dynamic_cast<typename C::parent_type*>(parent);
+		} // :-(((
 	
-		template<class Unused> set_parent(Unused* ) {}
-	};*/
+		template<class Unused>
+		set_parent(Unused, node_t* p) : parent(p) {}
+	};
 
 public:
-	parent_assigner(T* parent) : parent(parent) {}
+	parent_assigner(node_t* parent) : parent(parent) {}
 	
 	template<class C>
-	void operator()(const C& child)
+	void operator()(C* const& child)
 	{
 		if(child)
 		{
-			child->parent = parent;
-			//func_visitor< set_parent > sp;
-			//child->accept(sp);
+			func_visitor< set_parent > sp(parent);
+			child->accept(sp);
 		}
 	}
+
 	template<class C>
 	void operator()(std::list<C*>* children) {
 		_foreach< std::list<C*>* >::exec(children, *this);
@@ -288,8 +300,8 @@ public:
 	template<class NodeType, class Direction>
 	void operator()(NodeType& n, Direction d) {
 		// assign parents
-		//parent_assigner<NodeType> pa(&n);
-		//foreach(n.c, pa);
+		parent_assigner pa(&n);
+		foreach(n.c, pa);
 		// variable scoping
 		handle_depth_inc(n, d);
 		// do something

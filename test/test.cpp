@@ -266,6 +266,7 @@ void run(int argc, char** argv)
 		run_test_file("nested");
 
 		run_test_file("struct_acc");
+		run_test_file("struct_typedefs");
 	}
 	else // argc > 1
 	{

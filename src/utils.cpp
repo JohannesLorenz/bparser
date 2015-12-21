@@ -41,5 +41,5 @@ void struct_type_specifier_of_declaration_t::visit(typedef_name_t &t)
 {
 	func_visitor< declaration_from_declarator_t > v0;
 	t._definition->parent->accept(v0);
-	return visit(*v0.functor().declaration_found);
+	return visit(v0.functor().declaration_found->decl_spec());
 }

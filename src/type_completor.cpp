@@ -137,7 +137,7 @@ void struct_type_of::visit(typedef_name_t &t)
 	//					~> not useful ;)
 	//		=> struct_or_union_specifier
 	//			~> can not be (typedef ~> would be declaration)
-	visit(*declaration_from_identifier(*t._definition).c.get<0>()); // FEATURE: ref func for tuple?
+	visit(declaration_from_identifier(*t._definition).decl_spec()); // FEATURE: ref func for tuple?
 	//t->_definition->parent->parent->accept(*this);
 }
 
