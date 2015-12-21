@@ -191,7 +191,7 @@ public:
 	{
 	}
 
-	void fill(const type& e0, // FEATURE: rename: e0, e1,...
+	void fill(const type& e0,
 		typename ar<1>::g e1 = typename ar<1>::c(),
 		typename ar<2>::g e2 = typename ar<2>::c(),
 		typename ar<3>::g e3 = typename ar<3>::c(),

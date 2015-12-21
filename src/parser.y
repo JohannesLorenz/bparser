@@ -71,6 +71,28 @@ token_t* t(int token_id) { return new token_t(get_pos(), token_id); }
 extern void flag_symbol(const char* str, int type, const node_base* scope);
 extern void leave_scope(const node_base* scope);
 extern int type_of(const char* str);
+/*
+template<
+	class Base
+	>
+void setc(
+	Base* b,
+	const typename Base::type& e0, // FEATURE: rename: e0, e1,...
+	typename Base::template ar<1>::g e1 = typename Base::template ar<1>::c(),
+	typename Base::template ar<2>::g e2 = typename Base::template ar<2>::c(),
+	typename Base::template ar<3>::g e3 = typename Base::template ar<3>::c(),
+	typename Base::template ar<4>::g e4 = typename Base::template ar<4>::c(),
+	typename Base::template ar<5>::g e5 = typename Base::template ar<5>::c(),
+	typename Base::template ar<6>::g e6 = typename Base::template ar<6>::c(),
+	typename Base::template ar<7>::g e7 = typename Base::template ar<7>::c(),
+	typename Base::template ar<8>::g e8 = typename Base::template ar<8>::c(),
+	typename Base::template ar<9>::g e9 = typename Base::template ar<9>::c(),
+	typename Base::template ar<10>::g e10 = typename Base::template ar<10>::c(),
+	typename Base::template ar<11>::g e11 = typename Base::template ar<11>::c()
+	) {
+		b->c.fill(e0, e1, e2, e3, e4, e5, e6, e7,
+		e8, e9, e10, e11);
+}*/
 
 %}
 
@@ -102,7 +124,7 @@ typedef void* yyscan_t;
 	float _float;
 	int _int;
 	token_t* token;
-	class node_base* node;
+	node_t* node;
 
 	type_specifier_t* type_specifier;
 	specifier_qualifier_list_t* specifier_qualifier_list;
@@ -563,7 +585,7 @@ struct_declarator_list
 	;
 
 struct_declarator
-	: ':' constant_expression { alloc($$); $$->c.fill(NULL, $1, $2); }
+	: ':' constant_expression { alloc($$); $$->c.fill(NULL, $1, $2); /*setc($$, NULL, $1, $2);*/ }
 	| declarator ':' constant_expression { alloc($$); $$->c.fill($1, $2, $3); }
 	| declarator { alloc($$); $$->c.set($1); }
 	;

@@ -1,6 +1,6 @@
 //! @file node_fwd.h forward declarations for node classes
 
-class node_base;
+class node_t;
 
 namespace nodes {
 

@@ -583,23 +583,6 @@ public:
 	void operator()(const NodeType& nt) { ++depth; xaccept(nt.c); --depth; }
 };
 
-template<class T>
-class parent_assigner
-{
-	T* parent;
-public:
-	parent_assigner(T* parent) : parent(parent) {}
-	template<class C>
-	void operator()(const C& child) {
-		if(child)
-		 child->parent = parent;
-	}
-	template<class C>
-	void operator()(std::list<C*>* children) {
-		_foreach< std::list<C*>* >::exec(children, *this);
-	}
-};
-
 class geom_completor : ftor_base
 {
 	static span_t span_limit() {

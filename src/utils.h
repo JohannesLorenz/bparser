@@ -148,6 +148,11 @@ struct struct_type_specifier_of_declaration_t : visitor_t
 	void visit(typedef_name_t& t);
 };
 
+struct declaration_base
+{
+};
+
+#include <iostream> //TODO
 // FEATURE: structs etc?
 struct declaration_from_declarator_t : ftor_base
 {
@@ -162,12 +167,16 @@ struct declaration_from_declarator_t : ftor_base
 		declaration_t* declaration;
 		function_definition_t* function;
 	} declaration_found;*/
+	
 	declaration_t* declaration_found;
+	
 
 	declaration_from_declarator_t(visitor_t* vref) :
 		ftor_base(vref) {}
 
-	void operator()(node_base& ) { declaration_found = NULL; }
+	void operator()(node_base& ) {
+		std::cout << "node base" << std::endl;
+		declaration_found = NULL; }
 	void operator()(identifier_t& d) {
 		accept(*d.parent);
 	}
@@ -186,6 +195,9 @@ struct declaration_from_declarator_t : ftor_base
 	void operator ()(declaration_t& d) {
 		declaration_found = &d;
 	}
+	void operator()(parameter_declaration_t& d) {
+		//u.parameter_found = &d;
+	}
 };
 
 //! returns the declaration in which the given declarator is
@@ -200,6 +212,7 @@ inline declaration_t& declaration_from_declarator(declarator_t& dtor)
 inline declaration_t& declaration_from_identifier(identifier_t& id)
 {
 	func_visitor< declaration_from_declarator_t > v0;
+	std::cout << "..." << std::endl;
 	id.parent->accept(v0);
 	return *v0.functor().declaration_found;
 }
@@ -207,6 +220,9 @@ inline declaration_t& declaration_from_identifier(identifier_t& id)
 inline identifier_t& struct_rval_of_func(identifier_t& id)
 {
 	struct_type_specifier_of_declaration_t v;
+	if(!id._definition)
+	 throw "definition";
+
 	declaration_from_identifier(*id._definition).accept(v);
 
 	return *v.result;

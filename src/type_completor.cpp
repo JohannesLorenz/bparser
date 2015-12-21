@@ -413,7 +413,7 @@ void type_completor::on(declaration_t& d, leave)
 	}
 }
 
-void type_completor::on(function_definition_t& f, leave)
+void type_completor::on(function_definition_t& f, enter)
 {
 	// for functions, the depth has already been increased,
 	// however, the function identifier itself is at level 0

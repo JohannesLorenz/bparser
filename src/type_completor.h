@@ -64,6 +64,41 @@ public:
 	void visit(typedef_name_t& t);
 };
 
+template<class T>
+class parent_assigner
+{
+	T* parent;
+
+	class set_parent
+	{
+		T* parent;
+	public:
+		template<class C>
+		void operator()(C& child) {
+			child.parent = parent; } // :-(((
+	
+		template<class Unused> set_parent(Unused* ) {}
+	};
+
+public:
+	parent_assigner(T* parent) : parent(parent) {}
+	
+	template<class C>
+	void operator()(const C& child)
+	{
+		if(child)
+		{
+			//child->parent = parent;
+			func_visitor< set_parent > sp;
+			child->accept(sp);
+		}
+	}
+	template<class C>
+	void operator()(std::list<C*>* children) {
+		_foreach< std::list<C*>* >::exec(children, *this);
+	}
+};
+
 namespace scope_types
 {
 	template<class T>
@@ -204,7 +239,7 @@ public:
 	// declarators
 	void on(enum_specifier_t& , enter);
 	void on(declaration_t&, leave);
-	void on(function_definition_t&, leave);
+	void on(function_definition_t&, enter);
 	void on(parameter_declaration_t&, leave);
 	void on(enumerator_t&, leave);
 

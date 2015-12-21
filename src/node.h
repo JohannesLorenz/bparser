@@ -48,36 +48,34 @@ enum lookup_type
 
 void init_parser(const char* fname = NULL); //!< see node.cpp
 
-class node_base
+class node_t
 {
 public:
+	null_type c; //!< base case, overwrite this
+
 	typedef std::size_t id_t;
 
 	span_t span; // FEATURE: not public
 	virtual void accept(class visitor_t& v) = 0;
 
-	node_base() {}
-	node_base(const geom_t& geom) : span(geom, geom_t()) {}
-
-	virtual ~node_base() {}
-};
-
-template<class ParType = node_base>
-class node_t : public node_base
-{
-public:
-	null_type c; //!< base case, overwrite this
-
-	ParType* parent;
 	node_t() {}
-	node_t(const geom_t& geom) : node_base(geom) {}
+	node_t(const geom_t& geom) : span(geom, geom_t()) {}
 
 	virtual ~node_t() {}
 };
 
+typedef node_t node_base;
+
+template<class ParType = node_t>
+class has_par
+{
+public:
+	ParType* parent;
+};
+
 #if 0
 template<class First, class Next = null_type>
-class node_ch : public node_t<>
+class node_ch : public node_t, public has_par<>
 {
 	ptn<First, Next> c;
 public:
@@ -91,7 +89,7 @@ public:
 
 namespace nodes {
 
-class terminal_t : public node_t<>
+class terminal_t : public node_t, public has_par<>
 {
 	int _value;
 	virtual std::size_t length() const = 0;
@@ -100,7 +98,7 @@ public:
 	int value() const { return _value; }
 	std::size_t get_length() const { return length(); }
 	std::size_t get_newlines() const { return newlines(); }
-	terminal_t(const geom_t& geom, int _value) : node_t<>(geom), _value(_value) {}
+	terminal_t(const geom_t& geom, int _value) : node_t(geom), _value(_value) {}
 };
 
 struct token_t : public terminal_t
@@ -171,9 +169,9 @@ public:
 	string_literal_t(const char* value, geom_t geom);
 };
 
-struct declaration_specifier_type : public node_t<> {
+struct declaration_specifier_type : public node_t, public has_par<> {
 	declaration_specifier_type() {}
-	declaration_specifier_type(const geom_t& geom) : node_t<>(geom) {}
+	declaration_specifier_type(const geom_t& geom) : node_t(geom) {}
 };
 
 #if 0
@@ -267,7 +265,7 @@ enum binary_op_t
 
 typedef ptn<token_t> end_token;
 
-struct expression_t : public node_t<> {};
+struct expression_t : public node_t, public has_par<> {};
 
 struct unary_expression_r : public expression_t
 {
@@ -311,7 +309,7 @@ struct ternary_expression_t : public expression_t
 //		op(op), op_token(op_token), op_token_2(op_token_2), n1(n1), n2(n2), n3(n3) {}
 };
 
-struct abstract_declarator_t : public node_t<>
+struct abstract_declarator_t : public node_t, public has_par<>
 {
 	ptn<	struct pointer_t,
 		ptn<	struct direct_abstract_declarator_t > > c;
@@ -320,7 +318,7 @@ struct abstract_declarator_t : public node_t<>
 
 struct type_specifier_t : public declaration_specifier_type
 {
-	ptn<	node_t<> > c; // FEATURE: more granular?
+	ptn<	node_t> c; // FEATURE: more granular?
 	virtual void accept(class visitor_t& v);
 };
 
@@ -334,7 +332,7 @@ struct attr_name_t : public noconst_1line_terminal_t
 	attr_name_t(const char* name, geom_t geom);
 };
 
-struct attribute_t : public node_t<struct_or_union_specifier_t>
+struct attribute_t : public node_t, public has_par<struct_or_union_specifier_t>
 {
 	virtual void accept(class visitor_t& v);
 	ptn<	token_t,
@@ -368,13 +366,13 @@ struct struct_or_union_specifier_t : public type_specifier_complex_t
 	virtual void accept(class visitor_t& v);
 };
 
-struct struct_declaration_list_t : public node_t<> // FEATURE: when alt list
+struct struct_declaration_list_t : public node_t, public has_par<> // FEATURE: when alt list
 {
 	std::list<struct struct_declaration_t*> c;
 	void accept(class visitor_t& v);
 };
 
-struct struct_declaration_t : public node_t<struct_declaration_list_t>
+struct struct_declaration_t : public node_t, public has_par<struct_declaration_list_t>
 {
 	ptn<	struct specifier_qualifier_list_t,
 		ptn<	struct struct_declarator_list_t,
@@ -382,13 +380,13 @@ struct struct_declaration_t : public node_t<struct_declaration_list_t>
 	void accept(class visitor_t& v);
 };
 
-struct specifier_qualifier_list_t : public node_t<>
+struct specifier_qualifier_list_t : public node_t, public has_par<>
 {
 	std::list<declaration_specifier_type*> c;
 	void accept(class visitor_t& v);
 };
 
-struct struct_declarator_list_t : public node_t<> // FEATURE: when alt list
+struct struct_declarator_list_t : public node_t, public has_par<> // FEATURE: when alt list
 {
 	ptn<	struct struct_declarator_list_t,
 		ptn<	token_t, // :
@@ -397,7 +395,7 @@ struct struct_declarator_list_t : public node_t<> // FEATURE: when alt list
 	void accept(class visitor_t& v);
 };
 
-struct struct_declarator_t : public node_t<struct_declarator_list_t>
+struct struct_declarator_t : public node_t, public has_par<struct_declarator_list_t>
 {
 	// careful! all optional!
 	ptn<	struct declarator_t,
@@ -428,7 +426,7 @@ struct enum_specifier_t : public type_specifier_complex_t
 	void accept(class visitor_t& v);
 };
 
-struct enumerator_list_t : public node_t<> // FEATURE: when alt list
+struct enumerator_list_t : public node_t, public has_par<> // FEATURE: when alt list
 {
 	ptn<	enumerator_list_t,
 		ptn<	token_t,
@@ -436,7 +434,7 @@ struct enumerator_list_t : public node_t<> // FEATURE: when alt list
 	void accept(class visitor_t& v);
 };
 
-struct enumerator_t : public node_t<enumerator_list_t>
+struct enumerator_t : public node_t, public has_par<enumerator_list_t>
 {
 	ptn<	identifier_t,
 		ptn<	token_t, // =, optional
@@ -445,7 +443,7 @@ struct enumerator_t : public node_t<enumerator_list_t>
 	void accept(class visitor_t& v);
 };
 
-struct parameter_type_list_t : public node_t<> // FEATURE: declar. or abstr. declar.
+struct parameter_type_list_t : public node_t, public has_par<> // FEATURE: declar. or abstr. declar.
 {
 	ptn<	struct parameter_list_t,
 		ptn<	token_t,
@@ -453,7 +451,7 @@ struct parameter_type_list_t : public node_t<> // FEATURE: declar. or abstr. dec
 	void accept(class visitor_t& v);
 };
 
-struct parameter_list_t : public node_t<> // FEATURE: when alt list
+struct parameter_list_t : public node_t, public has_par<> // FEATURE: when alt list
 {
 	ptn<	parameter_list_t,
 		ptn<	token_t,
@@ -462,7 +460,7 @@ struct parameter_list_t : public node_t<> // FEATURE: when alt list
 	void accept(class visitor_t& v);
 };
 
-struct parameter_declaration_t : public node_t<parameter_list_t>
+struct parameter_declaration_t : public node_t, public has_par<parameter_list_t>
 {
 	ptn<	struct declaration_specifiers_t,
 		ptn<	declarator_t,
@@ -471,7 +469,7 @@ struct parameter_declaration_t : public node_t<parameter_list_t>
 	void accept(class visitor_t& v);
 };
 
-struct identifier_list_t : public node_t<> // FEATURE: when alt list
+struct identifier_list_t : public node_t, public has_par<> // FEATURE: when alt list
 {
 	ptn<	identifier_list_t,
 		ptn<	token_t,
@@ -480,7 +478,7 @@ struct identifier_list_t : public node_t<> // FEATURE: when alt list
 	void accept(class visitor_t& v);
 };
 
-struct type_name_t : public node_t<>
+struct type_name_t : public node_t, public has_par<>
 {
 	ptn<	specifier_qualifier_list_t,
 		ptn<	abstract_declarator_t > > c;
@@ -588,7 +586,7 @@ struct array_access_expression_t : public expression_t
 	virtual void accept(class visitor_t& v);
 };
 
-struct argument_expression_list_t : public node_t<>
+struct argument_expression_list_t : public node_t, public has_par<>
 {
 	ptn<	argument_expression_list_t,
 		ptn<	token_t,
@@ -693,14 +691,14 @@ struct alignment_specifier_t : public declaration_specifier_type {
 };
 #endif
 
-struct declaration_list_t : public node_t<struct function_definition_t>
+struct declaration_list_t : public node_t, public has_par<struct function_definition_t>
 {
 	virtual void accept(class visitor_t& v);
 	std::list<struct declaration_t*> c;
 };
 
 // FEATURE: use compound_statement_t here as a parent and put declaration into wrapper?
-struct block_item_t : public node_t<> {
+struct block_item_t : public node_t, public has_par<> {
 	virtual void accept(class visitor_t& v);
 };
 
@@ -826,7 +824,7 @@ struct iteration_statement_t : public statement_t
 		> > > > > > > > > > c;
 };
 
-struct designator_t : public node_t<struct designator_list_t> {};
+struct designator_t : public node_t, public has_par<struct designator_list_t> {};
 
 struct designator_id : public designator_t
 {
@@ -843,13 +841,13 @@ struct designator_constant_expr : public designator_t
 	virtual void accept(class visitor_t& v);
 };
 
-struct designator_list_t : public node_t<struct initializer_list_t>
+struct designator_list_t : public node_t, public has_par<struct initializer_list_t>
 {
 	std::list<designator_t*> c;
 	virtual void accept(class visitor_t& v);
 };
 
-struct initializer_list_t : public node_t<>
+struct initializer_list_t : public node_t, public has_par<>
 {
 	ptn<	initializer_list_t,
 		ptn<	token_t, // ,
@@ -860,7 +858,7 @@ struct initializer_list_t : public node_t<>
 	virtual void accept(class visitor_t& v);
 };
 
-struct initializer_t : public node_t<>
+struct initializer_t : public node_t, public has_par<>
 {
 	//	assignment_expr
 	//		{	init list
@@ -874,7 +872,7 @@ struct initializer_t : public node_t<>
 	virtual void accept(class visitor_t& v);
 };
 
-struct init_declarator_t : public node_t<> // FEATURE: node<init_declarator_list>
+struct init_declarator_t : public node_t, public has_par<> // FEATURE: node<init_declarator_list>
 {
 	ptn<	struct declarator_t,
 		ptn<	token_t,
@@ -883,7 +881,7 @@ struct init_declarator_t : public node_t<> // FEATURE: node<init_declarator_list
 	virtual void accept(class visitor_t& v);
 };
 
-struct init_declarator_list_t : public node_t<> // FEATURE: struct declaration_t
+struct init_declarator_list_t : public node_t, public has_par<> // FEATURE: struct declaration_t
 {
 	ptn<	init_declarator_list_t,
 		ptn<	token_t,
@@ -934,7 +932,7 @@ struct declaration_t : public block_item_t
 			end_token> > c; // semicolon
 };
 
-struct type_qualifier_list_t : public node_t<>
+struct type_qualifier_list_t : public node_t, public has_par<>
 {
 	std::list<type_qualifier_t*> c;
 	virtual void accept(class visitor_t& v);
@@ -957,14 +955,14 @@ struct compound_statement_t : public statement_t
 	virtual void accept(class visitor_t& v);
 };
 
-struct pointer_t : public node_t<> // FEATURE: node<base class of declarator and abstract_d.>?
+struct pointer_t : public node_t, public has_par<> // FEATURE: node<base class of declarator and abstract_d.>?
 {
 	ptn<	token_t,
 		ptn<	type_qualifier_list_t,
 			ptn<	pointer_t > > > c;
 	virtual void accept(class visitor_t& v);
 };
-struct direct_declarator_t : public node_t<> { // FEATURE: node<base class of ...>?
+struct direct_declarator_t : public node_t, public has_par<> { // FEATURE: node<base class of ...>?
 	virtual void accept(class visitor_t& v);
 };
 
@@ -1024,7 +1022,7 @@ struct direct_declarator_idlist : public direct_declarator_t
 
 
 
-struct direct_abstract_declarator_t : public node_t<> { // FEATURE: base class of ...?
+struct direct_abstract_declarator_t : public node_t, public has_par<> { // FEATURE: base class of ...?
 	virtual void accept(class visitor_t& v);
 };
 
@@ -1063,19 +1061,19 @@ struct direct_abstract_declarator_func : public direct_abstract_declarator_t
 };
 
 
-struct declarator_t : public node_t<>
+struct declarator_t : public node_t, public has_par<>
 {
 	virtual void accept(class visitor_t& v);
 	ptn<pointer_t, ptn< direct_declarator_t > > c;
 };
 
-struct declaration_specifiers_t : public node_t<>
+struct declaration_specifiers_t : public node_t, public has_par<>
 {
 	virtual void accept(class visitor_t& v);
-	std::list< node_t<>*> c;
+	std::list<node_t*> c;
 };
 
-struct function_definition_t : public node_t<struct external_declaration_t>
+struct function_definition_t : public node_t, public has_par<struct external_declaration_t>
 {
 	virtual void accept(class visitor_t& v);
 	ptn<	declaration_specifiers_t,
@@ -1094,7 +1092,7 @@ struct function_definition_t : public node_t<struct external_declaration_t>
 	{}
 };
 
-struct external_declaration_t : public node_t<struct translation_unit_t>
+struct external_declaration_t : public node_t, public has_par<struct translation_unit_t>
 {
 	virtual void accept(class visitor_t& v);
 	ptn<	function_definition_t,
@@ -1103,7 +1101,7 @@ struct external_declaration_t : public node_t<struct translation_unit_t>
 	external_declaration_t(declaration_t* d) : c(NULL, d) {}
 };
 
-struct translation_unit_t : public node_t<translation_unit_t> // FEATURE: inherit from node_base?
+struct translation_unit_t : public node_t, public has_par<translation_unit_t> // FEATURE: inherit from node_base?
 {
 	std::list<external_declaration_t*> c;
 	virtual void accept(class visitor_t& v);
