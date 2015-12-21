@@ -69,7 +69,7 @@ class parent_assigner
 {
 	T* parent;
 
-	class set_parent
+	/*class set_parent
 	{
 		T* parent;
 	public:
@@ -78,7 +78,7 @@ class parent_assigner
 			child.parent = parent; } // :-(((
 	
 		template<class Unused> set_parent(Unused* ) {}
-	};
+	};*/
 
 public:
 	parent_assigner(T* parent) : parent(parent) {}
@@ -88,9 +88,9 @@ public:
 	{
 		if(child)
 		{
-			//child->parent = parent;
-			func_visitor< set_parent > sp;
-			child->accept(sp);
+			child->parent = parent;
+			//func_visitor< set_parent > sp;
+			//child->accept(sp);
 		}
 	}
 	template<class C>
@@ -288,8 +288,8 @@ public:
 	template<class NodeType, class Direction>
 	void operator()(NodeType& n, Direction d) {
 		// assign parents
-		parent_assigner<NodeType> pa(&n);
-		foreach(n.c, pa);
+		//parent_assigner<NodeType> pa(&n);
+		//foreach(n.c, pa);
 		// variable scoping
 		handle_depth_inc(n, d);
 		// do something

@@ -71,28 +71,50 @@ token_t* t(int token_id) { return new token_t(get_pos(), token_id); }
 extern void flag_symbol(const char* str, int type, const node_base* scope);
 extern void leave_scope(const node_base* scope);
 extern int type_of(const char* str);
-/*
+
+template<class P>
+struct parent_assigner
+{
+	P* parent;
+public:
+	parent_assigner(P* parent) : parent(parent) {}
+	template<class C>
+	void operator()(C* child) { if(child) child->parent = parent; }
+	template<class C>
+	void operator()(std::list<C>* children)
+	{
+		if(children)
+		for(typename std::list<C>::iterator itr = children->begin();
+			itr != children->end(); ++itr)
+			if(*itr)
+			 operator()(*itr);
+	}
+};
+
 template<
-	class Base
+	class Base, class C
 	>
 void setc(
 	Base* b,
-	const typename Base::type& e0, // FEATURE: rename: e0, e1,...
-	typename Base::template ar<1>::g e1 = typename Base::template ar<1>::c(),
-	typename Base::template ar<2>::g e2 = typename Base::template ar<2>::c(),
-	typename Base::template ar<3>::g e3 = typename Base::template ar<3>::c(),
-	typename Base::template ar<4>::g e4 = typename Base::template ar<4>::c(),
-	typename Base::template ar<5>::g e5 = typename Base::template ar<5>::c(),
-	typename Base::template ar<6>::g e6 = typename Base::template ar<6>::c(),
-	typename Base::template ar<7>::g e7 = typename Base::template ar<7>::c(),
-	typename Base::template ar<8>::g e8 = typename Base::template ar<8>::c(),
-	typename Base::template ar<9>::g e9 = typename Base::template ar<9>::c(),
-	typename Base::template ar<10>::g e10 = typename Base::template ar<10>::c(),
-	typename Base::template ar<11>::g e11 = typename Base::template ar<11>::c()
+	const C&,
+	const typename C::type& e0, // FEATURE: rename: e0, e1,...
+	typename C::template ar<1>::g e1 = typename C::template ar<1>::c(),
+	typename C::template ar<2>::g e2 = typename C::template ar<2>::c(),
+	typename C::template ar<3>::g e3 = typename C::template ar<3>::c(),
+	typename C::template ar<4>::g e4 = typename C::template ar<4>::c(),
+	typename C::template ar<5>::g e5 = typename C::template ar<5>::c(),
+	typename C::template ar<6>::g e6 = typename C::template ar<6>::c(),
+	typename C::template ar<7>::g e7 = typename C::template ar<7>::c(),
+	typename C::template ar<8>::g e8 = typename C::template ar<8>::c(),
+	typename C::template ar<9>::g e9 = typename C::template ar<9>::c(),
+	typename C::template ar<10>::g e10 = typename C::template ar<10>::c(),
+	typename C::template ar<11>::g e11 = typename C::template ar<11>::c()
 	) {
 		b->c.fill(e0, e1, e2, e3, e4, e5, e6, e7,
 		e8, e9, e10, e11);
-}*/
+		parent_assigner<Base> pa(b);
+		foreach(b->c, pa);
+}
 
 %}
 
@@ -312,10 +334,10 @@ typedef void* yyscan_t;
 
 primary_expression // parents: postfix_expression
 	: IDENTIFIER { if(type_of($1->raw.c_str())==lt_undefined) throw "identifier undefined"; else
-		{ alloc($$); $$->c.fill(NULL, $1); } }
+		{ alloc($$); setc($$, $$->c, NULL, $1); } }
 	| constant { alloc($$); $$->c.set($1); }
 	| string { alloc($$); $$->c.set($1); }
-	| '(' expression ')' { alloc($$); $$->c.fill(NULL, NULL, $1, $2, $3); }
+	| '(' expression ')' { alloc($$); setc($$, $$->c, NULL, NULL, $1, $2, $3); }
 	| generic_selection { c11(); }
 	;
 
@@ -351,30 +373,30 @@ generic_association
 // FEATURE: base class: nary_expression_t?
 postfix_expression
 	: primary_expression { $$=$1; }
-	| postfix_expression '[' expression ']' { array_access_expression_t* u; $$=alloc(u); u->c.fill($1, $2, $3, $4); }
-	| postfix_expression '(' ')' { function_call_expression_t* u; $$=alloc(u); u->c.fill($1, $2, NULL, $3); }
-	| postfix_expression '(' argument_expression_list ')' { function_call_expression_t* u; $$=alloc(u); u->c.fill($1, $2, $3, $4); }
-	| postfix_expression '.' IDENTIFIER { struct_access_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3); } // FEATURE: bool if with pointer?
-	| postfix_expression PTR_OP IDENTIFIER { struct_access_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3); }
-	| postfix_expression INC_OP { unary_expression_r* u; $$=alloc(u); u->c.fill($1, $2); }
-	| postfix_expression DEC_OP { unary_expression_r* u; $$=alloc(u); u->c.fill($1, $2); }
-	| '(' type_name ')' '{' initializer_list '}' { compound_literal_t* e; $$=alloc(e); e->c.fill($1, $2, $3, $4, $5, NULL, $6); }
-	| '(' type_name ')' '{' initializer_list ',' '}' { compound_literal_t* e; $$=alloc(e); e->c.fill($1, $2, $3, $4, $5, $6, $7); }
+	| postfix_expression '[' expression ']' { array_access_expression_t* u; $$=alloc(u); setc(u, u->c, $1, $2, $3, $4); }
+	| postfix_expression '(' ')' { function_call_expression_t* u; $$=alloc(u); setc(u, u->c, $1, $2, NULL, $3); }
+	| postfix_expression '(' argument_expression_list ')' { function_call_expression_t* u; $$=alloc(u); setc(u, u->c, $1, $2, $3, $4); }
+	| postfix_expression '.' IDENTIFIER { struct_access_expression_t* e; $$=alloc(e); setc(e, e->c, $1, $2, $3); } // FEATURE: bool if with pointer?
+	| postfix_expression PTR_OP IDENTIFIER { struct_access_expression_t* e; $$=alloc(e); setc(e, e->c, $1, $2, $3); }
+	| postfix_expression INC_OP { unary_expression_r* u; $$=alloc(u); setc(u, u->c, $1, $2); }
+	| postfix_expression DEC_OP { unary_expression_r* u; $$=alloc(u); setc(u, u->c, $1, $2); }
+	| '(' type_name ')' '{' initializer_list '}' { compound_literal_t* e; $$=alloc(e); setc(e, e->c, $1, $2, $3, $4, $5, NULL, $6); }
+	| '(' type_name ')' '{' initializer_list ',' '}' { compound_literal_t* e; $$=alloc(e); setc(e, e->c, $1, $2, $3, $4, $5, $6, $7); }
 	;
 
 // FEATURE: alternate list<token_t, assignment_exp>
 argument_expression_list
-	: assignment_expression { alloc($$); $$->c.fill(NULL, NULL, $1); }
-	| argument_expression_list ',' assignment_expression { alloc($$); $$->c.fill($1, $2, $3); }
+	: assignment_expression { alloc($$); setc($$, $$->c, NULL, NULL, $1); }
+	| argument_expression_list ',' assignment_expression { alloc($$); setc($$, $$->c, $1, $2, $3); }
 	;
 
 unary_expression
 	: postfix_expression { $$=$1; }
-	| INC_OP unary_expression { unary_expression_l* u; $$=alloc(u); u->c.fill($1, $2); }
-	| DEC_OP unary_expression { unary_expression_l* u; $$=alloc(u); u->c.fill($1, $2); }
-	| unary_operator cast_expression { unary_expression_l* u; $$=alloc(u); u->c.fill($1, $2); /*u->op_id = $1;*/ }
-	| SIZEOF unary_expression { sizeof_expression_t* e; alloc(e); e->c.fill($1, NULL, NULL, $2, NULL); $$=e; } // example: sizeof 255+1
-	| SIZEOF '(' type_name ')' { sizeof_expression_t* e; alloc(e); e->c.fill($1,$2,$3,NULL, $4); $$=e; }
+	| INC_OP unary_expression { unary_expression_l* u; $$=alloc(u); setc(u, u->c, $1, $2); }
+	| DEC_OP unary_expression { unary_expression_l* u; $$=alloc(u); setc(u, u->c, $1, $2); }
+	| unary_operator cast_expression { unary_expression_l* u; $$=alloc(u); setc(u, u->c, $1, $2); /*u->op_id = $1;*/ }
+	| SIZEOF unary_expression { sizeof_expression_t* e; alloc(e); setc(e, e->c, $1, NULL, NULL, $2, NULL); $$=e; } // example: sizeof 255+1
+	| SIZEOF '(' type_name ')' { sizeof_expression_t* e; alloc(e); setc(e, e->c, $1,$2,$3,NULL, $4); $$=e; }
 	| ALIGNOF '(' type_name ')' { c11(); }
 	;
 
@@ -389,75 +411,75 @@ unary_operator
 
 cast_expression
 	: unary_expression { $$=$1; }
-	| '(' type_name ')' cast_expression { cast_expression_t* c; $$=alloc(c); c->c.fill($1, $2, $3, $4); }
+	| '(' type_name ')' cast_expression { cast_expression_t* c; $$=alloc(c); setc(c, c->c, $1, $2, $3, $4); }
 	;
 
 multiplicative_expression
 	: cast_expression { $$=$1; }
-	| multiplicative_expression '*' cast_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_mult; e->c.fill($1, $2, $3); }
-	| multiplicative_expression '/' cast_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_div; e->c.fill($1, $2, $3); }
-	| multiplicative_expression '%' cast_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_mod; e->c.fill($1, $2, $3); }
+	| multiplicative_expression '*' cast_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_mult; setc(e, e->c, $1, $2, $3); }
+	| multiplicative_expression '/' cast_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_div; setc(e, e->c, $1, $2, $3); }
+	| multiplicative_expression '%' cast_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_mod; setc(e, e->c, $1, $2, $3); }
 	;
 
 additive_expression
 	: multiplicative_expression { $$=$1; }
-	| additive_expression '+' multiplicative_expression { binary_expression_t* e; $$=alloc(e); e; e->op_id = op_plus; e->c.fill($1, $2, $3); }
-	| additive_expression '-' multiplicative_expression { binary_expression_t* e; $$=alloc(e); e; e->op_id = op_minus; e->c.fill($1, $2, $3); }
+	| additive_expression '+' multiplicative_expression { binary_expression_t* e; $$=alloc(e); e; e->op_id = op_plus; setc(e, e->c, $1, $2, $3); }
+	| additive_expression '-' multiplicative_expression { binary_expression_t* e; $$=alloc(e); e; e->op_id = op_minus; setc(e, e->c, $1, $2, $3); }
 	;
 
 shift_expression
 	: additive_expression { $$=$1; }
-	| shift_expression LEFT_OP additive_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_lshift; e->c.fill($1, $2, $3); }
-	| shift_expression RIGHT_OP additive_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_rshift; e->c.fill($1, $2, $3); }
+	| shift_expression LEFT_OP additive_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_lshift; setc(e, e->c, $1, $2, $3); }
+	| shift_expression RIGHT_OP additive_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_rshift; setc(e, e->c, $1, $2, $3); }
 	;
 
 relational_expression
 	: shift_expression { $$=$1; }
-	| relational_expression '<' shift_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_lt; e->c.fill($1, $2, $3); }
-	| relational_expression '>' shift_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_gt; e->c.fill($1, $2, $3); }
-	| relational_expression LE_OP shift_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_le; e->c.fill($1, $2, $3); }
-	| relational_expression GE_OP shift_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_ge; e->c.fill($1, $2, $3); }
+	| relational_expression '<' shift_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_lt; setc(e, e->c, $1, $2, $3); }
+	| relational_expression '>' shift_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_gt; setc(e, e->c, $1, $2, $3); }
+	| relational_expression LE_OP shift_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_le; setc(e, e->c, $1, $2, $3); }
+	| relational_expression GE_OP shift_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_ge; setc(e, e->c, $1, $2, $3); }
 	;
 
 equality_expression
 	: relational_expression { $$=$1; }
-	| equality_expression EQ_OP relational_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_eq; e->c.fill($1, $2, $3); }
-	| equality_expression NE_OP relational_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_ne; e->c.fill($1, $2, $3); }
+	| equality_expression EQ_OP relational_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_eq; setc(e, e->c, $1, $2, $3); }
+	| equality_expression NE_OP relational_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_ne; setc(e, e->c, $1, $2, $3); }
 	;
 
 and_expression
 	: equality_expression { $$=$1; }
-	| and_expression '&' equality_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_band; e->c.fill($1, $2, $3); }
+	| and_expression '&' equality_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_band; setc(e, e->c, $1, $2, $3); }
 	;
 
 exclusive_or_expression
 	: and_expression { $$=$1; }
-	| exclusive_or_expression '^' and_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_xor; e->c.fill($1, $2, $3); }
+	| exclusive_or_expression '^' and_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_xor; setc(e, e->c, $1, $2, $3); }
 	;
 
 inclusive_or_expression
 	: exclusive_or_expression { $$=$1; }
-	| inclusive_or_expression '|' exclusive_or_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_bor; e->c.fill($1, $2, $3); }
+	| inclusive_or_expression '|' exclusive_or_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_bor; setc(e, e->c, $1, $2, $3); }
 	;
 
 logical_and_expression
 	: inclusive_or_expression { $$=$1; }
-	| logical_and_expression AND_OP inclusive_or_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_and; e->c.fill($1, $2, $3); }
+	| logical_and_expression AND_OP inclusive_or_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_and; setc(e, e->c, $1, $2, $3); }
 	;
 
 logical_or_expression
 	: logical_and_expression { $$=$1; }
-	| logical_or_expression OR_OP logical_and_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_or; e->c.fill($1, $2, $3); }
+	| logical_or_expression OR_OP logical_and_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_or; setc(e, e->c, $1, $2, $3); }
 	;
 
 conditional_expression
 	: logical_or_expression { $$=$1; }
-	| logical_or_expression '?' expression ':' conditional_expression { ternary_expression_t* e; $$=alloc(e); e->c.fill($1, $2, $3, $4, $5); }
+	| logical_or_expression '?' expression ':' conditional_expression { ternary_expression_t* e; $$=alloc(e); setc(e, e->c, $1, $2, $3, $4, $5); }
 	;
 
 assignment_expression
 	: conditional_expression { $$=$1; }
-	| unary_expression assignment_operator assignment_expression { binary_expression_t* e; $$=alloc(e); /*e->op_id = op_asn*/; e->c.fill($1, $2, $3); }
+	| unary_expression assignment_operator assignment_expression { binary_expression_t* e; $$=alloc(e); /*e->op_id = op_asn*/; setc(e, e->c, $1, $2, $3); }
 	;
 
 assignment_operator
@@ -476,7 +498,7 @@ assignment_operator
 
 expression
 	: assignment_expression { $$=$1; }
-	| expression ',' assignment_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_asn; e->c.fill($1, $2, $3); }
+	| expression ',' assignment_expression { binary_expression_t* e; $$=alloc(e); e->op_id = op_asn; setc(e, e->c, $1, $2, $3); }
 	;
 
 constant_expression
@@ -484,8 +506,8 @@ constant_expression
 	;
 
 declaration
-	: declaration_specifiers ';' { $$ = new declaration_t(); $$->c.fill($1, NULL, $2); } // e.g. forward declaration
-	| declaration_specifiers init_declarator_list ';' { $$ = new declaration_t(); $$->c.fill($1, $2, $3); }
+	: declaration_specifiers ';' { $$ = new declaration_t(); setc($$, $$->c, $1, NULL, $2); } // e.g. forward declaration
+	| declaration_specifiers init_declarator_list ';' { $$ = new declaration_t(); setc($$, $$->c, $1, $2, $3); }
 	| static_assert_declaration { c11(); }
 	;
 
@@ -503,12 +525,12 @@ declaration_specifiers
 	;
 
 init_declarator_list
-	: init_declarator { alloc($$); $$->c.fill(NULL, NULL, $1); }
-	| init_declarator_list ',' init_declarator { alloc($$); $$->c.fill($1, $2, $3); }
+	: init_declarator { alloc($$); setc($$, $$->c, NULL, NULL, $1); }
+	| init_declarator_list ',' init_declarator { alloc($$); setc($$, $$->c, $1, $2, $3); }
 	;
 
 init_declarator
-	: declarator '=' initializer { alloc($$); $$->c.fill($1, $2, $3); }
+	: declarator '=' initializer { alloc($$); setc($$, $$->c, $1, $2, $3); }
 	| declarator { alloc($$); $$->c.set($1); }
 	;
 
@@ -549,11 +571,11 @@ attribute
 	;
 
 struct_or_union_specifier
-	: struct_or_union '{' struct_declaration_list '}' { alloc($$); $$->c.fill($1, NULL, $2, $3, $4); }
-	| struct_or_union IDENTIFIER '{' struct_declaration_list '}' { alloc($$); $$->c.fill($1, $2, $3, $4, $5); }
-	| struct_or_union '{' struct_declaration_list '}' attribute { alloc($$); $$->c.fill($1, NULL, $2, $3, $4, $5); }
-	| struct_or_union IDENTIFIER '{' struct_declaration_list '}' attribute { alloc($$); $$->c.fill($1, $2, $3, $4, $5, $6); }
-	| struct_or_union IDENTIFIER { alloc($$); $$->c.fill($1, $2); }
+	: struct_or_union '{' struct_declaration_list '}' { alloc($$); setc($$, $$->c, $1, NULL, $2, $3, $4); }
+	| struct_or_union IDENTIFIER '{' struct_declaration_list '}' { alloc($$); setc($$, $$->c, $1, $2, $3, $4, $5); }
+	| struct_or_union '{' struct_declaration_list '}' attribute { alloc($$); setc($$, $$->c, $1, NULL, $2, $3, $4, $5); }
+	| struct_or_union IDENTIFIER '{' struct_declaration_list '}' attribute { alloc($$); setc($$, $$->c, $1, $2, $3, $4, $5, $6); }
+	| struct_or_union IDENTIFIER { alloc($$); setc($$, $$->c, $1, $2); }
 	;
 
 struct_or_union
@@ -567,8 +589,8 @@ struct_declaration_list
 	;
 
 struct_declaration
-	: specifier_qualifier_list ';' { alloc($$); $$->c.fill($1, NULL, $2); } /* for anonymous struct/union */
-	| specifier_qualifier_list struct_declarator_list ';' { alloc($$); $$->c.fill($1, $2, $3); }
+	: specifier_qualifier_list ';' { alloc($$); setc($$, $$->c, $1, NULL, $2); } /* for anonymous struct/union */
+	| specifier_qualifier_list struct_declarator_list ';' { alloc($$); setc($$, $$->c, $1, $2, $3); }
 	| static_assert_declaration { c11(); }
 	;
 
@@ -580,31 +602,31 @@ specifier_qualifier_list
 	;
 
 struct_declarator_list
-	: struct_declarator { alloc($$); $$->c.fill(NULL, NULL, $1); }
-	| struct_declarator_list ',' struct_declarator { alloc($$); $$->c.fill($1, $2, $3); }
+	: struct_declarator { alloc($$); setc($$, $$->c, NULL, NULL, $1); }
+	| struct_declarator_list ',' struct_declarator { alloc($$); setc($$, $$->c, $1, $2, $3); }
 	;
 
 struct_declarator
-	: ':' constant_expression { alloc($$); $$->c.fill(NULL, $1, $2); /*setc($$, NULL, $1, $2);*/ }
-	| declarator ':' constant_expression { alloc($$); $$->c.fill($1, $2, $3); }
+	: ':' constant_expression { alloc($$); setc($$, $$->c, NULL, $1, $2); setc($$, $$->c, NULL, $1, $2); }
+	| declarator ':' constant_expression { alloc($$); setc($$, $$->c, $1, $2, $3); }
 	| declarator { alloc($$); $$->c.set($1); }
 	;
 
 enum_specifier
-	: ENUM '{' enumerator_list '}' { alloc($$); $$->c.fill($1, NULL, $2, $3, NULL, $4); }
-	| ENUM '{' enumerator_list ',' '}' { alloc($$); $$->c.fill($1, NULL, $2, $3, $4, $5); }
-	| ENUM IDENTIFIER '{' enumerator_list '}' { alloc($$); $$->c.fill($1, $2, $3, $4, NULL, $5); }
-	| ENUM IDENTIFIER '{' enumerator_list ',' '}' { alloc($$); $$->c.fill($1, $2, $3, $4, $5, $6); }
-	| ENUM IDENTIFIER { alloc($$); $$->c.fill($1, $2); }
+	: ENUM '{' enumerator_list '}' { alloc($$); setc($$, $$->c, $1, NULL, $2, $3, NULL, $4); }
+	| ENUM '{' enumerator_list ',' '}' { alloc($$); setc($$, $$->c, $1, NULL, $2, $3, $4, $5); }
+	| ENUM IDENTIFIER '{' enumerator_list '}' { alloc($$); setc($$, $$->c, $1, $2, $3, $4, NULL, $5); }
+	| ENUM IDENTIFIER '{' enumerator_list ',' '}' { alloc($$); setc($$, $$->c, $1, $2, $3, $4, $5, $6); }
+	| ENUM IDENTIFIER { alloc($$); setc($$, $$->c, $1, $2); }
 	;
 
 enumerator_list
-	: enumerator { alloc($$); $$->c.fill(NULL, NULL, $1); }
-	| enumerator_list ',' enumerator { alloc($$); $$->c.fill($1, $2, $3); }
+	: enumerator { alloc($$); setc($$, $$->c, NULL, NULL, $1); }
+	| enumerator_list ',' enumerator { alloc($$); setc($$, $$->c, $1, $2, $3); }
 	;
 
 enumerator	/* identifiers must be flagged as ENUMERATION_CONSTANT */
-	: enumeration_constant '=' constant_expression { alloc($$); $$->c.fill($1, $2, $3); }
+	: enumeration_constant '=' constant_expression { alloc($$); setc($$, $$->c, $1, $2, $3); }
 	| enumeration_constant { alloc($$); $$->c.set($1); }
 	;
 
@@ -630,7 +652,7 @@ alignment_specifier
 	;
 
 declarator
-	: pointer direct_declarator { alloc($$); $$->c.fill($1, $2); }
+	: pointer direct_declarator { alloc($$); setc($$, $$->c, $1, $2); }
 	| direct_declarator { alloc($$); $$->c.get_next().set($1); }
 	;
 
@@ -638,45 +660,45 @@ declarator
 
 direct_declarator
 	: IDENTIFIER { direct_declarator_id* d; $$ = alloc(d); d->c = $1; }
-	| '(' declarator ')' { direct_declarator_decl* d; $$ = alloc(d); d->c.fill($1, $2, $3); }
+	| '(' declarator ')' { direct_declarator_decl* d; $$ = alloc(d); setc(d, d->c, $1, $2, $3); }
 	| direct_declarator '[' ']' { direct_declarator_arr* d; $$ = alloc(d);
-		d->c.fill($1, $2, NULL, NULL, NULL, NULL, $3); }
+		setc(d, d->c, $1, $2, NULL, NULL, NULL, NULL, $3); }
 	| direct_declarator '[' '*' ']' { direct_declarator_arr* d; $$ = alloc(d);
-		d->c.fill($1, $2, NULL, NULL, NULL, $3, $4); }
+		setc(d, d->c, $1, $2, NULL, NULL, NULL, $3, $4); }
 	| direct_declarator '[' STATIC type_qualifier_list assignment_expression ']' {
 		direct_declarator_arr* d; $$ = alloc(d);
-		d->c.fill($1, $2, $3, $4, $5, NULL, $6); }
+		setc(d, d->c, $1, $2, $3, $4, $5, NULL, $6); }
 	| direct_declarator '[' STATIC assignment_expression ']' { c11(); }
 	| direct_declarator '[' type_qualifier_list '*' ']' { direct_declarator_arr* d; $$ = alloc(d);
 		// FEATURE: autoptr that converts to pointer in assignment to $$?
-		d->c.fill($1, $2, NULL, $3, NULL, $4, $5); }
+		setc(d, d->c, $1, $2, NULL, $3, NULL, $4, $5); }
 	| direct_declarator '[' type_qualifier_list STATIC assignment_expression ']' {
 		direct_declarator_arr* d; $$ = alloc(d);
-		d->c.fill($1, $2, $4, $3, $5, NULL, $6); }
+		setc(d, d->c, $1, $2, $4, $3, $5, NULL, $6); }
 	| direct_declarator '[' type_qualifier_list assignment_expression ']' {
 		direct_declarator_arr* d; $$ = alloc(d);
-		d->c.fill($1, $2, NULL, $3, $4, NULL, $5); }
+		setc(d, d->c, $1, $2, NULL, $3, $4, NULL, $5); }
 	| direct_declarator '[' type_qualifier_list ']' {
 		direct_declarator_arr* d; $$ = alloc(d);
-		d->c.fill($1, $2, NULL, $3, NULL, NULL, $4); }
+		setc(d, d->c, $1, $2, NULL, $3, NULL, NULL, $4); }
 	| direct_declarator '[' assignment_expression ']' {
 		direct_declarator_arr* d; $$ = alloc(d);
-		d->c.fill($1, $2, NULL, NULL, $3, NULL, $4); }
+		setc(d, d->c, $1, $2, NULL, NULL, $3, NULL, $4); }
 	| direct_declarator '(' parameter_type_list ')' {
 		direct_declarator_func* d; $$ = alloc(d);
-		d->c.fill($1, $2, $3, $4); }
+		setc(d, d->c, $1, $2, $3, $4); }
 	| direct_declarator '(' ')' {
 		direct_declarator_func* d; $$ = alloc(d);
-		d->c.fill($1, $2, NULL, $3); }
+		setc(d, d->c, $1, $2, NULL, $3); }
 	| direct_declarator '(' identifier_list ')' {
 		direct_declarator_idlist* d; $$ = alloc(d);
-		d->c.fill($1, $2, $3, $4); } // old-style C function declarator
+		setc(d, d->c, $1, $2, $3, $4); } // old-style C function declarator
 	;
 
 pointer
-	: '*' type_qualifier_list pointer { alloc($$); $$->c.fill($1, $2, $3); }
-	| '*' type_qualifier_list { alloc($$); $$->c.fill($1, $2, NULL); }
-	| '*' pointer { alloc($$); $$->c.fill($1, NULL, $2); }
+	: '*' type_qualifier_list pointer { alloc($$); setc($$, $$->c, $1, $2, $3); }
+	| '*' type_qualifier_list { alloc($$); setc($$, $$->c, $1, $2, NULL); }
+	| '*' pointer { alloc($$); setc($$, $$->c, $1, NULL, $2); }
 	| '*' { alloc($$); $$->c.set($1); }
 	;
 
@@ -686,80 +708,80 @@ type_qualifier_list
 	;
 
 parameter_type_list
-	: parameter_list ',' ELLIPSIS { alloc($$); $$->c.fill($1, $2, $3); }
+	: parameter_list ',' ELLIPSIS { alloc($$); setc($$, $$->c, $1, $2, $3); }
 	| parameter_list { alloc($$); $$->c.set($1); }
 	;
 
 parameter_list
-	: parameter_declaration { alloc($$); $$->c.fill(NULL, NULL, $1); }
-	| parameter_list ',' parameter_declaration { alloc($$); $$->c.fill($1, $2, $3); }
+	: parameter_declaration { alloc($$); setc($$, $$->c, NULL, NULL, $1); }
+	| parameter_list ',' parameter_declaration { alloc($$); setc($$, $$->c, $1, $2, $3); }
 	;
 
 parameter_declaration
-	: declaration_specifiers declarator { alloc($$); $$->c.fill($1, $2); }
-	| declaration_specifiers abstract_declarator { alloc($$); $$->c.fill($1, NULL, $2); }
+	: declaration_specifiers declarator { alloc($$); setc($$, $$->c, $1, $2); }
+	| declaration_specifiers abstract_declarator { alloc($$); setc($$, $$->c, $1, NULL, $2); }
 	| declaration_specifiers { alloc($$); $$->c.set($1); }
 	;
 
 identifier_list
-	: IDENTIFIER { alloc($$); $$->c.fill(NULL, NULL, $1); }
-	| identifier_list ',' IDENTIFIER { alloc($$); $$->c.fill($1, $2, $3); }
+	: IDENTIFIER { alloc($$); setc($$, $$->c, NULL, NULL, $1); }
+	| identifier_list ',' IDENTIFIER { alloc($$); setc($$, $$->c, $1, $2, $3); }
 	;
 
 type_name
-	: specifier_qualifier_list abstract_declarator { alloc($$); $$->c.fill($1, $2); }
+	: specifier_qualifier_list abstract_declarator { alloc($$); setc($$, $$->c, $1, $2); }
 	| specifier_qualifier_list { alloc($$); $$->c.set($1); }
 	;
 
 abstract_declarator
-	: pointer direct_abstract_declarator { alloc($$); $$->c.fill($1, $2); }
+	: pointer direct_abstract_declarator { alloc($$); setc($$, $$->c, $1, $2); }
 	| pointer { alloc($$); $$->c.set($1); }
-	| direct_abstract_declarator { alloc($$); $$->c.fill(NULL, $1); }
+	| direct_abstract_declarator { alloc($$); setc($$, $$->c, NULL, $1); }
 	;
 
 direct_abstract_declarator
-	: '(' abstract_declarator ')' { direct_abstract_declarator_decl* d; $$ = alloc(d); d->c.fill($1, $2, $3); }
-	| '[' ']' { direct_abstract_declarator_arr* d; $$ = alloc(d); d->c.fill( NULL, $1, NULL, NULL, $2); }
-	| '[' '*' ']' { direct_abstract_declarator_arr* d; $$ = alloc(d); d->c.fill( NULL, $1, NULL, $2, $3); }
+	: '(' abstract_declarator ')' { direct_abstract_declarator_decl* d; $$ = alloc(d); setc(d, d->c, $1, $2, $3); }
+	| '[' ']' { direct_abstract_declarator_arr* d; $$ = alloc(d); setc(d, d->c,  NULL, $1, NULL, NULL, $2); }
+	| '[' '*' ']' { direct_abstract_declarator_arr* d; $$ = alloc(d); setc(d, d->c,  NULL, $1, NULL, $2, $3); }
 	| '[' STATIC type_qualifier_list assignment_expression ']' { c11(); }
 	| '[' STATIC assignment_expression ']' { c11(); }
 	| '[' type_qualifier_list STATIC assignment_expression ']' { c11(); }
 	| '[' type_qualifier_list assignment_expression ']' { c11(); }
 	| '[' type_qualifier_list ']' { c11(); }
-	| '[' assignment_expression ']' { direct_abstract_declarator_arr* d; $$ = alloc(d); d->c.fill( NULL, $1, $2, NULL, $3); }
-	| direct_abstract_declarator '[' ']' { direct_abstract_declarator_arr* d; $$ = alloc(d); d->c.fill( $1, $2, NULL, NULL, $3); }
-	| direct_abstract_declarator '[' '*' ']' { direct_abstract_declarator_arr* d; $$ = alloc(d); d->c.fill( $1, $2, NULL, $3, $4); }
+	| '[' assignment_expression ']' { direct_abstract_declarator_arr* d; $$ = alloc(d); setc(d, d->c,  NULL, $1, $2, NULL, $3); }
+	| direct_abstract_declarator '[' ']' { direct_abstract_declarator_arr* d; $$ = alloc(d); setc(d, d->c,  $1, $2, NULL, NULL, $3); }
+	| direct_abstract_declarator '[' '*' ']' { direct_abstract_declarator_arr* d; $$ = alloc(d); setc(d, d->c,  $1, $2, NULL, $3, $4); }
 	| direct_abstract_declarator '[' STATIC type_qualifier_list assignment_expression ']' { c11(); }
 	| direct_abstract_declarator '[' STATIC assignment_expression ']' { c11(); }
 	| direct_abstract_declarator '[' type_qualifier_list assignment_expression ']' { c11(); }
 	| direct_abstract_declarator '[' type_qualifier_list STATIC assignment_expression ']' { c11(); }
 	| direct_abstract_declarator '[' type_qualifier_list ']' { c11(); }
-	| direct_abstract_declarator '[' assignment_expression ']' { direct_abstract_declarator_arr* d; $$ = alloc(d); d->c.fill( $1, $2, $3, NULL, $4); }
+	| direct_abstract_declarator '[' assignment_expression ']' { direct_abstract_declarator_arr* d; $$ = alloc(d); setc(d, d->c,  $1, $2, $3, NULL, $4); }
 	| '(' ')' {
 		direct_abstract_declarator_func* d; $$ = alloc(d);
-		d->c.fill(NULL, $1, NULL, $2); }
+		setc(d, d->c, NULL, $1, NULL, $2); }
 	| '(' parameter_type_list ')' {
 		direct_abstract_declarator_func* d; $$ = alloc(d);
-		d->c.fill(NULL, $1, $2, $3); }
+		setc(d, d->c, NULL, $1, $2, $3); }
 	| direct_abstract_declarator '(' ')' {
 		direct_abstract_declarator_func* d; $$ = alloc(d);
-		d->c.fill($1, $2, NULL, $3); }
+		setc(d, d->c, $1, $2, NULL, $3); }
 	| direct_abstract_declarator '(' parameter_type_list ')' {
 		direct_abstract_declarator_func* d; $$ = alloc(d);
-		d->c.fill($1, $2, $3, $4); }
+		setc(d, d->c, $1, $2, $3, $4); }
 	;
 
 initializer
-	: '{' initializer_list '}' { alloc($$); $$->c.fill(NULL, $1, $2, NULL, $3); }
-	| '{' initializer_list ',' '}'{ alloc($$); $$->c.fill(NULL, $1, $2, $3, $4); }
+	: '{' initializer_list '}' { alloc($$); setc($$, $$->c, NULL, $1, $2, NULL, $3); }
+	| '{' initializer_list ',' '}'{ alloc($$); setc($$, $$->c, NULL, $1, $2, $3, $4); }
 	| assignment_expression { alloc($$); $$->c.set($1); }
 	;
 
 initializer_list
-	: designator_list '=' initializer { alloc($$); $$->c.fill(NULL, NULL, $1, $2, $3); }
-	| initializer { alloc($$); $$->c.fill(NULL, NULL, NULL, NULL, $1); }
-	| initializer_list ',' designator_list '=' initializer { alloc($$); $$->c.fill($1, $2, $3, $4, $5); }
-	| initializer_list ',' initializer { alloc($$); $$->c.fill($1, $2, NULL, NULL, $3); }
+	: designator_list '=' initializer { alloc($$); setc($$, $$->c, NULL, NULL, $1, $2, $3); }
+	| initializer { alloc($$); setc($$, $$->c, NULL, NULL, NULL, NULL, $1); }
+	| initializer_list ',' designator_list '=' initializer { alloc($$); setc($$, $$->c, $1, $2, $3, $4, $5); }
+	| initializer_list ',' initializer { alloc($$); setc($$, $$->c, $1, $2, NULL, NULL, $3); }
 	;
 
 // FEATURE: -> removed this, put eq sign into initializer_list? is this ok?
@@ -773,8 +795,8 @@ designator_list // e.g. 2D arrays: int a[1][1] = { [0][0] = 0 };
 	;
 
 designator
-	: '[' constant_expression ']' { designator_constant_expr* d; $$ = alloc(d); d->c.fill($1, $2, $3); }
-	| '.' IDENTIFIER { designator_id* d; $$ = alloc(d); d->c.fill($1, $2); }
+	: '[' constant_expression ']' { designator_constant_expr* d; $$ = alloc(d); setc(d, d->c, $1, $2, $3); }
+	| '.' IDENTIFIER { designator_id* d; $$ = alloc(d); setc(d, d->c, $1, $2); }
 	;
 
 static_assert_declaration
@@ -791,13 +813,13 @@ statement
 	;
 
 labeled_statement
-	: IDENTIFIER ':' statement { alloc($$); $$->c.fill(NULL, $1, NULL, $2, $3); }
-	| CASE constant_expression ':' statement { alloc($$); $$->c.fill($1, NULL, $2, $3, $4); }
-	| DEFAULT ':' statement { alloc($$); $$->c.fill($1, NULL, NULL, $2, $3); }
+	: IDENTIFIER ':' statement { alloc($$); setc($$, $$->c, NULL, $1, NULL, $2, $3); }
+	| CASE constant_expression ':' statement { alloc($$); setc($$, $$->c, $1, NULL, $2, $3, $4); }
+	| DEFAULT ':' statement { alloc($$); setc($$, $$->c, $1, NULL, NULL, $2, $3); }
 	;
 
 compound_statement
-	: '{' '}' { alloc($$); $$->c.fill($1, NULL, $2); }
+	: '{' '}' { alloc($$); setc($$, $$->c, $1, NULL, $2); }
 	| '{' block_item_list '}'  { /* extends $2 by brackets */ $$=$2; $$->c.set($1).get_next().set($3); }
 	;
 
@@ -812,14 +834,14 @@ block_item
 	;
 
 expression_statement
-	: ';' { alloc($$); $$->c.fill(NULL, $1); }
-	| expression ';' { alloc($$); $$->c.fill($1, $2); }
+	: ';' { alloc($$); setc($$, $$->c, NULL, $1); }
+	| expression ';' { alloc($$); setc($$, $$->c, $1, $2); }
 	;
 
 selection_statement
-	: IF '(' expression ')' statement ELSE statement { alloc($$); $$->c.fill($1, $2, $3, $4, $5, $6, $7); }
-	| IF '(' expression ')' statement { alloc($$); $$->c.fill($1, $2, $3, $4, $5); }
-	| SWITCH '(' expression ')' statement { alloc($$); $$->c.fill($1, $2, $3, $4, $5); }
+	: IF '(' expression ')' statement ELSE statement { alloc($$); setc($$, $$->c, $1, $2, $3, $4, $5, $6, $7); }
+	| IF '(' expression ')' statement { alloc($$); setc($$, $$->c, $1, $2, $3, $4, $5); }
+	| SWITCH '(' expression ')' statement { alloc($$); setc($$, $$->c, $1, $2, $3, $4, $5); }
 	;
 
 iteration_statement
@@ -832,11 +854,11 @@ iteration_statement
 	;	
 
 jump_statement
-	: GOTO IDENTIFIER ';' { alloc($$); $$->c.fill($1, $2, NULL, $3); }
-	| CONTINUE ';' { alloc($$); $$->c.fill($1, NULL, NULL, $2); }
-	| BREAK ';' { alloc($$); $$->c.fill($1, NULL, NULL, $2); }
-	| RETURN ';' { alloc($$); $$->c.fill($1, NULL, NULL, $2); }
-	| RETURN expression ';' { alloc($$); $$->c.fill($1, NULL, $2, $3); }
+	: GOTO IDENTIFIER ';' { alloc($$); setc($$, $$->c, $1, $2, NULL, $3); }
+	| CONTINUE ';' { alloc($$); setc($$, $$->c, $1, NULL, NULL, $2); }
+	| BREAK ';' { alloc($$); setc($$, $$->c, $1, NULL, NULL, $2); }
+	| RETURN ';' { alloc($$); setc($$, $$->c, $1, NULL, NULL, $2); }
+	| RETURN expression ';' { alloc($$); setc($$, $$->c, $1, NULL, $2, $3); }
 	;
 
 translation_unit_nonempty // TODO: dynamic cast useless?

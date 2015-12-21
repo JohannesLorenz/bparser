@@ -196,6 +196,7 @@ struct declaration_from_declarator_t : ftor_base
 		declaration_found = &d;
 	}
 	void operator()(parameter_declaration_t& d) {
+		throw "TODO!";
 		//u.parameter_found = &d;
 	}
 };
