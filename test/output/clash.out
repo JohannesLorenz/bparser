@@ -209,7 +209,7 @@
                            clash (l  21 c   8) (l  21 c  11)             primary expression
                            clash (l  21 c   8) (l  21 c   9)               (
                            clash (l  21 c   9) (l  21 c  10)               primary expression
-                           clash (l  21 c   9) (l  21 c  10)                 identifier: t (definition: clash: l1, c8-9)
+                           clash (l  21 c   9) (l  21 c  10)                 identifier: t (definition: clash: l20, c12-13)
                            clash (l  21 c  10) (l  21 c  11)               )
                            clash (l  21 c  11) (l  21 c  12)           ;
                            clash (l  22 c   1) (l  22 c   2)         }

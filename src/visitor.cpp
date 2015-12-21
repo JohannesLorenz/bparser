@@ -807,19 +807,33 @@ void dumper_t::visit(identifier_t &n)
 
 void dumper_t::visit(enumeration_constant_t& n)
 {
-	incr_depth_t x(&depth, stream, n.span);
-	stream << "enumeration constant: " << n.raw
-		<< " (definition: " << n._definition->span
-		<< ")" << std::endl;
+	if(!n._definition)
+	{
+		stream << "enumeration constant (definition MISSING)" << std::endl;
+	} // should not happen
+	else
+	{
+		incr_depth_t x(&depth, stream, n.span);
+		stream << "enumeration constant: " << n.raw
+			<< " (definition: " << n._definition->span
+			<< ")" << std::endl;
+	}
 	fwd::visit(n);
 }
 
 void dumper_t::visit(typedef_name_t& n)
 {
-	incr_depth_t x(&depth, stream, n.span);
-	stream << "typedef name: " << n.raw
-		<< " (definition: " << n._definition->span
-		<< ")" << std::endl;
+	if(!n._definition)
+	{
+		stream << "typedef name (definition MISSING)" << std::endl;
+	} // should not happen
+	else
+	{
+		incr_depth_t x(&depth, stream, n.span);
+		stream << "typedef name: " << n.raw
+			<< " (definition: " << n._definition->span
+			<< ")" << std::endl;
+	}
 	fwd::visit(n);
 }
 

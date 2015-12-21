@@ -97,7 +97,11 @@ translation_unit_t *get_ast(const char *input, const char* fname,
 		 (*itr)->accept(g);
 	}
 	transl_unit->accept(g);
-
+	
+	// output incomplete AST for debugging purposes
+	// not valgrind-safe yet :( TODO!
+	// std::cout << *transl_unit << std::endl;
+	
 	// run the type completor
 	io_visitor<type_completor> f;
 	transl_unit->accept(f);

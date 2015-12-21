@@ -81,7 +81,7 @@ namespace scope_types
 		public do_inc_depth {};
 	template<> struct inc_depth<compound_statement_t> :
 		public do_inc_depth {};
-	template<> struct inc_depth<parameter_type_list_t> :
+	template<> struct inc_depth<function_definition_t> :
 		public do_inc_depth {};
 	template<> struct inc_depth<struct_declaration_list_t> :
 		public do_inc_depth {};

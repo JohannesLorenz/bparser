@@ -415,7 +415,9 @@ void type_completor::on(declaration_t& d, leave)
 
 void type_completor::on(function_definition_t& f, leave)
 {
-	v_lookup_table.flag_symbol(&get_declarator(*f.c.get<1>()), decl_depth, false);
+	// for functions, the depth has already been increased,
+	// however, the function identifier itself is at level 0
+	v_lookup_table.flag_symbol(&get_declarator(*f.c.get<1>()), decl_depth - 1, false);
 }
 
 void type_completor::on(parameter_declaration_t& p, leave) {

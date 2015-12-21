@@ -25,7 +25,6 @@
 #include "node.h"
 #include "parser.h"
 #include "lexer.h"
-using namespace nodes;
 
 extern void dump_lookup_table();
 
@@ -78,6 +77,7 @@ extern int type_of(const char* str);
 %code requires {
 
 #include "node_fwd.h"
+using namespace nodes;
 #ifndef YY_TYPEDEF_YY_SCANNER_T
 #define YY_TYPEDEF_YY_SCANNER_T
 typedef void* yyscan_t;
@@ -94,75 +94,75 @@ typedef void* yyscan_t;
 %parse-param { yyscan_t scanner }
 
 %union {
-	nodes::attr_name_t* attr_name;
-	nodes::attribute_t* attribute;
-	nodes::identifier_t* name;
-	nodes::typedef_name_t* typedef_name;
-	nodes::enumeration_constant_t* enumeration_constant;
+	attr_name_t* attr_name;
+	attribute_t* attribute;
+	identifier_t* name;
+	typedef_name_t* typedef_name;
+	enumeration_constant_t* enumeration_constant;
 	float _float;
 	int _int;
-	nodes::token_t* token;
+	token_t* token;
 	class node_base* node;
 
-	nodes::type_specifier_t* type_specifier;
-	nodes::specifier_qualifier_list_t* specifier_qualifier_list;
-	nodes::expression_t *expression;
-	nodes::declaration_specifiers_t* declaration_specifiers;
-	nodes::declarator_t* declarator;
-	nodes::declaration_list_t* declaration_list;
-	nodes::compound_statement_t* compound_statement;
-	nodes::external_declaration_t* external_declaration;
-	nodes::function_definition_t* function_definition;
+	type_specifier_t* type_specifier;
+	specifier_qualifier_list_t* specifier_qualifier_list;
+	expression_t *expression;
+	declaration_specifiers_t* declaration_specifiers;
+	declarator_t* declarator;
+	declaration_list_t* declaration_list;
+	compound_statement_t* compound_statement;
+	external_declaration_t* external_declaration;
+	function_definition_t* function_definition;
 /*	storage_class_specifier_t* storage_class_specifier;
 	alignment_specifier_t* alignment_specifier;
 	function_specifier_t* function_specifier;*/
-	nodes::pointer_t* pointer;
-	nodes::direct_declarator_t* direct_declarator;
-	nodes::struct_or_union_specifier_t* struct_or_union_specifier;
-	nodes::enum_specifier_t* enum_specifier;
-	nodes::declaration_t* declaration;
-	nodes::labeled_statement_t* labeled_statement;
-	nodes::expression_statement_t* expression_statement;
-	nodes::jump_statement_t* jump_statement;
-	nodes::selection_statement_t* selection_statement;
-	nodes::iteration_statement_t* iteration_statement;
-	nodes::init_declarator_t* init_declarator;
-	nodes::init_declarator_list_t* init_declarator_list;
-	nodes::initializer_t* initializer;
-	nodes::initializer_list_t* initializer_list;
-	nodes::identifier_t* identifier;
-	nodes::statement_t* statement;
-	nodes::block_item_t* block_item;
-//	nodes::constant_t* constant;
-	nodes::type_name_t* type_name;
+	pointer_t* pointer;
+	direct_declarator_t* direct_declarator;
+	struct_or_union_specifier_t* struct_or_union_specifier;
+	enum_specifier_t* enum_specifier;
+	declaration_t* declaration;
+	labeled_statement_t* labeled_statement;
+	expression_statement_t* expression_statement;
+	jump_statement_t* jump_statement;
+	selection_statement_t* selection_statement;
+	iteration_statement_t* iteration_statement;
+	init_declarator_t* init_declarator;
+	init_declarator_list_t* init_declarator_list;
+	initializer_t* initializer;
+	initializer_list_t* initializer_list;
+	identifier_t* identifier;
+	statement_t* statement;
+	block_item_t* block_item;
+//	constant_t* constant;
+	type_name_t* type_name;
 
-	nodes::struct_declaration_t* struct_declaration;
-	nodes::struct_declaration_list_t* struct_declaration_list;
-	nodes::struct_declarator_list_t* struct_declarator_list;
-	nodes::struct_declarator_t* struct_declarator;
-	nodes::enumerator_list_t* enumerator_list;
-	nodes::enumerator_t* enumerator;
-	nodes::parameter_list_t* parameter_list;
-	nodes::parameter_declaration_t* parameter_declaration;
-	nodes::identifier_list_t* identifier_list;
+	struct_declaration_t* struct_declaration;
+	struct_declaration_list_t* struct_declaration_list;
+	struct_declarator_list_t* struct_declarator_list;
+	struct_declarator_t* struct_declarator;
+	enumerator_list_t* enumerator_list;
+	enumerator_t* enumerator;
+	parameter_list_t* parameter_list;
+	parameter_declaration_t* parameter_declaration;
+	identifier_list_t* identifier_list;
 
-	nodes::parameter_type_list_t* parameter_type_list;
-	nodes::type_qualifier_list_t* type_qualifier_list;
-	nodes::type_qualifier_t* type_qualifier;
-	nodes::direct_abstract_declarator_t* direct_abstract_declarator;
-	nodes::abstract_declarator_t* abstract_declarator;
-	nodes::designator_list_t* designator_list;
-	nodes::designator_t* designator;
-	nodes::argument_expression_list_t* argument_expression_list;
+	parameter_type_list_t* parameter_type_list;
+	type_qualifier_list_t* type_qualifier_list;
+	type_qualifier_t* type_qualifier;
+	direct_abstract_declarator_t* direct_abstract_declarator;
+	abstract_declarator_t* abstract_declarator;
+	designator_list_t* designator_list;
+	designator_t* designator;
+	argument_expression_list_t* argument_expression_list;
 
-	nodes::primary_expression_t* primary_expression;
-	nodes::noconst_terminal_t* terminal;
-	nodes::iconstant_t* iconstant;
-	nodes::fconstant_t* fconstant;
+	primary_expression_t* primary_expression;
+	noconst_terminal_t* terminal;
+	iconstant_t* iconstant;
+	fconstant_t* fconstant;
 
-	nodes::string_literal_t* string_literal;
+	string_literal_t* string_literal;
 
-	nodes::translation_unit_t* translation_unit;
+	translation_unit_t* translation_unit;
 }
 
 %token	ATTR_NAME ATTRIBUTE
