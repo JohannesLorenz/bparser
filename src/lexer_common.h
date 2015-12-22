@@ -697,7 +697,7 @@ public:
 			 recent_declaration = true;
 		}
 
-		std::cout << "SET STATE NOW: " << declaration_state << " after text: "<< text << std::endl;
+//		std::cout << "SET STATE NOW: " << declaration_state << " after text: "<< text << std::endl;
 		
 		add_recent_token(token_id); // updates recent_tokens
 

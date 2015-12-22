@@ -330,6 +330,7 @@ struct type_specifier_complex_t : public type_specifier_t {
 struct declaration_base
 {
 	virtual declaration_specifiers_t& decl_spec() = 0;
+	virtual ~declaration_base() {}
 };
 
 struct attr_name_t : public noconst_1line_terminal_t

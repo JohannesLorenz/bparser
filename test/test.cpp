@@ -268,6 +268,7 @@ void run(int argc, char** argv)
 
 		run_test_file("struct_acc");
 		run_test_file("struct_typedefs");
+		run_test_file("list");
 	}
 	else // argc > 1
 	{

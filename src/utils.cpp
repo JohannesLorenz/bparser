@@ -40,6 +40,9 @@ void function_called::visit(cast_expression_t& c){
 void struct_type_specifier_of_declaration_t::visit(typedef_name_t &t)
 {
 	func_visitor< declaration_from_declarator_t > v0;
+	if(!t._definition)
+	 throw "definition";
+	std::cout << "DEFINITION: " << t._definition << std::endl;
 	t._definition->parent->accept(v0);
 	return visit(v0.functor().declaration_found->decl_spec());
 }

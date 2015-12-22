@@ -64,7 +64,10 @@ void struct_type_of::visit(primary_expression_t& p)
 	identifier_t* id = p.c.get<1>();
 	if(id)
 	{
+		std::cout << "67: " << *struct_rval_of_func(*id).c.get<struct_or_union_specifier_t::identifier>() << std::endl;
+		
 		set_id(struct_rval_of_func(*id).c.get<struct_or_union_specifier_t::identifier>()->_definition);
+		std::cout << "DEF: " << _identifier << std::endl;
 		/*if(is_func_id(*id))
 		 {}
 		else
@@ -364,9 +367,13 @@ void type_completor::on(struct_access_expression_t& s, leave)
 
 	// step 2: get struct type of left identifier
 #if 1
+	if(s.c.get<2>()->raw == "seezbit")
+	 std::cout << "BUG" << std::endl;	
+
 	struct_type_of struct_type;
 	s.c.get<0>()->accept(struct_type); // <- this does almost all the work, including typedef resolution
 	current_struct_scope = struct_type.get_identifier();
+	std::cout << "STRUCT ACCESS EXPRESSION: " << s << std::endl;
 	std::cout << "STRUCT ACCESS: SCOPE: " << *current_struct_scope << std::endl;
 	if(!current_struct_scope) {
 		std::cout << "struct access expression at " << s.span
@@ -400,9 +407,13 @@ void type_completor::on(struct_access_expression_t& s, leave)
 		for(; cur && searching; cur = cur->c.get<0>()) {
 			declarator_t* dtor = cur->c.get<2>()->c.get<0>();
 			if(dtor) { // FEATURE: never NULL?
-			std::cout << "connecting id: " << *dtor << std::endl;
-			 s.c.get<2>()->_definition = &get_declarator(*dtor); // FEATURE: rename: id_from_declarator?
-			searching = false;
+				// once a declarator exists, it must have an identifier
+				identifier_t& struct_member = get_declarator(*dtor); // FEATURE: rename: id_from_declarator?
+				if(struct_member.raw == s.c.get<2>()->raw) {
+					s.c.get<2>()->_definition = &struct_member;
+					std::cout << "connecting id: " << *dtor << std::endl;
+					searching = false;
+				}
 			}
 			//if(dtor)
 			// v_lookup_table.flag_symbol(&get_declarator(*dtor), decl_depth, false);
