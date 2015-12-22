@@ -35,6 +35,32 @@
 #include "tuple03.h"
 #include "geom.h"
 
+template<class P>
+class safe_ptr
+{
+	P* p;
+public:
+	safe_ptr() : p(NULL) {}
+	safe_ptr(P* p) : p(p) {}
+	safe_ptr& operator=(P* _p) { return p = _p, *this; }
+	operator P*() { return p; }
+	operator P const*() const { return p; }
+	//bool operator==(const P* _p) const { return p == _p; }
+	P& operator*() {
+		if(!p) throw "pointer access";
+		return *p; }
+	P const& operator*() const {
+		if(!p) throw "pointer access";
+		return *p; }
+	P* operator->() {
+		if(!p) throw "pointer access";
+		return p; }
+	P const* operator->() const {
+		if(!p) throw "pointer access";
+		return p; }
+	bool operator!() const { return p == NULL; }
+};
+
 // FEATURE: not here?
 enum lookup_type
 {
@@ -135,7 +161,7 @@ public:
 struct defined_t : public noconst_1line_terminal_t
 {
 public:
-	struct identifier_t* _definition;
+	safe_ptr<struct identifier_t> _definition;
 	defined_t(const geom_t& geom, int value,
 		const char* raw) :
 		noconst_1line_terminal_t(geom, value, raw),

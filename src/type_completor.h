@@ -159,7 +159,7 @@ class type_completor : ftor_base
 	std::size_t decl_depth;
 	identifier_t* current_struct_scope;
 
-	struct
+	class lookup_table_t
 	{
 		typedef std::pair<std::size_t, identifier_t*> value_entry_t; // depth, declaration
 		typedef std::vector<value_entry_t> value_t;
@@ -172,17 +172,10 @@ class type_completor : ftor_base
 			return rval += new_id;
 		}
 
-		void flag_symbol(identifier_t* id, int new_depth, bool struct_bound)
-		{
-			if(id)
-			{
-				std::string new_name = internal_name_of_new_id(id->raw.c_str(), struct_bound);
-				std::cout << "flagging " << new_name << " at depth " << new_depth << std::endl;
-
-				table[new_name].push_back(value_entry_t(new_depth, id));
-				id->_definition = id;
-			}
-		}
+		typedef std::multimap<std::string, identifier_t* > unknowns_t;
+		unknowns_t unknown_types;
+	public:
+		void flag_symbol(identifier_t* id, int new_depth, bool struct_bound);
 
 		identifier_t* declaration_of(const char* str) {
 			table_t::const_iterator itr = table.find(str);
@@ -218,7 +211,15 @@ class type_completor : ftor_base
 			}
 		}
 
+		void dangling_identifier(identifier_t* i, bool is_struct)
+		{
+			std::string s = internal_name_of_new_id(i->raw.c_str(), is_struct);
+			unknown_types.insert(std::pair<std::string, identifier_t*>(s, i));
+		}
+
 	} v_lookup_table;
+
+
 
 	void connect_identifier(identifier_t* , bool connect_as_struct = false);
 

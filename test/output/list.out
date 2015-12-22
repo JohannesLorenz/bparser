@@ -1,0 +1,45 @@
+                            list (l   1 c   1) (l   9 c   2) translation unit
+                            list (l   1 c   1) (l   4 c   5)   external declaration
+                            list (l   1 c   1) (l   4 c   5)     declaration
+                            list (l   1 c   1) (l   4 c   2)       type specifier
+                            list (l   1 c   1) (l   4 c   2)         struct specifier
+                            list (l   1 c   1) (l   1 c   7)           "struct"
+                            list (l   1 c   8) (l   1 c  11)           identifier (definition): l_t
+                            list (l   2 c   1) (l   2 c   2)           {
+                            list (l   3 c   2) (l   3 c  19)           struct declaration
+                            list (l   3 c   2) (l   3 c  12)             type specifier
+                            list (l   3 c   2) (l   3 c  12)               struct specifier
+                            list (l   3 c   2) (l   3 c   8)                 "struct"
+                            list (l   3 c   9) (l   3 c  12)                 identifier: l_t (definition: list: l1, c8-11)
+                            list (l   3 c  12) (l   3 c  18)             declarator
+                            list (l   3 c  12) (l   3 c  13)               pointer
+                            list (l   3 c  12) (l   3 c  13)                 *
+                            list (l   3 c  14) (l   3 c  18)               direct declarator (identifier)
+                            list (l   3 c  14) (l   3 c  18)                 identifier (definition): next
+                            list (l   3 c  18) (l   3 c  19)             ;
+                            list (l   4 c   1) (l   4 c   2)           }
+                            list (l   4 c   3) (l   4 c   4)       direct declarator (identifier)
+                            list (l   4 c   3) (l   4 c   4)         identifier (definition): l
+                            list (l   4 c   4) (l   4 c   5)       ;
+                            list (l   6 c   1) (l   9 c   2)   external declaration
+                            list (l   6 c   1) (l   9 c   2)     function definition
+                            list (l   6 c   1) (l   6 c   4)       type specifier
+                            list (l   6 c   1) (l   6 c   4)         "int"
+                            list (l   6 c   5) (l   6 c  11)       direct declarator (function)
+                            list (l   6 c   5) (l   6 c   9)         direct declarator (identifier)
+                            list (l   6 c   5) (l   6 c   9)           identifier (definition): main
+                            list (l   6 c   9) (l   6 c  10)         (
+                            list (l   6 c  10) (l   6 c  11)         )
+                            list (l   7 c   1) (l   9 c   2)       compound statement
+                            list (l   7 c   1) (l   7 c   2)         {
+                            list (l   8 c   2) (l   8 c  15)         expression statement
+                            list (l   8 c   2) (l   8 c  14)           struct access
+                            list (l   8 c   2) (l   8 c   8)             struct access
+                            list (l   8 c   2) (l   8 c   3)               primary expression
+                            list (l   8 c   2) (l   8 c   3)                 identifier: l (definition: list: l4, c3-4)
+                            list (l   8 c   3) (l   8 c   4)               .
+                            list (l   8 c   4) (l   8 c   8)               identifier: next (definition: list: l3, c14-18)
+                            list (l   8 c   8) (l   8 c  10)             ->
+                            list (l   8 c  10) (l   8 c  14)             identifier: next (definition: list: l3, c14-18)
+                            list (l   8 c  14) (l   8 c  15)           ;
+                            list (l   9 c   1) (l   9 c   2)         }

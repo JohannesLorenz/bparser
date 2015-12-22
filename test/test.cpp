@@ -268,6 +268,7 @@ void run(int argc, char** argv)
 
 		run_test_file("struct_acc");
 		run_test_file("struct_typedefs");
+		run_test_file("list");
 	}
 	else // argc > 1
 	{
@@ -292,6 +293,12 @@ int main(int argc, char** argv)
 		std::cout << err_msg << std::endl;
 		std::cout << "ABBRUCH." << std::endl;
 		exit_value = EXIT_FAILURE;
+	} catch (...) {
+		std::cout << "FEHLER: " << std::endl;
+		std::cout << "unbekannt exception" << std::endl;
+		std::cout << "ABBRUCH." << std::endl;
+		exit_value = EXIT_FAILURE;
 	}
+
 	return exit_value;
 }

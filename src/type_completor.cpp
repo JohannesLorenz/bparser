@@ -248,6 +248,9 @@ void type_completor::connect_identifier(identifier_t* identifier,
 
 		identifier->_definition = v_lookup_table.declaration_of(lookup_name.c_str());
 		// TODO
+
+		if(!identifier->_definition)
+		 v_lookup_table.dangling_identifier(identifier, connect_as_struct);
 	}
 }
 
@@ -468,3 +471,37 @@ void type_completor::on(typedef_name_t& t, enter) {
 	t._definition = v_lookup_table.declaration_of(t.raw.c_str());
 }
 
+
+
+void type_completor::lookup_table_t::flag_symbol(identifier_t *id, int new_depth, bool struct_bound)
+{
+	if(id)
+	{
+		std::string new_name = internal_name_of_new_id(id->raw.c_str(), struct_bound);
+		std::cout << "flagging " << new_name << " at depth " << new_depth << std::endl;
+
+		table[new_name].push_back(value_entry_t(new_depth, id));
+		id->_definition = id;
+
+		// resolve dangling forward declaration and throw them away
+		unknowns_t::iterator itr = unknown_types.begin(),
+				next = unknown_types.begin();
+		for(itr = unknown_types.begin(); itr != unknown_types.end(); itr = next)
+		{
+			// invariant: itr == next
+			if(next != unknown_types.end())
+				++next;
+
+			std::cout << itr->first << " vs " << new_name << std::endl;
+			// invariant: ++itr == next || next == unknown_types.end()
+			if(itr->first == new_name)
+			{
+				itr->second->_definition = id;
+				//declaration_t* d = declaration_from_identifier(itr->second);
+				// FEATURE: map definitions
+
+				unknown_types.erase(itr);
+			}
+		}
+	}
+}
