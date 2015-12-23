@@ -1,5 +1,27 @@
-struct param;
+struct s* ptr1;
 
-int f(struct param* p) {}
+int main()
+{
+	struct s* ptr2;
 
-int main() {}
+	{
+		struct s
+		{
+			char x;
+		};
+		struct s s_x;
+	}
+	struct s
+	{
+		short y;
+	};
+	struct s s_y;
+}
+
+struct s
+{
+	int z;
+};
+
+struct s s_z;
+

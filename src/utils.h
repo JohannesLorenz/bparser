@@ -146,7 +146,18 @@ struct struct_type_specifier_of_declaration_t : visitor_t
 	void visit(declaration_specifiers_t & d) { vaccept(d.c); }
 	void visit(type_specifier_t & t) { t.c.get<0>()->accept(*this); }
 	void visit(struct_or_union_specifier_t& s) {
-		result = &s; }
+		if(s.c.get<struct_or_union_specifier_t::lbrack>())
+		 result = &s;
+		else
+		{ // FEATURE: remove this once forward declarations have been mapped
+			identifier_t& definition = *s.c.get<struct_or_union_specifier_t::identifier>()->_definition;
+			struct_or_union_specifier_t* src = dcast<struct_or_union_specifier_t>(*definition.parent);
+			if(src)
+			 result = src;
+			else // not sure if this is possible, but let's just throw for now
+			 throw "struct has definition which is not a struct...";
+		}
+		}
 	void visit(typedef_name_t& t);
 };
 
