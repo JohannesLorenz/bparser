@@ -4,7 +4,9 @@ FILES	= lexer.o parser.o node.o visitor.o token.o geom.o ast.o type_completor.o 
 #CC	= gcc
 #CXX	= g++
 # -Werror -Wno-unused ?
-FLAGS	= -Wall -Wextra -Wno-unused -Wno-overloaded-virtual  -g -ggdb -ansi -DYYDEBUG=1 -pipe
+DBGFLAGS=-g -ggdb -DYYDEBUG=1
+#DBGFLAGS=-O2
+FLAGS	= -Wall -Wextra -Wno-unused -Wno-overloaded-virtual ${DBGFLAGS} -ansi -pipe
 CFLAGS	= -fPIC
 LFLAGS	= -shared
 #BISON_BIN = /home/t0161834/pakete/bison-3.0.4/install/bin/bison

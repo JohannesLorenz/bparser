@@ -29,6 +29,7 @@
 #include <iostream>
 #include <string>
 
+#include "options.h"
 #include "visitor.h"
 
 //! only for internal use of type_completor
@@ -36,16 +37,18 @@ class struct_type_of : public visitor_t
 {
 	// TODO: set_identifier function that checks if it's null
 	//	in all other node types, set identifier to null!
-	identifier_t* _identifier;
+	struct_or_union_specifier_t* _struct_specifier;
 
-	void set_id(identifier_t* i) {
-		if(!_identifier) // identifier has been found in
+	void set_spec(struct_or_union_specifier_t* s) {
+		if(!_struct_specifier) // identifier has been found in
 			// a parent node, so noting the identifier
 			// does not make any sense
-		 _identifier = i; }
+		 _struct_specifier = s; }
+
+	void set_spec_from_id(identifier_t* struct_id);
 public:
-	identifier_t* get_identifier() { return _identifier; }
-	struct_type_of() : _identifier(NULL) {}
+	struct_or_union_specifier_t* get_struct_specifier() { return _struct_specifier; }
+	struct_type_of() : _struct_specifier(NULL) {}
 	void visit(unary_expression_r &u);
 	void visit(unary_expression_l &u);
 	void visit(binary_expression_t &b);
@@ -188,7 +191,9 @@ class type_completor : ftor_base
 
 		void notify_dec_decl_depth(std::size_t new_depth)
 		{
+#ifdef TYPE_COMPLETOR_DEBUG
 			std::cout << "DEPTH decreased to: " << new_depth << std::endl;
+#endif
 			table_t::iterator itr = table.begin(),
 				next = table.begin();
 			for(itr = table.begin(); itr != table.end(); itr = next)

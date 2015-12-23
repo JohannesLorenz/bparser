@@ -205,6 +205,9 @@ struct declaration_from_declarator_t : ftor_base
 	void operator()(struct_declaration_t& s) {
 		declaration_found = &s;
 	}
+	void operator()(function_definition_t& s) {
+		declaration_found = &s;
+	}
 };
 
 //! returns the declaration in which the given declarator is
@@ -222,20 +225,12 @@ inline declaration_base& declaration_from_identifier(identifier_t& id)
 	id.parent->accept(v0);
 	return *v0.functor().declaration_found;
 }
-#include <iostream>
+
 inline struct_or_union_specifier_t& struct_rval_of_func(identifier_t& id)
 {
 	struct_type_specifier_of_declaration_t v;
-	if(!id._definition)
-	 throw "definition";
-
-	std::cout << "DECLSPEC: " << declaration_from_identifier(*id._definition).decl_spec() << std::endl;
-
+//	std::cout << "DECLSPEC: " << declaration_from_identifier(*id._definition).decl_spec() << std::endl;
 	declaration_from_identifier(*id._definition).decl_spec().accept(v);
-
-
-	if(!v.result)
-	 throw "no result";
 	return *v.result;
 
 /*	func_visitor< is<struct_return_value_of_function> > v;

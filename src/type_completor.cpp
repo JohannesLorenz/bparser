@@ -22,6 +22,20 @@
 #include "token.h"
 #include "utils.h"
 
+void struct_type_of::set_spec_from_id(identifier_t* struct_id)
+{
+	struct_or_union_specifier_t* spec = dcast<struct_or_union_specifier_t>(*struct_id->parent);
+	if(! spec) { // B : declared as a declarator?
+		spec = dcast<struct_or_union_specifier_t>(struct_rval_of_func(*struct_id));
+		if(! spec)
+		{
+			std::cout << "ABORT INFO: " << *struct_id->parent << std::endl;
+			throw "Unable to cast parent of struct identifier to struct_or_union_specifier_t";
+		}
+	}
+	set_spec(spec);
+}
+
 void struct_type_of::visit(unary_expression_r& u)
 {
 	u.c.get<0>()->accept(*this);
@@ -44,7 +58,7 @@ void struct_type_of::visit(binary_expression_t& b)
 		// ptr = voidptr
 		// in all cases, this works:
 		b.c.get<0>()->accept(*this);
-		if(!_identifier)
+		if(!_struct_specifier)
 		 b.c.get<2>()->accept(*this);
 	}
 }
@@ -52,7 +66,7 @@ void struct_type_of::visit(binary_expression_t& b)
 void struct_type_of::visit(ternary_expression_t& t)
 {
 	t.c.get<2>()->accept(*this);
-	if(!_identifier)
+	if(!_struct_specifier)
 	{
 		// maybe we have better luck here:
 		t.c.get<4>()->accept(*this);
@@ -64,10 +78,17 @@ void struct_type_of::visit(primary_expression_t& p)
 	identifier_t* id = p.c.get<1>();
 	if(id)
 	{
-		std::cout << "67: " << *struct_rval_of_func(*id).c.get<struct_or_union_specifier_t::identifier>() << std::endl;
+	//	std::cout << "67: " << *struct_rval_of_func(*id).c.get<struct_or_union_specifier_t::identifier>() << std::endl;
 		
-		set_id(struct_rval_of_func(*id).c.get<struct_or_union_specifier_t::identifier>()->_definition);
-		std::cout << "DEF: " << _identifier << std::endl;
+		struct_or_union_specifier_t& result = struct_rval_of_func(*id);
+		identifier_t* structs_id = result.c.get<struct_or_union_specifier_t::identifier>();
+		
+		if(structs_id) // TODO: does this ever occur?
+		 set_spec_from_id(structs_id->_definition);
+		else
+		 set_spec(&result);
+		
+	//	std::cout << "DEF: " << _identifier << std::endl;
 		/*if(is_func_id(*id))
 		 {}
 		else
@@ -92,7 +113,7 @@ void struct_type_of::visit(function_call_expression_t& f)
 
 void struct_type_of::visit(struct_access_expression_t& s) {
 	// should have already been done by other visitors
-	set_id(s.c.get<2>()->_definition);
+	set_spec_from_id(s.c.get<2>()->_definition); // TODO: recursive visit?
 }
 
 void struct_type_of::visit(compound_literal_t& c){
@@ -125,7 +146,7 @@ void struct_type_of::visit(type_specifier_t &t)
 
 void struct_type_of::visit(struct_or_union_specifier_t &s)
 {
-	set_id(s.c.get<struct_or_union_specifier_t::identifier>()->_definition);
+	set_spec(&s);
 }
 
 void struct_type_of::visit(typedef_name_t &t)
@@ -370,14 +391,14 @@ void type_completor::on(struct_access_expression_t& s, leave)
 
 	// step 2: get struct type of left identifier
 #if 1
-	if(s.c.get<2>()->raw == "seezbit")
-	 std::cout << "BUG" << std::endl;	
-
 	struct_type_of struct_type;
 	s.c.get<0>()->accept(struct_type); // <- this does almost all the work, including typedef resolution
+#if 0
 	current_struct_scope = struct_type.get_identifier();
+#ifdef TYPE_COMPLETOR_VERBOSE
 	std::cout << "STRUCT ACCESS EXPRESSION: " << s << std::endl;
 	std::cout << "STRUCT ACCESS: SCOPE: " << *current_struct_scope << std::endl;
+#endif
 	if(!current_struct_scope) {
 		std::cout << "struct access expression at " << s.span
 			<< "implicits a struct left of the operator,"
@@ -401,7 +422,12 @@ void type_completor::on(struct_access_expression_t& s, leave)
 			throw "Unable to cast parent of struct identifier to struct_or_union_specifier_t";
 		}
 	}
+#ifdef TYPE_COMPLETOR_VERBOSE
 	std::cout << "ACC ACC:" << *spec << std::endl;
+#endif
+#else
+	safe_ptr<struct_or_union_specifier_t> spec = struct_type.get_struct_specifier();
+#endif
 	struct_declaration_list_t& l = *spec->c.get<struct_or_union_specifier_t::declaration_list>();
 	bool searching = true;
 	for(std::list<struct_declaration_t*>::const_iterator itr = l.c.begin(); searching && itr != l.c.end(); ++itr)
@@ -414,7 +440,9 @@ void type_completor::on(struct_access_expression_t& s, leave)
 				identifier_t& struct_member = get_declarator(*dtor); // FEATURE: rename: id_from_declarator?
 				if(struct_member.raw == s.c.get<2>()->raw) {
 					s.c.get<2>()->_definition = &struct_member;
+#ifdef TYPE_COMPLETOR_VERBOSE
 					std::cout << "connecting id: " << *dtor << std::endl;
+#endif
 					searching = false;
 				}
 			}
@@ -489,8 +517,9 @@ void type_completor::lookup_table_t::flag_symbol(identifier_t *id, int new_depth
 	if(id)
 	{
 		std::string new_name = internal_name_of_new_id(id->raw.c_str(), struct_bound);
+#ifdef TYPE_COMPLETOR_DEBUG
 		std::cout << "flagging " << new_name << " at depth " << new_depth << std::endl;
-
+#endif
 		table[new_name].push_back(value_entry_t(new_depth, id));
 		id->_definition = id;
 
@@ -503,7 +532,6 @@ void type_completor::lookup_table_t::flag_symbol(identifier_t *id, int new_depth
 			if(next != unknown_types.end())
 				++next;
 
-			std::cout << itr->first << " vs " << new_name << std::endl;
 			// invariant: ++itr == next || next == unknown_types.end()
 			if(itr->first == new_name)
 			{

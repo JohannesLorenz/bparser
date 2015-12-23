@@ -1,0 +1,16 @@
+               empty-initializer (l   1 c   1) (l   1 c  18) translation unit
+               empty-initializer (l   1 c   1) (l   1 c  18)   external declaration
+               empty-initializer (l   1 c   1) (l   1 c  18)     declaration
+               empty-initializer (l   1 c   1) (l   1 c   4)       type specifier
+               empty-initializer (l   1 c   1) (l   1 c   4)         "int"
+               empty-initializer (l   1 c   5) (l   1 c  17)       init declarator
+               empty-initializer (l   1 c   5) (l   1 c  12)         direct declarator (array)
+               empty-initializer (l   1 c   5) (l   1 c  10)           direct declarator (identifier)
+               empty-initializer (l   1 c   5) (l   1 c  10)             identifier (definition): array
+               empty-initializer (l   1 c  10) (l   1 c  11)           [
+               empty-initializer (l   1 c  11) (l   1 c  12)           ]
+               empty-initializer (l   1 c  13) (l   1 c  14)         =
+               empty-initializer (l   1 c  15) (l   1 c  17)         initializer
+               empty-initializer (l   1 c  15) (l   1 c  16)           {
+               empty-initializer (l   1 c  16) (l   1 c  17)           }
+               empty-initializer (l   1 c  17) (l   1 c  18)       ;

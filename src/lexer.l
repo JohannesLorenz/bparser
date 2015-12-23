@@ -117,16 +117,24 @@ static int check_type(const char* text);
 						switch(type)
 						{
 							case IDENTIFIER:
+#ifdef LEXER_DEBUG
 							std::cout << " -> IDENTIFIER: " << res << std::endl;
+#endif
 							return app(yylval->name = new identifier_t(res, get_pos()), type);
 							case TYPEDEF_NAME:
+#ifdef LEXER_DEBUG
 							std::cout << " -> TYPEDEF NAME: " << res << std::endl;
+#endif
 							return app(yylval->typedef_name = new typedef_name_t(res, get_pos()), type);
 							case ENUMERATION_CONSTANT:
+#ifdef LEXER_DEBUG
 							std::cout << " -> ENUMERATION_CONSTANT: " << res << std::endl;
+#endif
 							return app(yylval->enumeration_constant = new enumeration_constant_t(res, get_pos()), type);
 							case ATTR_NAME:
+#ifdef LEXER_DEBUG
 							std::cout << " -> ATTR_NAME: " << res << std::endl;
+#endif
 							return app(yylval->attr_name = new attr_name_t(res, get_pos()), type);
 						}
 					}
@@ -325,9 +333,9 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 		type_specifier + regex + IDENTIFIER (grammar) <=> declaration
 		
 	*/
-
+#ifdef LEXER_DEBUG
 	std::cout << "STATE NOW: " << declaration_state << std::endl;
-
+#endif
 	if(recent_tokens[-1] == '.' || recent_tokens[-1] == PTR_OP)
 	{
 		return IDENTIFIER;
@@ -350,7 +358,9 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 		// the last IF found *all* declarations, except all inside of enum {}
 		// find these manually, this is easy
 		states.flag_symbol(text,lt_enumeration);
+#ifdef LEXER_DEBUG
 		std::cout << " -> declaration, enum" << std::endl;
+#endif
 		return IDENTIFIER;
 	}
 	else if(declaration_state == declarator_found)
@@ -365,8 +375,9 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 			states.flag_symbol(text, lt_identifier);
 
 //		declaration_state = expect_type_specifier; // reset for next declaration
+#ifdef LEXER_DEBUG
 		std::cout << " -> declaration, no braces" << std::endl;
-
+#endif
 		declaration_state = expect_initializer_or_comma;
 
 		return IDENTIFIER;
@@ -392,7 +403,9 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 	{
 		// must be a function. all identifiers must be declarators
 		states.flag_symbol(text, lt_identifier);
+#ifdef LEXER_DEBUG
 		std::cout << " -> declaration, function parameter" << std::endl;
+#endif
 		return IDENTIFIER;
 	}*/
 		else switch(lookup_table_t::type_of(text))

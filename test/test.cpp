@@ -217,7 +217,7 @@ void run(int argc, char** argv)
 		cleaner_t cleaner;
 		e->accept(cleaner);
 	#endif
-
+		run_test("int main() { int x = (int)(3); sizeof(x); }", "init_with_cast");
 		run_test("int main() {}", "minimal");
 
 		run_test("typedef struct { int x; } s;\n"

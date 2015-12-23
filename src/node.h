@@ -1114,7 +1114,7 @@ struct declaration_specifiers_t : public node_t, public has_par<>
 	std::list<node_t*> c;
 };
 
-struct function_definition_t : public node_t, public has_par<struct external_declaration_t>
+struct function_definition_t : public node_t, public has_par<struct external_declaration_t>, public declaration_base
 {
 	virtual void accept(class visitor_t& v);
 	ptn<	declaration_specifiers_t,
@@ -1131,6 +1131,8 @@ struct function_definition_t : public node_t, public has_par<struct external_dec
 			c(declaration_specifiers, declarator,
 				declaration_list, compound_statement)
 	{}
+
+	declaration_specifiers_t& decl_spec() { return *c.get<0>(); }
 };
 
 struct external_declaration_t : public node_t, public has_par<struct translation_unit_t>

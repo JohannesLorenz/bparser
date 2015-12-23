@@ -33,6 +33,7 @@
 #include <cstring>
 #include <map>
 
+#include "options.h"
 #include "node.h"
 #include "parser.h"
 using namespace nodes;
@@ -237,7 +238,9 @@ public:
 	
 	static void notify_dec_decl_depth(int new_depth)
 	{
+#ifdef LEXER_DEBUG
 		std::cout << "DEPTH decreased to: " << new_depth << std::endl;
+#endif
 		table_t::iterator itr = table.begin(),
 			next = table.begin();
 		if(bparser_debug)
@@ -286,6 +289,9 @@ public:
 
 	static void flag_symbol(const char* str, lookup_type type, int new_depth = 0)
 	{
+		if(new_depth < 0)
+		 throw "Invalid depth calculation for variable";
+		
 		std::string new_name = internal_name_of_new_id(str, type);
 
 		table_t::iterator itr = table.find(new_name);
@@ -308,7 +314,9 @@ public:
 					(stack.back().first == lt_struct_bound && // TODO: not only stack.back?
 					type == lt_struct_bound))
 				{
+#ifdef LEXER_DEBUG
 					std::cout << "flagging: " << new_name << " as " << type << " (" << get_pos() << ", depth " << new_depth <<  ")" <<  std::endl;
+#endif
 					stack.push_back(value_entry_t(type, new_depth));
 				}
 				else
@@ -323,8 +331,9 @@ public:
 		}
 		else
 		{
+#ifdef LEXER_DEBUG
 			std::cout << "flagging: " << str << " as " << type << " (" << get_pos() << ", depth " << new_depth << ")" <<  std::endl;
-
+#endif
 			table[new_name].push_back(value_entry_t(type, new_depth));
 			//table.insert(entry_t(str, value_t()))
 			//value_entry_t(type, new_depth)));
@@ -434,13 +443,30 @@ public:
 		in_enum(0),
 		struct_depth(0)
 		{}
+	
+	void check_variables_initial() {
+		// if(*this == cmp) {} FEATURE?
+		if(decl_depth) throw "decl_depth";
+		if(in_for_header) throw "in_for_header";
+		if(par_count) throw "par_count";
+		if(brack_count) throw "brack_count";
+		if(recent_declaration) throw "recent_declaration";
+		if(lazy_decr_decl_depth) throw "lazy_decr_decl_depth";
+		if(_maybe_struct_definition) throw "_maybe_struct_definition";
+		if(in_enum) throw "in_enum";
+		if(struct_depth) throw "struct_depth";
+		if(struct_depth_decreased) throw "struct_depth_decreased";
+	}
+
+	~states_t() { check_variables_initial(); }
 
 	//! resets all variables to initial states
 	void reset()
 	{
 		// actually, no variables are reset - they are assumed to already
 		// carry initial values, if not, we exit
-		if(decl_depth) throw "decl_depth";
+		check_variables_initial();
+/*		if(decl_depth) throw "decl_depth";
 		if(in_for_header) throw "in_for_header";
 		if(par_count) throw "par_count";
 		if(brack_count) throw "brack_count";
@@ -449,7 +475,7 @@ public:
 		if(_maybe_struct_definition) throw "_maybe_struct_definition";
 		if(in_enum) throw "in_enum";
 		if(struct_depth) throw "struct_depth";
-		if(struct_depth_decreased) throw "struct_depth_decreased";
+		if(struct_depth_decreased) throw "struct_depth_decreased";*/
 	}
 
 	int get_brack_count() const { return brack_count; }
@@ -512,7 +538,9 @@ public:
 				in_enum = 1; break;
 			case '=':
 				if(in_enum)
-					in_enum = 2; break;
+					in_enum = 2;
+				recent_declaration = false;
+				break;
 			case ',':
 				if(in_enum)
 					in_enum = 1;
@@ -655,7 +683,6 @@ public:
 						case ';':
 					//	case '}':
 					//	case ')':
-							std::cout << "CASE 1" << std::endl;
 							next_state = (enum_state())
 								// end of enum block can be reached right
 								// after declarator was found:
@@ -664,7 +691,6 @@ public:
 								: expect_type_specifier;
 							break;
 						case ')':
-							std::cout << "CASE 1.1" << std::endl;
 						/*	next_state = (declaration_state_pars_after > 0)
 								? expect_braces_pointers_type_qualifiers_identifier
 								: expect_type_specifier;*/
@@ -673,11 +699,9 @@ public:
 						//	if(declaration_state_pars_after > 0)
 						//	 throw "impossible";
 						case '(':
-							std::cout << "CASE 1.2" << std::endl;
 							next_state = expect_type_specifier;
 							break;
 						case ',':
-							std::cout << "CASE 2" << std::endl;
 							next_state = (decl_depth > 0)
 								// in a function, a comma separates identifiers: "void f(int a, int b)"
 								? expect_type_specifier
@@ -686,7 +710,6 @@ public:
 								: expect_braces_pointers_type_qualifiers_identifier;
 							break;
 						default: // might be some complicated intializating expression
-							std::cout << "CASE 3" << std::endl;
 							next_state = expect_initializer_or_comma;
 					}
 			}
@@ -725,8 +748,14 @@ public:
 
 	void flag_symbol(const char* symbol, lookup_type lt, int special = 0)
 	{
+#ifdef LEXER_DEBUG
 		std::cout << "flag: brack_count: " << brack_count << ", decl_depth: " << decl_depth << std::endl;
-		lookup_table_t::flag_symbol(symbol, lt, get_add_number(lt) + brack_count + decl_depth + special);
+#endif
+		// gcc somehow allows enums in structs to be globally visible...
+		int new_depth = (lt == lt_enumeration && struct_depth) ? 0 : 
+			get_add_number(lt) + brack_count + decl_depth + special;
+
+		lookup_table_t::flag_symbol(symbol, lt, new_depth);
 		if(lt != lt_identifier_list)
 		 declaration_state = expect_initializer_or_comma;
 	}

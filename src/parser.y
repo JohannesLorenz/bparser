@@ -772,7 +772,8 @@ direct_abstract_declarator
 	;
 
 initializer
-	: '{' initializer_list '}' { alloc($$); setc($$, $$->c, NULL, $1, $2, NULL, $3); }
+	: '{' '}' { alloc($$); setc($$, $$->c, NULL, $1, NULL, NULL, $2); }
+	| '{' initializer_list '}' { alloc($$); setc($$, $$->c, NULL, $1, $2, NULL, $3); }
 	| '{' initializer_list ',' '}'{ alloc($$); setc($$, $$->c, NULL, $1, $2, $3, $4); }
 	| assignment_expression { alloc($$); $$->c.set($1); }
 	;

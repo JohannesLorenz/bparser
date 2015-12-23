@@ -1,0 +1,42 @@
+                  init_with_cast (l   1 c   1) (l   1 c  44) translation unit
+                  init_with_cast (l   1 c   1) (l   1 c  44)   external declaration
+                  init_with_cast (l   1 c   1) (l   1 c  44)     function definition
+                  init_with_cast (l   1 c   1) (l   1 c   4)       type specifier
+                  init_with_cast (l   1 c   1) (l   1 c   4)         "int"
+                  init_with_cast (l   1 c   5) (l   1 c  11)       direct declarator (function)
+                  init_with_cast (l   1 c   5) (l   1 c   9)         direct declarator (identifier)
+                  init_with_cast (l   1 c   5) (l   1 c   9)           identifier (definition): main
+                  init_with_cast (l   1 c   9) (l   1 c  10)         (
+                  init_with_cast (l   1 c  10) (l   1 c  11)         )
+                  init_with_cast (l   1 c  12) (l   1 c  44)       compound statement
+                  init_with_cast (l   1 c  12) (l   1 c  13)         {
+                  init_with_cast (l   1 c  14) (l   1 c  31)         declaration
+                  init_with_cast (l   1 c  14) (l   1 c  17)           type specifier
+                  init_with_cast (l   1 c  14) (l   1 c  17)             "int"
+                  init_with_cast (l   1 c  18) (l   1 c  30)           init declarator
+                  init_with_cast (l   1 c  18) (l   1 c  19)             direct declarator (identifier)
+                  init_with_cast (l   1 c  18) (l   1 c  19)               identifier (definition): x
+                  init_with_cast (l   1 c  20) (l   1 c  21)             =
+                  init_with_cast (l   1 c  22) (l   1 c  30)             initializer
+                  init_with_cast (l   1 c  22) (l   1 c  30)               cast
+                  init_with_cast (l   1 c  22) (l   1 c  23)                 (
+                  init_with_cast (l   1 c  23) (l   1 c  26)                 type name
+                  init_with_cast (l   1 c  23) (l   1 c  26)                   type specifier
+                  init_with_cast (l   1 c  23) (l   1 c  26)                     "int"
+                  init_with_cast (l   1 c  26) (l   1 c  27)                 )
+                  init_with_cast (l   1 c  27) (l   1 c  30)                 primary expression
+                  init_with_cast (l   1 c  27) (l   1 c  28)                   (
+                  init_with_cast (l   1 c  28) (l   1 c  29)                   primary expression
+                  init_with_cast (l   1 c  28) (l   1 c  29)                     int constant: 3
+                  init_with_cast (l   1 c  29) (l   1 c  30)                   )
+                  init_with_cast (l   1 c  30) (l   1 c  31)           ;
+                  init_with_cast (l   1 c  32) (l   1 c  42)         expression statement
+                  init_with_cast (l   1 c  32) (l   1 c  41)           sizeof ...
+                  init_with_cast (l   1 c  32) (l   1 c  38)             "sizeof"
+                  init_with_cast (l   1 c  38) (l   1 c  41)             primary expression
+                  init_with_cast (l   1 c  38) (l   1 c  39)               (
+                  init_with_cast (l   1 c  39) (l   1 c  40)               primary expression
+                  init_with_cast (l   1 c  39) (l   1 c  40)                 identifier: x (definition: init_with_cast: l1, c18-19)
+                  init_with_cast (l   1 c  40) (l   1 c  41)               )
+                  init_with_cast (l   1 c  41) (l   1 c  42)           ;
+                  init_with_cast (l   1 c  43) (l   1 c  44)         }
