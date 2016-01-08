@@ -66,7 +66,7 @@ class pos_counter
 {
 	static int last_file;
 	static int last_line;
-	static int last_col;
+	static int last_col, last_tabcol;
 
 	static bool is_whitespace_no_newline(int c)
 	{
@@ -105,16 +105,19 @@ public:
 			terminal_t* prev = get_token_vector().back();
 
 			std::size_t newlines = prev->get_newlines(),
-				length = prev->get_length();
+				length = prev->get_length(),
+				tablength = prev->get_tablength();
 
 			if(newlines)
 			{
 				last_line += newlines;
 				last_col = 1 + length;
+				last_tabcol = 1 + tablength;
 			}
 			else
 			{
 				last_col += length;
+				last_tabcol += tablength;
 			}
 		}
 		return span_t();
@@ -123,13 +126,13 @@ public:
 	static geom_t pos() {
 		//std::cout << "pos call, last_linebreak was: " << *last_linebreak << std::endl;
 		return geom_t(last_file, last_line,
-		last_col); }
+		last_col, last_tabcol); }
 
 	static void parse_ppline(const char* p)
 	{
 		++p; // skip #
 		for(; is_whitespace_no_newline(*p); ++p) ;
-		last_col = 1;
+		last_col = last_tabcol = 1;
 		
 		// no line number - ignore such macros
 		if( *p < '0' || *p > '9')
@@ -177,7 +180,7 @@ public:
 	{
 		last_file = 0; // default file
 		// we start at 1, 1 (typical convention)
-		last_line = last_col = 1;
+		last_line = last_col = last_tabcol = 1;
 	}
 };
 
@@ -185,6 +188,7 @@ int pos_counter::last_file = 0; // default file
 // we start at 1, 1 (typical convention)
 int pos_counter::last_line = 1;
 int pos_counter::last_col = 1;
+int pos_counter::last_tabcol = 1;
 
 void reset_pos_counter()
 {

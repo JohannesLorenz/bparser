@@ -587,8 +587,10 @@ class geom_completor : ftor_base
 {
 	static span_t span_limit() {
 		return span_t(	geom_t(0, std::numeric_limits<int>::max(),
+						std::numeric_limits<int>::max(),
 						std::numeric_limits<int>::max()),
 					geom_t(0, std::numeric_limits<int>::min(),
+						std::numeric_limits<int>::min(),
 						std::numeric_limits<int>::min())
 				);
 	}
@@ -655,7 +657,8 @@ class geom_completor : ftor_base
 	void add_geom(T& n)
 	{
 		std::size_t newlines = n.get_newlines(),
-			length = n.get_length(); // FEATURE: unify with lexer.l?
+			length = n.get_length(),
+			tablength = n.get_tablength(); // FEATURE: unify with lexer.l?
 		geom_t& end = n.span.second;
 		geom_t& start = n.span.first;
 		end.file_id = start.file_id;
@@ -663,11 +666,13 @@ class geom_completor : ftor_base
 		{
 			end.line = start.line + newlines;
 			end.col = 1 + length;
+			end.tabcol = 1 + tablength;
 		}
 		else
 		{
 			end.line = start.line;
 			end.col = start.col + length;
+			end.tabcol = start.tabcol + tablength;
 		}
 	}
 
@@ -693,7 +698,7 @@ public:
 
 	void operator()(/*const*/ translation_unit_t& t) {
 		if(t.c.empty())
-		 t.span = span_t(0,0,0,0); // the file id does not matter if all files are empty
+		 t.span = span_t::null_span(); // the file id does not matter if all files are empty
 		else
 		 on(t, t.c);
 	}

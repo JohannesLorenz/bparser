@@ -12,6 +12,16 @@ std::ostream& operator<<(std::ostream& stream,
 		<< "l" << g.line << ", c" << g.col;
 }
 
+std::string to_string(const geom_t& g)
+{
+	char tmp[16];
+	std::string result = get_files().at(g.file_id) + ": l";
+	sprintf(tmp, "%d", g.line);
+	result.append(tmp).append(", c");
+	sprintf(tmp, "%d", g.col);
+	return result += tmp;
+}
+
 std::ostream& operator<<(std::ostream& stream,
 	const span_t& s)
 {

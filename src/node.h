@@ -121,8 +121,10 @@ class terminal_t : public node_t, public has_par<>
 	int _value;
 	virtual std::size_t length() const = 0;
 	virtual std::size_t newlines() const = 0;
+	virtual std::size_t tablength() const = 0;
 public:
 	int value() const { return _value; }
+	std::size_t get_tablength() const { return tablength(); }
 	std::size_t get_length() const { return length(); }
 	std::size_t get_newlines() const { return newlines(); }
 	terminal_t(const geom_t& geom, int _value) : node_t(geom), _value(_value) {}
@@ -131,6 +133,7 @@ public:
 struct token_t : public terminal_t
 {
 	std::size_t length() const;
+	std::size_t tablength() const;
 	std::size_t newlines() const;
 public:
 	token_t(const geom_t& pos, int value) : terminal_t(pos, value) {}
@@ -151,6 +154,7 @@ struct noconst_terminal_t : public terminal_t
 struct noconst_1line_terminal_t : public noconst_terminal_t
 {
 	std::size_t length() const;
+	std::size_t tablength() const { return length(); }
 	std::size_t newlines() const;
 public:
 	noconst_1line_terminal_t(const geom_t& geom, int value,
@@ -190,6 +194,7 @@ struct string_literal_t : public noconst_terminal_t
 {
 	std::size_t _length, _newlines;
 	std::size_t length() const;
+	std::size_t tablength() const { return length(); }
 	std::size_t newlines() const;
 public:
 	virtual void accept(class visitor_t& v);
