@@ -395,8 +395,9 @@ enum declaration_state_t
 	expect_type_specifier,
 	expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier,
 	expect_braces_pointers_type_qualifiers_identifier,
-	declarator_found, //! < this will only be used for a short time
-	expect_initializer_or_comma
+	declarator_found, //!< this will only be used for a short time
+	expect_initializer_or_comma,
+	inside_initializer
 } declaration_state = expect_type_specifier;
 //int declaration_state_braces = 0;
 
@@ -681,6 +682,7 @@ public:
 				case declarator_found:
 					throw "this function should never be called with declarator_found";
 				case expect_initializer_or_comma:
+				case inside_initializer:
 					switch(token_id)
 					{
 						// these mark the end of a declaration
@@ -698,12 +700,15 @@ public:
 						/*	next_state = (declaration_state_pars_after > 0)
 								? expect_braces_pointers_type_qualifiers_identifier
 								: expect_type_specifier;*/
-							next_state = expect_type_specifier;
+							next_state = (declaration_state == expect_initializer_or_comma)
+								? expect_type_specifier : declaration_state;
 							// TODO: put these cases together
 						//	if(declaration_state_pars_after > 0)
 						//	 throw "impossible";
+							break;
 						case '(':
-							next_state = expect_type_specifier;
+							next_state = (declaration_state == expect_initializer_or_comma)
+								? expect_type_specifier : declaration_state;
 							break;
 						case ',':
 							next_state = (decl_depth > 0)
@@ -713,8 +718,16 @@ public:
 								// "similar" type: "int a,b";
 								: expect_braces_pointers_type_qualifiers_identifier;
 							break;
+						case '=':
+							next_state = inside_initializer;
+							break;
+						case '{':
+							next_state = (declaration_state == inside_initializer)
+								? inside_initializer
+								: expect_type_specifier;
+							break;
 						default: // might be some complicated intializating expression
-							next_state = expect_initializer_or_comma;
+							next_state = declaration_state;
 					}
 			}
 

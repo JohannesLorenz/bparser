@@ -1,4 +1,4 @@
-                    initializers (l   1 c   1) (l  11 c   2) translation unit
+                    initializers (l   1 c   1) (l  14 c   2) translation unit
                     initializers (l   1 c   1) (l   1 c  38)   external declaration
                     initializers (l   1 c   1) (l   1 c  38)     declaration
                     initializers (l   1 c   1) (l   1 c  33)       declaration specifiers
@@ -24,8 +24,8 @@
                     initializers (l   1 c  34) (l   1 c  37)       direct declarator (identifier)
                     initializers (l   1 c  34) (l   1 c  37)         identifier (definition): s_t
                     initializers (l   1 c  37) (l   1 c  38)       ;
-                    initializers (l   3 c   1) (l  11 c   2)   external declaration
-                    initializers (l   3 c   1) (l  11 c   2)     function definition
+                    initializers (l   3 c   1) (l  14 c   2)   external declaration
+                    initializers (l   3 c   1) (l  14 c   2)     function definition
                     initializers (l   3 c   1) (l   3 c   4)       type specifier
                     initializers (l   3 c   1) (l   3 c   4)         "int"
                     initializers (l   3 c   5) (l   3 c  11)       direct declarator (function)
@@ -33,7 +33,7 @@
                     initializers (l   3 c   5) (l   3 c   9)           identifier (definition): main
                     initializers (l   3 c   9) (l   3 c  10)         (
                     initializers (l   3 c  10) (l   3 c  11)         )
-                    initializers (l   3 c  12) (l  11 c   2)       compound statement
+                    initializers (l   3 c  12) (l  14 c   2)       compound statement
                     initializers (l   3 c  12) (l   3 c  13)         {
                     initializers (l   4 c   2) (l   4 c   6)         declaration
                     initializers (l   4 c   2) (l   4 c   5)           type specifier
@@ -193,13 +193,65 @@
                     initializers (l   9 c  33) (l   9 c  34)                     )
                     initializers (l   9 c  35) (l   9 c  36)               }
                     initializers (l   9 c  36) (l   9 c  37)           ;
-                    initializers (l  10 c   2) (l  10 c  14)         expression statement
-                    initializers (l  10 c   2) (l  10 c  13)           sizeof ...
-                    initializers (l  10 c   2) (l  10 c   8)             "sizeof"
-                    initializers (l  10 c   8) (l  10 c   9)             (
-                    initializers (l  10 c   9) (l  10 c  12)             type name
-                    initializers (l  10 c   9) (l  10 c  12)               type specifier
-                    initializers (l  10 c   9) (l  10 c  12)                 typedef name: s_t (definition: initializers: l1, c34-37)
-                    initializers (l  10 c  12) (l  10 c  13)             )
-                    initializers (l  10 c  13) (l  10 c  14)           ;
-                    initializers (l  11 c   1) (l  11 c   2)         }
+                    initializers (l  10 c   2) (l  10 c  31)         declaration
+                    initializers (l  10 c   2) (l  10 c   5)           type specifier
+                    initializers (l  10 c   2) (l  10 c   5)             typedef name: s_t (definition: initializers: l1, c34-37)
+                    initializers (l  10 c   6) (l  10 c  30)           init declarator
+                    initializers (l  10 c   6) (l  10 c  18)             direct declarator (function)
+                    initializers (l  10 c   6) (l  10 c  13)               direct declarator (declaration)
+                    initializers (l  10 c   6) (l  10 c   7)                 (
+                    initializers (l  10 c   7) (l  10 c  12)                 declarator
+                    initializers (l  10 c   7) (l  10 c   8)                   pointer
+                    initializers (l  10 c   7) (l  10 c   8)                     *
+                    initializers (l  10 c   8) (l  10 c  12)                   direct declarator (identifier)
+                    initializers (l  10 c   8) (l  10 c  12)                     identifier (definition): fptr
+                    initializers (l  10 c  12) (l  10 c  13)                 )
+                    initializers (l  10 c  13) (l  10 c  14)               (
+                    initializers (l  10 c  14) (l  10 c  17)               parameter declaration
+                    initializers (l  10 c  14) (l  10 c  17)                 type specifier
+                    initializers (l  10 c  14) (l  10 c  17)                   typedef name: s_t (definition: initializers: l1, c34-37)
+                    initializers (l  10 c  17) (l  10 c  18)               )
+                    initializers (l  10 c  19) (l  10 c  20)             =
+                    initializers (l  10 c  21) (l  10 c  30)             initializer
+                    initializers (l  10 c  21) (l  10 c  30)               cast
+                    initializers (l  10 c  21) (l  10 c  22)                 (
+                    initializers (l  10 c  22) (l  10 c  27)                 type name
+                    initializers (l  10 c  22) (l  10 c  26)                   type specifier
+                    initializers (l  10 c  22) (l  10 c  26)                     "void"
+                    initializers (l  10 c  26) (l  10 c  27)                   abstract declarator
+                    initializers (l  10 c  26) (l  10 c  27)                     pointer
+                    initializers (l  10 c  26) (l  10 c  27)                       *
+                    initializers (l  10 c  27) (l  10 c  28)                 )
+                    initializers (l  10 c  29) (l  10 c  30)                 primary expression
+                    initializers (l  10 c  29) (l  10 c  30)                   int constant: 0
+                    initializers (l  10 c  30) (l  10 c  31)           ;
+                    initializers (l  11 c   2) (l  11 c  14)         expression statement
+                    initializers (l  11 c   2) (l  11 c  13)           sizeof ...
+                    initializers (l  11 c   2) (l  11 c   8)             "sizeof"
+                    initializers (l  11 c   8) (l  11 c   9)             (
+                    initializers (l  11 c   9) (l  11 c  12)             type name
+                    initializers (l  11 c   9) (l  11 c  12)               type specifier
+                    initializers (l  11 c   9) (l  11 c  12)                 typedef name: s_t (definition: initializers: l1, c34-37)
+                    initializers (l  11 c  12) (l  11 c  13)             )
+                    initializers (l  11 c  13) (l  11 c  14)           ;
+                    initializers (l  12 c   2) (l  12 c  15)         expression statement
+                    initializers (l  12 c   2) (l  12 c  14)           sizeof ...
+                    initializers (l  12 c   2) (l  12 c   8)             "sizeof"
+                    initializers (l  12 c   8) (l  12 c  14)             primary expression
+                    initializers (l  12 c   8) (l  12 c   9)               (
+                    initializers (l  12 c   9) (l  12 c  13)               primary expression
+                    initializers (l  12 c   9) (l  12 c  13)                 identifier: fptr (definition: initializers: l10, c8-12)
+                    initializers (l  12 c  13) (l  12 c  14)               )
+                    initializers (l  12 c  14) (l  12 c  15)           ;
+                    initializers (l  13 c   2) (l  13 c  16)         expression statement
+                    initializers (l  13 c   2) (l  13 c  15)           sizeof ...
+                    initializers (l  13 c   2) (l  13 c   8)             "sizeof"
+                    initializers (l  13 c   8) (l  13 c  15)             primary expression
+                    initializers (l  13 c   8) (l  13 c   9)               (
+                    initializers (l  13 c   9) (l  13 c  14)               unary_expression (prefix)
+                    initializers (l  13 c   9) (l  13 c  10)                 *
+                    initializers (l  13 c  10) (l  13 c  14)                 primary expression
+                    initializers (l  13 c  10) (l  13 c  14)                   identifier: fptr (definition: initializers: l10, c8-12)
+                    initializers (l  13 c  14) (l  13 c  15)               )
+                    initializers (l  13 c  15) (l  13 c  16)           ;
+                    initializers (l  14 c   1) (l  14 c   2)         }
