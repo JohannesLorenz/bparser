@@ -1,6 +1,7 @@
 #include "geom.h"
 #include <vector>
 #include <string>
+#include <cstdio>
 #include <iostream>
 
 extern std::vector<std::string>& get_files();
