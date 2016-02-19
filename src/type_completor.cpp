@@ -510,7 +510,58 @@ void type_completor::on(typedef_name_t& t, enter) {
 	t._definition = v_lookup_table.declaration_of(t.raw.c_str());
 }
 
+bool _icmp(const char* p, char c) {
+	return tolower(*p) == tolower(c);
+}
 
+void type_completor::on(iconstant_t& i, enter)
+{
+	iconstant_t::suf_type_t suf;
+	const char* p = i.raw.c_str();
+
+	// (((u|U)(l|L|ll|LL)?)|((l|L|ll|LL)(u|U)?))
+	if(_icmp(p, 'u')) // FEATURE: ?:
+	{
+		if(_icmp(p+1,'l'))
+		{
+			if(*(p+1)==*(p+2))
+			suf=iconstant_t::suf_ull;
+			else
+			suf=iconstant_t::suf_ul;
+		}
+		else
+		suf=iconstant_t::suf_u;
+	}
+	else if(_icmp(p, 'l'))
+	{
+		if(*(p+1) == (*p)) // ll or LL
+		{
+			suf = _icmp(p+2, 'u') ? iconstant_t::suf_ull : iconstant_t::suf_ll;
+		}
+		else
+		{
+			suf = _icmp(p+1, 'u') ? iconstant_t::suf_ul : iconstant_t::suf_l;
+		}
+	}
+	else
+	 suf = iconstant_t::no_suffix;
+
+/*	switch(suf)
+	{
+		case iconstant_t::suf_ull:
+			++p;
+		case iconstant_t::suf_ll:
+		case iconstant_t::suf_ul:
+			++p;
+		case iconstant_t::suf_l:
+		case iconstant_t::suf_u:
+			++p;
+		default:
+			;
+	}*/
+
+	i.suf_type = suf;
+}
 
 void type_completor::lookup_table_t::flag_symbol(identifier_t *id, int new_depth, bool struct_bound)
 {

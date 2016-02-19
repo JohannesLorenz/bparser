@@ -270,6 +270,9 @@ public:
 	void on(enumeration_constant_t&, enter);
 	void on(typedef_name_t&, enter);
 
+	// literals
+	void on(iconstant_t&, enter);
+
 	// default case
 	void on(node_base& , direction_t ) {}
 

@@ -326,7 +326,7 @@ typedef void* yyscan_t;
 
 %start translation_unit
 
-%printer { fprintf (yyoutput, "constant %d", $$); } I_CONSTANT
+//%printer { fprintf (yyoutput, "constant %d", $$); } I_CONSTANT
 // %printer { fprintf (yyoutput, "type %d", $$.expression->type); } <>
 %printer { fprintf (yyoutput, "<...?>"); } <>
 

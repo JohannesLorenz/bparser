@@ -11,7 +11,7 @@
 
 //! This class trys to find the funtion identifier of a function call expression
 //! E.g. f in f(x), but also in (f)(x) or ((fptr)f)(x)
-class function_called : public visitor_t
+class _function_called : public visitor_t
 {
 	identifier_t* _identifier;
 
@@ -20,7 +20,7 @@ class function_called : public visitor_t
 		 _identifier = i; }
 public:
 	identifier_t* get_identifier() { return _identifier; }
-	function_called() : _identifier(NULL) {}
+	_function_called() : _identifier(NULL) {}
 	// maybe future ideas, especially ternary
 	//void visit(unary_expression_r &u);
 	//void visit(unary_expression_l &u);
@@ -29,9 +29,18 @@ public:
 	// interesting
 	void visit(primary_expression_t &p);
 	void visit(cast_expression_t& c);
+	void visit(identifier_t& i);
 	// unlikely...
 	//void visit(array_access_expression_t &a);
+
+	// note: function_call_expression is not evaluated: (f + g(3))(x);
 };
+
+inline identifier_t* function_called(function_call_expression_t& node) {
+	_function_called vis;
+	node.c.get<0>()->accept(vis);
+	return vis.get_identifier();
+}
 
 //! not yet finished
 struct type_specifier_list
@@ -68,10 +77,25 @@ inline bool is(node_base& node)
 	return v.functor().value;
 }
 
-//! Returns true if the identifier is a function identifier
+struct raise_to_func_decl : public visitor_t
+{
+	direct_declarator_func* result;
+
+	raise_to_func_decl() : result(NULL) {}
+
+	void visit(direct_declarator_func& i) { result = &i; }
+	void visit(direct_declarator_decl& i) { i.parent->accept(*this); }
+	void visit(direct_declarator_id& i) { i.parent->accept(*this); }
+	void visit(identifier_t& i) { i.parent->accept(*this); }
+};
+
+
+//! Returns true if the identifier is a function identifier (not a function pointer though)
 inline bool is_func_id(identifier_t& id)
 {
-	return is<direct_declarator_func>(*id._definition->parent);
+	raise_to_func_decl vis;
+	vis.visit(*id._definition);
+	return vis.result;
 }
 
 template<class T>

@@ -139,9 +139,9 @@ static int check_type(const char* text);
 						}
 					}
 
-{HP}{H}+{IS}?				{	return app_int(yylval->iconstant, yytext, 'x'); }
-{NZ}{D}*{IS}?				{ 	return app_int(yylval->iconstant, yytext, 'd'); }
-"0"{O}*{IS}?				{ 	return app_int(yylval->iconstant, yytext, 'o'); }
+{HP}{H}+{IS}?				{	return app_int(yylval->iconstant, yytext, 'x', yyleng); }
+{NZ}{D}*{IS}?				{ 	return app_int(yylval->iconstant, yytext, 'd', yyleng); }
+"0"{O}*{IS}?				{ 	return app_int(yylval->iconstant, yytext, 'o', yyleng); }
 {CP}?"'"([^'\\\n]|{ES})+"'"		{ const char* p = yytext; if(icmp(p, 'u') || *p == 'L') ++p;
 						++p; // '
 						// ES = (\\(['"\?\\abfnrtv]|[0-7]{1,3}|x[a-fA-F0-9]+))
@@ -163,14 +163,14 @@ static int check_type(const char* text);
 						} while(ok);
 						++p; // '
 						if(*p) throw "end of token not 0";
-						return app_with_string(yylval->iconstant, I_CONSTANT, yytext, p); }
+						return app_with_string(yylval->iconstant, I_CONSTANT, yytext, yyleng); }
 
-{D}+{E}{FS}?				{ return app_float(yylval->fconstant, yytext); }
-{D}*"."{D}+{E}?{FS}?			{ return app_float(yylval->fconstant, yytext); }
-{D}+"."{E}?{FS}?			{ return app_float(yylval->fconstant, yytext); }
-{HP}{H}+{P}{FS}?			{ return app_float(yylval->fconstant, yytext); }
-{HP}{H}*"."{H}+{P}{FS}?			{ return app_float(yylval->fconstant, yytext); }
-{HP}{H}+"."{P}{FS}?			{ return app_float(yylval->fconstant, yytext); }
+{D}+{E}{FS}?				{ return app_float(yylval->fconstant, yytext, yyleng); }
+{D}*"."{D}+{E}?{FS}?			{ return app_float(yylval->fconstant, yytext, yyleng); }
+{D}+"."{E}?{FS}?			{ return app_float(yylval->fconstant, yytext, yyleng); }
+{HP}{H}+{P}{FS}?			{ return app_float(yylval->fconstant, yytext, yyleng); }
+{HP}{H}*"."{H}+{P}{FS}?			{ return app_float(yylval->fconstant, yytext, yyleng); }
+{HP}{H}+"."{P}{FS}?			{ return app_float(yylval->fconstant, yytext, yyleng); }
 
 ({SP}?\"([^"\\\n]|{ES})*\"{WS}*)+	{ const char* p = yytext;
 						do
@@ -211,7 +211,7 @@ static int check_type(const char* text);
 						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, yytext, length);
 						if(*p) throw "end of token not 0";
 						// FEATURE: common routine with identifier
-						return app_with_string(yylval->string_literal, STRING_LITERAL, yytext, p); }
+						return app_with_string(yylval->string_literal, STRING_LITERAL, yytext, yyleng); }
 
 "..."					{ return app3(yylval->token, ELLIPSIS, yytext); }
 ">>="					{ return app3(yylval->token, RIGHT_ASSIGN, yytext); }

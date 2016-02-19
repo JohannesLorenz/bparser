@@ -724,7 +724,7 @@ public:
 			 recent_declaration = true;
 		}
 
-//		std::cout << "SET STATE NOW: " << declaration_state << " after text: "<< text << std::endl;
+		// std::cout << "SET STATE NOW: " << declaration_state << " after text: "<< text << std::endl;
 		
 		add_recent_token(token_id); // updates recent_tokens
 
@@ -833,13 +833,11 @@ template<class T> int app(T* elem, int lex_id)
 }
 
 template<class T>
-int app_with_string(T*& token, int lex_id, const char* text, const char* end)
+int app_with_string(T*& token, int lex_id, const char* text, std::size_t length)
 {
 	states.set_state(text, lex_id);
-	std::size_t length = end - text;
 	cnt();
 	char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, text, length);
-	if(*end) throw "end of token not 0";
 	return app(token = new T(res, get_pos()), lex_id);
 }
 
@@ -847,7 +845,7 @@ bool icmp(const char* p, char c) {
 	return tolower(*p) == tolower(c);
 }
 
-int app_float(fconstant_t*& token, const char* text)
+int app_float(fconstant_t*& token, const char* text, std::size_t length)
 {
 	const char* p = text;
 	{
@@ -857,65 +855,7 @@ int app_float(fconstant_t*& token, const char* text)
 	}
 	if(*p && (icmp(p,'f') || icmp(p,'l'))) ++p;
 	if(*p) throw "end of token not 0";
-	return app_with_string(token, F_CONSTANT, text, p);
-}
-
-enum int_suffix_type
-{
-	no_suffix,
-	suf_u,
-	suf_ul,
-	suf_ull,
-	suf_l,
-	suf_ll
-};
-
-// FEATURE: not here -> type_completor
-const char* skip_suffix(const char*& p)
-{
-	int_suffix_type suf;
-	// (((u|U)(l|L|ll|LL)?)|((l|L|ll|LL)(u|U)?))
-	if(icmp(p, 'u')) // FEATURE: ?:
-	{
-		if(icmp(p+1,'l'))
-		{
-			if(*(p+1)==*(p+2))
-			 suf=suf_ull;
-			else
-			 suf=suf_ul;
-		}
-		else
-		 suf=suf_u;
-	}
-	else if(icmp(p, 'l'))
-	{
-		if(*(p+1) == (*p)) // ll or LL
-		{
-			suf = icmp(p+2, 'u') ? suf_ull : suf_ll;
-		}
-		else
-		{
-			suf = icmp(p+1, 'u') ? suf_ul : suf_l;
-		}
-	}
-	else
-	 suf = no_suffix;
-
-	switch(suf)
-	{
-		case suf_ull:
-			++p;
-		case suf_ll:
-		case suf_ul:
-			++p;
-		case suf_l:
-		case suf_u:
-			++p;
-		default:
-			;
-	}
-
-	return p;
+	return app_with_string(token, F_CONSTANT, text, length);
 }
 
 void skip_esc_seq(const char*& p)
@@ -949,7 +889,7 @@ void skip_esc_seq(const char*& p)
 	}
 }
 
-int app_int(iconstant_t*& token, const char* text, char scanf_type)
+int app_int(iconstant_t*& token, const char* text, char scanf_type, std::size_t length)
 {
 	const char* p = text;
 	{
@@ -958,9 +898,7 @@ int app_int(iconstant_t*& token, const char* text, char scanf_type)
 		sscanf(text, scanf_str, &tmp, &n);
 		p += n;
 	}
-	skip_suffix(p);
-	if(*p) throw "end of token not 0";
-	return app_with_string(token, I_CONSTANT, text, p);
+	return app_with_string(token, I_CONSTANT, text, length);
 }
 
 bool recent_struct_access = false;

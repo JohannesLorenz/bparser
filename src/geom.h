@@ -16,6 +16,7 @@ struct geom_t
 		file_id(file_id), line(line), col(col), tabcol(tabcol) {}
 	geom_t() : file_id(-1), line(-1), col(-1), tabcol(-1) {}
 
+	const std::string& file() const;
 	friend std::ostream& operator<<(std::ostream& stream, const geom_t&);
 };
 
@@ -42,6 +43,7 @@ struct span_t
 
 	static span_t null_span() { return span_t(0,0,0,0,0,0); }
 
+	std::ostream& print(bool full_paths, std::ostream& stream) const;
 	friend std::ostream& operator<<(std::ostream& stream, const span_t&);
 };
 

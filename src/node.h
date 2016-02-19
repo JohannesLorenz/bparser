@@ -594,7 +594,18 @@ struct constant_t : public terminal_t
 
 struct iconstant_t : public noconst_1line_terminal_t
 {
-	int suf_type; // FEATURE: this is not being set yet
+	enum suf_type_t
+	{
+		no_suffix,
+		suf_u,
+		suf_ul,
+		suf_ull,
+		suf_l,
+		suf_ll
+	};
+	suf_type_t suf_type; // TODO: not int?
+	bool is_signed() const { return suf_type == no_suffix || suf_type == suf_l || suf_type == suf_ll; }	
+
 	iconstant_t(const char* value, geom_t geom) :
 		noconst_1line_terminal_t(geom, 0, value) {}
 
