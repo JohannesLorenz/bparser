@@ -28,7 +28,7 @@
                      expressions (l   3 c  11) (l   3 c  21)         jump statement (type return (with type))
                      expressions (l   3 c  11) (l   3 c  17)           "return"
                      expressions (l   3 c  18) (l   3 c  20)           primary expression
-                     expressions (l   3 c  18) (l   3 c  20)             int constant: 42
+                     expressions (l   3 c  18) (l   3 c  20)             int constant: 42 (type: d)
                      expressions (l   3 c  20) (l   3 c  21)           ;
                      expressions (l   3 c  22) (l   3 c  23)         }
                      expressions (l   4 c   1) (l   4 c  35)   external declaration
@@ -56,7 +56,7 @@
                      expressions (l   4 c  23) (l   4 c  33)         jump statement (type return (with type))
                      expressions (l   4 c  23) (l   4 c  29)           "return"
                      expressions (l   4 c  30) (l   4 c  32)           primary expression
-                     expressions (l   4 c  30) (l   4 c  32)             int constant: 42
+                     expressions (l   4 c  30) (l   4 c  32)             int constant: 42 (type: d)
                      expressions (l   4 c  32) (l   4 c  33)           ;
                      expressions (l   4 c  34) (l   4 c  35)         }
                      expressions (l   5 c   1) (l   5 c  24)   external declaration
@@ -117,10 +117,10 @@
                      expressions (l  11 c   8) (l  11 c   9)                     identifier: y (definition: expressions: l9, c9-10)
                      expressions (l  11 c   9) (l  11 c  10)                   ?
                      expressions (l  11 c  10) (l  11 c  11)                   primary expression
-                     expressions (l  11 c  10) (l  11 c  11)                     int constant: 1
+                     expressions (l  11 c  10) (l  11 c  11)                     int constant: 1 (type: d)
                      expressions (l  11 c  11) (l  11 c  12)                   :
                      expressions (l  11 c  12) (l  11 c  13)                   primary expression
-                     expressions (l  11 c  12) (l  11 c  13)                     int constant: 2
+                     expressions (l  11 c  12) (l  11 c  13)                     int constant: 2 (type: d)
                      expressions (l  11 c  13) (l  11 c  14)               )
                      expressions (l  11 c  14) (l  11 c  15)           ;
                      expressions (l  12 c   2) (l  12 c  14)         expression statement
@@ -260,7 +260,7 @@
                      expressions (l  22 c   3) (l  22 c   4)                   identifier: z (definition: expressions: l9, c12-13)
                      expressions (l  22 c   4) (l  22 c   6)                 <<
                      expressions (l  22 c   6) (l  22 c   7)                 primary expression
-                     expressions (l  22 c   6) (l  22 c   7)                   int constant: 1
+                     expressions (l  22 c   6) (l  22 c   7)                   int constant: 1 (type: d)
                      expressions (l  22 c   7) (l  22 c   8)               )
                      expressions (l  22 c   9) (l  22 c  11)             >=
                      expressions (l  22 c  12) (l  22 c  18)             primary expression
@@ -270,7 +270,7 @@
                      expressions (l  22 c  13) (l  22 c  14)                   identifier: y (definition: expressions: l9, c9-10)
                      expressions (l  22 c  14) (l  22 c  16)                 >>
                      expressions (l  22 c  16) (l  22 c  17)                 primary expression
-                     expressions (l  22 c  16) (l  22 c  17)                   int constant: 2
+                     expressions (l  22 c  16) (l  22 c  17)                   int constant: 2 (type: d)
                      expressions (l  22 c  17) (l  22 c  18)               )
                      expressions (l  22 c  18) (l  22 c  19)           ;
                      expressions (l  23 c   2) (l  23 c  41)         expression statement
@@ -294,7 +294,7 @@
                      expressions (l  23 c  14) (l  23 c  16)                       unary_expression (prefix)
                      expressions (l  23 c  14) (l  23 c  15)                         -
                      expressions (l  23 c  15) (l  23 c  16)                         primary expression
-                     expressions (l  23 c  15) (l  23 c  16)                           int constant: 1
+                     expressions (l  23 c  15) (l  23 c  16)                           int constant: 1 (type: d)
                      expressions (l  23 c  16) (l  23 c  17)                       )
                      expressions (l  23 c  18) (l  23 c  19)                   -
                      expressions (l  23 c  20) (l  23 c  39)                   binary expression 
@@ -305,7 +305,7 @@
                      expressions (l  23 c  21) (l  23 c  23)                           unary_expression (prefix)
                      expressions (l  23 c  21) (l  23 c  22)                             +
                      expressions (l  23 c  22) (l  23 c  23)                             primary expression
-                     expressions (l  23 c  22) (l  23 c  23)                               int constant: 2
+                     expressions (l  23 c  22) (l  23 c  23)                               int constant: 2 (type: d)
                      expressions (l  23 c  23) (l  23 c  24)                           )
                      expressions (l  23 c  25) (l  23 c  26)                         *
                      expressions (l  23 c  27) (l  23 c  31)                         primary expression
@@ -313,14 +313,14 @@
                      expressions (l  23 c  28) (l  23 c  30)                           unary_expression (prefix)
                      expressions (l  23 c  28) (l  23 c  29)                             ~
                      expressions (l  23 c  29) (l  23 c  30)                             primary expression
-                     expressions (l  23 c  29) (l  23 c  30)                               int constant: 3
+                     expressions (l  23 c  29) (l  23 c  30)                               int constant: 3 (type: d)
                      expressions (l  23 c  30) (l  23 c  31)                           )
                      expressions (l  23 c  32) (l  23 c  33)                       /
                      expressions (l  23 c  34) (l  23 c  35)                       primary expression
-                     expressions (l  23 c  34) (l  23 c  35)                         int constant: 4
+                     expressions (l  23 c  34) (l  23 c  35)                         int constant: 4 (type: d)
                      expressions (l  23 c  36) (l  23 c  37)                     %
                      expressions (l  23 c  38) (l  23 c  39)                     primary expression
-                     expressions (l  23 c  38) (l  23 c  39)                       int constant: 5
+                     expressions (l  23 c  38) (l  23 c  39)                       int constant: 5 (type: d)
                      expressions (l  23 c  39) (l  23 c  40)                 )
                      expressions (l  23 c  40) (l  23 c  41)           ;
                      expressions (l  24 c   2) (l  24 c  12)         expression statement
@@ -339,10 +339,10 @@
                      expressions (l  25 c   8) (l  25 c   9)               (
                      expressions (l  25 c   9) (l  25 c  12)               binary expression 
                      expressions (l  25 c   9) (l  25 c  10)                 primary expression
-                     expressions (l  25 c   9) (l  25 c  10)                   int constant: 1
+                     expressions (l  25 c   9) (l  25 c  10)                   int constant: 1 (type: d)
                      expressions (l  25 c  10) (l  25 c  11)                 +
                      expressions (l  25 c  11) (l  25 c  12)                 primary expression
-                     expressions (l  25 c  11) (l  25 c  12)                   int constant: 2
+                     expressions (l  25 c  11) (l  25 c  12)                   int constant: 2 (type: d)
                      expressions (l  25 c  12) (l  25 c  13)               )
                      expressions (l  25 c  13) (l  25 c  14)           ;
                      expressions (l  26 c   2) (l  26 c  14)         expression statement
@@ -381,7 +381,7 @@
                      expressions (l  30 c   3) (l  30 c   4)                 identifier: p (definition: expressions: l28, c7-8)
                      expressions (l  30 c   5) (l  30 c   6)             =
                      expressions (l  30 c   7) (l  30 c   8)             primary expression
-                     expressions (l  30 c   7) (l  30 c   8)               int constant: 3
+                     expressions (l  30 c   7) (l  30 c   8)               int constant: 3 (type: d)
                      expressions (l  30 c   8) (l  30 c   9)           ;
                      expressions (l  32 c   2) (l  32 c  11)         declaration
                      expressions (l  32 c   2) (l  32 c   5)           type specifier
@@ -391,7 +391,7 @@
                      expressions (l  32 c   6) (l  32 c   7)               identifier (definition): a
                      expressions (l  32 c   7) (l  32 c   8)             [
                      expressions (l  32 c   8) (l  32 c   9)             primary expression
-                     expressions (l  32 c   8) (l  32 c   9)               int constant: 3
+                     expressions (l  32 c   8) (l  32 c   9)               int constant: 3 (type: d)
                      expressions (l  32 c   9) (l  32 c  10)             ]
                      expressions (l  32 c  10) (l  32 c  11)           ;
                      expressions (l  33 c   2) (l  33 c  25)         expression statement
@@ -402,7 +402,7 @@
                      expressions (l  33 c   2) (l  33 c   3)                   identifier: a (definition: expressions: l32, c6-7)
                      expressions (l  33 c   3) (l  33 c   4)                 [
                      expressions (l  33 c   4) (l  33 c   5)                 primary expression
-                     expressions (l  33 c   4) (l  33 c   5)                   int constant: 0
+                     expressions (l  33 c   4) (l  33 c   5)                   int constant: 0 (type: d)
                      expressions (l  33 c   5) (l  33 c   6)                 ]
                      expressions (l  33 c   7) (l  33 c   8)               +
                      expressions (l  33 c   9) (l  33 c  12)               function call
@@ -416,10 +416,10 @@
                      expressions (l  33 c  15) (l  33 c  16)                 identifier: g (definition: expressions: l4, c5-6)
                      expressions (l  33 c  16) (l  33 c  17)               (
                      expressions (l  33 c  17) (l  33 c  19)               primary expression
-                     expressions (l  33 c  17) (l  33 c  19)                 int constant: 42
+                     expressions (l  33 c  17) (l  33 c  19)                 int constant: 42 (type: d)
                      expressions (l  33 c  19) (l  33 c  20)               ,
                      expressions (l  33 c  21) (l  33 c  23)               primary expression
-                     expressions (l  33 c  21) (l  33 c  23)                 int constant: 42
+                     expressions (l  33 c  21) (l  33 c  23)                 int constant: 42 (type: d)
                      expressions (l  33 c  23) (l  33 c  24)               )
                      expressions (l  33 c  24) (l  33 c  25)           ;
                      expressions (l  35 c   2) (l  35 c  15)         declaration
@@ -469,7 +469,7 @@
                      expressions (l  37 c  21) (l  37 c  22)               =
                      expressions (l  37 c  23) (l  37 c  24)               initializer
                      expressions (l  37 c  23) (l  37 c  24)                 primary expression
-                     expressions (l  37 c  23) (l  37 c  24)                   int constant: 0
+                     expressions (l  37 c  23) (l  37 c  24)                   int constant: 0 (type: d)
                      expressions (l  37 c  25) (l  37 c  26)               }
                      expressions (l  37 c  26) (l  37 c  27)             )
                      expressions (l  37 c  27) (l  37 c  28)           ;

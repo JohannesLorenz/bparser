@@ -23,26 +23,26 @@
                       statements (l  11 c   3) (l  11 c   7)           expression statement
                       statements (l  11 c   3) (l  11 c   6)             binary expression 
                       statements (l  11 c   3) (l  11 c   4)               primary expression
-                      statements (l  11 c   3) (l  11 c   4)                 int constant: 2
+                      statements (l  11 c   3) (l  11 c   4)                 int constant: 2 (type: d)
                       statements (l  11 c   4) (l  11 c   5)               +
                       statements (l  11 c   5) (l  11 c   6)               primary expression
-                      statements (l  11 c   5) (l  11 c   6)                 int constant: 2
+                      statements (l  11 c   5) (l  11 c   6)                 int constant: 2 (type: d)
                       statements (l  11 c   6) (l  11 c   7)             ;
                       statements (l  12 c   2) (l  12 c   3)           }
                       statements (l  14 c   2) (l  17 c   5)         selection statement
                       statements (l  14 c   2) (l  14 c   4)           "if"
                       statements (l  14 c   4) (l  14 c   5)           (
                       statements (l  14 c   5) (l  14 c   6)           primary expression
-                      statements (l  14 c   5) (l  14 c   6)             int constant: 1
+                      statements (l  14 c   5) (l  14 c   6)             int constant: 1 (type: d)
                       statements (l  14 c   6) (l  14 c   7)           )
                       statements (l  15 c   3) (l  15 c   5)           expression statement
                       statements (l  15 c   3) (l  15 c   4)             primary expression
-                      statements (l  15 c   3) (l  15 c   4)               int constant: 1
+                      statements (l  15 c   3) (l  15 c   4)               int constant: 1 (type: d)
                       statements (l  15 c   4) (l  15 c   5)             ;
                       statements (l  16 c   2) (l  16 c   6)           "else"
                       statements (l  17 c   3) (l  17 c   5)           expression statement
                       statements (l  17 c   3) (l  17 c   4)             primary expression
-                      statements (l  17 c   3) (l  17 c   4)               int constant: 1
+                      statements (l  17 c   3) (l  17 c   4)               int constant: 1 (type: d)
                       statements (l  17 c   4) (l  17 c   5)             ;
                       statements (l  19 c   2) (l  19 c   8)         labeled statement (type jump label)
                       statements (l  19 c   2) (l  19 c   5)           identifier (definition): lbl
@@ -53,14 +53,14 @@
                       statements (l  21 c   2) (l  21 c   8)           "switch"
                       statements (l  21 c   9) (l  21 c  10)           (
                       statements (l  21 c  10) (l  21 c  11)           primary expression
-                      statements (l  21 c  10) (l  21 c  11)             int constant: 1
+                      statements (l  21 c  10) (l  21 c  11)             int constant: 1 (type: d)
                       statements (l  21 c  11) (l  21 c  12)           )
                       statements (l  21 c  13) (l  26 c   3)           compound statement
                       statements (l  21 c  13) (l  21 c  14)             {
                       statements (l  22 c   3) (l  22 c  18)             labeled statement (type case label)
                       statements (l  22 c   3) (l  22 c   7)               "case"
                       statements (l  22 c   8) (l  22 c   9)               primary expression
-                      statements (l  22 c   8) (l  22 c   9)                 int constant: 1
+                      statements (l  22 c   8) (l  22 c   9)                 int constant: 1 (type: d)
                       statements (l  22 c   9) (l  22 c  10)               :
                       statements (l  22 c  11) (l  22 c  18)               jump statement (type return)
                       statements (l  22 c  11) (l  22 c  17)                 "return"
@@ -68,7 +68,7 @@
                       statements (l  23 c   3) (l  23 c  17)             labeled statement (type case label)
                       statements (l  23 c   3) (l  23 c   7)               "case"
                       statements (l  23 c   8) (l  23 c   9)               primary expression
-                      statements (l  23 c   8) (l  23 c   9)                 int constant: 2
+                      statements (l  23 c   8) (l  23 c   9)                 int constant: 2 (type: d)
                       statements (l  23 c   9) (l  23 c  10)               :
                       statements (l  23 c  11) (l  23 c  17)               jump statement (type break)
                       statements (l  23 c  11) (l  23 c  16)                 "break"
@@ -76,12 +76,12 @@
                       statements (l  24 c   3) (l  24 c  20)             labeled statement (type case label)
                       statements (l  24 c   3) (l  24 c   7)               "case"
                       statements (l  24 c   8) (l  24 c   9)               primary expression
-                      statements (l  24 c   8) (l  24 c   9)                 int constant: 3
+                      statements (l  24 c   8) (l  24 c   9)                 int constant: 3 (type: d)
                       statements (l  24 c   9) (l  24 c  10)               :
                       statements (l  24 c  11) (l  24 c  20)               jump statement (type return (with type))
                       statements (l  24 c  11) (l  24 c  17)                 "return"
                       statements (l  24 c  18) (l  24 c  19)                 primary expression
-                      statements (l  24 c  18) (l  24 c  19)                   int constant: 0
+                      statements (l  24 c  18) (l  24 c  19)                   int constant: 0 (type: d)
                       statements (l  24 c  19) (l  24 c  20)                 ;
                       statements (l  25 c   3) (l  25 c  21)             labeled statement (type default label)
                       statements (l  25 c   3) (l  25 c  10)               "default"
@@ -95,7 +95,7 @@
                       statements (l  28 c   2) (l  28 c   7)           "while"
                       statements (l  28 c   7) (l  28 c   8)           (
                       statements (l  28 c   8) (l  28 c   9)           primary expression
-                      statements (l  28 c   8) (l  28 c   9)             int constant: 1
+                      statements (l  28 c   8) (l  28 c   9)             int constant: 1 (type: d)
                       statements (l  28 c   9) (l  28 c  10)           )
                       statements (l  28 c  11) (l  28 c  24)           compound statement
                       statements (l  28 c  11) (l  28 c  12)             {
@@ -108,11 +108,11 @@
                       statements (l  29 c   8) (l  29 c  13)           "while"
                       statements (l  29 c  13) (l  29 c  14)           (
                       statements (l  29 c  14) (l  29 c  15)           primary expression
-                      statements (l  29 c  14) (l  29 c  15)             int constant: 1
+                      statements (l  29 c  14) (l  29 c  15)             int constant: 1 (type: d)
                       statements (l  29 c  15) (l  29 c  16)           )
                       statements (l  29 c   5) (l  29 c   7)           expression statement
                       statements (l  29 c   5) (l  29 c   6)             primary expression
-                      statements (l  29 c   5) (l  29 c   6)               int constant: 1
+                      statements (l  29 c   5) (l  29 c   6)               int constant: 1 (type: d)
                       statements (l  29 c   6) (l  29 c   7)             ;
                       statements (l  31 c   2) (l  31 c   8)         declaration
                       statements (l  31 c   2) (l  31 c   5)           type specifier

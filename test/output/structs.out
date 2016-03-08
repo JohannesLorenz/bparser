@@ -41,14 +41,14 @@
                          structs (l   7 c   9) (l   7 c  12)               struct declarator
                          structs (l   7 c   9) (l   7 c  10)                 :
                          structs (l   7 c  10) (l   7 c  12)                 primary expression
-                         structs (l   7 c  10) (l   7 c  12)                   int constant: 15
+                         structs (l   7 c  10) (l   7 c  12)                   int constant: 15 (type: d)
                          structs (l   7 c  12) (l   7 c  13)               ,
                          structs (l   7 c  14) (l   7 c  20)               struct declarator
                          structs (l   7 c  14) (l   7 c  18)                 direct declarator (identifier)
                          structs (l   7 c  14) (l   7 c  18)                   identifier (definition): rest
                          structs (l   7 c  18) (l   7 c  19)                 :
                          structs (l   7 c  19) (l   7 c  20)                 primary expression
-                         structs (l   7 c  19) (l   7 c  20)                   int constant: 1
+                         structs (l   7 c  19) (l   7 c  20)                   int constant: 1 (type: d)
                          structs (l   7 c  20) (l   7 c  21)               ;
                          structs (l   8 c   1) (l   8 c   2)           }
                          structs (l   8 c   2) (l   8 c   3)       ;

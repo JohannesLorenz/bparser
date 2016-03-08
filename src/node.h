@@ -594,6 +594,8 @@ struct constant_t : public terminal_t
 
 struct iconstant_t : public noconst_1line_terminal_t
 {
+	long value;
+	//! canonical type of suffix, or prefix for char literals
 	enum suf_type_t
 	{
 		no_suffix,
@@ -602,9 +604,44 @@ struct iconstant_t : public noconst_1line_terminal_t
 		suf_ull,
 		suf_l,
 		suf_ll
-	};
-	suf_type_t suf_type; // TODO: not int?
-	bool is_signed() const { return suf_type == no_suffix || suf_type == suf_l || suf_type == suf_ll; }	
+	} suf_type;
+	
+	//! literal number system if an integer, otherwise 'character'
+	enum number_system_t
+	{
+		octal,
+		decimal,
+		hexadecimal,
+		character
+	} number_system;
+
+	//! returns the scanf 'type modifier character', as in scanf("%d", &value); 
+	char scanf_modifier() const
+	{
+		switch(number_system)
+		{
+			case octal: return 'o';
+			case decimal: return 'd';
+			case hexadecimal: return 'x';
+			default: return 'c';
+		}
+	}
+
+	//! returns an equivalent, canonical suffix string, or prefix for char literals 
+	const char* suffix() const
+	{
+		switch(suf_type)
+		{
+			case suf_u: return "u";
+			case suf_ul: return "ul";
+			case suf_ull: return "ull";
+			case suf_l: return "l";
+			case suf_ll: return "ll";
+			default: return "";
+		}
+	}
+	
+	bool is_signed() const { return suf_type == no_suffix || suf_type == suf_l || suf_type == suf_ll; }
 
 	iconstant_t(const char* value, geom_t geom) :
 		noconst_1line_terminal_t(geom, 0, value) {}
@@ -622,7 +659,7 @@ struct fconstant_t : public noconst_1line_terminal_t
 
 struct primary_expression_t : public expression_t
 {
-	ptn<	noconst_terminal_t,
+	ptn<	noconst_terminal_t, // TODO: very bad name!!?
 		ptn<	struct identifier_t, // variable or function
 			ptn<	token_t,
 				ptn<	expression_t,

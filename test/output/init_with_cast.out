@@ -27,7 +27,7 @@
                   init_with_cast (l   1 c  27) (l   1 c  30)                 primary expression
                   init_with_cast (l   1 c  27) (l   1 c  28)                   (
                   init_with_cast (l   1 c  28) (l   1 c  29)                   primary expression
-                  init_with_cast (l   1 c  28) (l   1 c  29)                     int constant: 3
+                  init_with_cast (l   1 c  28) (l   1 c  29)                     int constant: 3 (type: d)
                   init_with_cast (l   1 c  29) (l   1 c  30)                   )
                   init_with_cast (l   1 c  30) (l   1 c  31)           ;
                   init_with_cast (l   1 c  32) (l   1 c  42)         expression statement

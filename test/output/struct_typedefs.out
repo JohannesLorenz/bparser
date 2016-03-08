@@ -58,7 +58,7 @@
                  struct_typedefs (l   5 c   8) (l   5 c   9)               identifier: x (definition: struct_typedefs: l1, c35-36)
                  struct_typedefs (l   5 c  10) (l   5 c  11)             =
                  struct_typedefs (l   5 c  12) (l   5 c  14)             primary expression
-                 struct_typedefs (l   5 c  12) (l   5 c  14)               int constant: 42
+                 struct_typedefs (l   5 c  12) (l   5 c  14)               int constant: 42 (type: d)
                  struct_typedefs (l   5 c  14) (l   5 c  15)           ;
                  struct_typedefs (l   6 c   1) (l   6 c   2)         }
                  struct_typedefs (l   8 c   1) (l   8 c  14)   external declaration

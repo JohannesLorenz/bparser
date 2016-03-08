@@ -97,7 +97,7 @@
                          clash_2 (l  14 c  10) (l  14 c  11)                         (
                          clash_2 (l  14 c  11) (l  14 c  22)                         binary expression 
                          clash_2 (l  14 c  11) (l  14 c  12)                           primary expression
-                         clash_2 (l  14 c  11) (l  14 c  12)                             int constant: 3
+                         clash_2 (l  14 c  11) (l  14 c  12)                             int constant: 3 (type: d)
                          clash_2 (l  14 c  12) (l  14 c  13)                           ,
                          clash_2 (l  14 c  13) (l  14 c  22)                           sizeof ...
                          clash_2 (l  14 c  13) (l  14 c  19)                             "sizeof"

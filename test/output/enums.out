@@ -11,10 +11,10 @@
                            enums (l   3 c   8) (l   3 c   9)             =
                            enums (l   3 c  10) (l   3 c  15)             binary expression 
                            enums (l   3 c  10) (l   3 c  11)               primary expression
-                           enums (l   3 c  10) (l   3 c  11)                 int constant: 0
+                           enums (l   3 c  10) (l   3 c  11)                 int constant: 0 (type: d)
                            enums (l   3 c  12) (l   3 c  13)               +
                            enums (l   3 c  14) (l   3 c  15)               primary expression
-                           enums (l   3 c  14) (l   3 c  15)                 int constant: 1
+                           enums (l   3 c  14) (l   3 c  15)                 int constant: 1 (type: d)
                            enums (l   3 c  15) (l   3 c  16)           ,
                            enums (l   4 c   2) (l   4 c   8)           identifier (definition): second
                            enums (l   4 c   8) (l   4 c   9)           ,

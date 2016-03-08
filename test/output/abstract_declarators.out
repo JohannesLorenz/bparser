@@ -53,10 +53,10 @@
             abstract_declarators (l   3 c  11) (l   3 c  12)             [
             abstract_declarators (l   3 c  12) (l   3 c  15)             binary expression 
             abstract_declarators (l   3 c  12) (l   3 c  13)               primary expression
-            abstract_declarators (l   3 c  12) (l   3 c  13)                 int constant: 1
+            abstract_declarators (l   3 c  12) (l   3 c  13)                 int constant: 1 (type: d)
             abstract_declarators (l   3 c  13) (l   3 c  14)               +
             abstract_declarators (l   3 c  14) (l   3 c  15)               primary expression
-            abstract_declarators (l   3 c  14) (l   3 c  15)                 int constant: 2
+            abstract_declarators (l   3 c  14) (l   3 c  15)                 int constant: 2 (type: d)
             abstract_declarators (l   3 c  15) (l   3 c  16)             ]
             abstract_declarators (l   3 c  16) (l   3 c  17)         )
             abstract_declarators (l   3 c  17) (l   3 c  18)       ;
@@ -112,18 +112,18 @@
             abstract_declarators (l   6 c  12) (l   6 c  13)               [
             abstract_declarators (l   6 c  13) (l   6 c  16)               binary expression 
             abstract_declarators (l   6 c  13) (l   6 c  14)                 primary expression
-            abstract_declarators (l   6 c  13) (l   6 c  14)                   int constant: 1
+            abstract_declarators (l   6 c  13) (l   6 c  14)                   int constant: 1 (type: d)
             abstract_declarators (l   6 c  14) (l   6 c  15)                 +
             abstract_declarators (l   6 c  15) (l   6 c  16)                 primary expression
-            abstract_declarators (l   6 c  15) (l   6 c  16)                   int constant: 2
+            abstract_declarators (l   6 c  15) (l   6 c  16)                   int constant: 2 (type: d)
             abstract_declarators (l   6 c  16) (l   6 c  17)               ]
             abstract_declarators (l   6 c  17) (l   6 c  18)             [
             abstract_declarators (l   6 c  18) (l   6 c  21)             binary expression 
             abstract_declarators (l   6 c  18) (l   6 c  19)               primary expression
-            abstract_declarators (l   6 c  18) (l   6 c  19)                 int constant: 3
+            abstract_declarators (l   6 c  18) (l   6 c  19)                 int constant: 3 (type: d)
             abstract_declarators (l   6 c  19) (l   6 c  20)               +
             abstract_declarators (l   6 c  20) (l   6 c  21)               primary expression
-            abstract_declarators (l   6 c  20) (l   6 c  21)                 int constant: 4
+            abstract_declarators (l   6 c  20) (l   6 c  21)                 int constant: 4 (type: d)
             abstract_declarators (l   6 c  21) (l   6 c  22)             ]
             abstract_declarators (l   6 c  22) (l   6 c  23)         )
             abstract_declarators (l   6 c  23) (l   6 c  24)       ;

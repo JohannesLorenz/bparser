@@ -9,6 +9,46 @@
 #include <string>
 #include "visitor.h"
 
+//! @note currently only for storage class specifiers!
+template<class Ftor>
+class _for_each_specifier : public visitor_t
+{
+	Ftor* _ftor;
+
+public:
+	Ftor* ftor() { return _ftor; }
+	const Ftor* ftor() const { return _ftor; }
+	_for_each_specifier(Ftor* _ftor) : _ftor(_ftor) {}
+
+	// should be called with one of those four
+	// (with others, it's - of course - still correct)
+	void visit(struct_declaration_t& d) { visit(*d.c.get<0>()); }
+	void visit(parameter_declaration_t& d) { visit(*d.c.get<0>()); }
+	void visit(function_definition_t& d) { visit(*d.c.get<0>()); }
+	void visit(declaration_t& d) { visit(*d.c.get<0>()); }
+
+	void visit(declaration_specifiers_t& d) { vaccept(d.c); }
+	void visit(specifier_qualifier_list_t& s) { vaccept(s.c); }
+
+	void visit(type_specifier_t& t) {
+		// if it's a keyword, then the child is token_t
+		t.c.value->accept(*this); }
+	void visit(type_qualifier_t& t) {
+		// guaranteed that child is token_t
+		t.c.value->accept(*this); }
+	// storage_class_sp and function_specifier are of type token_t...
+	// alignment_specifier_t 
+	void visit(token_t& t) { (*_ftor)(t.value()); }
+};
+
+//! must be called with non-abstrahizing pointer
+template<class Node, class Ftor>
+void for_each_specifier(Node& node, Ftor* ftor)
+{
+	_for_each_specifier<Ftor> _f(ftor);
+	_f.visit(node);
+}
+
 //! This class trys to find the funtion identifier of a function call expression
 //! E.g. f in f(x), but also in (f)(x) or ((fptr)f)(x)
 class _function_called : public visitor_t

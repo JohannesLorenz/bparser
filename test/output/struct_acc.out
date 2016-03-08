@@ -29,7 +29,7 @@
                       struct_acc (l   6 c  15) (l   6 c  20)           identifier (definition): a_t_2
                       struct_acc (l   6 c  20) (l   6 c  21)         [
                       struct_acc (l   6 c  21) (l   6 c  22)         primary expression
-                      struct_acc (l   6 c  21) (l   6 c  22)           int constant: 1
+                      struct_acc (l   6 c  21) (l   6 c  22)           int constant: 1 (type: d)
                       struct_acc (l   6 c  22) (l   6 c  23)         ]
                       struct_acc (l   6 c  23) (l   6 c  24)       ;
                       struct_acc (l   7 c   1) (l   7 c   9)   external declaration
@@ -66,7 +66,7 @@
                       struct_acc (l  12 c   4) (l  12 c   5)                   (
                       struct_acc (l  12 c   5) (l  12 c  16)                   binary expression 
                       struct_acc (l  12 c   5) (l  12 c   6)                     primary expression
-                      struct_acc (l  12 c   5) (l  12 c   6)                       int constant: 1
+                      struct_acc (l  12 c   5) (l  12 c   6)                       int constant: 1 (type: d)
                       struct_acc (l  12 c   7) (l  12 c   8)                     +
                       struct_acc (l  12 c   9) (l  12 c  16)                     primary expression
                       struct_acc (l  12 c   9) (l  12 c  10)                       (
@@ -77,7 +77,7 @@
                       struct_acc (l  12 c  11) (l  12 c  12)                             identifier: a (definition: struct_acc: l7, c7-8)
                       struct_acc (l  12 c  12) (l  12 c  13)                           [
                       struct_acc (l  12 c  13) (l  12 c  14)                           primary expression
-                      struct_acc (l  12 c  13) (l  12 c  14)                             int constant: 0
+                      struct_acc (l  12 c  13) (l  12 c  14)                             int constant: 0 (type: d)
                       struct_acc (l  12 c  14) (l  12 c  15)                           ]
                       struct_acc (l  12 c  15) (l  12 c  16)                       )
                       struct_acc (l  12 c  16) (l  12 c  17)                   )

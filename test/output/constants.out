@@ -70,29 +70,29 @@
                        constants (l  12 c   8) (l  12 c  11)                             primary expression
                        constants (l  12 c   8) (l  12 c   9)                               (
                        constants (l  12 c   9) (l  12 c  10)                               primary expression
-                       constants (l  12 c   9) (l  12 c  10)                                 int constant: 0
+                       constants (l  12 c   9) (l  12 c  10)                                 int constant: 0 (type: d)
                        constants (l  12 c  10) (l  12 c  11)                               )
                        constants (l  12 c  12) (l  12 c  13)                             +
                        constants (l  12 c  14) (l  12 c  25)                             primary expression
-                       constants (l  12 c  14) (l  12 c  25)                               int constant: 0xDEADBEEFu
+                       constants (l  12 c  14) (l  12 c  25)                               int constant: -559038737 (type: x, suffix: u)
                        constants (l  12 c  26) (l  12 c  27)                           +
                        constants (l  12 c  28) (l  12 c  33)                           primary expression
-                       constants (l  12 c  28) (l  12 c  33)                             int constant: 0777l
+                       constants (l  12 c  28) (l  12 c  33)                             int constant: 511 (type: o, suffix: l)
                        constants (l  12 c  34) (l  12 c  35)                         +
                        constants (l  12 c  36) (l  12 c  41)                         primary expression
-                       constants (l  12 c  36) (l  12 c  41)                           int constant: 123ul
+                       constants (l  12 c  36) (l  12 c  41)                           int constant: 123 (type: d, suffix: ul)
                        constants (l  12 c  42) (l  12 c  43)                       +
                        constants (l  12 c  44) (l  12 c  49)                       primary expression
-                       constants (l  12 c  44) (l  12 c  49)                         int constant: 456lu
+                       constants (l  12 c  44) (l  12 c  49)                         int constant: 456 (type: d, suffix: ul)
                        constants (l  12 c  50) (l  12 c  51)                     +
                        constants (l  12 c  52) (l  12 c  57)                     primary expression
-                       constants (l  12 c  52) (l  12 c  57)                       int constant: 78llu
+                       constants (l  12 c  52) (l  12 c  57)                       int constant: 78 (type: d, suffix: ull)
                        constants (l  12 c  58) (l  12 c  59)                   +
                        constants (l  12 c  60) (l  12 c  66)                   primary expression
-                       constants (l  12 c  60) (l  12 c  66)                     int constant: 910ull
+                       constants (l  12 c  60) (l  12 c  66)                     int constant: 910 (type: d, suffix: ull)
                        constants (l  12 c  67) (l  12 c  68)                 +
                        constants (l  12 c  69) (l  12 c  73)                 primary expression
-                       constants (l  12 c  69) (l  12 c  73)                   int constant: 11ll
+                       constants (l  12 c  69) (l  12 c  73)                   int constant: 11 (type: d, suffix: ll)
                        constants (l  12 c  73) (l  12 c  74)           ;
                        constants (l  13 c   2) (l  13 c  16)         declaration
                        constants (l  13 c   2) (l  13 c   6)           type specifier
@@ -103,7 +103,7 @@
                        constants (l  13 c   9) (l  13 c  10)             =
                        constants (l  13 c  11) (l  13 c  15)             initializer
                        constants (l  13 c  11) (l  13 c  15)               primary expression
-                       constants (l  13 c  11) (l  13 c  15)                 int constant: u'1'
+                       constants (l  13 c  11) (l  13 c  15)                 int constant: 1 (type: c, suffix: u)
                        constants (l  13 c  15) (l  13 c  16)           ;
                        constants (l  14 c   2) (l  14 c  11)         expression statement
                        constants (l  14 c   2) (l  14 c  10)           binary expression 
@@ -111,7 +111,7 @@
                        constants (l  14 c   2) (l  14 c   3)               identifier: c (definition: constants: l13, c7-8)
                        constants (l  14 c   4) (l  14 c   5)             =
                        constants (l  14 c   6) (l  14 c  10)             primary expression
-                       constants (l  14 c   6) (l  14 c  10)               int constant: U'2'
+                       constants (l  14 c   6) (l  14 c  10)               int constant: 2 (type: c, suffix: u)
                        constants (l  14 c  10) (l  14 c  11)           ;
                        constants (l  15 c   2) (l  15 c  12)         expression statement
                        constants (l  15 c   2) (l  15 c  11)           binary expression 
@@ -119,7 +119,7 @@
                        constants (l  15 c   2) (l  15 c   3)               identifier: c (definition: constants: l13, c7-8)
                        constants (l  15 c   4) (l  15 c   5)             =
                        constants (l  15 c   6) (l  15 c  11)             primary expression
-                       constants (l  15 c   6) (l  15 c  11)               int constant: L'\''
+                       constants (l  15 c   6) (l  15 c  11)               int constant: \ (type: c, suffix: l)
                        constants (l  15 c  11) (l  15 c  12)           ;
                        constants (l  16 c   2) (l  16 c  26)         declaration
                        constants (l  16 c   2) (l  16 c  10)           type specifier
@@ -130,7 +130,7 @@
                        constants (l  16 c  17) (l  16 c  18)             =
                        constants (l  16 c  19) (l  16 c  25)             initializer
                        constants (l  16 c  19) (l  16 c  25)               primary expression
-                       constants (l  16 c  19) (l  16 c  25)                 int constant: '1234'
+                       constants (l  16 c  19) (l  16 c  25)                 int constant: 1 (type: c)
                        constants (l  16 c  25) (l  16 c  26)           ;
                        constants (l  18 c   2) (l  18 c  72)         declaration
                        constants (l  18 c   2) (l  18 c   7)           type specifier

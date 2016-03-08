@@ -518,48 +518,69 @@ void type_completor::on(iconstant_t& i, enter)
 {
 	iconstant_t::suf_type_t suf;
 	const char* p = i.raw.c_str();
+	std::cerr << "p: " << p << std::endl;
 
-	// (((u|U)(l|L|ll|LL)?)|((l|L|ll|LL)(u|U)?))
-	if(_icmp(p, 'u')) // FEATURE: ?:
+	if(*p == '\'' || *p == 'L' || _icmp(p,'u'))
 	{
-		if(_icmp(p+1,'l'))
-		{
-			if(*(p+1)==*(p+2))
-			suf=iconstant_t::suf_ull;
-			else
-			suf=iconstant_t::suf_ul;
+		i.number_system = iconstant_t::character;
+		if(*p == '\'')
+		 suf = iconstant_t::no_suffix;
+		else {
+			suf = (*p == 'L') ? iconstant_t::suf_l : iconstant_t::suf_u;
+			++p;
 		}
-		else
-		suf=iconstant_t::suf_u;
-	}
-	else if(_icmp(p, 'l'))
-	{
-		if(*(p+1) == (*p)) // ll or LL
-		{
-			suf = _icmp(p+2, 'u') ? iconstant_t::suf_ull : iconstant_t::suf_ll;
-		}
-		else
-		{
-			suf = _icmp(p+1, 'u') ? iconstant_t::suf_ul : iconstant_t::suf_l;
-		}
+		++p;
+		i.value = *p; // TODO: multi-chars don't work yet
 	}
 	else
-	 suf = iconstant_t::no_suffix;
-
-/*	switch(suf)
 	{
-		case iconstant_t::suf_ull:
-			++p;
-		case iconstant_t::suf_ll:
-		case iconstant_t::suf_ul:
-			++p;
-		case iconstant_t::suf_l:
-		case iconstant_t::suf_u:
-			++p;
-		default:
-			;
-	}*/
 
+	
+		i.number_system = (*p == '0')
+			? (_icmp(p+1, 'x'))
+				? iconstant_t::hexadecimal
+				: isdigit(*(p+1))
+					? iconstant_t::octal
+					: iconstant_t::decimal // e.g. "0", "0L"
+			: iconstant_t::decimal;
+
+		{
+			char scanf_str [5] = {'%', i.scanf_modifier(), '%', 'n', 0};
+			int tmp, n;
+			sscanf(p, scanf_str, &tmp, &n);
+			i.value = tmp;
+			p += n;
+		}
+
+		// find suffix
+		// (((u|U)(l|L|ll|LL)?)|((l|L|ll|LL)(u|U)?))
+		if(_icmp(p, 'u')) // FEATURE: ?:
+		{
+			if(_icmp(p+1,'l'))
+			{
+				if(*(p+1)==*(p+2))
+				suf=iconstant_t::suf_ull;
+				else
+				suf=iconstant_t::suf_ul;
+			}
+			else
+			suf=iconstant_t::suf_u;
+		}
+		else if(_icmp(p, 'l'))
+		{
+			if(*(p+1) == (*p)) // ll or LL
+			{
+				suf = _icmp(p+2, 'u') ? iconstant_t::suf_ull : iconstant_t::suf_ll;
+			}
+			else
+			{
+				suf = _icmp(p+1, 'u') ? iconstant_t::suf_ul : iconstant_t::suf_l;
+			}
+		}
+		else
+		 suf = iconstant_t::no_suffix;
+	}
+	
 	i.suf_type = suf;
 }
 

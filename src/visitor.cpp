@@ -545,9 +545,16 @@ void dumper_t::visit(constant_t<int>& c)
 }
 #endif
 
-void dumper_t::visit(iconstant_t& c) {
+void dumper_t::visit(iconstant_t& c)
+{
 	incr_depth_t x(&depth, stream, c.span);
-	stream << "int constant: " << c.raw << std::endl; // FEATURE...
+	stream << "int constant: ";
+	if(c.number_system == iconstant_t::character) stream << (char)c.value;
+	else stream << c.value;
+	stream << " (type: " << c.scanf_modifier();
+	if(c.suf_type != iconstant_t::no_suffix)
+	 stream << ", suffix: " << c.suffix();
+	stream << ")" << std::endl;
 }
 
 void dumper_t::visit(fconstant_t& c) {

@@ -121,4 +121,16 @@ std::size_t token_length(token_id t);
 //! returns whether the token string has alphanumeric chars (A-Z, a-z)
 bool has_alpha(int t_id);
 
+template <token_id Value>
+class token_contained
+{
+	bool _result;
+public:
+	token_contained() : _result(false) {}
+	bool result() const { return _result; }
+	bool operator()(int t) {
+		return _result = _result || (Value == t);
+	}
+};
+
 #endif // TOKEN_H
