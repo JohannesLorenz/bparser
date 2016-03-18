@@ -43,6 +43,7 @@ using namespace nodes;
 class visitor_t
 {
 public:
+	virtual void visit(declaration_base &) {}
 	virtual void visit(type_name_t &) {}
 	virtual void visit(specifier_qualifier_list_t& ) {}
 

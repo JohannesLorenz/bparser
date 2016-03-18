@@ -362,6 +362,7 @@ struct declaration_base
 {
 	virtual declaration_specifiers_t& decl_spec() = 0;
 	virtual ~declaration_base() {}
+	virtual void accept(class visitor_t& v) = 0;
 };
 
 struct attr_name_t : public noconst_1line_terminal_t
@@ -1170,6 +1171,7 @@ struct declaration_specifiers_t : public node_t, public has_par<>
 struct function_definition_t : public node_t, public has_par<struct external_declaration_t>, public declaration_base
 {
 	virtual void accept(class visitor_t& v);
+
 	ptn<	declaration_specifiers_t,
 		ptn<	declarator_t,
 			ptn<	declaration_list_t,

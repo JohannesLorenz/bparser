@@ -139,23 +139,21 @@ inline bool is_func_id(identifier_t& id)
 }
 
 template<class T>
-struct _dcast
+struct _dcast : visitor_t
 {
 	T* value;
-	template<class Unused>
-	_dcast(Unused* const) : value(NULL) {}
-	void operator()(T& ref) { value = &ref; }
-	void operator()(node_base& ) { value = NULL; }
+	_dcast() : value(NULL) {}
+	void visit(T& n) { value = &n; }
 };
 
 //! returns a pointer of type T if it is of exactly that type
 //! (similar to dynamic_cast, but faster)
-template<class T>
-inline T* dcast(node_base& node)
+template<class T, class Passed>
+inline T* dcast(Passed& node)
 {
-	func_visitor< _dcast<T> > v;
+	_dcast<T> v;
 	node.accept(v);
-	return v.functor().value;
+	return v.value;
 }
 
 struct get_declarator_t : ftor_base

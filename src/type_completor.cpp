@@ -518,8 +518,7 @@ void type_completor::on(iconstant_t& i, enter)
 {
 	iconstant_t::suf_type_t suf;
 	const char* p = i.raw.c_str();
-	std::cerr << "p: " << p << std::endl;
-
+	
 	if(*p == '\'' || *p == 'L' || _icmp(p,'u'))
 	{
 		i.number_system = iconstant_t::character;
