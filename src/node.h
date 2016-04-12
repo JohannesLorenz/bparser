@@ -190,15 +190,26 @@ struct enumeration_constant_t : public defined_t
 	enumeration_constant_t(const char* name, geom_t geom);
 };
 
-struct string_literal_t : public noconst_terminal_t
+struct string_base_t : public noconst_terminal_t
 {
 	std::size_t _length, _newlines;
 	std::size_t length() const;
 	std::size_t tablength() const { return length(); }
 	std::size_t newlines() const;
 public:
-	virtual void accept(class visitor_t& v);
+	string_base_t(const char* value, geom_t geom, int tok);
+};
+
+struct string_literal_t : public string_base_t
+{
+	void accept(class visitor_t& v);
 	string_literal_t(const char* value, geom_t geom);
+};
+
+struct comment_t : public string_base_t
+{
+	void accept(class visitor_t& v);
+	comment_t(const std::string& value, geom_t geom);
 };
 
 struct declaration_specifier_type : public node_t, public has_par<> {

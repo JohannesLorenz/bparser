@@ -1,6 +1,6 @@
-                      statements (l   1 c   1) (l  37 c   2) translation unit
-                      statements (l   1 c   1) (l  37 c   2)   external declaration
-                      statements (l   1 c   1) (l  37 c   2)     function definition
+                      statements (l   1 c   1) (l  39 c   2) translation unit
+                      statements (l   1 c   1) (l  39 c   2)   external declaration
+                      statements (l   1 c   1) (l  39 c   2)     function definition
                       statements (l   1 c   1) (l   1 c   4)       type specifier
                       statements (l   1 c   1) (l   1 c   4)         "int"
                       statements (l   1 c   5) (l   1 c  11)       direct declarator (function)
@@ -8,7 +8,7 @@
                       statements (l   1 c   5) (l   1 c   9)           identifier (definition): main
                       statements (l   1 c   9) (l   1 c  10)         (
                       statements (l   1 c  10) (l   1 c  11)         )
-                      statements (l   2 c   1) (l  37 c   2)       compound statement
+                      statements (l   2 c   1) (l  39 c   2)       compound statement
                       statements (l   2 c   1) (l   2 c   2)         {
                       statements (l   3 c   2) (l   4 c   3)         compound statement
                       statements (l   3 c   2) (l   3 c   3)           {
@@ -114,77 +114,41 @@
                       statements (l  29 c   5) (l  29 c   6)             primary expression
                       statements (l  29 c   5) (l  29 c   6)               int constant: 1 (type: d)
                       statements (l  29 c   6) (l  29 c   7)             ;
-                      statements (l  31 c   2) (l  31 c   8)         declaration
-                      statements (l  31 c   2) (l  31 c   5)           type specifier
-                      statements (l  31 c   2) (l  31 c   5)             "int"
-                      statements (l  31 c   6) (l  31 c   7)           direct declarator (identifier)
-                      statements (l  31 c   6) (l  31 c   7)             identifier (definition): x
-                      statements (l  31 c   7) (l  31 c   8)           ;
-                      statements (l  32 c   2) (l  32 c  14)         iteration statement (type for)
-                      statements (l  32 c   2) (l  32 c   5)           "for"
-                      statements (l  32 c   5) (l  32 c   6)           (
-                      statements (l  32 c   6) (l  32 c   7)           expression statement
-                      statements (l  32 c   6) (l  32 c   7)             ;
-                      statements (l  32 c   8) (l  32 c  10)           expression statement
-                      statements (l  32 c   8) (l  32 c   9)             primary expression
-                      statements (l  32 c   8) (l  32 c   9)               identifier: x (definition: statements: l31, c6-7)
-                      statements (l  32 c   9) (l  32 c  10)             ;
-                      statements (l  32 c  11) (l  32 c  12)           )
-                      statements (l  32 c  13) (l  32 c  14)           expression statement
-                      statements (l  32 c  13) (l  32 c  14)             ;
-                      statements (l  33 c   2) (l  33 c  17)         iteration statement (type for)
-                      statements (l  33 c   2) (l  33 c   5)           "for"
-                      statements (l  33 c   5) (l  33 c   6)           (
-                      statements (l  33 c   6) (l  33 c   7)           expression statement
-                      statements (l  33 c   6) (l  33 c   7)             ;
-                      statements (l  33 c   8) (l  33 c  10)           expression statement
-                      statements (l  33 c   8) (l  33 c   9)             primary expression
-                      statements (l  33 c   8) (l  33 c   9)               identifier: x (definition: statements: l31, c6-7)
-                      statements (l  33 c   9) (l  33 c  10)             ;
-                      statements (l  33 c  11) (l  33 c  14)           unary_expression (prefix)
-                      statements (l  33 c  11) (l  33 c  13)             ++
-                      statements (l  33 c  13) (l  33 c  14)             primary expression
-                      statements (l  33 c  13) (l  33 c  14)               identifier: x (definition: statements: l31, c6-7)
-                      statements (l  33 c  14) (l  33 c  15)           )
-                      statements (l  33 c  16) (l  33 c  17)           expression statement
-                      statements (l  33 c  16) (l  33 c  17)             ;
-                      statements (l  34 c   2) (l  34 c  19)         iteration statement (type for)
+                      statements (l  33 c  10) (l  33 c  16)         declaration
+                      statements (l  33 c  10) (l  33 c  13)           type specifier
+                      statements (l  33 c  10) (l  33 c  13)             "int"
+                      statements (l  33 c  14) (l  33 c  15)           direct declarator (identifier)
+                      statements (l  33 c  14) (l  33 c  15)             identifier (definition): x
+                      statements (l  33 c  15) (l  33 c  16)           ;
+                      statements (l  34 c   2) (l  34 c  14)         iteration statement (type for)
                       statements (l  34 c   2) (l  34 c   5)           "for"
                       statements (l  34 c   5) (l  34 c   6)           (
-                      statements (l  34 c   6) (l  34 c  12)           declaration
-                      statements (l  34 c   6) (l  34 c   9)             type specifier
-                      statements (l  34 c   6) (l  34 c   9)               "int"
-                      statements (l  34 c  10) (l  34 c  11)             direct declarator (identifier)
-                      statements (l  34 c  10) (l  34 c  11)               identifier (definition): y
-                      statements (l  34 c  11) (l  34 c  12)             ;
-                      statements (l  34 c  13) (l  34 c  15)           expression statement
-                      statements (l  34 c  13) (l  34 c  14)             primary expression
-                      statements (l  34 c  13) (l  34 c  14)               identifier: y (definition: statements: l34, c10-11)
-                      statements (l  34 c  14) (l  34 c  15)             ;
-                      statements (l  34 c  16) (l  34 c  17)           )
-                      statements (l  34 c  18) (l  34 c  19)           expression statement
-                      statements (l  34 c  18) (l  34 c  19)             ;
-                      statements (l  35 c   2) (l  35 c  22)         iteration statement (type for)
+                      statements (l  34 c   6) (l  34 c   7)           expression statement
+                      statements (l  34 c   6) (l  34 c   7)             ;
+                      statements (l  34 c   8) (l  34 c  10)           expression statement
+                      statements (l  34 c   8) (l  34 c   9)             primary expression
+                      statements (l  34 c   8) (l  34 c   9)               identifier: x (definition: statements: l33, c14-15)
+                      statements (l  34 c   9) (l  34 c  10)             ;
+                      statements (l  34 c  11) (l  34 c  12)           )
+                      statements (l  34 c  13) (l  34 c  14)           expression statement
+                      statements (l  34 c  13) (l  34 c  14)             ;
+                      statements (l  35 c   2) (l  35 c  17)         iteration statement (type for)
                       statements (l  35 c   2) (l  35 c   5)           "for"
                       statements (l  35 c   5) (l  35 c   6)           (
-                      statements (l  35 c   6) (l  35 c  12)           declaration
-                      statements (l  35 c   6) (l  35 c   9)             type specifier
-                      statements (l  35 c   6) (l  35 c   9)               "int"
-                      statements (l  35 c  10) (l  35 c  11)             direct declarator (identifier)
-                      statements (l  35 c  10) (l  35 c  11)               identifier (definition): y
-                      statements (l  35 c  11) (l  35 c  12)             ;
-                      statements (l  35 c  13) (l  35 c  15)           expression statement
+                      statements (l  35 c   6) (l  35 c   7)           expression statement
+                      statements (l  35 c   6) (l  35 c   7)             ;
+                      statements (l  35 c   8) (l  35 c  10)           expression statement
+                      statements (l  35 c   8) (l  35 c   9)             primary expression
+                      statements (l  35 c   8) (l  35 c   9)               identifier: x (definition: statements: l33, c14-15)
+                      statements (l  35 c   9) (l  35 c  10)             ;
+                      statements (l  35 c  11) (l  35 c  14)           unary_expression (prefix)
+                      statements (l  35 c  11) (l  35 c  13)             ++
                       statements (l  35 c  13) (l  35 c  14)             primary expression
-                      statements (l  35 c  13) (l  35 c  14)               identifier: y (definition: statements: l35, c10-11)
-                      statements (l  35 c  14) (l  35 c  15)             ;
-                      statements (l  35 c  16) (l  35 c  19)           unary_expression (prefix)
-                      statements (l  35 c  16) (l  35 c  18)             ++
-                      statements (l  35 c  18) (l  35 c  19)             primary expression
-                      statements (l  35 c  18) (l  35 c  19)               identifier: y (definition: statements: l35, c10-11)
-                      statements (l  35 c  19) (l  35 c  20)           )
-                      statements (l  35 c  21) (l  35 c  22)           expression statement
-                      statements (l  35 c  21) (l  35 c  22)             ;
-                      statements (l  36 c   2) (l  36 c  31)         iteration statement (type for)
+                      statements (l  35 c  13) (l  35 c  14)               identifier: x (definition: statements: l33, c14-15)
+                      statements (l  35 c  14) (l  35 c  15)           )
+                      statements (l  35 c  16) (l  35 c  17)           expression statement
+                      statements (l  35 c  16) (l  35 c  17)             ;
+                      statements (l  36 c   2) (l  36 c  19)         iteration statement (type for)
                       statements (l  36 c   2) (l  36 c   5)           "for"
                       statements (l  36 c   5) (l  36 c   6)           (
                       statements (l  36 c   6) (l  36 c  12)           declaration
@@ -197,20 +161,56 @@
                       statements (l  36 c  13) (l  36 c  14)             primary expression
                       statements (l  36 c  13) (l  36 c  14)               identifier: y (definition: statements: l36, c10-11)
                       statements (l  36 c  14) (l  36 c  15)             ;
-                      statements (l  36 c  16) (l  36 c  19)           unary_expression (prefix)
-                      statements (l  36 c  16) (l  36 c  18)             ++
-                      statements (l  36 c  18) (l  36 c  19)             primary expression
-                      statements (l  36 c  18) (l  36 c  19)               identifier: y (definition: statements: l36, c10-11)
-                      statements (l  36 c  19) (l  36 c  20)           )
-                      statements (l  36 c  21) (l  36 c  31)           compound statement
-                      statements (l  36 c  21) (l  36 c  22)             {
-                      statements (l  36 c  23) (l  36 c  29)             expression statement
-                      statements (l  36 c  23) (l  36 c  28)               binary expression 
-                      statements (l  36 c  23) (l  36 c  24)                 primary expression
-                      statements (l  36 c  23) (l  36 c  24)                   identifier: x (definition: statements: l31, c6-7)
-                      statements (l  36 c  25) (l  36 c  26)                 =
-                      statements (l  36 c  27) (l  36 c  28)                 primary expression
-                      statements (l  36 c  27) (l  36 c  28)                   identifier: y (definition: statements: l36, c10-11)
-                      statements (l  36 c  28) (l  36 c  29)               ;
-                      statements (l  36 c  30) (l  36 c  31)             }
-                      statements (l  37 c   1) (l  37 c   2)         }
+                      statements (l  36 c  16) (l  36 c  17)           )
+                      statements (l  36 c  18) (l  36 c  19)           expression statement
+                      statements (l  36 c  18) (l  36 c  19)             ;
+                      statements (l  37 c   2) (l  37 c  22)         iteration statement (type for)
+                      statements (l  37 c   2) (l  37 c   5)           "for"
+                      statements (l  37 c   5) (l  37 c   6)           (
+                      statements (l  37 c   6) (l  37 c  12)           declaration
+                      statements (l  37 c   6) (l  37 c   9)             type specifier
+                      statements (l  37 c   6) (l  37 c   9)               "int"
+                      statements (l  37 c  10) (l  37 c  11)             direct declarator (identifier)
+                      statements (l  37 c  10) (l  37 c  11)               identifier (definition): y
+                      statements (l  37 c  11) (l  37 c  12)             ;
+                      statements (l  37 c  13) (l  37 c  15)           expression statement
+                      statements (l  37 c  13) (l  37 c  14)             primary expression
+                      statements (l  37 c  13) (l  37 c  14)               identifier: y (definition: statements: l37, c10-11)
+                      statements (l  37 c  14) (l  37 c  15)             ;
+                      statements (l  37 c  16) (l  37 c  19)           unary_expression (prefix)
+                      statements (l  37 c  16) (l  37 c  18)             ++
+                      statements (l  37 c  18) (l  37 c  19)             primary expression
+                      statements (l  37 c  18) (l  37 c  19)               identifier: y (definition: statements: l37, c10-11)
+                      statements (l  37 c  19) (l  37 c  20)           )
+                      statements (l  37 c  21) (l  37 c  22)           expression statement
+                      statements (l  37 c  21) (l  37 c  22)             ;
+                      statements (l  38 c   2) (l  38 c  31)         iteration statement (type for)
+                      statements (l  38 c   2) (l  38 c   5)           "for"
+                      statements (l  38 c   5) (l  38 c   6)           (
+                      statements (l  38 c   6) (l  38 c  12)           declaration
+                      statements (l  38 c   6) (l  38 c   9)             type specifier
+                      statements (l  38 c   6) (l  38 c   9)               "int"
+                      statements (l  38 c  10) (l  38 c  11)             direct declarator (identifier)
+                      statements (l  38 c  10) (l  38 c  11)               identifier (definition): y
+                      statements (l  38 c  11) (l  38 c  12)             ;
+                      statements (l  38 c  13) (l  38 c  15)           expression statement
+                      statements (l  38 c  13) (l  38 c  14)             primary expression
+                      statements (l  38 c  13) (l  38 c  14)               identifier: y (definition: statements: l38, c10-11)
+                      statements (l  38 c  14) (l  38 c  15)             ;
+                      statements (l  38 c  16) (l  38 c  19)           unary_expression (prefix)
+                      statements (l  38 c  16) (l  38 c  18)             ++
+                      statements (l  38 c  18) (l  38 c  19)             primary expression
+                      statements (l  38 c  18) (l  38 c  19)               identifier: y (definition: statements: l38, c10-11)
+                      statements (l  38 c  19) (l  38 c  20)           )
+                      statements (l  38 c  21) (l  38 c  31)           compound statement
+                      statements (l  38 c  21) (l  38 c  22)             {
+                      statements (l  38 c  23) (l  38 c  29)             expression statement
+                      statements (l  38 c  23) (l  38 c  28)               binary expression 
+                      statements (l  38 c  23) (l  38 c  24)                 primary expression
+                      statements (l  38 c  23) (l  38 c  24)                   identifier: x (definition: statements: l33, c14-15)
+                      statements (l  38 c  25) (l  38 c  26)                 =
+                      statements (l  38 c  27) (l  38 c  28)                 primary expression
+                      statements (l  38 c  27) (l  38 c  28)                   identifier: y (definition: statements: l38, c10-11)
+                      statements (l  38 c  28) (l  38 c  29)               ;
+                      statements (l  38 c  30) (l  38 c  31)             }
+                      statements (l  39 c   1) (l  39 c   2)         }

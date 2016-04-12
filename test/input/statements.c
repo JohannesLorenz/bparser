@@ -28,7 +28,9 @@ int main()
 	while(1) { continue; }
 	do 1; while(1);
 	
-	int x;
+	/* comment 1 */
+	/* comment 2
+		... */ int x;
 	for(; x; ) ;
 	for(; x; ++x) ;
 	for(int y; y; ) ;

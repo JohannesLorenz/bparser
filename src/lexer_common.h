@@ -845,6 +845,7 @@ template<class T> int app(T* elem, int lex_id)
 	return lex_id;
 }
 
+//! appends with a string given that is only restricted by @a length. sets state
 template<class T>
 int app_with_string(T*& token, int lex_id, const char* text, std::size_t length)
 {
@@ -852,6 +853,13 @@ int app_with_string(T*& token, int lex_id, const char* text, std::size_t length)
 	cnt();
 	char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, text, length);
 	return app(token = new T(res, get_pos()), lex_id);
+}
+
+//! appends a comment
+void app_comment(const std::string& com)
+{
+	cnt();
+	app(new comment_t(com, get_pos()), 0);
 }
 
 bool icmp(const char* p, char c) {

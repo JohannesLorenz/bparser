@@ -112,7 +112,9 @@ enum token_id
 	t_generic = GENERIC,
 	t_noreturn = NORETURN,
 	t_static_assert = STATIC_ASSERT,
-	t_thread_local = THREAD_LOCAL
+	t_thread_local = THREAD_LOCAL,
+
+	t_comment = COMMENT
 };
 
 const char* name_of(int token_id);

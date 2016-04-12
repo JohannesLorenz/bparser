@@ -209,6 +209,7 @@ typedef void* yyscan_t;
 	translation_unit_t* translation_unit;
 }
 
+%token  COMMENT
 %token	ATTR_NAME ATTRIBUTE
 %token	IDENTIFIER I_CONSTANT F_CONSTANT STRING_LITERAL FUNC_NAME SIZEOF
 %token	PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP

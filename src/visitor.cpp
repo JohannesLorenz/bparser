@@ -851,6 +851,13 @@ void dumper_t::visit(string_literal_t &s)
 	fwd::visit(s);
 }
 
+void dumper_t::visit(comment_t& n)
+{
+	incr_depth_t x(&depth, stream, n.span);
+	stream << "comment: " << n.raw << std::endl;
+	fwd::visit(n);
+}
+
 void dumper_t::visit(type_specifier_t &t)
 {
 	incr_depth_t x(&depth, stream, t.span);

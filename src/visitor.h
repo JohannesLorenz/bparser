@@ -115,6 +115,7 @@ public:
 	virtual void visit(enumeration_constant_t& ) {}
 	virtual void visit(typedef_name_t& ) {}
 	virtual void visit(string_literal_t& ) {}
+	virtual void visit(comment_t& ) {}
 	virtual void visit(sizeof_expression_t& ) {}
 	virtual void visit(init_declarator_list_t& ) {}
 	virtual void visit(init_declarator_t& ) {}
@@ -321,6 +322,7 @@ public:
 	void visit(enumeration_constant_t& n) { f(n); }
 	void visit(typedef_name_t& n) { f(n); }
 	void visit(string_literal_t& n) { f(n); }
+	void visit(comment_t& n) { f(n); }
 	void visit(sizeof_expression_t& n) { f(n); }
 	void visit(init_declarator_list_t& n) { f(n); }
 	void visit(init_declarator_t& n) { f(n); }
@@ -549,6 +551,7 @@ public:
 	void visit(typedef_name_t& ) {}
 
 	void visit(string_literal_t& ) {}
+	void visit(comment_t& ) {}
 	void visit(sizeof_expression_t& n);
 //	void visit(constant_t& );
 	void visit(init_declarator_t& );
@@ -785,6 +788,7 @@ public:
 	void visit(enumeration_constant_t& n);
 	void visit(typedef_name_t& n);
 	void visit(string_literal_t& s);
+	void visit(comment_t& n);
 	void visit(sizeof_expression_t& n);
 //	void visit(constant_t& );
 	void visit(init_declarator_t& );

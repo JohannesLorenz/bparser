@@ -98,8 +98,8 @@ std::ostream& operator<<(std::ostream& stream, const token_t& t)
 	return stream;
 }
 
-std::size_t string_literal_t::length() const { return _length; }
-std::size_t string_literal_t::newlines() const { return _newlines; }
+std::size_t string_base_t::length() const { return _length; }
+std::size_t string_base_t::newlines() const { return _newlines; }
 
 const char* next_0_or_n(const char* p)
 {
@@ -107,8 +107,8 @@ const char* next_0_or_n(const char* p)
 	return p;
 }
 
-string_literal_t::string_literal_t(const char* value, geom_t geom) :
-	noconst_terminal_t(geom, t_string_literal, value),
+string_base_t::string_base_t(const char* value, geom_t geom, int tok) :
+	noconst_terminal_t(geom, tok, value),
 	_newlines(0)
 {
 	const char *p = value, *last_linestart = value;
@@ -118,6 +118,16 @@ string_literal_t::string_literal_t(const char* value, geom_t geom) :
 	}
 	--_newlines; // \0 has been counted as newline
 	_length = p - last_linestart;
+}
+
+string_literal_t::string_literal_t(const char* value, geom_t geom) :
+	string_base_t(value, geom, t_string_literal)
+{
+}
+
+comment_t::comment_t(const std::string& value, geom_t geom) :
+	string_base_t(value.c_str(), geom, t_comment)
+{
 }
 
 std::size_t noconst_1line_terminal_t::length() const { return raw.length(); }
@@ -185,6 +195,7 @@ void identifier_t::accept(visitor_t &v) { v.vis(this); }
 void enumeration_constant_t::accept(visitor_t &v) { v.vis(this); }
 void typedef_name_t::accept(visitor_t &v) { v.vis(this); }
 void string_literal_t::accept(visitor_t &v) { v.vis(this); }
+void comment_t::accept(visitor_t &v) { v.vis(this); }
 
 void init_declarator_t::accept(visitor_t &v) { v.vis(this); }
 void init_declarator_list_t::accept(visitor_t &v) { v.vis(this); }

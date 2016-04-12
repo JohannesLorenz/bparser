@@ -9,6 +9,26 @@
 #include <string>
 #include "visitor.h"
 
+template<class Ftor>
+class _for_each_declarator : public visitor_t
+{
+	Ftor* _ftor;
+
+public:
+	_for_each_declarator(Ftor* _ftor) : _ftor(_ftor) {}
+	void visit(declaration_t& d) { visit(*d.c.get<1>()); }
+	void visit(init_declarator_list_t& i) { visit(*i.c.get<0>()); visit(*i.c.get<2>()); }
+	void visit(init_declarator_t& i) { visit(*i.c.get<0>()); }
+	void visit(declarator_t& d) { (*_ftor)(d); }
+};
+
+template<class Ftor>
+void for_each_declarator(declaration_t& node, Ftor* ftor)
+{
+	_for_each_declarator<Ftor> _f(ftor);
+	_f.visit(node);
+}
+
 //! @note currently only for storage class specifiers!
 template<class Ftor>
 class _for_each_specifier : public visitor_t
@@ -127,6 +147,20 @@ struct raise_to_func_decl : public visitor_t
 	void visit(direct_declarator_decl& i) { i.parent->accept(*this); }
 	void visit(direct_declarator_id& i) { i.parent->accept(*this); }
 	void visit(identifier_t& i) { i.parent->accept(*this); }
+	// TODO: visit declarator_t? only if it has no pointer?
+};
+
+struct _declares_function : public visitor_t
+{
+	bool result;
+
+	_declares_function() : result(false) {}
+	
+	void visit(direct_declarator_decl& d) { visit(*d.c.get<1>()); }
+	
+	void visit(direct_declarator_func& ) { result = true; }
+	void visit(declarator_t& d) { if(!d.c.get<0>()) d.c.get<1>()->accept(*this); }
+	// TODO: visit declarator_t? only if it has no pointer?
 };
 
 
@@ -135,6 +169,14 @@ inline bool is_func_id(identifier_t& id)
 {
 	raise_to_func_decl vis;
 	vis.visit(*id._definition);
+	return vis.result;
+}
+
+//! Returns true if the identifier is a function identifier (not a function pointer though)
+inline bool declares_function(declarator_t& decl)
+{
+	_declares_function vis;
+	vis.visit(decl);
 	return vis.result;
 }
 
@@ -301,6 +343,44 @@ inline struct_or_union_specifier_t& struct_rval_of_func(identifier_t& id)
 	//return v.functor().value;
 	return NULL; // TODO*/
 	//return get_declarator(v0.functor().declaration_found);
+}
+
+template<int Search>
+struct _declares_token : public visitor_t
+{
+#if 0
+	bool maybe_signed = false;
+
+	
+	void visit(primary_expression_t& e) { if(e.c.get<2>()) e.c.get<2>.accept(*this)
+		else if(e.c.get<1>() && dcast<e.c.get<1>()>)maybe_signed = true; }
+	void visit(binary_expression_t& e) { e.c.get<0>.accept(*this);
+		if(!maybe_signed)
+		 e.c.get<2>.accept(*this);
+	}
+	void visit(unary_expression_l& e) { e.c.get<0> }
+	void visit(cast_expression_t& e) { if(i.is_signed()) is_signed = true; }
+
+	void visit(iconstant_t& i) { if(i.is_signed()) is_signed = true; }
+#endif
+	bool contained;
+	void visit(declaration_specifiers_t& d) { vaccept(d.c); }
+	void visit(specifier_qualifier_list_t& s) { vaccept(s.c); }
+	void visit(type_specifier_t& t) { t.c.value->accept(*this); }
+	void visit(token_t& t) {
+		if(t.value() == Search)
+		 contained = true;
+	} // TODO: what about typedef names?
+
+	_declares_token() : contained(false) {}
+};// TODO: use _for_each_specifier
+
+template<int Search, class NodeT>
+bool declares_token(NodeT& n)
+{
+	_declares_token<Search> vis;
+	vis.visit(n);
+	return vis.contained;
 }
 
 #endif // UTILS_H

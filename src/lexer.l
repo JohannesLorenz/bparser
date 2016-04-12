@@ -40,12 +40,12 @@ extern int sym_type(const char *);  /* returns type from symbol table */
 
 #define sym_type(identifier) IDENTIFIER /* with no symbol table, fake it */
 
-static void comment(void);
+static void consume_comment(yyscan_t yyscanner);
 static int check_type(const char* text);
 %}
 
 %%
-"/*"					{ comment(); }
+"/*"					{ consume_comment(yyscanner); }
 "//".*					{ /* consume //-comment */ }
 
 "auto"					{ return app3(yylval->token, AUTO, yytext); }
@@ -286,25 +286,28 @@ int yywrap(void)        /* called at end of input */
 }
 #endif	
 
-static void comment(void)
+static void consume_comment(yyscan_t yyscanner)
 {
-#if 0
     int c;
-
-    while ((c = input()) != 0)
+    std::string com_str = "/*";
+    while ((c = yyinput(yyscanner)) != 0)
+    {
+        com_str += (char)c;
         if (c == '*')
         {
-            while ((c = input()) == '*')
-                ;
+            while ((c = yyinput(yyscanner)) == '*')
+                com_str += c;
 
-            if (c == '/')
+            if (c == '/') {
+                app_comment(com_str += '/');
                 return;
+            }
 
             if (c == 0)
                 break;
         }
+    }
     yyerror("unterminated comment");
-#endif
 }
 
 static int check_type(const char* text) // FEATURE: lookup_table function?
@@ -476,6 +479,6 @@ lookup_type lt = lookup_table_t::type_of(text);
 #endif
 }
 
-/*int yyerror(const char *msg) {
-    fprintf(stderr,"Error:%s\n",msg); return 0;
-}*/
+void yyerror(const char *msg) {
+    fprintf(stderr,"Error:%s\n",msg);
+}
