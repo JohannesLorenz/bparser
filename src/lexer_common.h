@@ -294,7 +294,12 @@ public:
 	static void flag_symbol(const char* str, lookup_type type, int new_depth = 0)
 	{
 		if(new_depth < 0)
-		 throw "Invalid depth calculation for variable";
+		{
+#ifdef LEXER_DEBUG
+			std::cout << "flagging " << str << " of type " << type << ": depth " << new_depth << " ..." << std::endl;
+#endif
+			throw "Invalid depth calculation for variable";
+		}
 		
 		std::string new_name = internal_name_of_new_id(str, type);
 

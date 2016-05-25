@@ -439,8 +439,9 @@ template<class Functor2>
 class io_visitor;
 //#include <typeinfo>
 template<class Functor2>
-class io_functor : ftor_base
+class io_functor : public ftor_base
 {
+protected:
 	Functor2 f;
 public:
 	template<class F2Constr> // FEATURE: solution with variable args

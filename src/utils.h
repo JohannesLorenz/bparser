@@ -16,8 +16,8 @@ class _for_each_declarator : public visitor_t
 
 public:
 	_for_each_declarator(Ftor* _ftor) : _ftor(_ftor) {}
-	void visit(declaration_t& d) { visit(*d.c.get<1>()); }
-	void visit(init_declarator_list_t& i) { visit(*i.c.get<0>()); visit(*i.c.get<2>()); }
+	void visit(declaration_t& d) { if(d.c.get<1>()) visit(*d.c.get<1>()); }
+	void visit(init_declarator_list_t& i) { if(i.c.get<0>()) visit(*i.c.get<0>()); visit(*i.c.get<2>()); }
 	void visit(init_declarator_t& i) { visit(*i.c.get<0>()); }
 	void visit(declarator_t& d) { (*_ftor)(d); }
 };
