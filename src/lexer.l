@@ -297,9 +297,10 @@ static void consume_comment(yyscan_t yyscanner)
         {
             while ((c = yyinput(yyscanner)) == '*')
                 com_str += c;
+	    com_str += c;
 
             if (c == '/') {
-                app_comment(com_str += '/');
+                app_comment(com_str);
                 return;
             }
 

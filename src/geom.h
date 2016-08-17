@@ -43,7 +43,8 @@ struct span_t
 
 	static span_t null_span() { return span_t(0,0,0,0,0,0); }
 
-	std::ostream& print(bool full_paths, std::ostream& stream) const;
+	std::ostream& print(bool full_paths, std::ostream& stream,
+		bool long_numbers = false) const;
 	friend std::ostream& operator<<(std::ostream& stream, const span_t&);
 };
 

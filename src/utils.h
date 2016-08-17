@@ -214,7 +214,7 @@ struct get_declarator_t : ftor_base
 };
 
 //! Returns the identifier of the innermost declarator, e.g. f in void (const *f[3])(int)
-inline identifier_t& get_declarator(declarator_t& d)
+inline identifier_t& get_declarator(declarator_t& d) // TODO: rename: get_identifier()
 {
 	func_visitor< get_declarator_t > v;
 	v.functor()(d);
@@ -382,6 +382,8 @@ bool declares_token(NodeT& n)
 	vis.visit(n);
 	return vis.contained;
 }
+
+//const std::string& function_defined(function_definition_t& f);
 
 #endif // UTILS_H
 

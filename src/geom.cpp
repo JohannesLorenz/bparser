@@ -27,7 +27,7 @@ std::string to_string(const geom_t& g)
 	return result += tmp;
 }
 
-std::ostream& span_t::print(bool full_paths, std::ostream& stream) const
+std::ostream& span_t::print(bool full_paths, std::ostream& stream, bool long_numbers) const
 {
 	const span_t& s = *this;
 	if(full_paths)
@@ -38,16 +38,25 @@ std::ostream& span_t::print(bool full_paths, std::ostream& stream) const
 		const char* ptr2 = strrchr(ptr1, '/');
 		stream << (ptr2 ? (ptr2+1) : ptr1);
 	}
+
+	const char* line_word = long_numbers ? "line " : "l";
+	const char* col_word = long_numbers ? "col " : "c";
+	const char* cols_word = long_numbers ? "columns " : "c";
+	const char* to_word = long_numbers ? " -> " : "-";
 	
 	if(s.second.line != 0) {
 		/*if(s.first.line == s.second.line)
-			stream << ", l" << s.first.line << ", c" << s.first.col << "-" << s.second.col;
+			stream << ", " << line_word << s.first.line <<
+				", " << cols_word << s.first.col << "-" << s.second.col;
 		else
-			stream	<< ", l" << s.first.line << ", c" << s.first.col << "-"
-				<< "l" << s.second.line << ", c" << s.second.col;*/
-		stream << ": l" << s.first.line << ", c" << s.first.col << "-";
+			stream	<< ", " << line_word << s.first.line <<
+				<< ", " << col_word  << s.first.col << "-"
+				<< line_word << s.second.line
+				<< ", " << col_word << s.second.col;*/
+		stream << ": " << line_word << s.first.line
+			<< ", " << col_word << s.first.col << to_word;
 		if(s.first.line != s.second.line)
-			stream << "l" << s.second.line << ", c";
+			stream << line_word << s.second.line << ", " << col_word;
 		stream << s.second.col;
 	}
 	return stream;

@@ -46,3 +46,20 @@ void struct_type_specifier_of_declaration_t::visit(typedef_name_t &t)
 	t._definition->parent->accept(v0);
 	return visit(v0.functor().declaration_found->decl_spec());
 }
+
+/*struct _function_defined
+{
+	const std::string* result;
+	void operator()(declarator_t& d)
+	{
+		result = &get_declarator(d).raw;
+	}
+};
+
+const std::string& function_defined(function_definition_t& f)
+{
+	_function_defined function_name;
+	for_each_declarator(*f.c.get<1>(), &function_name);
+	return *function_name.result;
+}*/
+
