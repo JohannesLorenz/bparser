@@ -1,6 +1,6 @@
 /*************************************************************************/
 /* bparser - a bison-based, C99 parser                                   */
-/* Copyright (C) 2015-2015                                               */
+/* Copyright (C) 2015-2016                                               */
 /* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
 /*                                                                       */
 /* This program is free software; you can redistribute it and/or modify  */
@@ -23,6 +23,7 @@
 		which redirects the virtual visit calls to a functor template
 */
 
+#include <stdexcept>
 #include <cstddef>
 #include <iosfwd>
 #include <cassert>
@@ -654,7 +655,7 @@ class geom_completor : ftor_base
 	}
 
 	span_t get_span(const null_type&) {
-		throw "should not happen. error in grammar!";
+		throw std::logic_error("should not happen. error in grammar!");
 		return span_t();
 	}
 

@@ -1,6 +1,6 @@
 /*************************************************************************/
 /* bparser - a bison-based, C99 parser                                   */
-/* Copyright (C) 2015-2015                                               */
+/* Copyright (C) 2015-2016                                               */
 /* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
 /*                                                                       */
 /* This program is free software; you can redistribute it and/or modify  */
@@ -132,6 +132,13 @@ comment_t::comment_t(const std::string& value, geom_t geom) :
 
 std::size_t noconst_1line_terminal_t::length() const { return raw.length(); }
 std::size_t noconst_1line_terminal_t::newlines() const { return 0; }
+
+expression_t* iteration_statement_t::condition()
+{
+	return (type == iteration_statement_t::for_type)
+		? c.get<iteration_statement_t::for_cond>()->c.get<0>()
+		: c.get<iteration_statement_t::while_cond>();
+}
 
 void token_t::accept(visitor_t& v) { v.vis(this); }
 //void number_t::accept(visitor_t& v) { v.vis(this); }

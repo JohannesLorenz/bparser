@@ -1,6 +1,6 @@
 /*************************************************************************/
 /* bparser - a bison-based, C99 parser                                   */
-/* Copyright (C) 2015-2015                                               */
+/* Copyright (C) 2015-2016                                               */
 /* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
 /*                                                                       */
 /* This program is free software; you can redistribute it and/or modify  */
@@ -17,6 +17,7 @@
 /* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
 /*************************************************************************/
 
+#include <stdexcept>
 #include "token.h"
 
 struct id_and_name
@@ -114,7 +115,7 @@ const char* name_of(int token_id)
 	for(unsigned i = 0; i < max; ++i)
 	 if(names[i].id == token_id)
 	  return names[i].name;
-	throw "name for invalid token id requested";
+	throw std::out_of_range("name for invalid token id requested");
 }
 
 std::size_t token_length(token_id t)

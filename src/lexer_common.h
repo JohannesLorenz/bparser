@@ -1,6 +1,6 @@
 /*************************************************************************/
 /* bparser - a bison-based, C99 parser                                   */
-/* Copyright (C) 2015-2015                                               */
+/* Copyright (C) 2015-2016                                               */
 /* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
 /*                                                                       */
 /* This program is free software; you can redistribute it and/or modify  */
@@ -26,6 +26,7 @@
 #ifndef LEXER_COMMON_H
 #define LEXER_COMMON_H
 
+#include <stdexcept>
 #include <cassert>
 #include <cctype>
 #include <iostream>
@@ -270,7 +271,7 @@ public:
 					{
 						dump();
 						std::cout << "undefined: " << itr->first << std::endl;
-						throw "Left scope with undefined variable!";
+						throw std::runtime_error("Left scope with undefined variable!");
 					}
 
 					// out of scope
@@ -298,7 +299,7 @@ public:
 #ifdef LEXER_DEBUG
 			std::cout << "flagging " << str << " of type " << type << ": depth " << new_depth << " ..." << std::endl;
 #endif
-			throw "Invalid depth calculation for variable";
+			throw std::logic_error("Invalid depth calculation for variable");
 		}
 		
 		std::string new_name = internal_name_of_new_id(str, type);
@@ -310,7 +311,7 @@ public:
 			if(stack.back().first == lt_identifier_list)
 			{
 				if(type != lt_identifier && type != lt_identifier_list)
-				 throw "declarator type must be identifier if it follows an identifier list.";
+				 throw std::runtime_error("declarator type must be identifier if it follows an identifier list.");
 				else {
 					std::cout << "found *LATE DEFINED* identifier: " << new_name << std::endl;
 					itr->second.back().first = type;
@@ -331,7 +332,7 @@ public:
 				else
 				{
 					if(strict_mode)
-					 throw "identifier has already been declared in this scope!";
+					 throw std::logic_error("identifier has already been declared in this scope!");
 					else
 					 { /* Nothing to do - the variable is already defined */ }
 				}
@@ -363,12 +364,12 @@ public:
 		for(table_t::iterator itr = table.begin(); itr != table.end(); ++itr)
 		{
 			value_t& stack = itr->second;
-			if(stack.empty()) throw "stack for identifier should not be empty";
+			if(stack.empty()) throw std::logic_error("stack for identifier should not be empty");
 			while(stack.size())
 			{
 				if(stack.back().first == lt_identifier_list) {
 					std::cout << "Error: remaining undeclared identifier" << itr->first << "(from identifier list?)" << std::endl;
-					throw "Error remaining undeclared identifier (from identifier list?)";
+					throw std::logic_error("Error remaining undeclared identifier (from identifier list?)");
 				}
 				else stack.pop_back();
 			}
@@ -456,16 +457,18 @@ public:
 	
 	void check_variables_initial() {
 		// if(*this == cmp) {} FEATURE?
-		if(decl_depth) throw "decl_depth";
-		if(in_for_header) throw "in_for_header";
-		if(par_count) throw "par_count";
-		if(brack_count) throw "brack_count";
-		if(recent_declaration) throw "recent_declaration";
-		if(lazy_decr_decl_depth) throw "lazy_decr_decl_depth";
-		if(_maybe_struct_definition) throw "_maybe_struct_definition";
-		if(in_enum) throw "in_enum";
-		if(struct_depth) throw "struct_depth";
-		if(struct_depth_decreased) throw "struct_depth_decreased";
+#if 0
+		if(decl_depth) throw std::logic_error("decl_depth");
+		if(in_for_header) throw std::logic_error("in_for_header");
+		if(par_count) throw std::logic_error("par_count");
+		if(brack_count) throw std::logic_error("brack_count");
+		if(recent_declaration) throw std::logic_error("recent_declaration");
+		if(lazy_decr_decl_depth) throw std::logic_error("lazy_decr_decl_depth");
+		if(_maybe_struct_definition) throw std::logic_error("_maybe_struct_definition");
+		if(in_enum) throw std::logic_error("in_enum");
+		if(struct_depth) throw std::logic_error("struct_depth");
+		if(struct_depth_decreased) throw std::logic_error("struct_depth_decreased");
+#endif
 	}
 
 	~states_t() { check_variables_initial(); }
@@ -476,16 +479,6 @@ public:
 		// actually, no variables are reset - they are assumed to already
 		// carry initial values, if not, we exit
 		check_variables_initial();
-/*		if(decl_depth) throw "decl_depth";
-		if(in_for_header) throw "in_for_header";
-		if(par_count) throw "par_count";
-		if(brack_count) throw "brack_count";
-	//	if(recent_declaration) throw "recent_declaration";
-		if(lazy_decr_decl_depth) throw "lazy_decr_decl_depth";
-		if(_maybe_struct_definition) throw "_maybe_struct_definition";
-		if(in_enum) throw "in_enum";
-		if(struct_depth) throw "struct_depth";
-		if(struct_depth_decreased) throw "struct_depth_decreased";*/
 	}
 
 	int get_brack_count() const { return brack_count; }
@@ -685,7 +678,7 @@ public:
 					}
 					break;
 				case declarator_found:
-					throw "this function should never be called with declarator_found";
+					throw std::logic_error("this function should never be called with declarator_found");
 				case expect_initializer_or_comma:
 				case inside_initializer:
 					switch(token_id)
@@ -709,7 +702,7 @@ public:
 								? expect_type_specifier : declaration_state;
 							// TODO: put these cases together
 						//	if(declaration_state_pars_after > 0)
-						//	 throw "impossible";
+						//	 throw std::logic_error("impossible");
 							break;
 						case '(':
 							next_state = (declaration_state == expect_initializer_or_comma)
@@ -880,7 +873,7 @@ int app_float(fconstant_t*& token, const char* text, std::size_t length)
 		p += n;
 	}
 	if(*p && (icmp(p,'f') || icmp(p,'l'))) ++p;
-	if(*p) throw "end of token not 0";
+	if(*p) throw std::logic_error("end of token not 0");
 	return app_with_string(token, F_CONSTANT, text, length);
 }
 

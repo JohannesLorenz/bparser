@@ -20,7 +20,7 @@ lexer.c: lexer.l
 	$(FLEX_BIN) lexer.l
 
 parser.c: parser.y lexer.c
-	$(BISON_BIN) -t --debug parser.y
+	$(BISON_BIN) -t --debug -Wno-conflicts-sr parser.y
 
 # default compilation rule
 %.o: %.cpp lexer.c parser.c %.h

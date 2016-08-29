@@ -1,6 +1,6 @@
 /*************************************************************************/
 /* bparser - a bison-based, C99 parser                                   */
-/* Copyright (C) 2015-2015                                               */
+/* Copyright (C) 2015-2016                                               */
 /* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
 /*                                                                       */
 /* This program is free software; you can redistribute it and/or modify  */
@@ -17,6 +17,8 @@
 /* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
 /*************************************************************************/
 
+#include <stdexcept>
+
 #include "type_completor.h"
 #include "node.h"
 #include "token.h"
@@ -30,7 +32,8 @@ void struct_type_of::set_spec_from_id(identifier_t* struct_id)
 		if(! spec)
 		{
 			std::cout << "ABORT INFO: " << *struct_id->parent << std::endl;
-			throw "Unable to cast parent of struct identifier to struct_or_union_specifier_t";
+			throw std::runtime_error(
+				"Unable to cast parent of struct identifier to struct_or_union_specifier_t");
 		}
 	}
 	set_spec(spec);
@@ -452,7 +455,7 @@ void type_completor::on(struct_access_expression_t& s, leave)
 
 	}
 	if(searching)
-	 throw "Identifier not found in struct!";
+	 throw std::runtime_error("Identifier not found in struct!");
 
 	//connect_identifier(s.c.get<2>());
 #endif

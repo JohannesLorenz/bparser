@@ -1,6 +1,6 @@
 /*************************************************************************/
 /* bparser - a bison-based, C99 parser                                   */
-/* Copyright (C) 2015-2015                                               */
+/* Copyright (C) 2015-2016                                               */
 /* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
 /*                                                                       */
 /* This program is free software; you can redistribute it and/or modify  */
@@ -31,6 +31,7 @@
 #ifndef TUPLE03_H
 #define TUPLE03_H
 
+#include <stdexcept>
 #include <cstddef>
 
 struct no_fill {};
@@ -255,7 +256,7 @@ public:
 
 	template<std::size_t Idx>
 	typename type_at<self, Idx>::type& get() {
-		if(Idx > 0) throw "tuple index out of range";
+		if(Idx > 0) throw std::out_of_range("tuple index out of range");
 		return value_at<0, self>(*this); }
 
 	null_type get_next() const { return null_type(); }

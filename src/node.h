@@ -1,6 +1,6 @@
 /*************************************************************************/
 /* bparser - a bison-based, C99 parser                                   */
-/* Copyright (C) 2015-2015                                               */
+/* Copyright (C) 2015-2016                                               */
 /* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
 /*                                                                       */
 /* This program is free software; you can redistribute it and/or modify  */
@@ -27,6 +27,7 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <stdexcept>
 #include <cstddef>
 #include <list>
 #include <string>
@@ -39,6 +40,9 @@ template<class P>
 class safe_ptr
 {
 	P* p;
+	static void assert_p(const P* p) {
+		if(!p) throw std::logic_error("pointer access");
+	}
 public:
 	safe_ptr() : p(NULL) {}
 	safe_ptr(P* p) : p(p) {}
@@ -46,18 +50,10 @@ public:
 	operator P*() { return p; }
 	operator P const*() const { return p; }
 	//bool operator==(const P* _p) const { return p == _p; }
-	P& operator*() {
-		if(!p) throw "pointer access";
-		return *p; }
-	P const& operator*() const {
-		if(!p) throw "pointer access";
-		return *p; }
-	P* operator->() {
-		if(!p) throw "pointer access";
-		return p; }
-	P const* operator->() const {
-		if(!p) throw "pointer access";
-		return p; }
+	P& operator*() { assert_p(p); return *p; }
+	P const& operator*() const { assert_p(p); return *p; }
+	P* operator->() { assert_p(p); return p; }
+	P const* operator->() const { assert_p(p); return p; }
 	bool operator!() const { return p == NULL; }
 };
 
@@ -926,6 +922,9 @@ struct iteration_statement_t : public statement_t
 					ptn<	statement_t,
 							end_token
 		> > > > > > > > > > c;
+
+	//! returns the conditional expression (can be NULL in for loops)
+	expression_t* condition();
 };
 
 struct designator_t : public node_t, public has_par<struct designator_list_t> {};

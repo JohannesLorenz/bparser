@@ -1,6 +1,6 @@
 /*************************************************************************/
 /* bparser - a bison-based, C99 parser                                   */
-/* Copyright (C) 2015-2015                                               */
+/* Copyright (C) 2015-2016                                               */
 /* Johannes Lorenz (jlsf2013 @ sourceforge)                              */
 /*                                                                       */
 /* This program is free software; you can redistribute it and/or modify  */
@@ -24,6 +24,7 @@
 #ifndef TYPE_COMPLETOR_H
 #define TYPE_COMPLETOR_H
 
+#include <stdexcept>
 #include <vector>
 #include <map>
 #include <iostream>
@@ -71,7 +72,7 @@ public:
 namespace detail
 {
 	template<class C1, class C2> struct asgn {
-		static void exec(C1& , const C2&) { throw "error: incompatible_"; }
+		static void exec(C1& , const C2&) { throw std::logic_error("error: incompatible assignment operators"); }
 	};
 	template<class C> struct asgn<C, C> {
 		static void exec(C& dest, const C& src) { dest = src; }
@@ -212,7 +213,7 @@ class type_completor : ftor_base
 					 table.erase(itr);
 				}
 				else if(itr->second.back().first >= (new_depth + 2))
-				 throw "overseen last scope end";
+				 throw std::logic_error("overseen last scope end");
 			}
 		}
 
@@ -235,7 +236,7 @@ public:
 		current_struct_scope(NULL) {}
 
 	~type_completor() {
-		if(decl_depth) throw "Declaration depth counted wrong";
+		if(decl_depth) throw std::logic_error("Declaration depth counted wrong");
 	}
 
 	// expressions...

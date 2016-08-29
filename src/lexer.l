@@ -157,12 +157,12 @@ static int check_type(const char* text);
 							else // must be '
 							{
 								if(*p != '\'')
-								 throw "lexer error for char parsing";
+								 throw std::runtime_error("lexer error for char parsing");
 								ok = false; // end found
 							}
 						} while(ok);
 						++p; // '
-						if(*p) throw "end of token not 0";
+						if(*p) throw std::logic_error("end of token not 0");
 						return app_with_string(yylval->iconstant, I_CONSTANT, yytext, yyleng); }
 
 {D}+{E}{FS}?				{ return app_float(yylval->fconstant, yytext, yyleng); }
@@ -191,7 +191,7 @@ static int check_type(const char* text);
 								else // must be "
 								{
 									if(*p != '"')
-									 throw "lexer error for char parsing";
+									 throw std::runtime_error("lexer error for char parsing");
 									ok = false; // end found
 								}
 							} while(ok);
@@ -209,7 +209,7 @@ static int check_type(const char* text);
 
 						std::size_t length = p - yytext;
 						char* res = new char[length + 1]; res[length] = 0; /*std::copy(yytext, end, yylval->name);*/ strncpy(res, yytext, length);
-						if(*p) throw "end of token not 0";
+						if(*p) throw std::logic_error("end of token not 0");
 						// FEATURE: common routine with identifier
 						return app_with_string(yylval->string_literal, STRING_LITERAL, yytext, yyleng); }
 
@@ -275,7 +275,7 @@ return app3(yylval->token, '{', yytext); }
 "\f"					{ app2(yylval->token, '\f'); }
 " "					{ app2(yylval->token, ' '); }
 "#"([^\\\n])*"\n"			{ pos_counter::parse_ppline(yytext); }
-.					{ std::cerr << "At: " << yytext << std::endl; throw "bad character"; }
+.					{ std::cerr << "At: " << yytext << std::endl; throw std::runtime_error("bad character"); }
 
 %%
 
@@ -481,5 +481,5 @@ lookup_type lt = lookup_table_t::type_of(text);
 }
 
 void yyerror(const char *msg) {
-    fprintf(stderr,"Error:%s\n",msg);
+    fprintf(stderr,"Error: %s\n",msg);
 }

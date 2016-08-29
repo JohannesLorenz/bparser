@@ -27,10 +27,12 @@
 #include "lexer.h"
 
 extern void dump_lookup_table();
+extern geom_t get_pos();
 
 int yyerror(translation_unit_t ** /*expression*/, yyscan_t scanner, const char *msg) {
 	dump_lookup_table();
-	fprintf(stderr,"At: %s,\n  line %d, column %d: Error:%s\n", yyget_text(scanner), yyget_lineno(scanner), yyget_column(scanner), msg); return 0;
+	//fprintf(stderr,"At: %s,\n  line %d, column %d: Error:%s\n", yyget_text(scanner), yyget_lineno(scanner), yyget_column(scanner), msg); return 0;
+	fprintf(stderr,"%s: line %d, column %d: Error: %s\n", get_pos().file().c_str(), get_pos().line, get_pos().col, msg); return 0;
 	// Add error handling routine as needed
 }
 
@@ -58,7 +60,7 @@ R* app_right(R* cur, S& stor, Right* left) {
 	 return stor.push_back(left), cur;
 }
 
-void c11() { throw "This C11 extension is not implemented yet."; }
+void c11() { throw std::runtime_error("This C11 extension is not implemented yet."); }
 
 extern std::vector<terminal_t*>& get_token_vector();
 
@@ -334,7 +336,7 @@ typedef void* yyscan_t;
 %%
 
 primary_expression // parents: postfix_expression
-	: IDENTIFIER { if(type_of($1->raw.c_str())==lt_undefined) throw "identifier undefined"; else
+	: IDENTIFIER { if(type_of($1->raw.c_str())==lt_undefined) throw std::runtime_error("identifier undefined"); else
 		{ alloc($$); setc($$, $$->c, NULL, $1); } }
 	| constant { alloc($$); $$->c.set($1); }
 	| string { alloc($$); $$->c.set($1); }

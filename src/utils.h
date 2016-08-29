@@ -6,6 +6,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <stdexcept>
 #include <string>
 #include "visitor.h"
 
@@ -259,7 +260,7 @@ struct struct_type_specifier_of_declaration_t : visitor_t
 			if(src)
 			 result = src;
 			else // not sure if this is possible, but let's just throw for now
-			 throw "struct has definition which is not a struct...";
+			 throw std::logic_error("struct has definition which is not a struct...");
 		}
 		}
 	void visit(typedef_name_t& t);
