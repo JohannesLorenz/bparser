@@ -688,10 +688,21 @@ struct array_access_expression_t : public expression_t
 
 struct argument_expression_list_t : public node_t, public has_par<>
 {
+private:
+	expression_t& rget(std::size_t idx) {
+		return idx ? c.get<0>()->rget(idx-1) : *c.get<2>();
+	}
+public:
 	ptn<	argument_expression_list_t,
 		ptn<	token_t,
 			ptn<	expression_t> > > c;
-
+	
+	expression_t& get(std::size_t idx) {
+		return rget(size() - 1 - idx);
+	}
+	std::size_t size() const {
+		return c.get<0>() ? (1 + c.get<0>()->size()) : 0;
+	}
 	virtual void accept(class visitor_t& v);
 };
 

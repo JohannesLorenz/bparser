@@ -211,7 +211,7 @@ std::vector<std::string> file_map::files;
 std::vector<std::string>& get_files() { return file_map::files; }
 
 
-
+int recent_typedef_keyword = -1;
 
 class lookup_table_t
 {
@@ -246,6 +246,9 @@ public:
 #ifdef LEXER_DEBUG
 		std::cout << "DEPTH decreased to: " << new_depth << std::endl;
 #endif
+		if(recent_typedef_keyword > new_depth)
+		 recent_typedef_keyword = -1;
+
 		table_t::iterator itr = table.begin(),
 			next = table.begin();
 		if(bparser_debug)
@@ -921,7 +924,6 @@ int app_int(iconstant_t*& token, const char* text, char scanf_type, std::size_t 
 }
 
 bool recent_struct_access = false;
-int recent_typedef_keyword = -1;
 bool in_enum_block = false;
 int braces_since_typedef = 0;
 

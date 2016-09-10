@@ -88,16 +88,21 @@ template<class Tpl, std::size_t Idx>
 struct _value_at
 {
 	static typename type_at<Tpl, Idx>::type& get(Tpl& tpl) { return _value_at<typename Tpl::next, Idx-1>::get(tpl.get_next()); }
+	static const typename type_at<Tpl, Idx>::type& get(const Tpl& tpl) { return _value_at<typename Tpl::next, Idx-1>::get(tpl.get_next()); }
 };
 
 template<class Tpl>
 struct _value_at<Tpl, 0>
 {
 	static typename type_at<Tpl, 0>::type& get(Tpl& tpl) { return tpl.value; }
+	static const typename type_at<Tpl, 0>::type& get(const Tpl& tpl) { return tpl.value; }
 };
 
 template<std::size_t Idx, class Tpl>
 typename type_at<Tpl, Idx>::type& value_at(Tpl& tpl) { return _value_at<Tpl, Idx>::get(tpl); }
+
+template<std::size_t Idx, class Tpl>
+const typename type_at<Tpl, Idx>::type& value_at(const Tpl& tpl) { return _value_at<Tpl, Idx>::get(tpl); }
 
 // FEATURE: const versions for both args
 template<class Tpl>
@@ -222,6 +227,9 @@ public:
 
 	template<std::size_t Idx>
 	typename type_at<self, Idx>::type& get() { return value_at<Idx, self>(*this); }
+
+	template<std::size_t Idx>
+	const typename type_at<self, Idx>::type& get() const { return value_at<Idx, self>(*this); }
 };
 
 template<class T>
@@ -255,7 +263,7 @@ public:
 	std::size_t size() const { return 1; }
 
 	template<std::size_t Idx>
-	typename type_at<self, Idx>::type& get() {
+	const typename type_at<self, Idx>::type& get() {
 		if(Idx > 0) throw std::out_of_range("tuple index out of range");
 		return value_at<0, self>(*this); }
 
