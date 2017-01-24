@@ -302,6 +302,10 @@ enum binary_op_t
 	op_com
 };
 
+inline bool makes_assignment(binary_op_t b) {
+	return b >= op_asn && b <= op_asn_or;
+}
+
 typedef ptn<token_t> end_token;
 
 struct expression_t : public node_t, public has_par<> {};
