@@ -284,10 +284,16 @@ public:
 	void on(const NodeType&)
 #endif
 	template<class NodeType>
-	void handle_depth_inc(NodeType& , enter)
+	void handle_depth_inc(NodeType& n, enter)
 	{
-	//	if(scope_types::inc_depth<NodeType>::value)
-	//	 std::cout << "++ " << typeid(n).name() << std::endl;
+#ifdef TYPE_COMPLETOR_DEBUG
+		if(scope_types::inc_depth<NodeType>::value)
+		{
+			for(std::size_t i = 0; i < decl_depth; ++i)
+			 std::cout << "  ";
+			std::cout << "++ " << typeid(n).name() << " " << n.span.first << std::endl;
+		}
+#endif
 		decl_depth += scope_types::inc_depth<NodeType>::value;
 	}
 
@@ -298,10 +304,16 @@ public:
 	void handle_depth_dec(NodeType& , enter) {}
 
 	template<class NodeType>
-	void handle_depth_dec(NodeType& , leave)
+	void handle_depth_dec(NodeType& n, leave)
 	{
-	//	if(scope_types::inc_depth<NodeType>::value)
-	//	 std::cout << "-- " << typeid(n).name() << std::endl;
+#ifdef TYPE_COMPLETOR_DEBUG
+		if(scope_types::inc_depth<NodeType>::value)
+		{
+			for(std::size_t i = 0; i < decl_depth - 1; ++i)
+			 std::cout << "  ";
+			std::cout << "-- " << typeid(n).name() << " " << n.span.first << std::endl;
+		}
+#endif
 		int dec_val = scope_types::inc_depth<NodeType>::value;
 		if(dec_val) {
 			v_lookup_table.notify_dec_decl_depth(--decl_depth);
