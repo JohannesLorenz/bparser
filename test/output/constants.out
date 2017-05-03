@@ -1,4 +1,4 @@
-                       constants (l   1 c   1) (l  24 c   2) translation unit
+                       constants (l   1 c   1) (l  25 c   2) translation unit
                        constants (l   1 c   1) (l   4 c   7)   external declaration
                        constants (l   1 c   1) (l   4 c   7)     declaration
                        constants (l   1 c   1) (l   4 c   2)       declaration specifiers
@@ -12,8 +12,8 @@
                        constants (l   4 c   3) (l   4 c   6)       direct declarator (identifier)
                        constants (l   4 c   3) (l   4 c   6)         identifier (definition): e_t
                        constants (l   4 c   6) (l   4 c   7)       ;
-                       constants (l   6 c   1) (l  24 c   2)   external declaration
-                       constants (l   6 c   1) (l  24 c   2)     function definition
+                       constants (l   6 c   1) (l  25 c   2)   external declaration
+                       constants (l   6 c   1) (l  25 c   2)     function definition
                        constants (l   6 c   1) (l   6 c   4)       type specifier
                        constants (l   6 c   1) (l   6 c   4)         "int"
                        constants (l   6 c   5) (l   6 c  11)       direct declarator (function)
@@ -21,7 +21,7 @@
                        constants (l   6 c   5) (l   6 c   9)           identifier (definition): main
                        constants (l   6 c   9) (l   6 c  10)         (
                        constants (l   6 c  10) (l   6 c  11)         )
-                       constants (l   7 c   1) (l  24 c   2)       compound statement
+                       constants (l   7 c   1) (l  25 c   2)       compound statement
                        constants (l   7 c   1) (l   7 c   2)         {
                        constants (l   8 c   2) (l   8 c  16)         declaration
                        constants (l   8 c   2) (l   8 c   5)           type specifier
@@ -224,4 +224,21 @@
                        constants (l  23 c  28) (l  23 c  59)               primary expression
                        constants (l  23 c  28) (l  23 c  59)                 string literal: "\'\"\?\\\a\b\f\n\r\t\b\077\xFF"
                        constants (l  23 c  59) (l  23 c  60)           ;
-                       constants (l  24 c   1) (l  24 c   2)         }
+                       constants (l  24 c   2) (l  24 c  38)         declaration
+                       constants (l  24 c   2) (l  24 c  12)           declaration specifiers
+                       constants (l  24 c   2) (l  24 c   7)             type qualifier
+                       constants (l  24 c   2) (l  24 c   7)               "const"
+                       constants (l  24 c   8) (l  24 c  12)             type specifier
+                       constants (l  24 c   8) (l  24 c  12)               "char"
+                       constants (l  24 c  12) (l  24 c  37)           init declarator
+                       constants (l  24 c  12) (l  24 c  22)             declarator
+                       constants (l  24 c  12) (l  24 c  13)               pointer
+                       constants (l  24 c  12) (l  24 c  13)                 *
+                       constants (l  24 c  14) (l  24 c  22)               direct declarator (identifier)
+                       constants (l  24 c  14) (l  24 c  22)                 identifier (definition): funcname
+                       constants (l  24 c  23) (l  24 c  24)             =
+                       constants (l  24 c  25) (l  24 c  37)             initializer
+                       constants (l  24 c  25) (l  24 c  37)               primary expression
+                       constants (l  24 c  25) (l  24 c  37)                 "__FUNCTION__"
+                       constants (l  24 c  37) (l  24 c  38)           ;
+                       constants (l  25 c   1) (l  25 c   2)         }
