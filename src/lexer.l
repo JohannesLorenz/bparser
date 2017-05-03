@@ -95,6 +95,7 @@ static int check_type(const char* text);
 "_Static_assert"                        { return app3(yylval->token, STATIC_ASSERT, yytext); }
 "_Thread_local"                         { return app3(yylval->token, THREAD_LOCAL, yytext); }
 "__func__"                              { return app3(yylval->token, FUNC_NAME, yytext); }
+"__FUNCTION__"                          { return app3(yylval->token, FUNCTION_NAME, yytext); }
 "__attribute__"				{ return app3(yylval->token, ATTRIBUTE, yytext); }
 
 {L}{A}*					{	

@@ -35,6 +35,7 @@ const id_and_name names[] =
 	{ t_f_constant, "<float constant>" },
 	{ t_string_literal, "<string literal>" },
 	{ t_func_name, "__func__" },
+	{ t_function_name, "__FUNCTION__" },
 	{ t_sizeof, "sizeof" },
 	{ t_ptr_op, "->" },
 	{ t_inc_op, "++" },
@@ -126,6 +127,7 @@ std::size_t token_length(token_id t)
 		case t_static_assert:
 			return 13;
 		case t_thread_local:
+		case t_function_name:
 			return 12;
 		case t_imaginary:
 			return 9;
@@ -136,6 +138,7 @@ std::size_t token_length(token_id t)
 		case t_continue:
 		case t_noreturn:
 		case t_complex:
+		case t_func_name:
 			return 8;
 		case t_typedef:
 		case t_default:

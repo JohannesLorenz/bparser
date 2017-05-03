@@ -41,6 +41,7 @@ enum token_id
 	t_f_constant = F_CONSTANT,
 	t_string_literal = STRING_LITERAL,
 	t_func_name = FUNC_NAME,
+	t_function_name = FUNCTION_NAME,
 	t_sizeof = SIZEOF,
 	t_ptr_op = PTR_OP,
 	t_inc_op = INC_OP,

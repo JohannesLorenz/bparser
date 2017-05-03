@@ -79,6 +79,7 @@ struct identifier_t;
 struct typedef_name_t;
 struct enumeration_constant_t;
 struct string_literal_t;
+struct func_name_t;
 struct sizeof_expression_t;
 struct init_declarator_list_t;
 struct init_declarator_t;

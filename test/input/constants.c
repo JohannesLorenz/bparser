@@ -21,4 +21,5 @@ int main()
 		"World"
 		"!";
 	const char* complex_str = "\'\"\?\\\a\b\f\n\r\t\b\077\xFF";
+	const char* funcname = __FUNCTION__;
 }

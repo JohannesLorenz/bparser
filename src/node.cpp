@@ -130,6 +130,11 @@ comment_t::comment_t(const std::string& value, geom_t geom) :
 {
 }
 
+func_name_t::func_name_t(const std::string& value, geom_t geom) :
+	string_base_t(value.c_str(), geom, t_func_name)
+{
+}
+
 std::size_t noconst_1line_terminal_t::length() const { return raw.length(); }
 std::size_t noconst_1line_terminal_t::newlines() const { return 0; }
 
@@ -203,6 +208,7 @@ void enumeration_constant_t::accept(visitor_t &v) { v.vis(this); }
 void typedef_name_t::accept(visitor_t &v) { v.vis(this); }
 void string_literal_t::accept(visitor_t &v) { v.vis(this); }
 void comment_t::accept(visitor_t &v) { v.vis(this); }
+void func_name_t::accept(visitor_t &v) { v.vis(this); }
 
 void init_declarator_t::accept(visitor_t &v) { v.vis(this); }
 void init_declarator_list_t::accept(visitor_t &v) { v.vis(this); }

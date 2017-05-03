@@ -858,6 +858,13 @@ void dumper_t::visit(comment_t& n)
 	fwd::visit(n);
 }
 
+void dumper_t::visit(func_name_t& n)
+{
+	incr_depth_t x(&depth, stream, n.span);
+	stream << "__FUNCTION__" << std::endl;
+	fwd::visit(n);
+}
+
 void dumper_t::visit(type_specifier_t &t)
 {
 	incr_depth_t x(&depth, stream, t.span);

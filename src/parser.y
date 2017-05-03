@@ -207,13 +207,14 @@ typedef void* yyscan_t;
 	fconstant_t* fconstant;
 
 	string_literal_t* string_literal;
+	func_name_t* func_name;
 
 	translation_unit_t* translation_unit;
 }
 
 %token  COMMENT
 %token	ATTR_NAME ATTRIBUTE
-%token	IDENTIFIER I_CONSTANT F_CONSTANT STRING_LITERAL FUNC_NAME SIZEOF
+%token	IDENTIFIER I_CONSTANT F_CONSTANT STRING_LITERAL FUNC_NAME FUNCTION_NAME SIZEOF
 %token	PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
 %token	AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
 %token	SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
@@ -234,6 +235,7 @@ typedef void* yyscan_t;
 %type <enumeration_constant> ENUMERATION_CONSTANT
 %type <typedef_name> TYPEDEF_NAME
 
+%type <func_name> FUNC_NAME FUNCTION_NAME
 %type <string_literal> STRING_LITERAL
 %type <iconstant> I_CONSTANT
 %type <fconstant> F_CONSTANT
@@ -357,6 +359,7 @@ enumeration_constant		/* before it has been defined as such */
 string
 	: STRING_LITERAL { $$=$1; /*c->c.set($1);*/ }
 	| FUNC_NAME { c11(); }
+	| FUNCTION_NAME { $$=$1; }
 	;
 
 generic_selection

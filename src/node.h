@@ -208,6 +208,12 @@ struct comment_t : public string_base_t
 	comment_t(const std::string& value, geom_t geom);
 };
 
+struct func_name_t : public string_base_t
+{
+	void accept(class visitor_t& v);
+	func_name_t(const std::string& value, geom_t geom);
+};
+
 struct declaration_specifier_type : public node_t, public has_par<> {
 	declaration_specifier_type() {}
 	declaration_specifier_type(const geom_t& geom) : node_t(geom) {}
