@@ -675,13 +675,19 @@ class geom_completor : ftor_base
 		{
 			end.line = start.line + newlines;
 			end.col = 1 + length;
-			end.tabcol = 1 + tablength;
+			end.tabcol = tablength ? (1 + tablength) : (1 + length);
 		}
 		else
 		{
 			end.line = start.line;
 			end.col = start.col + length;
 			end.tabcol = start.tabcol + tablength;
+			
+			if(tablength)
+			 end.tabcol += tablength - ((end.tabcol-1) % tablength);
+			else
+			 end.tabcol += length;
+			// -> -1 because the tabs are aligned at 1+8*N
 		}
 	}
 

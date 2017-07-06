@@ -113,12 +113,16 @@ public:
 			{
 				last_line += newlines;
 				last_col = 1 + length;
-				last_tabcol = 1 + tablength;
+				last_tabcol = tablength ? (1 + tablength) : (1 + length);
 			}
 			else
 			{
 				last_col += length;
-				last_tabcol += tablength;
+				if(tablength)
+				 last_tabcol += tablength - ((last_tabcol-1) % tablength);
+				else
+				 last_tabcol += length;
+				// -> -1 because the tabs are aligned at 1+8*N
 			}
 		}
 		return span_t();

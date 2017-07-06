@@ -255,7 +255,7 @@
               direct_declarators (l  18 c   2) (l  18 c   7)               identifier: func2 (definition: direct_declarators: l13, c6-11)
               direct_declarators (l  18 c   7) (l  18 c   8)             (
               direct_declarators (l  18 c   8) (l  18 c   9)             primary expression
-              direct_declarators (l  18 c   8) (l  18 c   9)               identifier: a (definition: direct_declarators: l17, c6-7)
+              direct_declarators (l  18 c   8) (l  18 c   9)               identifier: a (definition: direct_declarators: l17, c13-14)
               direct_declarators (l  18 c   9) (l  18 c  10)             )
               direct_declarators (l  18 c  10) (l  18 c  11)           ;
               direct_declarators (l  19 c   1) (l  19 c   2)         }

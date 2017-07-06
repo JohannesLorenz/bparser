@@ -73,7 +73,7 @@ std::size_t token_t::length() const
 
 std::size_t token_t::tablength() const
 {
-	return (value() == '\t') ? 8 : token_t::length();
+	return (value() == '\t') ? 8 : 0;
 }
 
 std::size_t token_t::newlines() const

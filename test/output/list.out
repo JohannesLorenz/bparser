@@ -38,8 +38,8 @@
                             list (l   8 c   2) (l   8 c   6)               primary expression
                             list (l   8 c   2) (l   8 c   6)                 identifier: list (definition: list: l4, c3-7)
                             list (l   8 c   6) (l   8 c   7)               .
-                            list (l   8 c   7) (l   8 c  11)               identifier: next (definition: list: l3, c17-21)
+                            list (l   8 c   7) (l   8 c  11)               identifier: next (definition: list: l3, c24-28)
                             list (l   8 c  11) (l   8 c  13)             ->
-                            list (l   8 c  13) (l   8 c  17)             identifier: next (definition: list: l3, c17-21)
+                            list (l   8 c  13) (l   8 c  17)             identifier: next (definition: list: l3, c24-28)
                             list (l   8 c  17) (l   8 c  18)           ;
                             list (l   9 c   1) (l   9 c   2)         }

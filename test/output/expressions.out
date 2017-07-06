@@ -104,17 +104,17 @@
                      expressions (l  11 c   2) (l  11 c  15)         expression statement
                      expressions (l  11 c   2) (l  11 c  14)           binary expression 
                      expressions (l  11 c   2) (l  11 c   3)             primary expression
-                     expressions (l  11 c   2) (l  11 c   3)               identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  11 c   2) (l  11 c   3)               identifier: x (definition: expressions: l9, c13-14)
                      expressions (l  11 c   3) (l  11 c   4)             =
                      expressions (l  11 c   4) (l  11 c  14)             primary expression
                      expressions (l  11 c   4) (l  11 c   5)               (
                      expressions (l  11 c   5) (l  11 c  13)               binary expression 
                      expressions (l  11 c   5) (l  11 c   6)                 primary expression
-                     expressions (l  11 c   5) (l  11 c   6)                   identifier: z (definition: expressions: l9, c12-13)
+                     expressions (l  11 c   5) (l  11 c   6)                   identifier: z (definition: expressions: l9, c19-20)
                      expressions (l  11 c   6) (l  11 c   7)                 ,
                      expressions (l  11 c   8) (l  11 c  13)                 ternary expression
                      expressions (l  11 c   8) (l  11 c   9)                   primary expression
-                     expressions (l  11 c   8) (l  11 c   9)                     identifier: y (definition: expressions: l9, c9-10)
+                     expressions (l  11 c   8) (l  11 c   9)                     identifier: y (definition: expressions: l9, c16-17)
                      expressions (l  11 c   9) (l  11 c  10)                   ?
                      expressions (l  11 c  10) (l  11 c  11)                   primary expression
                      expressions (l  11 c  10) (l  11 c  11)                     int constant: 1 (type: d)
@@ -126,130 +126,130 @@
                      expressions (l  12 c   2) (l  12 c  14)         expression statement
                      expressions (l  12 c   2) (l  12 c  13)           binary expression 
                      expressions (l  12 c   2) (l  12 c   3)             primary expression
-                     expressions (l  12 c   2) (l  12 c   3)               identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  12 c   2) (l  12 c   3)               identifier: x (definition: expressions: l9, c13-14)
                      expressions (l  12 c   4) (l  12 c   6)             *=
                      expressions (l  12 c   7) (l  12 c  13)             binary expression 
                      expressions (l  12 c   7) (l  12 c   8)               primary expression
-                     expressions (l  12 c   7) (l  12 c   8)                 identifier: z (definition: expressions: l9, c12-13)
+                     expressions (l  12 c   7) (l  12 c   8)                 identifier: z (definition: expressions: l9, c19-20)
                      expressions (l  12 c   9) (l  12 c  11)               ||
                      expressions (l  12 c  12) (l  12 c  13)               primary expression
-                     expressions (l  12 c  12) (l  12 c  13)                 identifier: y (definition: expressions: l9, c9-10)
+                     expressions (l  12 c  12) (l  12 c  13)                 identifier: y (definition: expressions: l9, c16-17)
                      expressions (l  12 c  13) (l  12 c  14)           ;
                      expressions (l  13 c   2) (l  13 c  14)         expression statement
                      expressions (l  13 c   2) (l  13 c  13)           binary expression 
                      expressions (l  13 c   2) (l  13 c   3)             primary expression
-                     expressions (l  13 c   2) (l  13 c   3)               identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  13 c   2) (l  13 c   3)               identifier: x (definition: expressions: l9, c13-14)
                      expressions (l  13 c   4) (l  13 c   6)             /=
                      expressions (l  13 c   7) (l  13 c  13)             binary expression 
                      expressions (l  13 c   7) (l  13 c   8)               primary expression
-                     expressions (l  13 c   7) (l  13 c   8)                 identifier: z (definition: expressions: l9, c12-13)
+                     expressions (l  13 c   7) (l  13 c   8)                 identifier: z (definition: expressions: l9, c19-20)
                      expressions (l  13 c   9) (l  13 c  11)               &&
                      expressions (l  13 c  12) (l  13 c  13)               primary expression
-                     expressions (l  13 c  12) (l  13 c  13)                 identifier: y (definition: expressions: l9, c9-10)
+                     expressions (l  13 c  12) (l  13 c  13)                 identifier: y (definition: expressions: l9, c16-17)
                      expressions (l  13 c  13) (l  13 c  14)           ;
                      expressions (l  14 c   2) (l  14 c  13)         expression statement
                      expressions (l  14 c   2) (l  14 c  12)           binary expression 
                      expressions (l  14 c   2) (l  14 c   3)             primary expression
-                     expressions (l  14 c   2) (l  14 c   3)               identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  14 c   2) (l  14 c   3)               identifier: x (definition: expressions: l9, c13-14)
                      expressions (l  14 c   4) (l  14 c   6)             %=
                      expressions (l  14 c   7) (l  14 c  12)             binary expression 
                      expressions (l  14 c   7) (l  14 c   8)               primary expression
-                     expressions (l  14 c   7) (l  14 c   8)                 identifier: z (definition: expressions: l9, c12-13)
+                     expressions (l  14 c   7) (l  14 c   8)                 identifier: z (definition: expressions: l9, c19-20)
                      expressions (l  14 c   9) (l  14 c  10)               ^
                      expressions (l  14 c  11) (l  14 c  12)               primary expression
-                     expressions (l  14 c  11) (l  14 c  12)                 identifier: y (definition: expressions: l9, c9-10)
+                     expressions (l  14 c  11) (l  14 c  12)                 identifier: y (definition: expressions: l9, c16-17)
                      expressions (l  14 c  12) (l  14 c  13)           ;
                      expressions (l  15 c   2) (l  15 c  13)         expression statement
                      expressions (l  15 c   2) (l  15 c  12)           binary expression 
                      expressions (l  15 c   2) (l  15 c   3)             primary expression
-                     expressions (l  15 c   2) (l  15 c   3)               identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  15 c   2) (l  15 c   3)               identifier: x (definition: expressions: l9, c13-14)
                      expressions (l  15 c   4) (l  15 c   6)             +=
                      expressions (l  15 c   7) (l  15 c  12)             binary expression 
                      expressions (l  15 c   7) (l  15 c   8)               primary expression
-                     expressions (l  15 c   7) (l  15 c   8)                 identifier: z (definition: expressions: l9, c12-13)
+                     expressions (l  15 c   7) (l  15 c   8)                 identifier: z (definition: expressions: l9, c19-20)
                      expressions (l  15 c   9) (l  15 c  10)               |
                      expressions (l  15 c  11) (l  15 c  12)               primary expression
-                     expressions (l  15 c  11) (l  15 c  12)                 identifier: y (definition: expressions: l9, c9-10)
+                     expressions (l  15 c  11) (l  15 c  12)                 identifier: y (definition: expressions: l9, c16-17)
                      expressions (l  15 c  12) (l  15 c  13)           ;
                      expressions (l  16 c   2) (l  16 c  13)         expression statement
                      expressions (l  16 c   2) (l  16 c  12)           binary expression 
                      expressions (l  16 c   2) (l  16 c   3)             primary expression
-                     expressions (l  16 c   2) (l  16 c   3)               identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  16 c   2) (l  16 c   3)               identifier: x (definition: expressions: l9, c13-14)
                      expressions (l  16 c   4) (l  16 c   6)             -=
                      expressions (l  16 c   7) (l  16 c  12)             binary expression 
                      expressions (l  16 c   7) (l  16 c   8)               primary expression
-                     expressions (l  16 c   7) (l  16 c   8)                 identifier: z (definition: expressions: l9, c12-13)
+                     expressions (l  16 c   7) (l  16 c   8)                 identifier: z (definition: expressions: l9, c19-20)
                      expressions (l  16 c   9) (l  16 c  10)               &
                      expressions (l  16 c  11) (l  16 c  12)               primary expression
-                     expressions (l  16 c  11) (l  16 c  12)                 identifier: y (definition: expressions: l9, c9-10)
+                     expressions (l  16 c  11) (l  16 c  12)                 identifier: y (definition: expressions: l9, c16-17)
                      expressions (l  16 c  12) (l  16 c  13)           ;
                      expressions (l  17 c   2) (l  17 c  14)         expression statement
                      expressions (l  17 c   2) (l  17 c  13)           binary expression 
                      expressions (l  17 c   2) (l  17 c   3)             primary expression
-                     expressions (l  17 c   2) (l  17 c   3)               identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  17 c   2) (l  17 c   3)               identifier: x (definition: expressions: l9, c13-14)
                      expressions (l  17 c   4) (l  17 c   7)             <<=
                      expressions (l  17 c   8) (l  17 c  13)             binary expression 
                      expressions (l  17 c   8) (l  17 c   9)               primary expression
-                     expressions (l  17 c   8) (l  17 c   9)                 identifier: z (definition: expressions: l9, c12-13)
+                     expressions (l  17 c   8) (l  17 c   9)                 identifier: z (definition: expressions: l9, c19-20)
                      expressions (l  17 c  10) (l  17 c  11)               <
                      expressions (l  17 c  12) (l  17 c  13)               primary expression
-                     expressions (l  17 c  12) (l  17 c  13)                 identifier: y (definition: expressions: l9, c9-10)
+                     expressions (l  17 c  12) (l  17 c  13)                 identifier: y (definition: expressions: l9, c16-17)
                      expressions (l  17 c  13) (l  17 c  14)           ;
                      expressions (l  18 c   2) (l  18 c  16)         expression statement
                      expressions (l  18 c   2) (l  18 c  15)           binary expression 
                      expressions (l  18 c   2) (l  18 c   3)             primary expression
-                     expressions (l  18 c   2) (l  18 c   3)               identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  18 c   2) (l  18 c   3)               identifier: x (definition: expressions: l9, c13-14)
                      expressions (l  18 c   4) (l  18 c   7)             >>=
                      expressions (l  18 c   8) (l  18 c  15)             binary expression 
                      expressions (l  18 c   8) (l  18 c   9)               primary expression
-                     expressions (l  18 c   8) (l  18 c   9)                 identifier: z (definition: expressions: l9, c12-13)
+                     expressions (l  18 c   8) (l  18 c   9)                 identifier: z (definition: expressions: l9, c19-20)
                      expressions (l  18 c  10) (l  18 c  11)               >
                      expressions (l  18 c  12) (l  18 c  15)               unary_expression (postfix)
                      expressions (l  18 c  12) (l  18 c  13)                 primary expression
-                     expressions (l  18 c  12) (l  18 c  13)                   identifier: y (definition: expressions: l9, c9-10)
+                     expressions (l  18 c  12) (l  18 c  13)                   identifier: y (definition: expressions: l9, c16-17)
                      expressions (l  18 c  13) (l  18 c  15)                 ++
                      expressions (l  18 c  15) (l  18 c  16)           ;
                      expressions (l  19 c   2) (l  19 c  16)         expression statement
                      expressions (l  19 c   2) (l  19 c  15)           binary expression 
                      expressions (l  19 c   2) (l  19 c   3)             primary expression
-                     expressions (l  19 c   2) (l  19 c   3)               identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  19 c   2) (l  19 c   3)               identifier: x (definition: expressions: l9, c13-14)
                      expressions (l  19 c   4) (l  19 c   6)             &=
                      expressions (l  19 c   7) (l  19 c  15)             binary expression 
                      expressions (l  19 c   7) (l  19 c   8)               primary expression
-                     expressions (l  19 c   7) (l  19 c   8)                 identifier: z (definition: expressions: l9, c12-13)
+                     expressions (l  19 c   7) (l  19 c   8)                 identifier: z (definition: expressions: l9, c19-20)
                      expressions (l  19 c   9) (l  19 c  11)               !=
                      expressions (l  19 c  12) (l  19 c  15)               unary_expression (postfix)
                      expressions (l  19 c  12) (l  19 c  13)                 primary expression
-                     expressions (l  19 c  12) (l  19 c  13)                   identifier: y (definition: expressions: l9, c9-10)
+                     expressions (l  19 c  12) (l  19 c  13)                   identifier: y (definition: expressions: l9, c16-17)
                      expressions (l  19 c  13) (l  19 c  15)                 --
                      expressions (l  19 c  15) (l  19 c  16)           ;
                      expressions (l  20 c   2) (l  20 c  16)         expression statement
                      expressions (l  20 c   2) (l  20 c  15)           binary expression 
                      expressions (l  20 c   2) (l  20 c   3)             primary expression
-                     expressions (l  20 c   2) (l  20 c   3)               identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  20 c   2) (l  20 c   3)               identifier: x (definition: expressions: l9, c13-14)
                      expressions (l  20 c   4) (l  20 c   6)             |=
                      expressions (l  20 c   7) (l  20 c  15)             binary expression 
                      expressions (l  20 c   7) (l  20 c   8)               primary expression
-                     expressions (l  20 c   7) (l  20 c   8)                 identifier: z (definition: expressions: l9, c12-13)
+                     expressions (l  20 c   7) (l  20 c   8)                 identifier: z (definition: expressions: l9, c19-20)
                      expressions (l  20 c   9) (l  20 c  11)               ==
                      expressions (l  20 c  12) (l  20 c  15)               unary_expression (prefix)
                      expressions (l  20 c  12) (l  20 c  14)                 ++
                      expressions (l  20 c  14) (l  20 c  15)                 primary expression
-                     expressions (l  20 c  14) (l  20 c  15)                   identifier: y (definition: expressions: l9, c9-10)
+                     expressions (l  20 c  14) (l  20 c  15)                   identifier: y (definition: expressions: l9, c16-17)
                      expressions (l  20 c  15) (l  20 c  16)           ;
                      expressions (l  21 c   2) (l  21 c  16)         expression statement
                      expressions (l  21 c   2) (l  21 c  15)           binary expression 
                      expressions (l  21 c   2) (l  21 c   3)             primary expression
-                     expressions (l  21 c   2) (l  21 c   3)               identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  21 c   2) (l  21 c   3)               identifier: x (definition: expressions: l9, c13-14)
                      expressions (l  21 c   4) (l  21 c   6)             ^=
                      expressions (l  21 c   7) (l  21 c  15)             binary expression 
                      expressions (l  21 c   7) (l  21 c   8)               primary expression
-                     expressions (l  21 c   7) (l  21 c   8)                 identifier: z (definition: expressions: l9, c12-13)
+                     expressions (l  21 c   7) (l  21 c   8)                 identifier: z (definition: expressions: l9, c19-20)
                      expressions (l  21 c   9) (l  21 c  11)               <=
                      expressions (l  21 c  12) (l  21 c  15)               unary_expression (prefix)
                      expressions (l  21 c  12) (l  21 c  14)                 --
                      expressions (l  21 c  14) (l  21 c  15)                 primary expression
-                     expressions (l  21 c  14) (l  21 c  15)                   identifier: y (definition: expressions: l9, c9-10)
+                     expressions (l  21 c  14) (l  21 c  15)                   identifier: y (definition: expressions: l9, c16-17)
                      expressions (l  21 c  15) (l  21 c  16)           ;
                      expressions (l  22 c   2) (l  22 c  19)         expression statement
                      expressions (l  22 c   2) (l  22 c  18)           binary expression 
@@ -257,7 +257,7 @@
                      expressions (l  22 c   2) (l  22 c   3)               (
                      expressions (l  22 c   3) (l  22 c   7)               binary expression 
                      expressions (l  22 c   3) (l  22 c   4)                 primary expression
-                     expressions (l  22 c   3) (l  22 c   4)                   identifier: z (definition: expressions: l9, c12-13)
+                     expressions (l  22 c   3) (l  22 c   4)                   identifier: z (definition: expressions: l9, c19-20)
                      expressions (l  22 c   4) (l  22 c   6)                 <<
                      expressions (l  22 c   6) (l  22 c   7)                 primary expression
                      expressions (l  22 c   6) (l  22 c   7)                   int constant: 1 (type: d)
@@ -267,7 +267,7 @@
                      expressions (l  22 c  12) (l  22 c  13)               (
                      expressions (l  22 c  13) (l  22 c  17)               binary expression 
                      expressions (l  22 c  13) (l  22 c  14)                 primary expression
-                     expressions (l  22 c  13) (l  22 c  14)                   identifier: y (definition: expressions: l9, c9-10)
+                     expressions (l  22 c  13) (l  22 c  14)                   identifier: y (definition: expressions: l9, c16-17)
                      expressions (l  22 c  14) (l  22 c  16)                 >>
                      expressions (l  22 c  16) (l  22 c  17)                 primary expression
                      expressions (l  22 c  16) (l  22 c  17)                   int constant: 2 (type: d)
@@ -287,7 +287,7 @@
                      expressions (l  23 c   9) (l  23 c  39)                 binary expression 
                      expressions (l  23 c   9) (l  23 c  17)                   binary expression 
                      expressions (l  23 c   9) (l  23 c  10)                     primary expression
-                     expressions (l  23 c   9) (l  23 c  10)                       identifier: y (definition: expressions: l9, c9-10)
+                     expressions (l  23 c   9) (l  23 c  10)                       identifier: y (definition: expressions: l9, c16-17)
                      expressions (l  23 c  11) (l  23 c  12)                     +
                      expressions (l  23 c  13) (l  23 c  17)                     primary expression
                      expressions (l  23 c  13) (l  23 c  14)                       (
@@ -329,7 +329,7 @@
                      expressions (l  24 c   8) (l  24 c  11)             primary expression
                      expressions (l  24 c   8) (l  24 c   9)               (
                      expressions (l  24 c   9) (l  24 c  10)               primary expression
-                     expressions (l  24 c   9) (l  24 c  10)                 identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  24 c   9) (l  24 c  10)                 identifier: x (definition: expressions: l9, c13-14)
                      expressions (l  24 c  10) (l  24 c  11)               )
                      expressions (l  24 c  11) (l  24 c  12)           ;
                      expressions (l  25 c   2) (l  25 c  14)         expression statement
@@ -366,19 +366,19 @@
                      expressions (l  29 c   2) (l  29 c   9)         expression statement
                      expressions (l  29 c   2) (l  29 c   8)           binary expression 
                      expressions (l  29 c   2) (l  29 c   3)             primary expression
-                     expressions (l  29 c   2) (l  29 c   3)               identifier: p (definition: expressions: l28, c7-8)
+                     expressions (l  29 c   2) (l  29 c   3)               identifier: p (definition: expressions: l28, c14-15)
                      expressions (l  29 c   4) (l  29 c   5)             =
                      expressions (l  29 c   6) (l  29 c   8)             unary_expression (prefix)
                      expressions (l  29 c   6) (l  29 c   7)               &
                      expressions (l  29 c   7) (l  29 c   8)               primary expression
-                     expressions (l  29 c   7) (l  29 c   8)                 identifier: x (definition: expressions: l9, c6-7)
+                     expressions (l  29 c   7) (l  29 c   8)                 identifier: x (definition: expressions: l9, c13-14)
                      expressions (l  29 c   8) (l  29 c   9)           ;
                      expressions (l  30 c   2) (l  30 c   9)         expression statement
                      expressions (l  30 c   2) (l  30 c   8)           binary expression 
                      expressions (l  30 c   2) (l  30 c   4)             unary_expression (prefix)
                      expressions (l  30 c   2) (l  30 c   3)               *
                      expressions (l  30 c   3) (l  30 c   4)               primary expression
-                     expressions (l  30 c   3) (l  30 c   4)                 identifier: p (definition: expressions: l28, c7-8)
+                     expressions (l  30 c   3) (l  30 c   4)                 identifier: p (definition: expressions: l28, c14-15)
                      expressions (l  30 c   5) (l  30 c   6)             =
                      expressions (l  30 c   7) (l  30 c   8)             primary expression
                      expressions (l  30 c   7) (l  30 c   8)               int constant: 3 (type: d)
@@ -399,7 +399,7 @@
                      expressions (l  33 c   2) (l  33 c  12)             binary expression 
                      expressions (l  33 c   2) (l  33 c   6)               array access op
                      expressions (l  33 c   2) (l  33 c   3)                 primary expression
-                     expressions (l  33 c   2) (l  33 c   3)                   identifier: a (definition: expressions: l32, c6-7)
+                     expressions (l  33 c   2) (l  33 c   3)                   identifier: a (definition: expressions: l32, c13-14)
                      expressions (l  33 c   3) (l  33 c   4)                 [
                      expressions (l  33 c   4) (l  33 c   5)                 primary expression
                      expressions (l  33 c   4) (l  33 c   5)                   int constant: 0 (type: d)
@@ -434,7 +434,7 @@
                      expressions (l  36 c   2) (l  36 c  15)           binary expression 
                      expressions (l  36 c   2) (l  36 c   5)             struct access
                      expressions (l  36 c   2) (l  36 c   3)               primary expression
-                     expressions (l  36 c   2) (l  36 c   3)                 identifier: s (definition: expressions: l35, c13-14)
+                     expressions (l  36 c   2) (l  36 c   3)                 identifier: s (definition: expressions: l35, c20-21)
                      expressions (l  36 c   3) (l  36 c   4)               .
                      expressions (l  36 c   4) (l  36 c   5)               identifier: x (definition: expressions: l1, c18-19)
                      expressions (l  36 c   6) (l  36 c   7)             +
@@ -444,7 +444,7 @@
                      expressions (l  36 c   9) (l  36 c  11)                 unary_expression (prefix)
                      expressions (l  36 c   9) (l  36 c  10)                   &
                      expressions (l  36 c  10) (l  36 c  11)                   primary expression
-                     expressions (l  36 c  10) (l  36 c  11)                     identifier: s (definition: expressions: l35, c13-14)
+                     expressions (l  36 c  10) (l  36 c  11)                     identifier: s (definition: expressions: l35, c20-21)
                      expressions (l  36 c  11) (l  36 c  12)                 )
                      expressions (l  36 c  12) (l  36 c  14)               ->
                      expressions (l  36 c  14) (l  36 c  15)               identifier: x (definition: expressions: l1, c18-19)

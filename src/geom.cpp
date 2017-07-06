@@ -47,17 +47,17 @@ std::ostream& span_t::print(bool full_paths, std::ostream& stream, bool long_num
 	if(s.second.line != 0) {
 		/*if(s.first.line == s.second.line)
 			stream << ", " << line_word << s.first.line <<
-				", " << cols_word << s.first.col << "-" << s.second.col;
+				", " << cols_word << s.first.tabcol << "-" << s.second.tabcol;
 		else
 			stream	<< ", " << line_word << s.first.line <<
-				<< ", " << col_word  << s.first.col << "-"
+				<< ", " << col_word  << s.first.tabcol << "-"
 				<< line_word << s.second.line
-				<< ", " << col_word << s.second.col;*/
+				<< ", " << col_word << s.second.tabcol;*/
 		stream << ": " << line_word << s.first.line
-			<< ", " << col_word << s.first.col << to_word;
+			<< ", " << col_word << s.first.tabcol << to_word;
 		if(s.first.line != s.second.line)
 			stream << line_word << s.second.line << ", " << col_word;
-		stream << s.second.col;
+		stream << s.second.tabcol;
 	}
 	return stream;
 }

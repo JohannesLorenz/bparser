@@ -117,7 +117,7 @@ class terminal_t : public node_t, public has_par<>
 	int _value;
 	virtual std::size_t length() const = 0;
 	virtual std::size_t newlines() const = 0;
-	virtual std::size_t tablength() const = 0;
+	virtual std::size_t tablength() const = 0; //!< shall return 0 or 8
 public:
 	int value() const { return _value; }
 	std::size_t get_tablength() const { return tablength(); }
@@ -150,7 +150,7 @@ struct noconst_terminal_t : public terminal_t
 struct noconst_1line_terminal_t : public noconst_terminal_t
 {
 	std::size_t length() const;
-	std::size_t tablength() const { return length(); }
+	std::size_t tablength() const { return 0; /* no tabs */ }
 	std::size_t newlines() const;
 public:
 	noconst_1line_terminal_t(const geom_t& geom, int value,
@@ -190,7 +190,7 @@ struct string_base_t : public noconst_terminal_t
 {
 	std::size_t _length, _newlines;
 	std::size_t length() const;
-	std::size_t tablength() const { return length(); }
+	std::size_t tablength() const { return 0; /* no tabs */ }
 	std::size_t newlines() const;
 public:
 	string_base_t(const char* value, geom_t geom, int tok);

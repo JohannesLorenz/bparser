@@ -189,7 +189,7 @@
                     initializers (l   9 c  31) (l   9 c  34)                   primary expression
                     initializers (l   9 c  31) (l   9 c  32)                     (
                     initializers (l   9 c  32) (l   9 c  33)                     primary expression
-                    initializers (l   9 c  32) (l   9 c  33)                       identifier: x (definition: initializers: l5, c20-21)
+                    initializers (l   9 c  32) (l   9 c  33)                       identifier: x (definition: initializers: l5, c27-28)
                     initializers (l   9 c  33) (l   9 c  34)                     )
                     initializers (l   9 c  35) (l   9 c  36)               }
                     initializers (l   9 c  36) (l   9 c  37)           ;
@@ -240,7 +240,7 @@
                     initializers (l  12 c   8) (l  12 c  14)             primary expression
                     initializers (l  12 c   8) (l  12 c   9)               (
                     initializers (l  12 c   9) (l  12 c  13)               primary expression
-                    initializers (l  12 c   9) (l  12 c  13)                 identifier: fptr (definition: initializers: l10, c8-12)
+                    initializers (l  12 c   9) (l  12 c  13)                 identifier: fptr (definition: initializers: l10, c15-19)
                     initializers (l  12 c  13) (l  12 c  14)               )
                     initializers (l  12 c  14) (l  12 c  15)           ;
                     initializers (l  13 c   2) (l  13 c  16)         expression statement
@@ -251,7 +251,7 @@
                     initializers (l  13 c   9) (l  13 c  14)               unary_expression (prefix)
                     initializers (l  13 c   9) (l  13 c  10)                 *
                     initializers (l  13 c  10) (l  13 c  14)                 primary expression
-                    initializers (l  13 c  10) (l  13 c  14)                   identifier: fptr (definition: initializers: l10, c8-12)
+                    initializers (l  13 c  10) (l  13 c  14)                   identifier: fptr (definition: initializers: l10, c15-19)
                     initializers (l  13 c  14) (l  13 c  15)               )
                     initializers (l  13 c  15) (l  13 c  16)           ;
                     initializers (l  14 c   1) (l  14 c   2)         }

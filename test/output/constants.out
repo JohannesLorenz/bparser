@@ -32,7 +32,7 @@
                        constants (l   8 c   8) (l   8 c   9)             =
                        constants (l   8 c  10) (l   8 c  15)             initializer
                        constants (l   8 c  10) (l   8 c  15)               primary expression
-                       constants (l   8 c  10) (l   8 c  15)                 enumeration constant: first (definition: constants: l3, c2-7)
+                       constants (l   8 c  10) (l   8 c  15)                 enumeration constant: first (definition: constants: l3, c9-14)
                        constants (l   8 c  15) (l   8 c  16)           ;
                        constants (l   9 c   2) (l   9 c  16)         expression statement
                        constants (l   9 c   2) (l   9 c  15)           sizeof ...
@@ -40,7 +40,7 @@
                        constants (l   9 c   8) (l   9 c  15)             primary expression
                        constants (l   9 c   8) (l   9 c   9)               (
                        constants (l   9 c   9) (l   9 c  14)               primary expression
-                       constants (l   9 c   9) (l   9 c  14)                 enumeration constant: first (definition: constants: l3, c2-7)
+                       constants (l   9 c   9) (l   9 c  14)                 enumeration constant: first (definition: constants: l3, c9-14)
                        constants (l   9 c  14) (l   9 c  15)               )
                        constants (l   9 c  15) (l   9 c  16)           ;
                        constants (l  10 c   2) (l  10 c  12)         expression statement
@@ -49,7 +49,7 @@
                        constants (l  10 c   8) (l  10 c  11)             primary expression
                        constants (l  10 c   8) (l  10 c   9)               (
                        constants (l  10 c   9) (l  10 c  10)               primary expression
-                       constants (l  10 c   9) (l  10 c  10)                 identifier: e (definition: constants: l8, c6-7)
+                       constants (l  10 c   9) (l  10 c  10)                 identifier: e (definition: constants: l8, c13-14)
                        constants (l  10 c  10) (l  10 c  11)               )
                        constants (l  10 c  11) (l  10 c  12)           ;
                        constants (l  12 c   2) (l  12 c  74)         declaration
@@ -108,7 +108,7 @@
                        constants (l  14 c   2) (l  14 c  11)         expression statement
                        constants (l  14 c   2) (l  14 c  10)           binary expression 
                        constants (l  14 c   2) (l  14 c   3)             primary expression
-                       constants (l  14 c   2) (l  14 c   3)               identifier: c (definition: constants: l13, c7-8)
+                       constants (l  14 c   2) (l  14 c   3)               identifier: c (definition: constants: l13, c14-15)
                        constants (l  14 c   4) (l  14 c   5)             =
                        constants (l  14 c   6) (l  14 c  10)             primary expression
                        constants (l  14 c   6) (l  14 c  10)               int constant: 2 (type: c, suffix: u)
@@ -116,7 +116,7 @@
                        constants (l  15 c   2) (l  15 c  12)         expression statement
                        constants (l  15 c   2) (l  15 c  11)           binary expression 
                        constants (l  15 c   2) (l  15 c   3)             primary expression
-                       constants (l  15 c   2) (l  15 c   3)               identifier: c (definition: constants: l13, c7-8)
+                       constants (l  15 c   2) (l  15 c   3)               identifier: c (definition: constants: l13, c14-15)
                        constants (l  15 c   4) (l  15 c   5)             =
                        constants (l  15 c   6) (l  15 c  11)             primary expression
                        constants (l  15 c   6) (l  15 c  11)               int constant: \ (type: c, suffix: l)

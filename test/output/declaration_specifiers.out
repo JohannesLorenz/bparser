@@ -86,7 +86,7 @@
           declaration_specifiers (l  11 c   9) (l  11 c  10)           ;
           declaration_specifiers (l  12 c   2) (l  12 c  11)         declaration
           declaration_specifiers (l  12 c   2) (l  12 c   8)           type specifier
-          declaration_specifiers (l  12 c   2) (l  12 c   8)             typedef name: my_int (definition: declaration_specifiers: l6, c14-20)
+          declaration_specifiers (l  12 c   2) (l  12 c   8)             typedef name: my_int (definition: declaration_specifiers: l6, c21-27)
           declaration_specifiers (l  12 c   9) (l  12 c  10)           direct declarator (identifier)
           declaration_specifiers (l  12 c   9) (l  12 c  10)             identifier (definition): g
           declaration_specifiers (l  12 c  10) (l  12 c  11)           ;

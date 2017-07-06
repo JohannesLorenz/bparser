@@ -40,7 +40,7 @@
                          clash_2 (l   6 c   8) (l   6 c  11)             primary expression
                          clash_2 (l   6 c   8) (l   6 c   9)               (
                          clash_2 (l   6 c   9) (l   6 c  10)               primary expression
-                         clash_2 (l   6 c   9) (l   6 c  10)                 identifier: t (definition: clash_2: l5, c6-7)
+                         clash_2 (l   6 c   9) (l   6 c  10)                 identifier: t (definition: clash_2: l5, c13-14)
                          clash_2 (l   6 c  10) (l   6 c  11)               )
                          clash_2 (l   6 c  11) (l   6 c  12)           ;
                          clash_2 (l   7 c   2) (l  26 c   3)         compound statement
@@ -61,7 +61,7 @@
                          clash_2 (l  10 c   9) (l  10 c  12)               primary expression
                          clash_2 (l  10 c   9) (l  10 c  10)                 (
                          clash_2 (l  10 c  10) (l  10 c  11)                 primary expression
-                         clash_2 (l  10 c  10) (l  10 c  11)                   identifier: t (definition: clash_2: l8, c14-15)
+                         clash_2 (l  10 c  10) (l  10 c  11)                   identifier: t (definition: clash_2: l8, c28-29)
                          clash_2 (l  10 c  11) (l  10 c  12)                 )
                          clash_2 (l  10 c  12) (l  10 c  13)             ;
                          clash_2 (l  12 c   3) (l  15 c   5)           declaration
@@ -83,7 +83,7 @@
                          clash_2 (l  13 c  18) (l  13 c  21)                         primary expression
                          clash_2 (l  13 c  18) (l  13 c  19)                           (
                          clash_2 (l  13 c  19) (l  13 c  20)                           primary expression
-                         clash_2 (l  13 c  19) (l  13 c  20)                             identifier: t (definition: clash_2: l8, c14-15)
+                         clash_2 (l  13 c  19) (l  13 c  20)                             identifier: t (definition: clash_2: l8, c28-29)
                          clash_2 (l  13 c  20) (l  13 c  21)                           )
                          clash_2 (l  13 c  21) (l  13 c  22)                     ;
                          clash_2 (l  14 c   4) (l  14 c  25)                   struct declaration
@@ -104,7 +104,7 @@
                          clash_2 (l  14 c  19) (l  14 c  22)                             primary expression
                          clash_2 (l  14 c  19) (l  14 c  20)                               (
                          clash_2 (l  14 c  20) (l  14 c  21)                               primary expression
-                         clash_2 (l  14 c  20) (l  14 c  21)                                 identifier: t (definition: clash_2: l8, c14-15)
+                         clash_2 (l  14 c  20) (l  14 c  21)                                 identifier: t (definition: clash_2: l8, c28-29)
                          clash_2 (l  14 c  21) (l  14 c  22)                               )
                          clash_2 (l  14 c  22) (l  14 c  23)                         )
                          clash_2 (l  14 c  23) (l  14 c  24)                       ]
@@ -117,7 +117,7 @@
                          clash_2 (l  17 c   9) (l  17 c  12)               primary expression
                          clash_2 (l  17 c   9) (l  17 c  10)                 (
                          clash_2 (l  17 c  10) (l  17 c  11)                 primary expression
-                         clash_2 (l  17 c  10) (l  17 c  11)                   identifier: t (definition: clash_2: l8, c14-15)
+                         clash_2 (l  17 c  10) (l  17 c  11)                   identifier: t (definition: clash_2: l8, c28-29)
                          clash_2 (l  17 c  11) (l  17 c  12)                 )
                          clash_2 (l  17 c  12) (l  17 c  13)             ;
                          clash_2 (l  18 c   3) (l  18 c  20)           expression statement
@@ -128,7 +128,7 @@
                          clash_2 (l  18 c  10) (l  18 c  18)                 type specifier
                          clash_2 (l  18 c  10) (l  18 c  18)                   struct specifier
                          clash_2 (l  18 c  10) (l  18 c  16)                     "struct"
-                         clash_2 (l  18 c  17) (l  18 c  18)                     identifier: t (definition: clash_2: l12, c10-11)
+                         clash_2 (l  18 c  17) (l  18 c  18)                     identifier: t (definition: clash_2: l12, c24-25)
                          clash_2 (l  18 c  18) (l  18 c  19)               )
                          clash_2 (l  18 c  19) (l  18 c  20)             ;
                          clash_2 (l  20 c   3) (l  23 c   4)           compound statement
@@ -147,7 +147,7 @@
                          clash_2 (l  22 c  10) (l  22 c  13)                 primary expression
                          clash_2 (l  22 c  10) (l  22 c  11)                   (
                          clash_2 (l  22 c  11) (l  22 c  12)                   primary expression
-                         clash_2 (l  22 c  11) (l  22 c  12)                     enumeration constant: t (definition: clash_2: l21, c11-12)
+                         clash_2 (l  22 c  11) (l  22 c  12)                     enumeration constant: t (definition: clash_2: l21, c32-33)
                          clash_2 (l  22 c  12) (l  22 c  13)                   )
                          clash_2 (l  22 c  13) (l  22 c  14)               ;
                          clash_2 (l  23 c   3) (l  23 c   4)             }

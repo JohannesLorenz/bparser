@@ -88,7 +88,7 @@
                       statements (l  25 c  10) (l  25 c  11)               :
                       statements (l  25 c  12) (l  25 c  21)               jump statement (type goto)
                       statements (l  25 c  12) (l  25 c  16)                 "goto"
-                      statements (l  25 c  17) (l  25 c  20)                 identifier: lbl (definition: statements: l19, c2-5)
+                      statements (l  25 c  17) (l  25 c  20)                 identifier: lbl (definition: statements: l19, c9-12)
                       statements (l  25 c  20) (l  25 c  21)                 ;
                       statements (l  26 c   2) (l  26 c   3)             }
                       statements (l  28 c   2) (l  28 c  24)         iteration statement (type while)
@@ -159,7 +159,7 @@
                       statements (l  36 c  11) (l  36 c  12)             ;
                       statements (l  36 c  13) (l  36 c  15)           expression statement
                       statements (l  36 c  13) (l  36 c  14)             primary expression
-                      statements (l  36 c  13) (l  36 c  14)               identifier: y (definition: statements: l36, c10-11)
+                      statements (l  36 c  13) (l  36 c  14)               identifier: y (definition: statements: l36, c17-18)
                       statements (l  36 c  14) (l  36 c  15)             ;
                       statements (l  36 c  16) (l  36 c  17)           )
                       statements (l  36 c  18) (l  36 c  19)           expression statement
@@ -175,12 +175,12 @@
                       statements (l  37 c  11) (l  37 c  12)             ;
                       statements (l  37 c  13) (l  37 c  15)           expression statement
                       statements (l  37 c  13) (l  37 c  14)             primary expression
-                      statements (l  37 c  13) (l  37 c  14)               identifier: y (definition: statements: l37, c10-11)
+                      statements (l  37 c  13) (l  37 c  14)               identifier: y (definition: statements: l37, c17-18)
                       statements (l  37 c  14) (l  37 c  15)             ;
                       statements (l  37 c  16) (l  37 c  19)           unary_expression (prefix)
                       statements (l  37 c  16) (l  37 c  18)             ++
                       statements (l  37 c  18) (l  37 c  19)             primary expression
-                      statements (l  37 c  18) (l  37 c  19)               identifier: y (definition: statements: l37, c10-11)
+                      statements (l  37 c  18) (l  37 c  19)               identifier: y (definition: statements: l37, c17-18)
                       statements (l  37 c  19) (l  37 c  20)           )
                       statements (l  37 c  21) (l  37 c  22)           expression statement
                       statements (l  37 c  21) (l  37 c  22)             ;
@@ -195,12 +195,12 @@
                       statements (l  38 c  11) (l  38 c  12)             ;
                       statements (l  38 c  13) (l  38 c  15)           expression statement
                       statements (l  38 c  13) (l  38 c  14)             primary expression
-                      statements (l  38 c  13) (l  38 c  14)               identifier: y (definition: statements: l38, c10-11)
+                      statements (l  38 c  13) (l  38 c  14)               identifier: y (definition: statements: l38, c17-18)
                       statements (l  38 c  14) (l  38 c  15)             ;
                       statements (l  38 c  16) (l  38 c  19)           unary_expression (prefix)
                       statements (l  38 c  16) (l  38 c  18)             ++
                       statements (l  38 c  18) (l  38 c  19)             primary expression
-                      statements (l  38 c  18) (l  38 c  19)               identifier: y (definition: statements: l38, c10-11)
+                      statements (l  38 c  18) (l  38 c  19)               identifier: y (definition: statements: l38, c17-18)
                       statements (l  38 c  19) (l  38 c  20)           )
                       statements (l  38 c  21) (l  38 c  31)           compound statement
                       statements (l  38 c  21) (l  38 c  22)             {
@@ -210,7 +210,7 @@
                       statements (l  38 c  23) (l  38 c  24)                   identifier: x (definition: statements: l33, c14-15)
                       statements (l  38 c  25) (l  38 c  26)                 =
                       statements (l  38 c  27) (l  38 c  28)                 primary expression
-                      statements (l  38 c  27) (l  38 c  28)                   identifier: y (definition: statements: l38, c10-11)
+                      statements (l  38 c  27) (l  38 c  28)                   identifier: y (definition: statements: l38, c17-18)
                       statements (l  38 c  28) (l  38 c  29)               ;
                       statements (l  38 c  30) (l  38 c  31)             }
                       statements (l  39 c   1) (l  39 c   2)         }

@@ -4,7 +4,7 @@
                       struct_fwd (l   1 c   1) (l   1 c   9)       type specifier
                       struct_fwd (l   1 c   1) (l   1 c   9)         struct specifier
                       struct_fwd (l   1 c   1) (l   1 c   7)           "struct"
-                      struct_fwd (l   1 c   8) (l   1 c   9)           identifier: s (definition: struct_fwd: l8, c10-11)
+                      struct_fwd (l   1 c   8) (l   1 c   9)           identifier: s (definition: struct_fwd: l8, c24-25)
                       struct_fwd (l   1 c   9) (l   1 c  15)       declarator
                       struct_fwd (l   1 c   9) (l   1 c  10)         pointer
                       struct_fwd (l   1 c   9) (l   1 c  10)           *
@@ -26,7 +26,7 @@
                       struct_fwd (l   5 c   2) (l   5 c  10)           type specifier
                       struct_fwd (l   5 c   2) (l   5 c  10)             struct specifier
                       struct_fwd (l   5 c   2) (l   5 c   8)               "struct"
-                      struct_fwd (l   5 c   9) (l   5 c  10)               identifier: s (definition: struct_fwd: l8, c10-11)
+                      struct_fwd (l   5 c   9) (l   5 c  10)               identifier: s (definition: struct_fwd: l8, c24-25)
                       struct_fwd (l   5 c  10) (l   5 c  16)           declarator
                       struct_fwd (l   5 c  10) (l   5 c  11)             pointer
                       struct_fwd (l   5 c  10) (l   5 c  11)               *
@@ -53,7 +53,7 @@
                       struct_fwd (l  12 c   3) (l  12 c  11)             type specifier
                       struct_fwd (l  12 c   3) (l  12 c  11)               struct specifier
                       struct_fwd (l  12 c   3) (l  12 c   9)                 "struct"
-                      struct_fwd (l  12 c  10) (l  12 c  11)                 identifier: s (definition: struct_fwd: l8, c10-11)
+                      struct_fwd (l  12 c  10) (l  12 c  11)                 identifier: s (definition: struct_fwd: l8, c24-25)
                       struct_fwd (l  12 c  12) (l  12 c  15)             direct declarator (identifier)
                       struct_fwd (l  12 c  12) (l  12 c  15)               identifier (definition): s_x
                       struct_fwd (l  12 c  15) (l  12 c  16)             ;
@@ -76,7 +76,7 @@
                       struct_fwd (l  18 c   2) (l  18 c  10)           type specifier
                       struct_fwd (l  18 c   2) (l  18 c  10)             struct specifier
                       struct_fwd (l  18 c   2) (l  18 c   8)               "struct"
-                      struct_fwd (l  18 c   9) (l  18 c  10)               identifier: s (definition: struct_fwd: l14, c9-10)
+                      struct_fwd (l  18 c   9) (l  18 c  10)               identifier: s (definition: struct_fwd: l14, c16-17)
                       struct_fwd (l  18 c  11) (l  18 c  14)           direct declarator (identifier)
                       struct_fwd (l  18 c  11) (l  18 c  14)             identifier (definition): s_y
                       struct_fwd (l  18 c  14) (l  18 c  15)           ;

@@ -36,7 +36,7 @@
                            clash (l   5 c  17) (l   5 c  25)           expression statement
                            clash (l   5 c  17) (l   5 c  24)             binary expression 
                            clash (l   5 c  17) (l   5 c  18)               primary expression
-                           clash (l   5 c  17) (l   5 c  18)                 identifier: t (definition: clash: l5, c10-11)
+                           clash (l   5 c  17) (l   5 c  18)                 identifier: t (definition: clash: l5, c17-18)
                            clash (l   5 c  19) (l   5 c  21)               !=
                            clash (l   5 c  22) (l   5 c  24)               primary expression
                            clash (l   5 c  22) (l   5 c  24)                 int constant: 10 (type: d)
@@ -44,7 +44,7 @@
                            clash (l   5 c  26) (l   5 c  29)           unary_expression (prefix)
                            clash (l   5 c  26) (l   5 c  28)             ++
                            clash (l   5 c  28) (l   5 c  29)             primary expression
-                           clash (l   5 c  28) (l   5 c  29)               identifier: t (definition: clash: l5, c10-11)
+                           clash (l   5 c  28) (l   5 c  29)               identifier: t (definition: clash: l5, c17-18)
                            clash (l   5 c  29) (l   5 c  30)           )
                            clash (l   5 c  31) (l   5 c  32)           expression statement
                            clash (l   5 c  31) (l   5 c  32)             ;
@@ -65,7 +65,7 @@
                            clash (l   6 c  17) (l   6 c  25)           expression statement
                            clash (l   6 c  17) (l   6 c  24)             binary expression 
                            clash (l   6 c  17) (l   6 c  18)               primary expression
-                           clash (l   6 c  17) (l   6 c  18)                 identifier: t (definition: clash: l6, c10-11)
+                           clash (l   6 c  17) (l   6 c  18)                 identifier: t (definition: clash: l6, c17-18)
                            clash (l   6 c  19) (l   6 c  21)               !=
                            clash (l   6 c  22) (l   6 c  24)               primary expression
                            clash (l   6 c  22) (l   6 c  24)                 int constant: 10 (type: d)
@@ -73,7 +73,7 @@
                            clash (l   6 c  26) (l   6 c  29)           unary_expression (prefix)
                            clash (l   6 c  26) (l   6 c  28)             ++
                            clash (l   6 c  28) (l   6 c  29)             primary expression
-                           clash (l   6 c  28) (l   6 c  29)               identifier: t (definition: clash: l6, c10-11)
+                           clash (l   6 c  28) (l   6 c  29)               identifier: t (definition: clash: l6, c17-18)
                            clash (l   6 c  29) (l   6 c  30)           )
                            clash (l   6 c  31) (l   6 c  33)           compound statement
                            clash (l   6 c  31) (l   6 c  32)             {
@@ -104,7 +104,7 @@
                            clash (l   8 c  17) (l   8 c  25)           expression statement
                            clash (l   8 c  17) (l   8 c  24)             binary expression 
                            clash (l   8 c  17) (l   8 c  18)               primary expression
-                           clash (l   8 c  17) (l   8 c  18)                 identifier: t (definition: clash: l8, c10-11)
+                           clash (l   8 c  17) (l   8 c  18)                 identifier: t (definition: clash: l8, c17-18)
                            clash (l   8 c  19) (l   8 c  21)               !=
                            clash (l   8 c  22) (l   8 c  24)               primary expression
                            clash (l   8 c  22) (l   8 c  24)                 int constant: 10 (type: d)
@@ -112,7 +112,7 @@
                            clash (l   8 c  26) (l   8 c  29)           unary_expression (prefix)
                            clash (l   8 c  26) (l   8 c  28)             ++
                            clash (l   8 c  28) (l   8 c  29)             primary expression
-                           clash (l   8 c  28) (l   8 c  29)               identifier: t (definition: clash: l8, c10-11)
+                           clash (l   8 c  28) (l   8 c  29)               identifier: t (definition: clash: l8, c17-18)
                            clash (l   8 c  29) (l   8 c  30)           )
                            clash (l   8 c  31) (l  10 c   3)           compound statement
                            clash (l   8 c  31) (l   8 c  32)             {
@@ -122,7 +122,7 @@
                            clash (l   9 c   9) (l   9 c  12)                 primary expression
                            clash (l   9 c   9) (l   9 c  10)                   (
                            clash (l   9 c  10) (l   9 c  11)                   primary expression
-                           clash (l   9 c  10) (l   9 c  11)                     identifier: t (definition: clash: l8, c10-11)
+                           clash (l   9 c  10) (l   9 c  11)                     identifier: t (definition: clash: l8, c17-18)
                            clash (l   9 c  11) (l   9 c  12)                   )
                            clash (l   9 c  12) (l   9 c  13)               ;
                            clash (l  10 c   2) (l  10 c   3)             }
@@ -149,14 +149,14 @@
                            clash (l  13 c   8) (l  13 c   9)             (
                            clash (l  13 c   9) (l  13 c  10)             type name
                            clash (l  13 c   9) (l  13 c  10)               type specifier
-                           clash (l  13 c   9) (l  13 c  10)                 typedef name: t (definition: clash: l12, c14-15)
+                           clash (l  13 c   9) (l  13 c  10)                 typedef name: t (definition: clash: l12, c21-22)
                            clash (l  13 c  10) (l  13 c  11)             )
                            clash (l  13 c  11) (l  13 c  12)           ;
                            clash (l  14 c   2) (l  17 c   3)         compound statement
                            clash (l  14 c   2) (l  14 c   3)           {
                            clash (l  15 c   3) (l  15 c   7)           declaration
                            clash (l  15 c   3) (l  15 c   4)             type specifier
-                           clash (l  15 c   3) (l  15 c   4)               typedef name: t (definition: clash: l12, c14-15)
+                           clash (l  15 c   3) (l  15 c   4)               typedef name: t (definition: clash: l12, c21-22)
                            clash (l  15 c   5) (l  15 c   6)             direct declarator (identifier)
                            clash (l  15 c   5) (l  15 c   6)               identifier (definition): t
                            clash (l  15 c   6) (l  15 c   7)             ;
