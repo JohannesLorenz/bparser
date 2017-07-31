@@ -683,6 +683,8 @@ struct primary_expression_t : public expression_t
 				ptn<	expression_t,
 						end_token
 		> > > > c;
+
+	primary_type type;
 	
 	virtual void accept(class visitor_t& v);
 };

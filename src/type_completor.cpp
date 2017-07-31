@@ -492,8 +492,15 @@ void type_completor::on(enumerator_t& e, leave) {
 	v_lookup_table.flag_symbol(e.c.get<0>(), decl_depth, false);
 }
 
-void type_completor::on(primary_expression_t& p, enter) {
+void type_completor::on(primary_expression_t& p, enter)
+{
 	connect_identifier(p.c.get<1>());
+	p.type = (p.c.get<1>())	? pt_id
+				: (p.c.get<2>())
+					? pt_expression
+					: (is<iconstant_t>(*p.c.get<0>()) || is<fconstant_t>(*p.c.get<0>()) || is<enumeration_constant_t>(*p.c.get<0>()))
+						? pt_constant
+						: pt_string;
 }
 
 void type_completor::on(designator_id& d, enter) {
