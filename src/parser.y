@@ -30,6 +30,7 @@ extern void dump_lookup_table();
 extern geom_t get_pos();
 
 int yyerror(translation_unit_t ** /*expression*/, yyscan_t scanner, const char *msg) {
+	(void)scanner;
 	dump_lookup_table();
 	//fprintf(stderr,"At: %s,\n  line %d, column %d: Error:%s\n", yyget_text(scanner), yyget_lineno(scanner), yyget_column(scanner), msg); return 0;
 	fprintf(stderr,"%s: line %d, column %d: Error: %s\n", get_pos().file().c_str(), get_pos().line, get_pos().col, msg); return 0;

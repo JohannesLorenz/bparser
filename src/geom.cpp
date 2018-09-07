@@ -1,5 +1,6 @@
 #include "geom.h"
 #include <vector>
+#include <cstring>
 #include <string>
 #include <cstdio>
 #include <iostream>

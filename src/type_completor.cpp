@@ -18,6 +18,7 @@
 /*************************************************************************/
 
 #include <stdexcept>
+#include <cstdio> // sscanf...
 
 #include "type_completor.h"
 #include "node.h"
@@ -479,6 +480,34 @@ void type_completor::on(function_definition_t& f, enter)
 	v_lookup_table.flag_symbol(&get_declarator(*f.c.get<1>()), decl_depth - 1, false);
 }
 
+struct check_is_fptr : public visitor_t
+{
+	bool fptr;
+public:
+	check_is_fptr() : fptr(false) {}
+	bool result() const { return fptr; }
+
+	void visit(declarator_t& d) {
+		if(d.c.get<0>())
+			fptr = true;
+		else // maybe we'll still find one below?
+			d.c.get<1>()->accept(*this);
+	}
+	void visit(direct_declarator_decl& d) {
+		d.c.get<1>()->accept(*this);
+	}
+	void visit(direct_declarator_func& f) {
+		f.c.get<0>()->accept(*this);
+	}
+};
+
+void type_completor::on(direct_declarator_func& f, enter)
+{
+	check_is_fptr fptr_checker;
+	fptr_checker.visit(f);
+	f.fptr = fptr_checker.result();
+}
+
 void type_completor::on(parameter_declaration_t& p, leave) {
 	if(p.c.get<1>())
 	 v_lookup_table.flag_symbol(&get_declarator(*p.c.get<1>()), decl_depth, false);
@@ -503,14 +532,14 @@ void type_completor::on(primary_expression_t& p, enter)
 						: pt_string;
 }
 
-void type_completor::on(designator_id& d, enter) {
+void type_completor::on(designator_id& , enter) {
 	//connect_identifier(d.c.get<1>());
 }
 
 void type_completor::on(identifier_list_t&, enter) {
 	// TODO
 }
-void type_completor::on(type_name_t &t, enter) {
+void type_completor::on(type_name_t &, enter) {
 
 }
 void type_completor::on(enumeration_constant_t& e, enter) {

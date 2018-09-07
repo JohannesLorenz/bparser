@@ -151,6 +151,7 @@ namespace scope_types
 	Thus, the type_completor's job is to complete the whole AST (abstract syntax tree)
 	after parser+lexer have built it. Completing means: Adding additional info to
 	nodes, such as
+	 * parent pointers
 	 * location of definition of identifiers
 	 * practical things, e.g. a flag for whether a struct_or_union_specifier is a struct
 	   or a union, or what operator a binary expression has.
@@ -262,6 +263,7 @@ public:
 	void on(function_definition_t&, enter);
 	void on(parameter_declaration_t&, leave);
 	void on(enumerator_t&, leave);
+	void on(direct_declarator_func& f, enter);
 
 	// variables
 	void on(primary_expression_t&, enter);
@@ -293,6 +295,8 @@ public:
 			 std::cout << "  ";
 			std::cout << "++ " << typeid(n).name() << " " << n.span.first << std::endl;
 		}
+#else
+		(void)n;
 #endif
 		decl_depth += scope_types::inc_depth<NodeType>::value;
 	}
@@ -313,6 +317,8 @@ public:
 			 std::cout << "  ";
 			std::cout << "-- " << typeid(n).name() << " " << n.span.first << std::endl;
 		}
+#else
+		(void)n;
 #endif
 		int dec_val = scope_types::inc_depth<NodeType>::value;
 		if(dec_val) {

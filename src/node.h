@@ -168,18 +168,21 @@ public:
 		_definition(NULL) {}
 };
 
+//! e.g. a variable or function
 struct identifier_t : public defined_t
 {
 	virtual void accept(class visitor_t& v);
 	identifier_t(const char* name, geom_t geom);
 };
 
+//! a previously defined type, defined by a typename
 struct typedef_name_t : public defined_t
 {
 	virtual void accept(class visitor_t& v);
 	typedef_name_t(const char* name, geom_t geom);
 };
 
+//! an enum constant value
 struct enumeration_constant_t : public defined_t
 {
 	virtual void accept(class visitor_t& v);
@@ -1126,6 +1129,7 @@ struct direct_declarator_arr : public direct_declarator_t
 
 struct direct_declarator_func : public direct_declarator_t
 {
+	bool fptr;
 	ptn<	direct_declarator_t,
 		ptn<	token_t, // (
 			ptn<	parameter_type_list_t,
