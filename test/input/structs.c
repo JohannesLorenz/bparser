@@ -5,7 +5,7 @@ typedef union {
 struct b {
 	const char;
 	int x, :15, rest:1;
-};
+} __attribute__((packed, weak));
 
 struct c { float f; } ;
 typedef struct { float f; } d;

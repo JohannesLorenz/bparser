@@ -1,6 +1,6 @@
 inline void f() {}
 extern void g();
-
+void h() __attribute__((packed, weak));
 int main()
 {
 	typedef int my_int;

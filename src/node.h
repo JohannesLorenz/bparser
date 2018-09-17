@@ -391,15 +391,25 @@ struct attr_name_t : public noconst_1line_terminal_t
 	attr_name_t(const char* name, geom_t geom);
 };
 
-struct attribute_t : public node_t, public has_par<struct_or_union_specifier_t>
+struct attr_list_t : public node_t, public has_par<>
+{
+	ptn<    struct attr_list_t,
+		ptn<    token_t,
+			ptn<    attr_name_t > > > c;
+
+	virtual void accept(class visitor_t& v);
+};
+
+struct attributes_t : public node_t, public has_par<>
 {
 	virtual void accept(class visitor_t& v);
 	ptn<	token_t,
-		ptn<	token_t,
-			ptn<	attr_name_t,
-				ptn<	token_t,
-						end_token
-		> > > > c;
+		ptn<	token_t, // (
+			ptn<	token_t, // (
+				ptn<	attr_list_t,
+					ptn<	token_t, // )
+							end_token // )
+		> > > > > c;
 };
 
 struct struct_or_union_specifier_t : public type_specifier_complex_t
@@ -419,7 +429,7 @@ struct struct_or_union_specifier_t : public type_specifier_complex_t
 			ptn<	token_t,
 				ptn<	struct struct_declaration_list_t,
 					ptn<	token_t,
-						ptn<	attribute_t >
+						ptn<	attributes_t >
 		> > > > > c;
 
 	virtual void accept(class visitor_t& v);
@@ -1133,7 +1143,9 @@ struct direct_declarator_func : public direct_declarator_t
 	ptn<	direct_declarator_t,
 		ptn<	token_t, // (
 			ptn<	parameter_type_list_t,
-					end_token > > > c;
+					ptn<	token_t,
+						ptn<	attributes_t
+		> > > > > c;
 
 	virtual void accept(class visitor_t& v);
 };
@@ -1212,16 +1224,18 @@ struct function_definition_t : public node_t, public has_par<struct external_dec
 	ptn<	declaration_specifiers_t,
 		ptn<	declarator_t,
 			ptn<	declaration_list_t,
-				ptn<	compound_statement_t > > > > c;
+				ptn<	compound_statement_t,
+					ptn<	attributes_t > > > > > c;
 
 
 
 	function_definition_t(declaration_specifiers_t* declaration_specifiers,
 		declarator_t* declarator,
 		declaration_list_t* declaration_list,
-		compound_statement_t* compound_statement) :
+		compound_statement_t* compound_statement,
+		attributes_t* att = NULL) :
 			c(declaration_specifiers, declarator,
-				declaration_list, compound_statement)
+				declaration_list, compound_statement, att)
 	{}
 
 	declaration_specifiers_t& decl_spec() { return *c.get<0>(); }

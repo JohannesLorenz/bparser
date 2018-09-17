@@ -84,18 +84,18 @@ static int check_type(const char* text);
 "void"					{ return app3(yylval->token, VOID, yytext); }
 "volatile"				{ return app3(yylval->token, VOLATILE, yytext); }
 "while"					{ return app3(yylval->token, WHILE, yytext); }
-"_Alignas"                              { return app3(yylval->token, ALIGNAS, yytext); }
-"_Alignof"                              { return app3(yylval->token, ALIGNOF, yytext); }
-"_Atomic"                               { return app3(yylval->token, ATOMIC, yytext); }
-"_Bool"                                 { return app3(yylval->token, BOOL, yytext); }
-"_Complex"                              { return app3(yylval->token, COMPLEX, yytext); }
-"_Generic"                              { return app3(yylval->token, GENERIC, yytext); }
-"_Imaginary"                            { return app3(yylval->token, IMAGINARY, yytext); }
-"_Noreturn"                             { return app3(yylval->token, NORETURN, yytext); }
-"_Static_assert"                        { return app3(yylval->token, STATIC_ASSERT, yytext); }
-"_Thread_local"                         { return app3(yylval->token, THREAD_LOCAL, yytext); }
-"__func__"                              { return app3(yylval->token, FUNC_NAME, yytext); }
-"__FUNCTION__"                          { return app3(yylval->token, FUNCTION_NAME, yytext); }
+"_Alignas"				{ return app3(yylval->token, ALIGNAS, yytext); }
+"_Alignof"				{ return app3(yylval->token, ALIGNOF, yytext); }
+"_Atomic"				{ return app3(yylval->token, ATOMIC, yytext); }
+"_Bool"					{ return app3(yylval->token, BOOL, yytext); }
+"_Complex"				{ return app3(yylval->token, COMPLEX, yytext); }
+"_Generic"				{ return app3(yylval->token, GENERIC, yytext); }
+"_Imaginary"				{ return app3(yylval->token, IMAGINARY, yytext); }
+"_Noreturn"				{ return app3(yylval->token, NORETURN, yytext); }
+"_Static_assert"			{ return app3(yylval->token, STATIC_ASSERT, yytext); }
+"_Thread_local"				{ return app3(yylval->token, THREAD_LOCAL, yytext); }
+"__func__"				{ return app3(yylval->token, FUNC_NAME, yytext); }
+"__FUNCTION__"				{ return app3(yylval->token, FUNCTION_NAME, yytext); }
 "__attribute__"				{ return app3(yylval->token, ATTRIBUTE, yytext); }
 
 {L}{A}*					{	
@@ -320,7 +320,9 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 			: recent_struct_access*/
 
 	// attribute names go separate
-	if(recent_tokens[-3] == ATTRIBUTE)
+	if(recent_tokens[-3] == ATTRIBUTE ||
+		recent_tokens[-4] == ATTRIBUTE ||
+		recent_tokens[-5] == ATTRIBUTE) // more than 3 attributes => parse error
 	 return ATTR_NAME;
 
 	/*

@@ -142,7 +142,8 @@ typedef void* yyscan_t;
 
 %union {
 	attr_name_t* attr_name;
-	attribute_t* attribute;
+	attr_list_t* attr_list;
+	attributes_t* attributes;
 	identifier_t* name;
 	typedef_name_t* typedef_name;
 	enumeration_constant_t* enumeration_constant;
@@ -270,7 +271,8 @@ typedef void* yyscan_t;
 %type <declaration> declaration
 %type <statement> statement
 %type <attr_name> ATTR_NAME
-%type <attribute> attribute
+%type <attr_list> attr_list
+%type <attributes> attributes
 %type <identifier> enumeration_constant
 %type <token> type_specifier_simple unary_operator assignment_operator
 %type <declaration_specifiers> declaration_specifiers
@@ -573,15 +575,20 @@ type_specifier
 	| TYPEDEF_NAME { $$ = alloc($$); $$->c.set($1); }	/* after it has been defined as such */
 	;
 
-attribute
-	: ATTRIBUTE '(' '(' ATTR_NAME ')' ')' { $$ = alloc($$); $$->c.set($1); }
+attr_list
+	: ATTR_NAME { alloc($$); setc($$, $$->c, NULL, NULL, $1); }
+	| attr_list ',' ATTR_NAME { alloc($$); setc($$, $$->c, $1, $2, $3); }
+	;
+
+attributes
+	: ATTRIBUTE '(' '(' attr_list ')' ')' { alloc($$); setc($$, $$->c, $1, $2, $3, $4, $5, $6); }
 	;
 
 struct_or_union_specifier
 	: struct_or_union '{' struct_declaration_list '}' { alloc($$); setc($$, $$->c, $1, NULL, $2, $3, $4); }
 	| struct_or_union IDENTIFIER '{' struct_declaration_list '}' { alloc($$); setc($$, $$->c, $1, $2, $3, $4, $5); }
-	| struct_or_union '{' struct_declaration_list '}' attribute { alloc($$); setc($$, $$->c, $1, NULL, $2, $3, $4, $5); }
-	| struct_or_union IDENTIFIER '{' struct_declaration_list '}' attribute { alloc($$); setc($$, $$->c, $1, $2, $3, $4, $5, $6); }
+	| struct_or_union '{' struct_declaration_list '}' attributes { alloc($$); setc($$, $$->c, $1, NULL, $2, $3, $4, $5); }
+	| struct_or_union IDENTIFIER '{' struct_declaration_list '}' attributes { alloc($$); setc($$, $$->c, $1, $2, $3, $4, $5, $6); }
 	| struct_or_union IDENTIFIER { alloc($$); setc($$, $$->c, $1, $2); }
 	;
 
@@ -694,9 +701,15 @@ direct_declarator
 	| direct_declarator '(' parameter_type_list ')' {
 		direct_declarator_func* d; $$ = alloc(d);
 		setc(d, d->c, $1, $2, $3, $4); }
+	| direct_declarator '(' parameter_type_list ')' attributes {
+		direct_declarator_func* d; $$ = alloc(d);
+		setc(d, d->c, $1, $2, $3, $4, $5); }
 	| direct_declarator '(' ')' {
 		direct_declarator_func* d; $$ = alloc(d);
 		setc(d, d->c, $1, $2, NULL, $3); }
+	| direct_declarator '(' ')' attributes {
+		direct_declarator_func* d; $$ = alloc(d);
+		setc(d, d->c, $1, $2, NULL, $3, $4); }
 	| direct_declarator '(' identifier_list ')' {
 		direct_declarator_idlist* d; $$ = alloc(d);
 		setc(d, d->c, $1, $2, $3, $4); } // old-style C function declarator

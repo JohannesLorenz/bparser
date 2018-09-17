@@ -211,7 +211,12 @@ void fwd::visit(iteration_statement_t& i) { accept_all(i.c); }
 	accept_all(p.c);
 }*/
 
-void fwd::visit(attribute_t& n)
+void fwd::visit(attr_list_t& n)
+{
+	visit_all(n.c);
+}
+
+void fwd::visit(attributes_t& n)
 {
 	visit_all(n.c);
 }
@@ -787,7 +792,19 @@ void dumper_t::visit(attr_name_t& n)
 	incr_depth_t x(&depth, stream, n.span);
 	stream << "attribute name: " << n.raw << std::endl;
 }
-void dumper_t::visit(attribute_t& n)
+
+void dumper_t::visit(attr_list_t& n)
+{
+	if(n.c.size() > 1)
+	{
+		incr_depth_t x(&depth, stream, n.span);
+		stream << "attribute list" << std::endl;
+		fwd::visit(n);
+	}
+	else fwd::visit(n);	
+}
+
+void dumper_t::visit(attributes_t& n)
 {
 	incr_depth_t x(&depth, stream, n.span);
 	stream << "attribute" << std::endl;

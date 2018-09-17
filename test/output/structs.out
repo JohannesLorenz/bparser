@@ -17,10 +17,10 @@
                          structs (l   3 c   3) (l   3 c   4)       direct declarator (identifier)
                          structs (l   3 c   3) (l   3 c   4)         identifier (definition): u
                          structs (l   3 c   4) (l   3 c   5)       ;
-                         structs (l   5 c   1) (l   8 c   3)   external declaration
-                         structs (l   5 c   1) (l   8 c   3)     declaration
-                         structs (l   5 c   1) (l   8 c   2)       type specifier
-                         structs (l   5 c   1) (l   8 c   2)         struct specifier
+                         structs (l   5 c   1) (l   8 c  33)   external declaration
+                         structs (l   5 c   1) (l   8 c  33)     declaration
+                         structs (l   5 c   1) (l   8 c  32)       type specifier
+                         structs (l   5 c   1) (l   8 c  32)         struct specifier
                          structs (l   5 c   1) (l   5 c   7)           "struct"
                          structs (l   5 c   8) (l   5 c   9)           identifier (definition): b
                          structs (l   5 c  10) (l   5 c  11)           {
@@ -51,7 +51,16 @@
                          structs (l   7 c  19) (l   7 c  20)                   int constant: 1 (type: d)
                          structs (l   7 c  20) (l   7 c  21)               ;
                          structs (l   8 c   1) (l   8 c   2)           }
-                         structs (l   8 c   2) (l   8 c   3)       ;
+                         structs (l   8 c   3) (l   8 c  32)           attribute
+                         structs (l   8 c   3) (l   8 c  16)             "__attribute__"
+                         structs (l   8 c  16) (l   8 c  17)             (
+                         structs (l   8 c  17) (l   8 c  18)             (
+                         structs (l   8 c  18) (l   8 c  24)             attribute name: packed
+                         structs (l   8 c  24) (l   8 c  25)             ,
+                         structs (l   8 c  26) (l   8 c  30)             attribute name: weak
+                         structs (l   8 c  30) (l   8 c  31)             )
+                         structs (l   8 c  31) (l   8 c  32)             )
+                         structs (l   8 c  32) (l   8 c  33)       ;
                          structs (l  10 c   1) (l  10 c  24)   external declaration
                          structs (l  10 c   1) (l  10 c  24)     declaration
                          structs (l  10 c   1) (l  10 c  22)       type specifier

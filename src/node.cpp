@@ -202,7 +202,8 @@ void sizeof_expression_t::accept(visitor_t& v) { v.vis(this); }
 
 void block_item_t::accept(visitor_t &v) { v.vis(this); }
 void attr_name_t::accept(class visitor_t& v) { v.vis(this); }
-void attribute_t::accept(class visitor_t& v) { v.vis(this); }
+void attr_list_t::accept(class visitor_t& v) { v.vis(this); }
+void attributes_t::accept(class visitor_t& v) { v.vis(this); }
 void identifier_t::accept(visitor_t &v) { v.vis(this); }
 void enumeration_constant_t::accept(visitor_t &v) { v.vis(this); }
 void typedef_name_t::accept(visitor_t &v) { v.vis(this); }

@@ -111,7 +111,8 @@ public:
 	//virtual void visit(block_item_list_t& ) {}
 	virtual void visit(block_item_t& ) {}
 	virtual void visit(attr_name_t& ) {}
-	virtual void visit(attribute_t& ) {}
+	virtual void visit(attr_list_t& ) {}
+	virtual void visit(attributes_t& ) {}
 	virtual void visit(identifier_t& ) {}
 	virtual void visit(enumeration_constant_t& ) {}
 	virtual void visit(typedef_name_t& ) {}
@@ -319,7 +320,8 @@ public:
 	//void visit(block_item_list_t& n) { f(n); }
 	void visit(block_item_t& n) { f(n); }
 	void visit(attr_name_t& n) { f(n); }
-	void visit(attribute_t& n) { f(n); }
+	void visit(attr_list_t& n) { f(n); }
+	void visit(attributes_t& n) { f(n); }
 	void visit(identifier_t& n) { f(n); }
 	void visit(enumeration_constant_t& n) { f(n); }
 	void visit(typedef_name_t& n) { f(n); }
@@ -549,7 +551,8 @@ public:
 	void visit(declaration_t& n);
 	void visit(iteration_statement_t& n);
 	void visit(attr_name_t& ) {}
-	void visit(attribute_t& n);
+	void visit(attr_list_t& );
+	void visit(attributes_t& n);
 	void visit(identifier_t& ) {}
 	void visit(enumeration_constant_t& ) {}
 	void visit(typedef_name_t& ) {}
@@ -794,7 +797,8 @@ public:
 	void visit(declaration_t& n);
 	void visit(iteration_statement_t& n);
 	void visit(attr_name_t& n);
-	void visit(attribute_t& n);
+	void visit(attr_list_t& n);
+	void visit(attributes_t& n);
 	void visit(identifier_t& n);
 	void visit(enumeration_constant_t& n);
 	void visit(typedef_name_t& n);

@@ -25,6 +25,25 @@
           declaration_specifiers (l   2 c  14) (l   2 c  15)         (
           declaration_specifiers (l   2 c  15) (l   2 c  16)         )
           declaration_specifiers (l   2 c  16) (l   2 c  17)       ;
+          declaration_specifiers (l   3 c   1) (l   3 c  40)   external declaration
+          declaration_specifiers (l   3 c   1) (l   3 c  40)     declaration
+          declaration_specifiers (l   3 c   1) (l   3 c   5)       type specifier
+          declaration_specifiers (l   3 c   1) (l   3 c   5)         "void"
+          declaration_specifiers (l   3 c   6) (l   3 c  39)       direct declarator (function)
+          declaration_specifiers (l   3 c   6) (l   3 c   7)         direct declarator (identifier)
+          declaration_specifiers (l   3 c   6) (l   3 c   7)           identifier (definition): h
+          declaration_specifiers (l   3 c   7) (l   3 c   8)         (
+          declaration_specifiers (l   3 c   8) (l   3 c   9)         )
+          declaration_specifiers (l   3 c  10) (l   3 c  39)         attribute
+          declaration_specifiers (l   3 c  10) (l   3 c  23)           "__attribute__"
+          declaration_specifiers (l   3 c  23) (l   3 c  24)           (
+          declaration_specifiers (l   3 c  24) (l   3 c  25)           (
+          declaration_specifiers (l   3 c  25) (l   3 c  31)           attribute name: packed
+          declaration_specifiers (l   3 c  31) (l   3 c  32)           ,
+          declaration_specifiers (l   3 c  33) (l   3 c  37)           attribute name: weak
+          declaration_specifiers (l   3 c  37) (l   3 c  38)           )
+          declaration_specifiers (l   3 c  38) (l   3 c  39)           )
+          declaration_specifiers (l   3 c  39) (l   3 c  40)       ;
           declaration_specifiers (l   4 c   1) (l  16 c   2)   external declaration
           declaration_specifiers (l   4 c   1) (l  16 c   2)     function definition
           declaration_specifiers (l   4 c   1) (l   4 c   4)       type specifier

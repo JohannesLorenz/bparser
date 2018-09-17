@@ -41,13 +41,15 @@ using namespace nodes;
 
 int strict_mode;
 bool bparser_debug;
-int _recent_tokens[4] = { -1, -1, -1, -1 }; // FEATURE: better initial numbers?
+int _recent_tokens[6] = { -1, -1, -1, -1, -1, -1 }; // FEATURE: better initial numbers?
 int* recent_tokens = _recent_tokens + 3;
 int add_recent_token(int new_one) {
+	recent_tokens[-5] = recent_tokens[-4];
+	recent_tokens[-4] = recent_tokens[-3];
 	recent_tokens[-3] = recent_tokens[-2];
 	recent_tokens[-2] = recent_tokens[-1];
 	recent_tokens[-1] = recent_tokens[0];
-	return recent_tokens[ 0] = new_one;
+	return recent_tokens[0] = new_one;
 }
 
 std::vector<std::string>& get_files();
