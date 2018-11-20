@@ -40,7 +40,7 @@ using namespace nodes;
 #ifndef VISITOR_H
 #define VISITOR_H
 
-// FEATURE: pointers->refs?
+//! normal visitor, according to visitor pattern
 class visitor_t
 {
 public:
@@ -232,6 +232,9 @@ namespace std
 	extern ostream cout;
 }
 
+//! visitor which redirects all visits to a Functor with
+//! overloaded functions (Functor::operator(node_type&))
+//! useful if many nodes should behave in the same way
 template<class Functor>
 class func_visitor : public visitor_t
 {
@@ -465,6 +468,9 @@ public:
 	}
 };
 
+//! visitor where visiting a node means visiting all child nodes
+//! useful for tree-like traversing, if you need to differ between
+//! enter and leave
 template<class Functor2>
 class io_visitor : public func_visitor< io_functor<Functor2> >
 {
@@ -478,6 +484,9 @@ public:
 	void operator()(NodeType& n) { iof(n); }*/
 };
 
+//! visitor where visiting a node means visiting all child nodes
+//! useful for tree-like traversing, if you don't need to differ between
+//! enter and leave
 class fwd : public visitor_t
 {
 protected:
@@ -595,6 +604,7 @@ public:
 	void operator()(const NodeType& nt) { ++depth; xaccept(nt.c); --depth; }
 };
 
+//! functor to fill all span members of all nodes
 class geom_completor : ftor_base
 {
 	static span_t span_limit() {
@@ -727,6 +737,7 @@ class ffwd : public func_visitor< fwd_functor >
 {
 };
 
+//! visitor for dumping a tree, most useful for debugging and testing
 class dumper_t : public fwd
 {
 protected:
@@ -833,7 +844,7 @@ std::ostream& operator<<(std::ostream& o, node_base& n);
 
 
 
-
+//! unused
 struct cleaner_t : visitor_t
 {
 	//void visit(number_t &e) { delete e; }

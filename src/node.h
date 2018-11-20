@@ -462,7 +462,7 @@ struct specifier_qualifier_list_t : public node_t, public has_par<>
 struct struct_declarator_list_t : public node_t, public has_par<> // FEATURE: when alt list
 {
 	ptn<	struct struct_declarator_list_t,
-		ptn<	token_t, // :
+		ptn<	token_t, // ,
 			ptn<	struct struct_declarator_t
 			> > > c;
 	void accept(class visitor_t& v);
