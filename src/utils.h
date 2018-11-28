@@ -192,34 +192,35 @@ struct _dcast : visitor_t
 //! returns a pointer of type T if it is of exactly that type
 //! (similar to dynamic_cast, but faster)
 template<class T, class Passed>
-inline T* dcast(Passed& node)
+inline T* dcast(Passed* node)
 {
 	_dcast<T> v;
-	node.accept(v);
+	node->accept(v);
 	return v.value;
 }
-
-struct get_declarator_t : ftor_base
+  
+struct get_declarator_t : public visitor_t
 {
 	identifier_t* value;
-	template<class V>
-	get_declarator_t(V* const v) : ftor_base(v), value(NULL) {}
+	get_declarator_t() : value(NULL) {}
 
-	void operator()(node_base const& ) { value = NULL; }
-	void operator()(declarator_t& d) { accept(*d.c.get<1>()); }
-	void operator()(direct_declarator_id& d) { value = d.c.value; }
-	void operator()(direct_declarator_decl& d) { visit(*d.c.get<1>()); }
-	void operator()(direct_declarator_arr& d) { accept(*d.c.get<0>()); }
-	void operator()(direct_declarator_func& d) { accept(*d.c.get<0>()); }
-	void operator()(direct_declarator_idlist& d) { accept(*d.c.get<0>()); }
+	void visit(function_definition_t& d) { visit(*d.c.get<1>()); }
+	void visit(parameter_declaration_t& d) { if(d.c.get<1>()) visit(*d.c.get<1>()); }
+	
+	void visit(declarator_t& d) { d.c.get<1>()->accept(*this); }
+	void visit(direct_declarator_id& d) { value = d.c.value; }
+	void visit(direct_declarator_decl& d) { visit(*d.c.get<1>()); }
+	void visit(direct_declarator_arr& d) { d.c.get<0>()->accept(*this); }
+	void visit(direct_declarator_func& d) { d.c.get<0>()->accept(*this); }
+	void visit(direct_declarator_idlist& d) { d.c.get<0>()->accept(*this); }
 };
 
 //! Returns the identifier of the innermost declarator, e.g. f in void (const *f[3])(int)
-inline identifier_t& get_declarator(declarator_t& d) // TODO: rename: get_identifier()
+inline identifier_t* get_identifier(declarator_t& d)
 {
-	func_visitor< get_declarator_t > v;
-	v.functor()(d);
-	return *v.functor().value;
+	get_declarator_t vis;
+	vis.visit(d);
+	return vis.value;
 }
 
 #if 0
@@ -231,10 +232,10 @@ struct struct_return_value_of_function
 		: return_type(NULL) {}
 	void operator()(node_base& ) { return_type = NULL; }
 	void operator()(declaration_t& d) {
-		//return_type = get_declarator(&d);
+		//return_type = get_identifier(&d);
 	}
 /*	void operator()(function_definition_t& f) {
-		return_type = get_declarator(f.c.get<1>());
+		return_type = get_identifier(f.c.get<1>());
 	}*/
 };
 #endif
@@ -256,7 +257,7 @@ struct struct_type_specifier_of_declaration_t : visitor_t
 		else
 		{ // FEATURE: remove this once forward declarations have been mapped
 			identifier_t& definition = *s.c.get<struct_or_union_specifier_t::identifier>()->_definition;
-			struct_or_union_specifier_t* src = dcast<struct_or_union_specifier_t>(*definition.parent);
+			struct_or_union_specifier_t* src = dcast<struct_or_union_specifier_t>(definition.parent);
 			if(src)
 			 result = src;
 			else // not sure if this is possible, but let's just throw for now
@@ -267,50 +268,59 @@ struct struct_type_specifier_of_declaration_t : visitor_t
 };
 
 // FEATURE: structs etc?
-struct declaration_from_declarator_t : ftor_base
+struct declaration_from_declarator_t : visitor_t
 {
 	declaration_base* declaration_found;
-	
 
-	declaration_from_declarator_t(visitor_t* vref) :
-		ftor_base(vref) {}
+	declaration_from_declarator_t() :
+		declaration_found(NULL) {}
 
-	void operator()(node_base& ) {
-		declaration_found = NULL; }
-	void operator()(identifier_t& d) {
-		accept(*d.parent);
+	void visit(identifier_t& d) {
+		d.parent->accept(*this);
 	}
-	void operator()(direct_declarator_t& d) {
-		accept(*d.parent);
+	void visit(direct_declarator_id& d) {
+		d.parent->accept(*this);
 	}
-	void operator()(declarator_t& d) {
-		accept(*d.parent);
+	void visit(direct_declarator_func& d) {
+		d.parent->accept(*this);
 	}
-	void operator()(init_declarator_t& i) {
-		accept(*i.parent);
+	void visit(direct_declarator_decl& d) {
+		d.parent->accept(*this);
 	}
-	void operator()(init_declarator_list_t& i) {
-		accept(*i.parent);
+	void visit(direct_declarator_idlist& d) {
+		d.parent->accept(*this);
 	}
-	void operator()(struct_or_union_specifier_t& i) {
-		accept(*i.parent);
+	void visit(direct_declarator_arr& d) {
+		d.parent->accept(*this);
 	}
-	void operator ()(declaration_t& d) {
+	void visit(declarator_t& d) {
+		d.parent->accept(*this);
+	}
+	void visit(init_declarator_t& i) {
+		i.parent->accept(*this);
+	}
+	void visit(init_declarator_list_t& i) {
+		i.parent->accept(*this);
+	}
+	void visit(struct_or_union_specifier_t& i) {
+		i.parent->accept(*this);
+	}
+	void visit(declaration_t& d) {
 		declaration_found = &d;
 	}
-	void operator()(parameter_declaration_t& d) {
+	void visit(parameter_declaration_t& d) {
 		declaration_found = &d;
 	}
-	void operator()(struct_declarator_list_t& s) {
-		accept(*s.parent);
+	void visit(struct_declarator_list_t& s) {
+		s.parent->accept(*this);
 	}
-	void operator()(struct_declarator_t& s) {
+	void visit(struct_declarator_t& s) {
 		visit(*s.parent);
 	}
-	void operator()(struct_declaration_t& s) {
+	void visit(struct_declaration_t& s) {
 		declaration_found = &s;
 	}
-	void operator()(function_definition_t& s) {
+	void visit(function_definition_t& s) {
 		declaration_found = &s;
 	}
 };
@@ -318,17 +328,18 @@ struct declaration_from_declarator_t : ftor_base
 //! returns the declaration in which the given declarator is
 inline declaration_base& declaration_from_declarator(declarator_t& dtor)
 {
-	func_visitor< declaration_from_declarator_t > v0;
+	declaration_from_declarator_t v0;
 	dtor.accept(v0);
-	return *v0.functor().declaration_found;
+	return *v0.declaration_found;
 }
 
 //! returns the declaration in which the given identifier is the declarator
+//! @note identifiers in struct forward declarations
 inline declaration_base& declaration_from_identifier(identifier_t& id)
 {
-	func_visitor< declaration_from_declarator_t > v0;
-	id.parent->accept(v0);
-	return *v0.functor().declaration_found;
+	declaration_from_declarator_t v0;
+	v0.visit(id);
+	return *v0.declaration_found;
 }
 
 inline struct_or_union_specifier_t& struct_rval_of_func(identifier_t& id)
@@ -343,7 +354,7 @@ inline struct_or_union_specifier_t& struct_rval_of_func(identifier_t& id)
 	v0.functor().declaration_found->accept(v); // TODO: multiple parent calls?
 	//return v.functor().value;
 	return NULL; // TODO*/
-	//return get_declarator(v0.functor().declaration_found);
+	//return get_identifier(v0.functor().declaration_found);
 }
 
 template<int Search>

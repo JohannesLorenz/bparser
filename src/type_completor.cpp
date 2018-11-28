@@ -27,9 +27,9 @@
 
 void struct_type_of::set_spec_from_id(identifier_t* struct_id)
 {
-	struct_or_union_specifier_t* spec = dcast<struct_or_union_specifier_t>(*struct_id->parent);
+	struct_or_union_specifier_t* spec = dcast<struct_or_union_specifier_t>(struct_id->parent);
 	if(! spec) { // B : declared as a declarator?
-		spec = dcast<struct_or_union_specifier_t>(struct_rval_of_func(*struct_id));
+		spec = dcast<struct_or_union_specifier_t>(&struct_rval_of_func(*struct_id));
 		if(! spec)
 		{
 			std::cout << "ABORT INFO: " << *struct_id->parent << std::endl;
@@ -379,7 +379,7 @@ void type_completor::on(struct_declaration_list_t& l, leave)
 		for(; cur; cur = cur->c.get<0>()) {
 			declarator_t* dtor = cur->c.get<2>()->c.get<0>();
 			if(dtor)
-			 v_lookup_table.flag_symbol(&get_declarator(*dtor), decl_depth, false);
+			 v_lookup_table.flag_symbol(get_identifier(*dtor), decl_depth, false);
 		}
 
 	}
@@ -415,11 +415,11 @@ void type_completor::on(struct_access_expression_t& s, leave)
 	// right identifier
 	// TODO: get struct_...list
 	//declaration_from_identifier(*current_struct_scope).decl_spec();
-	//struct_or_union_specifier_t* spec = dcast<struct_or_union_specifier_t>(*current_struct_scope->parent);
+	//struct_or_union_specifier_t* spec = dcast<struct_or_union_specifier_t>(current_struct_scope->parent);
 	// A: declared in a struct specifier?
-	struct_or_union_specifier_t* spec = dcast<struct_or_union_specifier_t>(*current_struct_scope->parent);
+	struct_or_union_specifier_t* spec = dcast<struct_or_union_specifier_t>(current_struct_scope->parent);
 	if(! spec) { // B : declared as a declarator?
-		spec = dcast<struct_or_union_specifier_t>(struct_rval_of_func(*current_struct_scope));
+		spec = dcast<struct_or_union_specifier_t>(struct_rval_of_func(current_struct_scope));
 		if(! spec)
 		{
 			std::cout << "ABORT INFO: " << *current_struct_scope->parent << std::endl;
@@ -441,7 +441,7 @@ void type_completor::on(struct_access_expression_t& s, leave)
 			declarator_t* dtor = cur->c.get<2>()->c.get<0>();
 			if(dtor) { // FEATURE: never NULL?
 				// once a declarator exists, it must have an identifier
-				identifier_t& struct_member = get_declarator(*dtor); // FEATURE: rename: id_from_declarator?
+				identifier_t& struct_member = *get_identifier(*dtor); // FEATURE: rename: id_from_declarator?
 				if(struct_member.raw == s.c.get<2>()->raw) {
 					s.c.get<2>()->_definition = &struct_member;
 #ifdef TYPE_COMPLETOR_VERBOSE
@@ -451,7 +451,7 @@ void type_completor::on(struct_access_expression_t& s, leave)
 				}
 			}
 			//if(dtor)
-			// v_lookup_table.flag_symbol(&get_declarator(*dtor), decl_depth, false);
+			// v_lookup_table.flag_symbol(get_identifier(*dtor), decl_depth, false);
 		}
 
 	}
@@ -468,7 +468,7 @@ void type_completor::on(declaration_t& d, leave)
 	{
 		init_declarator_list_t* cur = d.c.get<1>();
 		for(; cur; cur = cur->c.get<0>()) {
-			v_lookup_table.flag_symbol(&get_declarator(*cur->c.get<2>()->c.get<0>()), decl_depth, false);
+			v_lookup_table.flag_symbol(get_identifier(*cur->c.get<2>()->c.get<0>()), decl_depth, false);
 		}
 	}
 }
@@ -477,7 +477,7 @@ void type_completor::on(function_definition_t& f, enter)
 {
 	// for functions, the depth has already been increased,
 	// however, the function identifier itself is at level 0
-	v_lookup_table.flag_symbol(&get_declarator(*f.c.get<1>()), decl_depth - 1, false);
+	v_lookup_table.flag_symbol(get_identifier(*f.c.get<1>()), decl_depth - 1, false);
 }
 
 struct check_is_fptr : public visitor_t
@@ -510,7 +510,7 @@ void type_completor::on(direct_declarator_func& f, enter)
 
 void type_completor::on(parameter_declaration_t& p, leave) {
 	if(p.c.get<1>())
-	 v_lookup_table.flag_symbol(&get_declarator(*p.c.get<1>()), decl_depth, false);
+	 v_lookup_table.flag_symbol(get_identifier(*p.c.get<1>()), decl_depth, false);
 }
 
 void type_completor::on(enum_specifier_t& e, enter) {

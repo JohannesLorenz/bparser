@@ -1,4 +1,4 @@
-                      struct_fwd (l   1 c   1) (l  26 c  14) translation unit
+                      struct_fwd (l   1 c   1) (l  28 c  10) translation unit
                       struct_fwd (l   1 c   1) (l   1 c  16)   external declaration
                       struct_fwd (l   1 c   1) (l   1 c  16)     declaration
                       struct_fwd (l   1 c   1) (l   1 c   9)       type specifier
@@ -105,3 +105,10 @@
                       struct_fwd (l  26 c  10) (l  26 c  13)       direct declarator (identifier)
                       struct_fwd (l  26 c  10) (l  26 c  13)         identifier (definition): s_z
                       struct_fwd (l  26 c  13) (l  26 c  14)       ;
+                      struct_fwd (l  28 c   1) (l  28 c  10)   external declaration
+                      struct_fwd (l  28 c   1) (l  28 c  10)     declaration
+                      struct_fwd (l  28 c   1) (l  28 c   9)       type specifier
+                      struct_fwd (l  28 c   1) (l  28 c   9)         struct specifier
+                      struct_fwd (l  28 c   1) (l  28 c   7)           "struct"
+                      struct_fwd (l  28 c   8) (l  28 c   9)           identifier (definition MISSING)
+                      struct_fwd (l  28 c   9) (l  28 c  10)       ;

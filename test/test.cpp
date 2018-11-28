@@ -24,6 +24,7 @@
 #include <vector>
 #include <cstring>
 
+#include "info.h"
 #include "node.h"
 #include "visitor.h"
 #include "ast.h"
@@ -165,6 +166,50 @@ void run_test_file(const char* file)
 	run_test(buffer_res.c_str(), file);
 }
 
+//! inherits from the tree-traversing visitor "fwd"
+struct declspec_info_test_vis : public fwd
+{
+	std::string res;
+	std::string human;
+
+	void visit(identifier_t& node) {
+		declarator_info_t* info;
+		if((info = get_declspec_info(node)))
+		{
+			if(res.size()) {
+				res += "; ";
+				human += "\n";
+			}
+			res += info->to_str("");
+			human += info->to_human();
+			delete info;
+		}
+	}
+};
+
+void grep_declspec(const char* descr, const char* input, const char* exp = NULL, const char* human_exp = NULL)
+{
+	std::cout << ":::::::::::::::" << std::endl;
+	std::cout << "running grep test: " << descr << std::endl;
+	std::cout << ":::::::::::::::" << std::endl;
+  
+	if(!exp)
+		exp = input;
+	declspec_info_test_vis v;
+	translation_unit_t *e = get_ast(input, "test.c");
+	e->accept(v);
+	v.res += ';';
+	if(v.res != exp)
+	{
+		throw "decl info parsed wrong!\nresult: \n" + v.res + "\n, exp: \n" + exp;
+	}
+	if(human_exp)
+	{
+		if(v.human != human_exp)
+			throw "human info printed wrong!\nresult: \n" + v.human + "\n, exp: \n" + human_exp;
+	}
+}
+
 
 void run(int argc, char** argv)
 {
@@ -269,13 +314,78 @@ void run(int argc, char** argv)
 		run_test_file("struct_acc");
 		run_test_file("struct_typedefs");
 		run_test_file("list");
+		
+		grep_declspec("basics", "void _() { int x; }", "void _(); int x;");
+		grep_declspec("primitive types", "void* v; _Bool b; _Complex c1; char c2; int i; float f; double d;", "void *v; _Bool b; _Complex c1; char c2; int i; float f; double d;");
+		grep_declspec("function forward declaration", "void forward_func(int, char);");
+		grep_declspec("structs",
+			"struct s1; struct s2 { int x2; }; struct { int x3; } s3; typedef struct { int x4; } s4; union { int x5; } u1;",
+			"int x2; int x3; struct s3; int x4; typedef struct s4; int x5; union u1;");
+		grep_declspec("enums",
+			"enum e1; enum e2 { RED }; enum { ONE } e3; typedef enum { RIGHT } e4;",
+			"enum e3; typedef enum e4;");
+		grep_declspec("function specifiers", "inline void f1(void);");
+		grep_declspec("type qualifiers", "const int i; restrict int i2; volatile int i3; _Atomic int i4;");
+		grep_declspec("storage classes", "typedef int i1; extern int i2; static void i3(); register int i4;");
+		grep_declspec("ellipsis", "void f(int, char, ...);");
+		grep_declspec("char types", "signed char c1; unsigned char c2; char c3;"); // signed char and char are separate types
+		
+		
+		grep_declspec("signed short", "short s1; short int s2; signed short s3; signed short int s4;",
+			  "short s1; short s2; short s3; short s4;"
+		);
+		grep_declspec("unsigned short", "unsigned short s1; unsigned short int s2;",
+			  "unsigned short s1; unsigned short s2;"
+		);
+		grep_declspec("signed long", "long s1; long int s2; signed long s3; signed long int s4;",
+			  "long s1; long s2; long s3; long s4;"
+		);
+		grep_declspec("unsigned long", "unsigned long s1; unsigned long int s2;",
+			  "unsigned long s1; unsigned long s2;"
+		);
+		grep_declspec("signed long long", "long long s1; long long int s2; signed long long s3; signed long long int s4;",
+			  "long long s1; long long s2; long long s3; long long s4;"
+		);
+		grep_declspec("unsigned long long", "unsigned long long s1; unsigned long long int s2;",
+			  "unsigned long long s1; unsigned long long s2;"
+		);
+		grep_declspec("signed int", "int i1; signed i2; signed int i3;",
+			  "int i1; int i2; int i3;"
+		);
+		grep_declspec("unsigned int", "unsigned i1; unsigned int i2;",
+			  "unsigned i1; unsigned i2;"
+		);
+		grep_declspec("float", "float f1; double d1; long double d2;");
+		
+		grep_declspec("array 1", "int arr[12][3][];", "int arr[][][];");
+		grep_declspec("array 2", "void f(int []);");
+		grep_declspec("pointers 1", "int *i1;");
+		grep_declspec("pointers 2", "int **i2;");
+		grep_declspec("pointers 3", "float **(*func)(int ***);");
+		grep_declspec("pointers 4", "float **(*func)(int ***i);", "float **(*func)(int ***i); int ***i;");
+		grep_declspec("pointers 5", "float **(*func)(int ***);");
+		grep_declspec("pointers 6", "const char *const str;");
+		grep_declspec("pointers 7", "int **restrict **const **volatile **_Atomic ptr;");
+		grep_declspec("pointers 8", "int **restrict **const (**volatile (**_Atomic ptr[])[]);");
+		grep_declspec("complex 1", "int * (* (*fp1) (int) ) [10];", "int *(*(*fp1)(int))[];",
+			"fp1 is  pointer to function taking int returning  pointer to array of  pointer to int ");
+		grep_declspec("complex 2", "float *(*(*fp1[2])())[];", "float *(*(*fp1[])())[];",
+			"fp1 is array of  pointer to function without argument specifier returning  pointer to array of  pointer to float "
+		);
+		grep_declspec("void func", "void f(void);", "void f(void);", "f is function without arguments returning void ");
 	}
 	else // argc > 1
 	{
 		run_test_file(argv[1]);
-
 	}
 
+}
+
+void dump_error(const char* err_msg)
+{
+	std::cout << "FEHLER: " << std::endl;
+	std::cout << err_msg << std::endl;
+	std::cout << "ABBRUCH." << std::endl;
 }
 
 int main(int argc, char** argv)
@@ -284,19 +394,16 @@ int main(int argc, char** argv)
 	try {
 		run(argc, argv);
 	} catch (const char* err_msg) {
-		std::cout << "FEHLER: " << std::endl;
-		std::cout << err_msg << std::endl;
-		std::cout << "ABBRUCH." << std::endl;
+		dump_error(err_msg);
 		exit_value = EXIT_FAILURE;
 	} catch (std::string& err_msg) { // FEATURE: code factorize
-		std::cout << "FEHLER: " << std::endl;
-		std::cout << err_msg << std::endl;
-		std::cout << "ABBRUCH." << std::endl;
+		dump_error(err_msg.c_str());
+		exit_value = EXIT_FAILURE;
+	} catch (std::exception& exc) { // FEATURE: code factorize
+		dump_error(exc.what());
 		exit_value = EXIT_FAILURE;
 	} catch (...) {
-		std::cout << "FEHLER: " << std::endl;
-		std::cout << "unbekannt exception" << std::endl;
-		std::cout << "ABBRUCH." << std::endl;
+		dump_error("Unknown exception");
 		exit_value = EXIT_FAILURE;
 	}
 

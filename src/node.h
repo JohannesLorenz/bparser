@@ -361,7 +361,11 @@ struct ternary_expression_t : public expression_t
 //		op(op), op_token(op_token), op_token_2(op_token_2), n1(n1), n2(n2), n3(n3) {}
 };
 
-struct abstract_declarator_t : public node_t, public has_par<>
+struct declarator_base : public node_t
+{
+};
+
+struct abstract_declarator_t : public declarator_base, public has_par<>
 {
 	ptn<	struct pointer_t,
 		ptn<	struct direct_abstract_declarator_t > > c;
@@ -378,7 +382,7 @@ struct type_specifier_complex_t : public type_specifier_t {
 	//virtual void accept(class visitor_t& v);
 };
 
-struct declaration_base
+struct declaration_base : public virtual node_t
 {
 	virtual declaration_specifiers_t& decl_spec() = 0;
 	virtual ~declaration_base() {}
@@ -441,7 +445,7 @@ struct struct_declaration_list_t : public node_t, public has_par<> // FEATURE: w
 	void accept(class visitor_t& v);
 };
 
-struct struct_declaration_t : public node_t, public has_par<struct_declaration_list_t>,
+struct struct_declaration_t : public has_par<struct_declaration_list_t>,
 	public declaration_base
 {
 	ptn<	struct declaration_specifiers_t, // FEATURE: don't use node_base there
@@ -533,7 +537,7 @@ struct parameter_list_t : public node_t, public has_par<> // FEATURE: when alt l
 	void accept(class visitor_t& v);
 };
 
-struct parameter_declaration_t : public node_t, public has_par<parameter_list_t>, public declaration_base
+struct parameter_declaration_t : public has_par<parameter_list_t>, public declaration_base
 {
 	ptn<	struct declaration_specifiers_t,
 		ptn<	declarator_t,
@@ -834,7 +838,7 @@ struct declaration_list_t : public node_t, public has_par<struct function_defini
 };
 
 // FEATURE: use compound_statement_t here as a parent and put declaration into wrapper?
-struct block_item_t : public node_t, public has_par<> {
+struct block_item_t : public virtual node_t, public has_par<> {
 	virtual void accept(class visitor_t& v);
 };
 
@@ -1204,8 +1208,7 @@ struct direct_abstract_declarator_func : public direct_abstract_declarator_t
 	virtual void accept(class visitor_t& v);
 };
 
-
-struct declarator_t : public node_t, public has_par<>
+struct declarator_t : public declarator_base, public has_par<>
 {
 	virtual void accept(class visitor_t& v);
 	ptn<pointer_t, ptn< direct_declarator_t > > c;
@@ -1217,7 +1220,7 @@ struct declaration_specifiers_t : public node_t, public has_par<>
 	std::list<node_t*> c;
 };
 
-struct function_definition_t : public node_t, public has_par<struct external_declaration_t>, public declaration_base
+struct function_definition_t : public has_par<struct external_declaration_t>, public declaration_base
 {
 	virtual void accept(class visitor_t& v);
 

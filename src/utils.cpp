@@ -42,9 +42,9 @@ void _function_called::visit(identifier_t& i){
 
 void struct_type_specifier_of_declaration_t::visit(typedef_name_t &t)
 {
-	func_visitor< declaration_from_declarator_t > v0;
+	declaration_from_declarator_t v0;
 	t._definition->parent->accept(v0);
-	return visit(v0.functor().declaration_found->decl_spec());
+	return visit(v0.declaration_found->decl_spec());
 }
 
 /*struct _function_defined
@@ -52,7 +52,7 @@ void struct_type_specifier_of_declaration_t::visit(typedef_name_t &t)
 	const std::string* result;
 	void operator()(declarator_t& d)
 	{
-		result = &get_declarator(d).raw;
+		result = &get_identifier(d).raw;
 	}
 };
 

@@ -1,6 +1,6 @@
 # Makefile
 
-FILES	= lexer.o parser.o node.o visitor.o token.o geom.o ast.o type_completor.o utils.o
+FILES	= lexer.o parser.o node.o visitor.o token.o geom.o ast.o type_completor.o utils.o info.o
 #CC	= gcc
 #CXX	= g++
 # -Werror -Wno-unused ?

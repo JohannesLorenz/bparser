@@ -25,3 +25,5 @@ struct s
 
 struct s s_z;
 
+struct x;
+
