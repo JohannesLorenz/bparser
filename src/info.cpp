@@ -649,6 +649,12 @@ declarator_info_t* get_declspec_info(nodes::defined_t& node)
 		: NULL; // no declaration specifiers => this was no declaration :-/
 }
 
+declarator_info_t* get_declspec_info(nodes::declarator_t& node)
+{
+	identifier_t* id = get_identifier(node);
+	return id ? get_declspec_info(*id) : NULL;
+}
+
 std::ostream& operator<<(std::ostream& os, const declarator_info_t& dsi)
 {
 	return os << dsi.to_str();

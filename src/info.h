@@ -194,5 +194,5 @@ struct declarator_info_t : not_copyable
 std::ostream& operator<<(std::ostream& os, const declarator_info_t& dsi);
 
 declarator_info_t* get_declspec_info(nodes::defined_t& node);
-
+declarator_info_t* get_declspec_info(nodes::declarator_t& node);
 
