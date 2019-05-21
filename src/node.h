@@ -315,6 +315,10 @@ inline bool makes_assignment(binary_op_t b) {
 	return b >= op_asn && b <= op_asn_or;
 }
 
+inline bool makes_assignment(unary_op_t u) {
+	return u >= op_inc_post && u <= op_dec_pre;
+}
+
 typedef ptn<token_t> end_token;
 
 struct expression_t : public node_t, public has_par<> {};
