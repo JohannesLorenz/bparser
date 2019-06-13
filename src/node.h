@@ -866,6 +866,10 @@ struct labeled_statement_t : public statement_t
 					colon,
 						statement
 	};
+	// WARNING:
+	// there may be multiple statements following
+	// this labeled statement, "statement" is just
+	// the first one
 
 	ptn<	token_t, // keyword: case, default
 		ptn<	identifier_t, // label: jump

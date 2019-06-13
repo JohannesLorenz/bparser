@@ -28,9 +28,10 @@
 //! This class contains a specific position in a file
 struct geom_t
 {
-	int file_id;
+	int file_id; //!< id conforming to get_files()
 	int line;
-	int col, tabcol;
+	int col; //!< column, tabs counted as 1 sign
+	int tabcol; //!< column, tabs counted as filling up to 8 signs
 	geom_t(int file_id, int line, int col, int tabcol) :
 		file_id(file_id), line(line), col(col), tabcol(tabcol) {}
 	geom_t() : file_id(-1), line(-1), col(-1), tabcol(-1) {}
