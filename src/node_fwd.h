@@ -94,7 +94,6 @@ struct expression_statement_t;
 struct selection_statement_t;
 struct iteration_statement_t;
 struct jump_statement_t;
-struct block_item_list_t;
 struct block_item_t;
 struct attr_name_t;
 struct attr_list_t;
