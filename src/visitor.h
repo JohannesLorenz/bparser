@@ -466,6 +466,8 @@ public:
 		xaccept(n.c);
 		f(n, leave());
 	}
+	const Functor2& functor() const { return f; }
+	Functor2& functor() { return f; }
 };
 
 //! visitor where visiting a node means visiting all child nodes
