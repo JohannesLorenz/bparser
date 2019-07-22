@@ -314,17 +314,15 @@ static void consume_comment(yyscan_t yyscanner)
 
 static int check_type(const char* text) // FEATURE: lookup_table function?
 {
-	/*return (typeof(yytext) == lt_undefined)
-		? recent_typedef_keyword
-			? recent_typedef_keyword=false, TYPEDEF_NAME
-			: recent_struct_access*/
+#ifdef LEXER_DEBUG
+	std::cout << "STATE NOW: " << declaration_state << std::endl;
+#endif
 
 	// attribute names go separate
 	if(recent_tokens[-3] == ATTRIBUTE ||
 		recent_tokens[-4] == ATTRIBUTE ||
 		recent_tokens[-5] == ATTRIBUTE) // more than 3 attributes => parse error
 	 return ATTR_NAME;
-
 	/*
 		Grammar: Each type_specifier is followed by either '<declaration_specifier>*['('<type_qualifier_list>*]*IDENTIFIER' => declaration,
 		Grammar: if it's followed by something else it's not a declaration
@@ -340,15 +338,11 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 		type_specifier + regex + IDENTIFIER (grammar) <=> declaration
 		
 	*/
-#ifdef LEXER_DEBUG
-	std::cout << "STATE NOW: " << declaration_state << std::endl;
-#endif
-	if(recent_tokens[-1] == '.' || recent_tokens[-1] == PTR_OP)
+	else if(recent_tokens[-1] == '.' || recent_tokens[-1] == PTR_OP)
 	{
 		return IDENTIFIER;
 	}
-
-	if(recent_tokens[-1] == STRUCT || recent_tokens[-1] == UNION || recent_tokens[-1] == ENUM)
+	else if(recent_tokens[-1] == STRUCT || recent_tokens[-1] == UNION || recent_tokens[-1] == ENUM)
 	{
 		states.recent_was_flagged_unknown = text;
 		states.maybe_struct_definition();
@@ -415,22 +409,22 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 #endif
 		return IDENTIFIER;
 	}*/
-		else switch(lookup_table_t::type_of(text))
-		{
-			// now it really can't be a declaration, so it must be known
-			case lt_typedef_name:                /* previously defined */
+	else switch(lookup_table_t::type_of(text))
+	{
+		// now it really can't be a declaration, so it must be known
+		case lt_typedef_name: /* previously defined */
 			return TYPEDEF_NAME;
-			case lt_enumeration:        /* previously defined */
+		case lt_enumeration: /* previously defined */
 			return ENUMERATION_CONSTANT;
-			case lt_identifier:                          /* includes undefined */
-			case lt_struct_bound:
+		case lt_identifier: /* includes undefined */
+		case lt_struct_bound:
 			return IDENTIFIER;
-			default:
+		default:
 			states.flag_symbol(text, lt_identifier_list);
 			states.recent_was_flagged_unknown = text;
 			return IDENTIFIER;
-			//throw "This is neither a declaration, nor is this type known.";
-		}
+		//throw "This is neither a declaration, nor is this type known.";
+	}
 
 #if 0	
 lookup_type lt = lookup_table_t::type_of(text);
@@ -470,19 +464,8 @@ lookup_type lt = lookup_table_t::type_of(text);
 		 return IDENTIFIER;
 	}
 #endif
-#if 0
-    switch (sym_type(yytext))
-    {
-    case TYPEDEF_NAME:                /* previously defined */
-        return TYPEDEF_NAME;
-    case ENUMERATION_CONSTANT:        /* previously defined */
-        return ENUMERATION_CONSTANT;
-    default:                          /* includes undefined */
-	return IDENTIFIER;
-    }
-#endif
 }
 
 void yyerror(const char *msg) {
-    fprintf(stderr,"Error: %s\n",msg);
+	fprintf(stderr,"Error: %s\n",msg);
 }
