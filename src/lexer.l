@@ -275,7 +275,7 @@ return app3(yylval->token, '{', yytext); }
 "\v"					{ app2(yylval->token, '\v'); }
 "\f"					{ app2(yylval->token, '\f'); }
 " "					{ app2(yylval->token, ' '); }
-"#"([^\\\n])*"\n"			{ pos_counter::parse_ppline(yytext); }
+"#"([^\\\n]*\\[ \t\v\f]*"\n")*[^\\\n]*"\n"	{ pos_counter::parse_ppline(yytext); }
 .					{ std::cerr << "At: " << yytext << std::endl; throw std::runtime_error("bad character"); }
 
 %%
