@@ -39,6 +39,7 @@
 #include "parser.h"
 using namespace nodes;
 
+int allow_undefined;
 int strict_mode;
 bool bparser_debug;
 int _recent_tokens[6] = { -1, -1, -1, -1, -1, -1 }; // FEATURE: better initial numbers?

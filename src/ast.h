@@ -17,17 +17,27 @@
 /* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
 /*************************************************************************/
 
-//! @file ast.h functionality to build complete ASTs
+/**
+	@file ast.h functionality to build complete ASTs
 
-//! returns an AST (abstract syntax tree) from given C99 input string
-//! This is the function most application will want to access
-//! @param input precompiled-ANSII-C99 input string
-//! @param fname name of the C99 file. This is not used for opening any
-//!	file (input is given as a string already), but this is for
-//!	labeling in which file the nodes (declarations, definitions,
-//!	expressions etc) are
-//! @param _strict_mode if this is set to true, the parser is annoyed about
-//!	duplicate declarations etc. This mode is too strict (a bug), but
-//!	it is useful for testing.
-struct translation_unit_t *get_ast(const char *input,
-	const char* fname = NULL, bool _strict_mode = true);
+	returns an AST (abstract syntax tree) from given C99 input string
+	This is the function most application will want to access
+
+	@param input precompiled-ANSII-C99 input string
+	@param fname name of the C99 file. This is not used for opening any
+		file (input is given as a string already), but this is for
+		labeling in which file the nodes (declarations, definitions,
+		expressions etc) are
+	@param param_allow_undefined Allow undefined identifiers. In this case,
+		the first occurence is the implicit definition (the last part
+		may be buggy). This will fail to detect identifier lists!
+	@param _strict_mode if this is set to true, the parser is annoyed about
+		duplicate declarations etc. This mode is too strict (a bug), but
+		it is useful for testing.
+*/
+
+struct translation_unit_t *get_ast(
+	const char *input,
+	const char* fname = NULL,
+	bool param_allow_undefined = false,
+	bool param_strict_mode = true);

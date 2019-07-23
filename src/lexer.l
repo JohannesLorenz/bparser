@@ -416,9 +416,14 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 			return TYPEDEF_NAME;
 		case lt_enumeration: /* previously defined */
 			return ENUMERATION_CONSTANT;
-		case lt_identifier: /* includes undefined */
+		case lt_identifier:
 		case lt_struct_bound:
 			return IDENTIFIER;
+		case lt_undefined: /* undefined or identifier list */
+			if(allow_undefined) /* in this mode, identifier lists are forbidden */
+				return IDENTIFIER; /* best guess */
+			else /* undefined are forbidden */
+			{ /* fall through => flag as identifier list */ }
 		default:
 			states.flag_symbol(text, lt_identifier_list);
 			states.recent_was_flagged_unknown = text;

@@ -28,6 +28,7 @@
 #include "ast.h"
 
 extern int strict_mode;
+extern int allow_undefined;
 extern bool bparser_debug;
 extern int yydebug;
 extern std::vector<terminal_t*>& get_token_vector();
@@ -35,9 +36,11 @@ extern std::vector<terminal_t*>& get_token_vector();
 int yyparse(translation_unit_t **expression, yyscan_t scanner);
 
 translation_unit_t *get_ast(const char *input, const char* fname,
-	bool _strict_mode)
+	bool param_allow_undefined,
+	bool param_strict_mode)
 {
-	strict_mode = _strict_mode;
+	allow_undefined = param_allow_undefined;
+	strict_mode = param_strict_mode;
 	bparser_debug = false;
 
 	init_parser(fname);

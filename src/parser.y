@@ -28,6 +28,7 @@
 
 extern void dump_lookup_table();
 extern geom_t get_pos();
+extern bool allow_undefined;
 
 int yyerror(translation_unit_t ** /*expression*/, yyscan_t scanner, const char *msg) {
 	(void)scanner;
@@ -341,7 +342,7 @@ typedef void* yyscan_t;
 %%
 
 primary_expression // parents: postfix_expression
-	: IDENTIFIER { if(type_of($1->raw.c_str())==lt_undefined) throw std::runtime_error("identifier undefined"); else
+	: IDENTIFIER { if(!allow_undefined && type_of($1->raw.c_str())==lt_undefined) throw std::runtime_error("identifier undefined"); else
 		{ alloc($$); setc($$, $$->c, NULL, $1); } }
 	| constant { alloc($$); $$->c.set($1); }
 	| string { alloc($$); $$->c.set($1); }
