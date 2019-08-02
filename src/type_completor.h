@@ -29,6 +29,7 @@
 #include <map>
 #include <iostream>
 #include <string>
+#include <typeinfo>
 
 #include "options.h"
 #include "visitor.h"
@@ -204,17 +205,24 @@ class type_completor : ftor_base
 				if(next != table.end())
 				 ++next;
 
-				// invariant: ++itr == next || next == table.end()
-				//std::cout << itr->second.second << " <-> " << bracket_depth << std::endl;
-				if(itr->second.back().first == new_depth + 1)
+				if(itr->second.back().first > new_depth + 1)
 				{
-					// out of scope
-					itr->second.pop_back();
-					if(itr->second.empty())
-					 table.erase(itr);
+					// that variable should have been removed at last scope end (below)
+					throw std::logic_error("overseen last scope end");
 				}
-				else if(itr->second.back().first >= (new_depth + 2))
-				 throw std::logic_error("overseen last scope end");
+				else
+				{
+					// remove all variables at that depth
+
+					// invariant: itr+1 == next || next == table.end()
+					while(itr->second.back().first == new_depth + 1)
+					{
+						// variable out of scope
+						itr->second.pop_back();
+						if(itr->second.empty())
+						 table.erase(itr);
+					}
+				}
 			}
 		}
 
