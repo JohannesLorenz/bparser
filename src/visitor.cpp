@@ -389,7 +389,7 @@ public:
 		snprintf(tmp, 64, "%32s (l%4d c%4d) (l%4d c%4d) ",
 			last_slash ? 1+last_slash : fname,
 			span.first.line,
-			span.first.col, span.second.line, span.second.col);
+			span.first.tabcol, span.second.line, span.second.tabcol);
 		stream << tmp;
 		for(std::size_t i = 0; i < *depth; ++i)
 		 stream << "  ";

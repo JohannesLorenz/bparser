@@ -10,207 +10,207 @@
                       statements (l   1 c  10) (l   1 c  11)         )
                       statements (l   2 c   1) (l  39 c   2)       compound statement
                       statements (l   2 c   1) (l   2 c   2)         {
-                      statements (l   3 c   2) (l   4 c   3)         compound statement
-                      statements (l   3 c   2) (l   3 c   3)           {
-                      statements (l   4 c   2) (l   4 c   3)           }
-                      statements (l   6 c   2) (l   8 c   3)         compound statement
-                      statements (l   6 c   2) (l   6 c   3)           {
-                      statements (l   7 c   3) (l   7 c   4)           expression statement
-                      statements (l   7 c   3) (l   7 c   4)             ;
-                      statements (l   8 c   2) (l   8 c   3)           }
-                      statements (l  10 c   2) (l  12 c   3)         compound statement
-                      statements (l  10 c   2) (l  10 c   3)           {
-                      statements (l  11 c   3) (l  11 c   7)           expression statement
-                      statements (l  11 c   3) (l  11 c   6)             binary expression 
-                      statements (l  11 c   3) (l  11 c   4)               primary expression
-                      statements (l  11 c   3) (l  11 c   4)                 int constant: 2 (type: d)
-                      statements (l  11 c   4) (l  11 c   5)               +
-                      statements (l  11 c   5) (l  11 c   6)               primary expression
-                      statements (l  11 c   5) (l  11 c   6)                 int constant: 2 (type: d)
-                      statements (l  11 c   6) (l  11 c   7)             ;
-                      statements (l  12 c   2) (l  12 c   3)           }
-                      statements (l  14 c   2) (l  17 c   5)         selection statement
-                      statements (l  14 c   2) (l  14 c   4)           "if"
-                      statements (l  14 c   4) (l  14 c   5)           (
-                      statements (l  14 c   5) (l  14 c   6)           primary expression
-                      statements (l  14 c   5) (l  14 c   6)             int constant: 1 (type: d)
-                      statements (l  14 c   6) (l  14 c   7)           )
-                      statements (l  15 c   3) (l  15 c   5)           expression statement
-                      statements (l  15 c   3) (l  15 c   4)             primary expression
-                      statements (l  15 c   3) (l  15 c   4)               int constant: 1 (type: d)
-                      statements (l  15 c   4) (l  15 c   5)             ;
-                      statements (l  16 c   2) (l  16 c   6)           "else"
-                      statements (l  17 c   3) (l  17 c   5)           expression statement
-                      statements (l  17 c   3) (l  17 c   4)             primary expression
-                      statements (l  17 c   3) (l  17 c   4)               int constant: 1 (type: d)
-                      statements (l  17 c   4) (l  17 c   5)             ;
-                      statements (l  19 c   2) (l  19 c   8)         labeled statement (type jump label)
-                      statements (l  19 c   2) (l  19 c   5)           identifier (definition): lbl
-                      statements (l  19 c   5) (l  19 c   6)           :
-                      statements (l  19 c   7) (l  19 c   8)           expression statement
-                      statements (l  19 c   7) (l  19 c   8)             ;
-                      statements (l  21 c   2) (l  26 c   3)         selection statement
-                      statements (l  21 c   2) (l  21 c   8)           "switch"
-                      statements (l  21 c   9) (l  21 c  10)           (
-                      statements (l  21 c  10) (l  21 c  11)           primary expression
-                      statements (l  21 c  10) (l  21 c  11)             int constant: 1 (type: d)
-                      statements (l  21 c  11) (l  21 c  12)           )
-                      statements (l  21 c  13) (l  26 c   3)           compound statement
-                      statements (l  21 c  13) (l  21 c  14)             {
-                      statements (l  22 c   3) (l  22 c  18)             labeled statement (type case label)
-                      statements (l  22 c   3) (l  22 c   7)               "case"
-                      statements (l  22 c   8) (l  22 c   9)               primary expression
-                      statements (l  22 c   8) (l  22 c   9)                 int constant: 1 (type: d)
-                      statements (l  22 c   9) (l  22 c  10)               :
-                      statements (l  22 c  11) (l  22 c  18)               jump statement (type return)
-                      statements (l  22 c  11) (l  22 c  17)                 "return"
-                      statements (l  22 c  17) (l  22 c  18)                 ;
-                      statements (l  23 c   3) (l  23 c  17)             labeled statement (type case label)
-                      statements (l  23 c   3) (l  23 c   7)               "case"
-                      statements (l  23 c   8) (l  23 c   9)               primary expression
-                      statements (l  23 c   8) (l  23 c   9)                 int constant: 2 (type: d)
-                      statements (l  23 c   9) (l  23 c  10)               :
-                      statements (l  23 c  11) (l  23 c  17)               jump statement (type break)
-                      statements (l  23 c  11) (l  23 c  16)                 "break"
-                      statements (l  23 c  16) (l  23 c  17)                 ;
-                      statements (l  24 c   3) (l  24 c  20)             labeled statement (type case label)
-                      statements (l  24 c   3) (l  24 c   7)               "case"
-                      statements (l  24 c   8) (l  24 c   9)               primary expression
-                      statements (l  24 c   8) (l  24 c   9)                 int constant: 3 (type: d)
-                      statements (l  24 c   9) (l  24 c  10)               :
-                      statements (l  24 c  11) (l  24 c  20)               jump statement (type return (with type))
-                      statements (l  24 c  11) (l  24 c  17)                 "return"
-                      statements (l  24 c  18) (l  24 c  19)                 primary expression
-                      statements (l  24 c  18) (l  24 c  19)                   int constant: 0 (type: d)
-                      statements (l  24 c  19) (l  24 c  20)                 ;
-                      statements (l  25 c   3) (l  25 c  21)             labeled statement (type default label)
-                      statements (l  25 c   3) (l  25 c  10)               "default"
-                      statements (l  25 c  10) (l  25 c  11)               :
-                      statements (l  25 c  12) (l  25 c  21)               jump statement (type goto)
-                      statements (l  25 c  12) (l  25 c  16)                 "goto"
-                      statements (l  25 c  17) (l  25 c  20)                 identifier: lbl (definition: statements: l19, c9-12)
-                      statements (l  25 c  20) (l  25 c  21)                 ;
-                      statements (l  26 c   2) (l  26 c   3)             }
-                      statements (l  28 c   2) (l  28 c  24)         iteration statement (type while)
-                      statements (l  28 c   2) (l  28 c   7)           "while"
-                      statements (l  28 c   7) (l  28 c   8)           (
-                      statements (l  28 c   8) (l  28 c   9)           primary expression
-                      statements (l  28 c   8) (l  28 c   9)             int constant: 1 (type: d)
-                      statements (l  28 c   9) (l  28 c  10)           )
-                      statements (l  28 c  11) (l  28 c  24)           compound statement
-                      statements (l  28 c  11) (l  28 c  12)             {
-                      statements (l  28 c  13) (l  28 c  22)             jump statement (type continue)
-                      statements (l  28 c  13) (l  28 c  21)               "continue"
-                      statements (l  28 c  21) (l  28 c  22)               ;
-                      statements (l  28 c  23) (l  28 c  24)             }
-                      statements (l  29 c   2) (l  29 c  16)         iteration statement (type do-while)
-                      statements (l  29 c   2) (l  29 c   4)           "do"
-                      statements (l  29 c   8) (l  29 c  13)           "while"
-                      statements (l  29 c  13) (l  29 c  14)           (
-                      statements (l  29 c  14) (l  29 c  15)           primary expression
-                      statements (l  29 c  14) (l  29 c  15)             int constant: 1 (type: d)
-                      statements (l  29 c  15) (l  29 c  16)           )
-                      statements (l  29 c   5) (l  29 c   7)           expression statement
-                      statements (l  29 c   5) (l  29 c   6)             primary expression
-                      statements (l  29 c   5) (l  29 c   6)               int constant: 1 (type: d)
-                      statements (l  29 c   6) (l  29 c   7)             ;
+                      statements (l   3 c   9) (l   4 c  10)         compound statement
+                      statements (l   3 c   9) (l   3 c  10)           {
+                      statements (l   4 c   9) (l   4 c  10)           }
+                      statements (l   6 c   9) (l   8 c  10)         compound statement
+                      statements (l   6 c   9) (l   6 c  10)           {
+                      statements (l   7 c  17) (l   7 c  18)           expression statement
+                      statements (l   7 c  17) (l   7 c  18)             ;
+                      statements (l   8 c   9) (l   8 c  10)           }
+                      statements (l  10 c   9) (l  12 c  10)         compound statement
+                      statements (l  10 c   9) (l  10 c  10)           {
+                      statements (l  11 c  17) (l  11 c  21)           expression statement
+                      statements (l  11 c  17) (l  11 c  20)             binary expression 
+                      statements (l  11 c  17) (l  11 c  18)               primary expression
+                      statements (l  11 c  17) (l  11 c  18)                 int constant: 2 (type: d)
+                      statements (l  11 c  18) (l  11 c  19)               +
+                      statements (l  11 c  19) (l  11 c  20)               primary expression
+                      statements (l  11 c  19) (l  11 c  20)                 int constant: 2 (type: d)
+                      statements (l  11 c  20) (l  11 c  21)             ;
+                      statements (l  12 c   9) (l  12 c  10)           }
+                      statements (l  14 c   9) (l  17 c  19)         selection statement
+                      statements (l  14 c   9) (l  14 c  11)           "if"
+                      statements (l  14 c  11) (l  14 c  12)           (
+                      statements (l  14 c  12) (l  14 c  13)           primary expression
+                      statements (l  14 c  12) (l  14 c  13)             int constant: 1 (type: d)
+                      statements (l  14 c  13) (l  14 c  14)           )
+                      statements (l  15 c  17) (l  15 c  19)           expression statement
+                      statements (l  15 c  17) (l  15 c  18)             primary expression
+                      statements (l  15 c  17) (l  15 c  18)               int constant: 1 (type: d)
+                      statements (l  15 c  18) (l  15 c  19)             ;
+                      statements (l  16 c   9) (l  16 c  13)           "else"
+                      statements (l  17 c  17) (l  17 c  19)           expression statement
+                      statements (l  17 c  17) (l  17 c  18)             primary expression
+                      statements (l  17 c  17) (l  17 c  18)               int constant: 1 (type: d)
+                      statements (l  17 c  18) (l  17 c  19)             ;
+                      statements (l  19 c   9) (l  19 c  18)         labeled statement (type jump label)
+                      statements (l  19 c   9) (l  19 c  12)           identifier (definition): lbl
+                      statements (l  19 c  12) (l  19 c  13)           :
+                      statements (l  19 c  17) (l  19 c  18)           expression statement
+                      statements (l  19 c  17) (l  19 c  18)             ;
+                      statements (l  21 c   9) (l  26 c  10)         selection statement
+                      statements (l  21 c   9) (l  21 c  15)           "switch"
+                      statements (l  21 c  16) (l  21 c  17)           (
+                      statements (l  21 c  17) (l  21 c  18)           primary expression
+                      statements (l  21 c  17) (l  21 c  18)             int constant: 1 (type: d)
+                      statements (l  21 c  18) (l  21 c  19)           )
+                      statements (l  21 c  20) (l  26 c  10)           compound statement
+                      statements (l  21 c  20) (l  21 c  21)             {
+                      statements (l  22 c  17) (l  22 c  32)             labeled statement (type case label)
+                      statements (l  22 c  17) (l  22 c  21)               "case"
+                      statements (l  22 c  22) (l  22 c  23)               primary expression
+                      statements (l  22 c  22) (l  22 c  23)                 int constant: 1 (type: d)
+                      statements (l  22 c  23) (l  22 c  24)               :
+                      statements (l  22 c  25) (l  22 c  32)               jump statement (type return)
+                      statements (l  22 c  25) (l  22 c  31)                 "return"
+                      statements (l  22 c  31) (l  22 c  32)                 ;
+                      statements (l  23 c  17) (l  23 c  31)             labeled statement (type case label)
+                      statements (l  23 c  17) (l  23 c  21)               "case"
+                      statements (l  23 c  22) (l  23 c  23)               primary expression
+                      statements (l  23 c  22) (l  23 c  23)                 int constant: 2 (type: d)
+                      statements (l  23 c  23) (l  23 c  24)               :
+                      statements (l  23 c  25) (l  23 c  31)               jump statement (type break)
+                      statements (l  23 c  25) (l  23 c  30)                 "break"
+                      statements (l  23 c  30) (l  23 c  31)                 ;
+                      statements (l  24 c  17) (l  24 c  34)             labeled statement (type case label)
+                      statements (l  24 c  17) (l  24 c  21)               "case"
+                      statements (l  24 c  22) (l  24 c  23)               primary expression
+                      statements (l  24 c  22) (l  24 c  23)                 int constant: 3 (type: d)
+                      statements (l  24 c  23) (l  24 c  24)               :
+                      statements (l  24 c  25) (l  24 c  34)               jump statement (type return (with type))
+                      statements (l  24 c  25) (l  24 c  31)                 "return"
+                      statements (l  24 c  32) (l  24 c  33)                 primary expression
+                      statements (l  24 c  32) (l  24 c  33)                   int constant: 0 (type: d)
+                      statements (l  24 c  33) (l  24 c  34)                 ;
+                      statements (l  25 c  17) (l  25 c  35)             labeled statement (type default label)
+                      statements (l  25 c  17) (l  25 c  24)               "default"
+                      statements (l  25 c  24) (l  25 c  25)               :
+                      statements (l  25 c  26) (l  25 c  35)               jump statement (type goto)
+                      statements (l  25 c  26) (l  25 c  30)                 "goto"
+                      statements (l  25 c  31) (l  25 c  34)                 identifier: lbl (definition: statements: l19, c9-12)
+                      statements (l  25 c  34) (l  25 c  35)                 ;
+                      statements (l  26 c   9) (l  26 c  10)             }
+                      statements (l  28 c   9) (l  28 c  31)         iteration statement (type while)
+                      statements (l  28 c   9) (l  28 c  14)           "while"
+                      statements (l  28 c  14) (l  28 c  15)           (
+                      statements (l  28 c  15) (l  28 c  16)           primary expression
+                      statements (l  28 c  15) (l  28 c  16)             int constant: 1 (type: d)
+                      statements (l  28 c  16) (l  28 c  17)           )
+                      statements (l  28 c  18) (l  28 c  31)           compound statement
+                      statements (l  28 c  18) (l  28 c  19)             {
+                      statements (l  28 c  20) (l  28 c  29)             jump statement (type continue)
+                      statements (l  28 c  20) (l  28 c  28)               "continue"
+                      statements (l  28 c  28) (l  28 c  29)               ;
+                      statements (l  28 c  30) (l  28 c  31)             }
+                      statements (l  29 c   9) (l  29 c  23)         iteration statement (type do-while)
+                      statements (l  29 c   9) (l  29 c  11)           "do"
+                      statements (l  29 c  15) (l  29 c  20)           "while"
+                      statements (l  29 c  20) (l  29 c  21)           (
+                      statements (l  29 c  21) (l  29 c  22)           primary expression
+                      statements (l  29 c  21) (l  29 c  22)             int constant: 1 (type: d)
+                      statements (l  29 c  22) (l  29 c  23)           )
+                      statements (l  29 c  12) (l  29 c  14)           expression statement
+                      statements (l  29 c  12) (l  29 c  13)             primary expression
+                      statements (l  29 c  12) (l  29 c  13)               int constant: 1 (type: d)
+                      statements (l  29 c  13) (l  29 c  14)             ;
                       statements (l  33 c  10) (l  33 c  16)         declaration
                       statements (l  33 c  10) (l  33 c  13)           type specifier
                       statements (l  33 c  10) (l  33 c  13)             "int"
                       statements (l  33 c  14) (l  33 c  15)           direct declarator (identifier)
                       statements (l  33 c  14) (l  33 c  15)             identifier (definition): x
                       statements (l  33 c  15) (l  33 c  16)           ;
-                      statements (l  34 c   2) (l  34 c  14)         iteration statement (type for)
-                      statements (l  34 c   2) (l  34 c   5)           "for"
-                      statements (l  34 c   5) (l  34 c   6)           (
-                      statements (l  34 c   6) (l  34 c   7)           expression statement
-                      statements (l  34 c   6) (l  34 c   7)             ;
-                      statements (l  34 c   8) (l  34 c  10)           expression statement
-                      statements (l  34 c   8) (l  34 c   9)             primary expression
-                      statements (l  34 c   8) (l  34 c   9)               identifier: x (definition: statements: l33, c14-15)
-                      statements (l  34 c   9) (l  34 c  10)             ;
-                      statements (l  34 c  11) (l  34 c  12)           )
+                      statements (l  34 c   9) (l  34 c  21)         iteration statement (type for)
+                      statements (l  34 c   9) (l  34 c  12)           "for"
+                      statements (l  34 c  12) (l  34 c  13)           (
                       statements (l  34 c  13) (l  34 c  14)           expression statement
                       statements (l  34 c  13) (l  34 c  14)             ;
-                      statements (l  35 c   2) (l  35 c  17)         iteration statement (type for)
-                      statements (l  35 c   2) (l  35 c   5)           "for"
-                      statements (l  35 c   5) (l  35 c   6)           (
-                      statements (l  35 c   6) (l  35 c   7)           expression statement
-                      statements (l  35 c   6) (l  35 c   7)             ;
-                      statements (l  35 c   8) (l  35 c  10)           expression statement
-                      statements (l  35 c   8) (l  35 c   9)             primary expression
-                      statements (l  35 c   8) (l  35 c   9)               identifier: x (definition: statements: l33, c14-15)
-                      statements (l  35 c   9) (l  35 c  10)             ;
-                      statements (l  35 c  11) (l  35 c  14)           unary_expression (prefix)
-                      statements (l  35 c  11) (l  35 c  13)             ++
-                      statements (l  35 c  13) (l  35 c  14)             primary expression
-                      statements (l  35 c  13) (l  35 c  14)               identifier: x (definition: statements: l33, c14-15)
-                      statements (l  35 c  14) (l  35 c  15)           )
-                      statements (l  35 c  16) (l  35 c  17)           expression statement
+                      statements (l  34 c  15) (l  34 c  17)           expression statement
+                      statements (l  34 c  15) (l  34 c  16)             primary expression
+                      statements (l  34 c  15) (l  34 c  16)               identifier: x (definition: statements: l33, c14-15)
+                      statements (l  34 c  16) (l  34 c  17)             ;
+                      statements (l  34 c  18) (l  34 c  19)           )
+                      statements (l  34 c  20) (l  34 c  21)           expression statement
+                      statements (l  34 c  20) (l  34 c  21)             ;
+                      statements (l  35 c   9) (l  35 c  24)         iteration statement (type for)
+                      statements (l  35 c   9) (l  35 c  12)           "for"
+                      statements (l  35 c  12) (l  35 c  13)           (
+                      statements (l  35 c  13) (l  35 c  14)           expression statement
+                      statements (l  35 c  13) (l  35 c  14)             ;
+                      statements (l  35 c  15) (l  35 c  17)           expression statement
+                      statements (l  35 c  15) (l  35 c  16)             primary expression
+                      statements (l  35 c  15) (l  35 c  16)               identifier: x (definition: statements: l33, c14-15)
                       statements (l  35 c  16) (l  35 c  17)             ;
-                      statements (l  36 c   2) (l  36 c  19)         iteration statement (type for)
-                      statements (l  36 c   2) (l  36 c   5)           "for"
-                      statements (l  36 c   5) (l  36 c   6)           (
-                      statements (l  36 c   6) (l  36 c  12)           declaration
-                      statements (l  36 c   6) (l  36 c   9)             type specifier
-                      statements (l  36 c   6) (l  36 c   9)               "int"
-                      statements (l  36 c  10) (l  36 c  11)             direct declarator (identifier)
-                      statements (l  36 c  10) (l  36 c  11)               identifier (definition): y
-                      statements (l  36 c  11) (l  36 c  12)             ;
-                      statements (l  36 c  13) (l  36 c  15)           expression statement
-                      statements (l  36 c  13) (l  36 c  14)             primary expression
-                      statements (l  36 c  13) (l  36 c  14)               identifier: y (definition: statements: l36, c17-18)
-                      statements (l  36 c  14) (l  36 c  15)             ;
-                      statements (l  36 c  16) (l  36 c  17)           )
-                      statements (l  36 c  18) (l  36 c  19)           expression statement
+                      statements (l  35 c  18) (l  35 c  21)           unary_expression (prefix)
+                      statements (l  35 c  18) (l  35 c  20)             ++
+                      statements (l  35 c  20) (l  35 c  21)             primary expression
+                      statements (l  35 c  20) (l  35 c  21)               identifier: x (definition: statements: l33, c14-15)
+                      statements (l  35 c  21) (l  35 c  22)           )
+                      statements (l  35 c  23) (l  35 c  24)           expression statement
+                      statements (l  35 c  23) (l  35 c  24)             ;
+                      statements (l  36 c   9) (l  36 c  26)         iteration statement (type for)
+                      statements (l  36 c   9) (l  36 c  12)           "for"
+                      statements (l  36 c  12) (l  36 c  13)           (
+                      statements (l  36 c  13) (l  36 c  19)           declaration
+                      statements (l  36 c  13) (l  36 c  16)             type specifier
+                      statements (l  36 c  13) (l  36 c  16)               "int"
+                      statements (l  36 c  17) (l  36 c  18)             direct declarator (identifier)
+                      statements (l  36 c  17) (l  36 c  18)               identifier (definition): y
                       statements (l  36 c  18) (l  36 c  19)             ;
-                      statements (l  37 c   2) (l  37 c  22)         iteration statement (type for)
-                      statements (l  37 c   2) (l  37 c   5)           "for"
-                      statements (l  37 c   5) (l  37 c   6)           (
-                      statements (l  37 c   6) (l  37 c  12)           declaration
-                      statements (l  37 c   6) (l  37 c   9)             type specifier
-                      statements (l  37 c   6) (l  37 c   9)               "int"
-                      statements (l  37 c  10) (l  37 c  11)             direct declarator (identifier)
-                      statements (l  37 c  10) (l  37 c  11)               identifier (definition): y
-                      statements (l  37 c  11) (l  37 c  12)             ;
-                      statements (l  37 c  13) (l  37 c  15)           expression statement
-                      statements (l  37 c  13) (l  37 c  14)             primary expression
-                      statements (l  37 c  13) (l  37 c  14)               identifier: y (definition: statements: l37, c17-18)
-                      statements (l  37 c  14) (l  37 c  15)             ;
-                      statements (l  37 c  16) (l  37 c  19)           unary_expression (prefix)
-                      statements (l  37 c  16) (l  37 c  18)             ++
-                      statements (l  37 c  18) (l  37 c  19)             primary expression
-                      statements (l  37 c  18) (l  37 c  19)               identifier: y (definition: statements: l37, c17-18)
-                      statements (l  37 c  19) (l  37 c  20)           )
-                      statements (l  37 c  21) (l  37 c  22)           expression statement
+                      statements (l  36 c  20) (l  36 c  22)           expression statement
+                      statements (l  36 c  20) (l  36 c  21)             primary expression
+                      statements (l  36 c  20) (l  36 c  21)               identifier: y (definition: statements: l36, c17-18)
+                      statements (l  36 c  21) (l  36 c  22)             ;
+                      statements (l  36 c  23) (l  36 c  24)           )
+                      statements (l  36 c  25) (l  36 c  26)           expression statement
+                      statements (l  36 c  25) (l  36 c  26)             ;
+                      statements (l  37 c   9) (l  37 c  29)         iteration statement (type for)
+                      statements (l  37 c   9) (l  37 c  12)           "for"
+                      statements (l  37 c  12) (l  37 c  13)           (
+                      statements (l  37 c  13) (l  37 c  19)           declaration
+                      statements (l  37 c  13) (l  37 c  16)             type specifier
+                      statements (l  37 c  13) (l  37 c  16)               "int"
+                      statements (l  37 c  17) (l  37 c  18)             direct declarator (identifier)
+                      statements (l  37 c  17) (l  37 c  18)               identifier (definition): y
+                      statements (l  37 c  18) (l  37 c  19)             ;
+                      statements (l  37 c  20) (l  37 c  22)           expression statement
+                      statements (l  37 c  20) (l  37 c  21)             primary expression
+                      statements (l  37 c  20) (l  37 c  21)               identifier: y (definition: statements: l37, c17-18)
                       statements (l  37 c  21) (l  37 c  22)             ;
-                      statements (l  38 c   2) (l  38 c  31)         iteration statement (type for)
-                      statements (l  38 c   2) (l  38 c   5)           "for"
-                      statements (l  38 c   5) (l  38 c   6)           (
-                      statements (l  38 c   6) (l  38 c  12)           declaration
-                      statements (l  38 c   6) (l  38 c   9)             type specifier
-                      statements (l  38 c   6) (l  38 c   9)               "int"
-                      statements (l  38 c  10) (l  38 c  11)             direct declarator (identifier)
-                      statements (l  38 c  10) (l  38 c  11)               identifier (definition): y
-                      statements (l  38 c  11) (l  38 c  12)             ;
-                      statements (l  38 c  13) (l  38 c  15)           expression statement
-                      statements (l  38 c  13) (l  38 c  14)             primary expression
-                      statements (l  38 c  13) (l  38 c  14)               identifier: y (definition: statements: l38, c17-18)
-                      statements (l  38 c  14) (l  38 c  15)             ;
-                      statements (l  38 c  16) (l  38 c  19)           unary_expression (prefix)
-                      statements (l  38 c  16) (l  38 c  18)             ++
-                      statements (l  38 c  18) (l  38 c  19)             primary expression
-                      statements (l  38 c  18) (l  38 c  19)               identifier: y (definition: statements: l38, c17-18)
-                      statements (l  38 c  19) (l  38 c  20)           )
-                      statements (l  38 c  21) (l  38 c  31)           compound statement
-                      statements (l  38 c  21) (l  38 c  22)             {
-                      statements (l  38 c  23) (l  38 c  29)             expression statement
-                      statements (l  38 c  23) (l  38 c  28)               binary expression 
-                      statements (l  38 c  23) (l  38 c  24)                 primary expression
-                      statements (l  38 c  23) (l  38 c  24)                   identifier: x (definition: statements: l33, c14-15)
-                      statements (l  38 c  25) (l  38 c  26)                 =
-                      statements (l  38 c  27) (l  38 c  28)                 primary expression
-                      statements (l  38 c  27) (l  38 c  28)                   identifier: y (definition: statements: l38, c17-18)
-                      statements (l  38 c  28) (l  38 c  29)               ;
-                      statements (l  38 c  30) (l  38 c  31)             }
+                      statements (l  37 c  23) (l  37 c  26)           unary_expression (prefix)
+                      statements (l  37 c  23) (l  37 c  25)             ++
+                      statements (l  37 c  25) (l  37 c  26)             primary expression
+                      statements (l  37 c  25) (l  37 c  26)               identifier: y (definition: statements: l37, c17-18)
+                      statements (l  37 c  26) (l  37 c  27)           )
+                      statements (l  37 c  28) (l  37 c  29)           expression statement
+                      statements (l  37 c  28) (l  37 c  29)             ;
+                      statements (l  38 c   9) (l  38 c  38)         iteration statement (type for)
+                      statements (l  38 c   9) (l  38 c  12)           "for"
+                      statements (l  38 c  12) (l  38 c  13)           (
+                      statements (l  38 c  13) (l  38 c  19)           declaration
+                      statements (l  38 c  13) (l  38 c  16)             type specifier
+                      statements (l  38 c  13) (l  38 c  16)               "int"
+                      statements (l  38 c  17) (l  38 c  18)             direct declarator (identifier)
+                      statements (l  38 c  17) (l  38 c  18)               identifier (definition): y
+                      statements (l  38 c  18) (l  38 c  19)             ;
+                      statements (l  38 c  20) (l  38 c  22)           expression statement
+                      statements (l  38 c  20) (l  38 c  21)             primary expression
+                      statements (l  38 c  20) (l  38 c  21)               identifier: y (definition: statements: l38, c17-18)
+                      statements (l  38 c  21) (l  38 c  22)             ;
+                      statements (l  38 c  23) (l  38 c  26)           unary_expression (prefix)
+                      statements (l  38 c  23) (l  38 c  25)             ++
+                      statements (l  38 c  25) (l  38 c  26)             primary expression
+                      statements (l  38 c  25) (l  38 c  26)               identifier: y (definition: statements: l38, c17-18)
+                      statements (l  38 c  26) (l  38 c  27)           )
+                      statements (l  38 c  28) (l  38 c  38)           compound statement
+                      statements (l  38 c  28) (l  38 c  29)             {
+                      statements (l  38 c  30) (l  38 c  36)             expression statement
+                      statements (l  38 c  30) (l  38 c  35)               binary expression 
+                      statements (l  38 c  30) (l  38 c  31)                 primary expression
+                      statements (l  38 c  30) (l  38 c  31)                   identifier: x (definition: statements: l33, c14-15)
+                      statements (l  38 c  32) (l  38 c  33)                 =
+                      statements (l  38 c  34) (l  38 c  35)                 primary expression
+                      statements (l  38 c  34) (l  38 c  35)                   identifier: y (definition: statements: l38, c17-18)
+                      statements (l  38 c  35) (l  38 c  36)               ;
+                      statements (l  38 c  37) (l  38 c  38)             }
                       statements (l  39 c   1) (l  39 c   2)         }

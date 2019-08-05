@@ -46,20 +46,20 @@
                  struct_typedefs (l   3 c  14) (l   3 c  15)         )
                  struct_typedefs (l   4 c   1) (l   6 c   2)       compound statement
                  struct_typedefs (l   4 c   1) (l   4 c   2)         {
-                 struct_typedefs (l   5 c   2) (l   5 c  15)         expression statement
-                 struct_typedefs (l   5 c   2) (l   5 c  14)           binary expression 
-                 struct_typedefs (l   5 c   2) (l   5 c   9)             struct access
-                 struct_typedefs (l   5 c   2) (l   5 c   7)               struct access
-                 struct_typedefs (l   5 c   2) (l   5 c   3)                 primary expression
-                 struct_typedefs (l   5 c   2) (l   5 c   3)                   identifier: s (definition: struct_typedefs: l3, c13-14)
-                 struct_typedefs (l   5 c   3) (l   5 c   5)                 ->
-                 struct_typedefs (l   5 c   5) (l   5 c   7)                 identifier: s2 (definition: struct_typedefs: l1, c40-42)
-                 struct_typedefs (l   5 c   7) (l   5 c   8)               .
-                 struct_typedefs (l   5 c   8) (l   5 c   9)               identifier: x (definition: struct_typedefs: l1, c35-36)
-                 struct_typedefs (l   5 c  10) (l   5 c  11)             =
-                 struct_typedefs (l   5 c  12) (l   5 c  14)             primary expression
-                 struct_typedefs (l   5 c  12) (l   5 c  14)               int constant: 42 (type: d)
-                 struct_typedefs (l   5 c  14) (l   5 c  15)           ;
+                 struct_typedefs (l   5 c   9) (l   5 c  22)         expression statement
+                 struct_typedefs (l   5 c   9) (l   5 c  21)           binary expression 
+                 struct_typedefs (l   5 c   9) (l   5 c  16)             struct access
+                 struct_typedefs (l   5 c   9) (l   5 c  14)               struct access
+                 struct_typedefs (l   5 c   9) (l   5 c  10)                 primary expression
+                 struct_typedefs (l   5 c   9) (l   5 c  10)                   identifier: s (definition: struct_typedefs: l3, c13-14)
+                 struct_typedefs (l   5 c  10) (l   5 c  12)                 ->
+                 struct_typedefs (l   5 c  12) (l   5 c  14)                 identifier: s2 (definition: struct_typedefs: l1, c40-42)
+                 struct_typedefs (l   5 c  14) (l   5 c  15)               .
+                 struct_typedefs (l   5 c  15) (l   5 c  16)               identifier: x (definition: struct_typedefs: l1, c35-36)
+                 struct_typedefs (l   5 c  17) (l   5 c  18)             =
+                 struct_typedefs (l   5 c  19) (l   5 c  21)             primary expression
+                 struct_typedefs (l   5 c  19) (l   5 c  21)               int constant: 42 (type: d)
+                 struct_typedefs (l   5 c  21) (l   5 c  22)           ;
                  struct_typedefs (l   6 c   1) (l   6 c   2)         }
                  struct_typedefs (l   8 c   1) (l   8 c  14)   external declaration
                  struct_typedefs (l   8 c   1) (l   8 c  14)     function definition

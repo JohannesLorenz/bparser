@@ -34,7 +34,7 @@ std::ostream& operator<<(std::ostream& stream,
 	const geom_t& g)
 {
 	return stream << g.file() << ": "
-		<< "l" << g.line << ", c" << g.col;
+		<< "l" << g.line << ", c" << g.tabcol;
 }
 
 std::string to_string(const geom_t& g)

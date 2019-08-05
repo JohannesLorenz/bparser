@@ -6,17 +6,17 @@
                             list (l   1 c   1) (l   1 c   7)           "struct"
                             list (l   1 c   8) (l   1 c  14)           identifier (definition): list_t
                             list (l   2 c   1) (l   2 c   2)           {
-                            list (l   3 c   2) (l   3 c  22)           struct declaration
-                            list (l   3 c   2) (l   3 c  15)             type specifier
-                            list (l   3 c   2) (l   3 c  15)               struct specifier
-                            list (l   3 c   2) (l   3 c   8)                 "struct"
-                            list (l   3 c   9) (l   3 c  15)                 identifier: list_t (definition: list: l1, c8-14)
-                            list (l   3 c  15) (l   3 c  21)             declarator
-                            list (l   3 c  15) (l   3 c  16)               pointer
-                            list (l   3 c  15) (l   3 c  16)                 *
-                            list (l   3 c  17) (l   3 c  21)               direct declarator (identifier)
-                            list (l   3 c  17) (l   3 c  21)                 identifier (definition): next
-                            list (l   3 c  21) (l   3 c  22)             ;
+                            list (l   3 c   9) (l   3 c  29)           struct declaration
+                            list (l   3 c   9) (l   3 c  22)             type specifier
+                            list (l   3 c   9) (l   3 c  22)               struct specifier
+                            list (l   3 c   9) (l   3 c  15)                 "struct"
+                            list (l   3 c  16) (l   3 c  22)                 identifier: list_t (definition: list: l1, c8-14)
+                            list (l   3 c  22) (l   3 c  28)             declarator
+                            list (l   3 c  22) (l   3 c  23)               pointer
+                            list (l   3 c  22) (l   3 c  23)                 *
+                            list (l   3 c  24) (l   3 c  28)               direct declarator (identifier)
+                            list (l   3 c  24) (l   3 c  28)                 identifier (definition): next
+                            list (l   3 c  28) (l   3 c  29)             ;
                             list (l   4 c   1) (l   4 c   2)           }
                             list (l   4 c   3) (l   4 c   7)       direct declarator (identifier)
                             list (l   4 c   3) (l   4 c   7)         identifier (definition): list
@@ -32,14 +32,14 @@
                             list (l   6 c  10) (l   6 c  11)         )
                             list (l   7 c   1) (l   9 c   2)       compound statement
                             list (l   7 c   1) (l   7 c   2)         {
-                            list (l   8 c   2) (l   8 c  18)         expression statement
-                            list (l   8 c   2) (l   8 c  17)           struct access
-                            list (l   8 c   2) (l   8 c  11)             struct access
-                            list (l   8 c   2) (l   8 c   6)               primary expression
-                            list (l   8 c   2) (l   8 c   6)                 identifier: list (definition: list: l4, c3-7)
-                            list (l   8 c   6) (l   8 c   7)               .
-                            list (l   8 c   7) (l   8 c  11)               identifier: next (definition: list: l3, c24-28)
-                            list (l   8 c  11) (l   8 c  13)             ->
-                            list (l   8 c  13) (l   8 c  17)             identifier: next (definition: list: l3, c24-28)
-                            list (l   8 c  17) (l   8 c  18)           ;
+                            list (l   8 c   9) (l   8 c  25)         expression statement
+                            list (l   8 c   9) (l   8 c  24)           struct access
+                            list (l   8 c   9) (l   8 c  18)             struct access
+                            list (l   8 c   9) (l   8 c  13)               primary expression
+                            list (l   8 c   9) (l   8 c  13)                 identifier: list (definition: list: l4, c3-7)
+                            list (l   8 c  13) (l   8 c  14)               .
+                            list (l   8 c  14) (l   8 c  18)               identifier: next (definition: list: l3, c24-28)
+                            list (l   8 c  18) (l   8 c  20)             ->
+                            list (l   8 c  20) (l   8 c  24)             identifier: next (definition: list: l3, c24-28)
+                            list (l   8 c  24) (l   8 c  25)           ;
                             list (l   9 c   1) (l   9 c   2)         }

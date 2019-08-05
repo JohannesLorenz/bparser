@@ -250,61 +250,61 @@
                           nested (l  14 c  10) (l  14 c  11)         )
                           nested (l  14 c  12) (l  21 c   2)       compound statement
                           nested (l  14 c  12) (l  14 c  13)         {
-                          nested (l  15 c   2) (l  15 c  15)         declaration
-                          nested (l  15 c   2) (l  15 c   5)           type specifier
-                          nested (l  15 c   2) (l  15 c   5)             "int"
-                          nested (l  15 c   6) (l  15 c   7)           direct declarator (identifier)
-                          nested (l  15 c   6) (l  15 c   7)             identifier (definition): x
-                          nested (l  15 c   7) (l  15 c   8)           ,
-                          nested (l  15 c   9) (l  15 c  10)           direct declarator (identifier)
-                          nested (l  15 c   9) (l  15 c  10)             identifier (definition): g
-                          nested (l  15 c  10) (l  15 c  11)           ,
-                          nested (l  15 c  12) (l  15 c  14)           direct declarator (identifier)
-                          nested (l  15 c  12) (l  15 c  14)             identifier (definition): s1
-                          nested (l  15 c  14) (l  15 c  15)           ;
-                          nested (l  16 c   2) (l  16 c  12)         expression statement
-                          nested (l  16 c   2) (l  16 c  11)           sizeof ...
-                          nested (l  16 c   2) (l  16 c   8)             "sizeof"
-                          nested (l  16 c   8) (l  16 c   9)             (
-                          nested (l  16 c   9) (l  16 c  10)             type name
-                          nested (l  16 c   9) (l  16 c  10)               type specifier
-                          nested (l  16 c   9) (l  16 c  10)                 typedef name: s (definition: nested: l1, c27-28)
-                          nested (l  16 c  10) (l  16 c  11)             )
-                          nested (l  16 c  11) (l  16 c  12)           ;
-                          nested (l  17 c   2) (l  17 c  12)         expression statement
-                          nested (l  17 c   2) (l  17 c  11)           sizeof ...
-                          nested (l  17 c   2) (l  17 c   8)             "sizeof"
-                          nested (l  17 c   8) (l  17 c  11)             primary expression
-                          nested (l  17 c   8) (l  17 c   9)               (
-                          nested (l  17 c   9) (l  17 c  10)               primary expression
-                          nested (l  17 c   9) (l  17 c  10)                 identifier: f (definition: nested: l5, c7-8)
-                          nested (l  17 c  10) (l  17 c  11)               )
-                          nested (l  17 c  11) (l  17 c  12)           ;
-                          nested (l  18 c   2) (l  18 c  13)         expression statement
-                          nested (l  18 c   2) (l  18 c  12)           sizeof ...
-                          nested (l  18 c   2) (l  18 c   8)             "sizeof"
-                          nested (l  18 c   8) (l  18 c  12)             primary expression
-                          nested (l  18 c   8) (l  18 c   9)               (
-                          nested (l  18 c   9) (l  18 c  11)               primary expression
-                          nested (l  18 c   9) (l  18 c  11)                 identifier: f3 (definition: nested: l9, c9-11)
-                          nested (l  18 c  11) (l  18 c  12)               )
-                          nested (l  18 c  12) (l  18 c  13)           ;
-                          nested (l  19 c   2) (l  19 c  13)         expression statement
-                          nested (l  19 c   2) (l  19 c  12)           sizeof ...
-                          nested (l  19 c   2) (l  19 c   8)             "sizeof"
-                          nested (l  19 c   8) (l  19 c  12)             primary expression
-                          nested (l  19 c   8) (l  19 c   9)               (
-                          nested (l  19 c   9) (l  19 c  11)               primary expression
-                          nested (l  19 c   9) (l  19 c  11)                 identifier: f4 (definition: nested: l11, c8-10)
-                          nested (l  19 c  11) (l  19 c  12)               )
-                          nested (l  19 c  12) (l  19 c  13)           ;
-                          nested (l  20 c   2) (l  20 c  13)         expression statement
-                          nested (l  20 c   2) (l  20 c  12)           sizeof ...
-                          nested (l  20 c   2) (l  20 c   8)             "sizeof"
-                          nested (l  20 c   8) (l  20 c  12)             primary expression
-                          nested (l  20 c   8) (l  20 c   9)               (
-                          nested (l  20 c   9) (l  20 c  11)               primary expression
-                          nested (l  20 c   9) (l  20 c  11)                 identifier: f5 (definition: nested: l12, c8-10)
-                          nested (l  20 c  11) (l  20 c  12)               )
-                          nested (l  20 c  12) (l  20 c  13)           ;
+                          nested (l  15 c   9) (l  15 c  22)         declaration
+                          nested (l  15 c   9) (l  15 c  12)           type specifier
+                          nested (l  15 c   9) (l  15 c  12)             "int"
+                          nested (l  15 c  13) (l  15 c  14)           direct declarator (identifier)
+                          nested (l  15 c  13) (l  15 c  14)             identifier (definition): x
+                          nested (l  15 c  14) (l  15 c  15)           ,
+                          nested (l  15 c  16) (l  15 c  17)           direct declarator (identifier)
+                          nested (l  15 c  16) (l  15 c  17)             identifier (definition): g
+                          nested (l  15 c  17) (l  15 c  18)           ,
+                          nested (l  15 c  19) (l  15 c  21)           direct declarator (identifier)
+                          nested (l  15 c  19) (l  15 c  21)             identifier (definition): s1
+                          nested (l  15 c  21) (l  15 c  22)           ;
+                          nested (l  16 c   9) (l  16 c  19)         expression statement
+                          nested (l  16 c   9) (l  16 c  18)           sizeof ...
+                          nested (l  16 c   9) (l  16 c  15)             "sizeof"
+                          nested (l  16 c  15) (l  16 c  16)             (
+                          nested (l  16 c  16) (l  16 c  17)             type name
+                          nested (l  16 c  16) (l  16 c  17)               type specifier
+                          nested (l  16 c  16) (l  16 c  17)                 typedef name: s (definition: nested: l1, c27-28)
+                          nested (l  16 c  17) (l  16 c  18)             )
+                          nested (l  16 c  18) (l  16 c  19)           ;
+                          nested (l  17 c   9) (l  17 c  19)         expression statement
+                          nested (l  17 c   9) (l  17 c  18)           sizeof ...
+                          nested (l  17 c   9) (l  17 c  15)             "sizeof"
+                          nested (l  17 c  15) (l  17 c  18)             primary expression
+                          nested (l  17 c  15) (l  17 c  16)               (
+                          nested (l  17 c  16) (l  17 c  17)               primary expression
+                          nested (l  17 c  16) (l  17 c  17)                 identifier: f (definition: nested: l5, c7-8)
+                          nested (l  17 c  17) (l  17 c  18)               )
+                          nested (l  17 c  18) (l  17 c  19)           ;
+                          nested (l  18 c   9) (l  18 c  20)         expression statement
+                          nested (l  18 c   9) (l  18 c  19)           sizeof ...
+                          nested (l  18 c   9) (l  18 c  15)             "sizeof"
+                          nested (l  18 c  15) (l  18 c  19)             primary expression
+                          nested (l  18 c  15) (l  18 c  16)               (
+                          nested (l  18 c  16) (l  18 c  18)               primary expression
+                          nested (l  18 c  16) (l  18 c  18)                 identifier: f3 (definition: nested: l9, c9-11)
+                          nested (l  18 c  18) (l  18 c  19)               )
+                          nested (l  18 c  19) (l  18 c  20)           ;
+                          nested (l  19 c   9) (l  19 c  20)         expression statement
+                          nested (l  19 c   9) (l  19 c  19)           sizeof ...
+                          nested (l  19 c   9) (l  19 c  15)             "sizeof"
+                          nested (l  19 c  15) (l  19 c  19)             primary expression
+                          nested (l  19 c  15) (l  19 c  16)               (
+                          nested (l  19 c  16) (l  19 c  18)               primary expression
+                          nested (l  19 c  16) (l  19 c  18)                 identifier: f4 (definition: nested: l11, c8-10)
+                          nested (l  19 c  18) (l  19 c  19)               )
+                          nested (l  19 c  19) (l  19 c  20)           ;
+                          nested (l  20 c   9) (l  20 c  20)         expression statement
+                          nested (l  20 c   9) (l  20 c  19)           sizeof ...
+                          nested (l  20 c   9) (l  20 c  15)             "sizeof"
+                          nested (l  20 c  15) (l  20 c  19)             primary expression
+                          nested (l  20 c  15) (l  20 c  16)               (
+                          nested (l  20 c  16) (l  20 c  18)               primary expression
+                          nested (l  20 c  16) (l  20 c  18)                 identifier: f5 (definition: nested: l12, c8-10)
+                          nested (l  20 c  18) (l  20 c  19)               )
+                          nested (l  20 c  19) (l  20 c  20)           ;
                           nested (l  21 c   1) (l  21 c   2)         }
