@@ -238,11 +238,13 @@ class type_completor : ftor_base
 
 	void connect_identifier(identifier_t* , bool connect_as_struct = false);
 
+	bool allow_undefined;
 public:
-	type_completor(visitor_t* vref) :
+	type_completor(visitor_t* vref, bool allow_undefined) :
 		ftor_base(vref),
 		decl_depth(0),
-		current_struct_scope(NULL) {}
+		current_struct_scope(NULL),
+		allow_undefined(allow_undefined) {}
 
 	~type_completor() {
 		if(decl_depth) throw std::logic_error("Declaration depth counted wrong");

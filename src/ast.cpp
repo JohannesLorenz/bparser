@@ -106,7 +106,7 @@ translation_unit_t *get_ast(const char *input, const char* fname,
 	// std::cout << *transl_unit << std::endl;
 	
 	// run the type completor
-	io_visitor<type_completor> f;
+	io_visitor<type_completor> f(param_allow_undefined);
 	transl_unit->accept(f);
 
 	return transl_unit;

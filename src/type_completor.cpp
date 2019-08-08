@@ -455,7 +455,7 @@ void type_completor::on(struct_access_expression_t& s, leave)
 		}
 
 	}
-	if(searching)
+	if(searching && !allow_undefined)
 	 throw std::runtime_error("Identifier not found in struct!");
 
 	//connect_identifier(s.c.get<2>());
