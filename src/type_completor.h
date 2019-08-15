@@ -220,7 +220,10 @@ class type_completor : ftor_base
 						// variable out of scope
 						itr->second.pop_back();
 						if(itr->second.empty())
-						 table.erase(itr);
+						{
+							table.erase(itr);
+							break;
+						}
 					}
 				}
 			}
