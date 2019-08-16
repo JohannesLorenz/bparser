@@ -124,8 +124,18 @@ void struct_type_of::visit(function_call_expression_t& f)
 }
 
 void struct_type_of::visit(struct_access_expression_t& s) {
-	// should have already been done by other visitors
-	set_spec_from_id(s.c.get<2>()->_definition); // TODO: recursive visit?
+
+	identifier_t* id = s.c.get<2>();
+
+	if(id->_definition)
+	{
+		// should have already been done by other visitors
+		set_spec_from_id(s.c.get<2>()->_definition); // TODO: recursive visit?
+	}
+	else
+	{
+		assert(allow_undefined);
+	}
 }
 
 void struct_type_of::visit(compound_literal_t& c){
