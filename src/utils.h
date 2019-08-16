@@ -342,12 +342,15 @@ inline declaration_base& declaration_from_identifier(identifier_t& id)
 	return *v0.declaration_found;
 }
 
-inline struct_or_union_specifier_t& struct_rval_of_func(identifier_t& id)
+inline struct_or_union_specifier_t* struct_rval_of_func(identifier_t& id)
 {
 	struct_type_specifier_of_declaration_t v;
 //	std::cout << "DECLSPEC: " << declaration_from_identifier(*id._definition).decl_spec() << std::endl;
-	declaration_from_identifier(*id._definition).decl_spec().accept(v);
-	return *v.result;
+	if(id._definition) {
+		declaration_from_identifier(*id._definition).decl_spec().accept(v);
+		return v.result;
+	}
+	else { return NULL; }
 
 /*	func_visitor< is<struct_return_value_of_function> > v;
 

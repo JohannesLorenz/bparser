@@ -37,6 +37,8 @@
 //! only for internal use of type_completor
 class struct_type_of : public visitor_t
 {
+	bool allow_undefined;
+
 	// TODO: set_identifier function that checks if it's null
 	//	in all other node types, set identifier to null!
 	struct_or_union_specifier_t* _struct_specifier;
@@ -50,7 +52,7 @@ class struct_type_of : public visitor_t
 	void set_spec_from_id(identifier_t* struct_id);
 public:
 	struct_or_union_specifier_t* get_struct_specifier() { return _struct_specifier; }
-	struct_type_of() : _struct_specifier(NULL) {}
+	struct_type_of(bool allow_undefined) : allow_undefined(allow_undefined), _struct_specifier(NULL) {}
 	void visit(unary_expression_r &u);
 	void visit(unary_expression_l &u);
 	void visit(binary_expression_t &b);

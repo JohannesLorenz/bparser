@@ -29,7 +29,7 @@ void struct_type_of::set_spec_from_id(identifier_t* struct_id)
 {
 	struct_or_union_specifier_t* spec = dcast<struct_or_union_specifier_t>(struct_id->parent);
 	if(! spec) { // B : declared as a declarator?
-		spec = dcast<struct_or_union_specifier_t>(&struct_rval_of_func(*struct_id));
+		spec = dcast<struct_or_union_specifier_t>(struct_rval_of_func(*struct_id));
 		if(! spec)
 		{
 			std::cout << "ABORT INFO: " << *struct_id->parent << std::endl;
@@ -84,13 +84,21 @@ void struct_type_of::visit(primary_expression_t& p)
 	{
 	//	std::cout << "67: " << *struct_rval_of_func(*id).c.get<struct_or_union_specifier_t::identifier>() << std::endl;
 		
-		struct_or_union_specifier_t& result = struct_rval_of_func(*id);
-		identifier_t* structs_id = result.c.get<struct_or_union_specifier_t::identifier>();
-		
-		if(structs_id) // TODO: does this ever occur?
-		 set_spec_from_id(structs_id->_definition);
-		else
-		 set_spec(&result);
+		struct_or_union_specifier_t* result = struct_rval_of_func(*id);
+		if(result)
+		{
+			identifier_t* structs_id = result->c.get<struct_or_union_specifier_t::identifier>();
+
+			if(structs_id) // TODO: does this ever occur?
+			 set_spec_from_id(structs_id->_definition);
+			else
+			 set_spec(result);
+		}
+		else if (!allow_undefined)
+		{
+			// impossible?
+			throw "Could not lookup struct type in struct access";
+		}
 		
 	//	std::cout << "DEF: " << _identifier << std::endl;
 		/*if(is_func_id(*id))
@@ -395,7 +403,7 @@ void type_completor::on(struct_access_expression_t& s, leave)
 
 	// step 2: get struct type of left identifier
 #if 1
-	struct_type_of struct_type;
+	struct_type_of struct_type(allow_undefined);
 	s.c.get<0>()->accept(struct_type); // <- this does almost all the work, including typedef resolution
 #if 0
 	current_struct_scope = struct_type.get_identifier();
@@ -431,6 +439,11 @@ void type_completor::on(struct_access_expression_t& s, leave)
 #endif
 #else
 	safe_ptr<struct_or_union_specifier_t> spec = struct_type.get_struct_specifier();
+	if(!spec)
+	{
+		assert(allow_undefined);
+		return;
+	}
 #endif
 	struct_declaration_list_t& l = *spec->c.get<struct_or_union_specifier_t::declaration_list>();
 	bool searching = true;
