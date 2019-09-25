@@ -6,4 +6,5 @@ test/test
 tmp_result.txt
 doc/html
 doc/latex
+.cproject
 
