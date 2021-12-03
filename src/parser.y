@@ -362,7 +362,7 @@ enumeration_constant		/* before it has been defined as such */
 
 string
 	: STRING_LITERAL { $$=$1; /*c->c.set($1);*/ }
-	| FUNC_NAME { c11(); }
+	| FUNC_NAME { $$=$1; }
 	| FUNCTION_NAME { $$=$1; }
 	;
 
