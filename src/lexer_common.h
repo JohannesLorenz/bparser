@@ -34,6 +34,7 @@
 #include <cstring>
 #include <map>
 
+#include "esc_seq.h"
 #include "options.h"
 #include "node.h"
 #include "parser.h"
@@ -885,37 +886,6 @@ int app_float(fconstant_t*& token, const char* text, std::size_t length)
 	if(*p && (icmp(p,'f') || icmp(p,'l'))) ++p;
 	if(*p) throw std::logic_error("end of token not 0");
 	return app_with_string(token, F_CONSTANT, text, length);
-}
-
-void skip_esc_seq(const char*& p)
-{
-	if(*p == '\\')
-	{
-		++p;
-		if(*p == '\'' || *p == '"'
-			|| *p == '?' || *p == '\\'
-			|| *p == 'a' || *p == 'b'
-			|| *p == 'f' || *p == 'n'
-			|| *p == 'r' || *p == 't'
-			|| *p == 'v')
-			++p;
-		else if(*p > '0' && *p < '7')
-		{
-			++p;
-			if(*p > '0' && *p < '7')
-			{
-				++p;
-				if(*p > '0' && *p < '7')
-				{
-					++p;
-				}
-			}
-		}
-		else if(*p == 'x')
-		{
-			while(isxdigit(*p)) ++p;
-		}
-	}
 }
 
 int app_int(iconstant_t*& token, const char* text, char scanf_type, std::size_t length)
