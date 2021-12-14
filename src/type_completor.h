@@ -290,6 +290,7 @@ public:
 
 	// literals
 	void on(iconstant_t&, enter);
+	void on(string_literal_t& s, enter);
 
 	// default case
 	void on(node_base& , direction_t ) {}

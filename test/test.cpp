@@ -28,6 +28,7 @@
 #include "node.h"
 #include "visitor.h"
 #include "ast.h"
+#include "utils.h"
 
 int evaluate(node_base* /*e*/)
 {/*
@@ -373,6 +374,24 @@ void run(int argc, char** argv)
 			"fp1 is array of  pointer to function without argument specifier returning  pointer to array of  pointer to float "
 		);
 		grep_declspec("void func", "void f(void);", "void f(void);", "f is function without arguments returning void ");
+
+		{
+			// test strings
+			const char* strfile =
+				"int main() {\n"
+				"    \"hello \"\n"
+				"    \"world\"\n"
+				"    \"!!!\";\n"
+				"}\n";
+			translation_unit_t *e = get_ast(strfile, "filename.c");
+			function_definition_t* f = e->c.front()->c.get<0>();
+			compound_statement_t* c = f->c.get<3>();
+			expression_statement_t* ex = dcast<expression_statement_t>(c->c.get<1>()->front());
+			primary_expression_t* p = dcast<primary_expression_t>(ex->c.get<0>());
+			string_literal_t* str = dcast<string_literal_t>(p->c.get<0>());
+			if(str->str != "hello world!!!")
+				throw "Invalid string";
+		}
 	}
 	else // argc > 1
 	{

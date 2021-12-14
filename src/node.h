@@ -201,6 +201,7 @@ public:
 
 struct string_literal_t : public string_base_t
 {
+	std::string str;
 	void accept(class visitor_t& v);
 	string_literal_t(const char* value, geom_t geom);
 };

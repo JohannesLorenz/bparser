@@ -21,6 +21,7 @@
 #include <cstdio> // sscanf...
 
 #include "type_completor.h"
+#include "esc_seq.h"
 #include "node.h"
 #include "token.h"
 #include "utils.h"
@@ -298,6 +299,49 @@ void type_completor::connect_identifier(identifier_t* identifier,
 		if(!identifier->_definition)
 		 v_lookup_table.dangling_identifier(identifier, connect_as_struct);
 	}
+}
+
+void type_completor::on(string_literal_t& s, enter)
+{
+	const char* p = s.raw.c_str();
+	// the loop is mostly copied from lexer.l
+	do
+	{
+		// read one string part (e.g. for "x" "y", read "x")
+		if(*p == 'u' || *p == 'U' || *p == 'L') ++p;
+			++p; // "
+		if(*p == '8')
+			++p;
+		bool ok = true;
+		
+		const char* start_of_string_part = p;
+		do
+		{
+			if(*p != '"' && *p != '\\' && *p != '\n') // exclude single chars
+				++p;
+			else if(*p == '\\')
+			{
+				skip_esc_seq(p);
+			}
+			else // must be "
+			{
+				if(*p != '"')
+					throw std::runtime_error("lexer error for char parsing");
+				ok = false; // end found
+			}
+		} while(ok);
+		s.str.append(start_of_string_part, p);
+		++p; // '"'
+
+		// skip space between adjacent strings
+		for(; *p == ' ' || *p == '\t' || *p == '\n' || *p == '\v' || *p == '\f'; ++p);
+
+	} while (*p == '"'
+		|| (*p == 'u' && (*(p+1) == '"'
+			|| (*(p+1) == '8' && *(p+2) == '"') ))
+		|| (*p == 'U' && *(p+1) == '"')
+		|| (*p == 'L' && *(p+1) == '"')
+		);
 }
 
 void type_completor::on(unary_expression_l& u, enter)
