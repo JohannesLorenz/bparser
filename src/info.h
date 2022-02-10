@@ -17,6 +17,13 @@
 /* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA  */
 /*************************************************************************/
 
+/**
+	@file info.h
+	Definition of an add-on that builds a tree from a declaration,
+	making declarations easier to parse.
+	The starting point of the tree is class declarator_info_t
+*/
+
 #include <iosfwd>
 #include <vector>
 #include <stdexcept>
@@ -162,6 +169,7 @@ struct declarator_info_t : not_copyable
 	nodes::identifier_t* identifier;
 	bool is_idlist;
 	bool is_ellipsis;
+	int bitfield_width; // 0 if none, -1 if can't be calculated
 	
 	decl_auto_ptr<declspec_info_t> declspec;
 	decl_auto_ptr<pointer_info_t> pointers;
@@ -174,7 +182,8 @@ struct declarator_info_t : not_copyable
 		is_array_without_size(false),
 		identifier(NULL),
 		is_idlist(false),
-		is_ellipsis(false) {}
+		is_ellipsis(false),
+		bitfield_width(0) {}
 
 	std::string to_str(const std::string& inside = "") const;
 	std::string to_human() const;

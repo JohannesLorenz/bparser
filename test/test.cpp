@@ -320,8 +320,8 @@ void run(int argc, char** argv)
 		grep_declspec("primitive types", "void* v; _Bool b; _Complex c1; char c2; int i; float f; double d;", "void *v; _Bool b; _Complex c1; char c2; int i; float f; double d;");
 		grep_declspec("function forward declaration", "void forward_func(int, char);");
 		grep_declspec("structs",
-			"struct s1; struct s2 { int x2; }; struct { int x3; } s3; typedef struct { int x4; } s4; union { int x5; } u1;",
-			"int x2; int x3; struct s3; int x4; typedef struct s4; int x5; union u1;");
+			"struct s1; struct s2 { int x2 : 9; }; struct { int x3; } s3; typedef struct { int x4; } s4; union { int x5; } u1;",
+			"int x2 : 9; int x3; struct s3; int x4; typedef struct s4; int x5; union u1;");
 		grep_declspec("enums",
 			"enum e1; enum e2 { RED }; enum { ONE } e3; typedef enum { RIGHT } e4;",
 			"enum e3; typedef enum e4;");

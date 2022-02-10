@@ -18,6 +18,7 @@
 /*************************************************************************/
 
 #include <cassert>
+#include <cstdio>
 
 #include "node.h"
 #include "token.h"
@@ -92,6 +93,22 @@ std::string declarator_info_t::to_str(const std::string& inside) const
 	else
 		if(res[res.length()-1] == ' ')
 			res.resize(res.size() - 1);
+
+	if(bitfield_width != 0)
+	{
+		res += " : ";
+		if (bitfield_width == -1)
+		{
+			res += "(unknown-bitfield-width)";
+		}
+		else
+		{
+			char tmp[16];
+			snprintf(tmp, 15, "%d", bitfield_width);
+			res += tmp;
+		}
+	}
+
 	return res;
 }
 
@@ -407,10 +424,20 @@ public:
 	}
 };
 
+struct get_integral_from_expression_t : public visitor_t
+{
+	long value; // default is -1: could not compute the value
+	void visit(iconstant_t& i) { value = i.value; }
+	void visit(primary_expression_t& e) { e.c.get<0>()->accept(*this); }
+public:
+	get_integral_from_expression_t(expression_t& e) : value(-1) { e.accept(*this); }
+	long result() const { return value; }
+};
+
 class get_declarator_info : public visitor_t
 {
-	decl_auto_ptr<declarator_info_t> last_decl;
-	declarator_info_t* res;
+	decl_auto_ptr<declarator_info_t> last_decl; //!< current decl that is being filled
+	declarator_info_t* res; //!< result. almost not used during computation, refer to "last_decl"
 	bool m_specifiers_found;
 
 	void recurse_tqs(type_qualifier_t& t, pointer_info_t::type_qualifiers_t& tqs)
@@ -498,9 +525,16 @@ class get_declarator_info : public visitor_t
 	
 	// reached the top to get the declarator
 	void visit(init_declarator_t& x) { go_up(x); }
-	void visit(struct_declarator_t& x) { go_up(x); }
+	void visit(struct_declarator_t& x) {
+		expression_t* bitfield_width_ex = x.c.get<2>();
+		if(bitfield_width_ex)
+		{
+			get_integral_from_expression_t gife(*bitfield_width_ex);
+			last_decl->bitfield_width = gife.result();
+		}
+		go_up(x); }
 
-	
+	// append new decl to current, and make the child the current decl
 	void new_decl()
 	{
 		declarator_info_t* parent = last_decl.steal();
@@ -572,7 +606,7 @@ class get_declarator_info : public visitor_t
 	template<class NodeType>
 	void do_start(NodeType& x)
 	{
-		/* allocate fake start node */
+		/* allocate fake start node above our result */
 		last_decl.alloc();
 		declarator_info_t* fake_node = last_decl.raw();
 		x.accept(*this);
