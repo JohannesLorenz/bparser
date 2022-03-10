@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Compile
+      run: BISON_BIN=/usr/bin/bison FLEX_BIN=/usr/bin/flex make
+    - name: Test
+      run: LD_LIBRARY_PATH=$PWD/src ./test/test
