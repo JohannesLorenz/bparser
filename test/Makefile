@@ -10,7 +10,7 @@ LFLAGS	= -L../src -lbparser
 
 all: test
 test: test.o ../src/libbparser.so
-	$(CXX) $(FLAGS) $(LFLAGS) test.o -o test
+	$(CXX) $(FLAGS) test.o $(LFLAGS) -o test
 
 # test.cpp has no header file:
 test.o: test.cpp ../src/*.h
