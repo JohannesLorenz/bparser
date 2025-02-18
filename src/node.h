@@ -379,6 +379,14 @@ struct abstract_declarator_t : public declarator_base, public has_par<>
 
 struct type_specifier_t : public declaration_specifier_type
 {
+	/* children types can be:
+		- token_t (void, char, short, int, long, float, dobuble, signed, unsigned, _Bool, _Complex, _Imaginary)
+		- typedef_name_t
+		- type_specifier_complex_t:
+		- struct_or_union_specifier_t
+		- enum_specifiert_t
+		- atomics (not supported)
+	*/
 	ptn<	node_t> c; // FEATURE: more granular?
 	virtual void accept(class visitor_t& v);
 };
@@ -1225,6 +1233,14 @@ struct declarator_t : public declarator_base, public has_par<>
 
 struct declaration_specifiers_t : public node_t, public has_par<>
 {
+	/* all children types:
+		- type_specifier_t
+		- type_qualifier_t (const, restrict, volatile, atomic)
+		- alignment specifiers (not supported)
+		- token_t:
+			* storage class specifiers (typedef, extern, static, thread_local, auto, register)
+			* function specifiers (inline, noreturn)
+	*/
 	virtual void accept(class visitor_t& v);
 	std::list<node_t*> c;
 };
