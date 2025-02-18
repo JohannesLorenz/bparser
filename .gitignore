@@ -1,10 +1,14 @@
+# object files
+*.o
+*.so
+# generated files
 lexer.c
 lexer.h
 parser.c
 parser.h
+# other
 test/test
 tmp_result.txt
 doc/html
 doc/latex
 .cproject
-
