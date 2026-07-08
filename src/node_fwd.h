@@ -112,6 +112,7 @@ struct designator_list_t;
 struct designator_t;
 struct designator_id;
 struct designator_constant_expr;
+struct va_arg_expression_t;
 
 struct abstract_declarator_t;
 

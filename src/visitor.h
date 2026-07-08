@@ -120,6 +120,7 @@ public:
 	virtual void visit(comment_t& ) {}
 	virtual void visit(func_name_t& ) {}
 	virtual void visit(sizeof_expression_t& ) {}
+	virtual void visit(va_arg_expression_t& ) {}
 	virtual void visit(init_declarator_list_t& ) {}
 	virtual void visit(init_declarator_t& ) {}
 	virtual void visit(initializer_t& ) {}
@@ -332,6 +333,7 @@ public:
 	void visit(comment_t& n) { f(n); }
 	void visit(func_name_t& n) { f(n); }
 	void visit(sizeof_expression_t& n) { f(n); }
+	void visit(va_arg_expression_t& n) { f(n); }
 	void visit(init_declarator_list_t& n) { f(n); }
 	void visit(init_declarator_t& n) { f(n); }
 	void visit(initializer_t& n) { f(n); }
@@ -572,6 +574,7 @@ public:
 	void visit(comment_t& ) {}
 	void visit(func_name_t& ) {}
 	void visit(sizeof_expression_t& n);
+	void visit(va_arg_expression_t& n);
 //	void visit(constant_t& );
 	void visit(init_declarator_t& );
 	void visit(init_declarator_list_t& );
@@ -819,6 +822,7 @@ public:
 	void visit(comment_t& n);
 	void visit(func_name_t& n);
 	void visit(sizeof_expression_t& n);
+	void visit(va_arg_expression_t& n);
 //	void visit(constant_t& );
 	void visit(init_declarator_t& );
 	void visit(init_declarator_list_t& );

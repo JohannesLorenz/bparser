@@ -1,6 +1,6 @@
-                      statements (l   1 c   1) (l  39 c   2) translation unit
-                      statements (l   1 c   1) (l  39 c   2)   external declaration
-                      statements (l   1 c   1) (l  39 c   2)     function definition
+                      statements (l   1 c   1) (l  41 c   2) translation unit
+                      statements (l   1 c   1) (l  41 c   2)   external declaration
+                      statements (l   1 c   1) (l  41 c   2)     function definition
                       statements (l   1 c   1) (l   1 c   4)       type specifier
                       statements (l   1 c   1) (l   1 c   4)         "int"
                       statements (l   1 c   5) (l   1 c  11)       direct declarator (function)
@@ -8,7 +8,7 @@
                       statements (l   1 c   5) (l   1 c   9)           identifier (definition): main
                       statements (l   1 c   9) (l   1 c  10)         (
                       statements (l   1 c  10) (l   1 c  11)         )
-                      statements (l   2 c   1) (l  39 c   2)       compound statement
+                      statements (l   2 c   1) (l  41 c   2)       compound statement
                       statements (l   2 c   1) (l   2 c   2)         {
                       statements (l   3 c   9) (l   4 c  10)         compound statement
                       statements (l   3 c   9) (l   3 c  10)           {
@@ -213,4 +213,87 @@
                       statements (l  38 c  34) (l  38 c  35)                   identifier: y (definition: statements: l38, c17-18)
                       statements (l  38 c  35) (l  38 c  36)               ;
                       statements (l  38 c  37) (l  38 c  38)             }
-                      statements (l  39 c   1) (l  39 c   2)         }
+                      statements (l  39 c   9) (l  39 c  41)         iteration statement (type for)
+                      statements (l  39 c   9) (l  39 c  12)           "for"
+                      statements (l  39 c  12) (l  39 c  13)           (
+                      statements (l  39 c  13) (l  39 c  22)           declaration
+                      statements (l  39 c  13) (l  39 c  16)             type specifier
+                      statements (l  39 c  13) (l  39 c  16)               "int"
+                      statements (l  39 c  17) (l  39 c  18)             direct declarator (identifier)
+                      statements (l  39 c  17) (l  39 c  18)               identifier (definition): y
+                      statements (l  39 c  18) (l  39 c  19)             ,
+                      statements (l  39 c  20) (l  39 c  21)             direct declarator (identifier)
+                      statements (l  39 c  20) (l  39 c  21)               identifier (definition): z
+                      statements (l  39 c  21) (l  39 c  22)             ;
+                      statements (l  39 c  23) (l  39 c  25)           expression statement
+                      statements (l  39 c  23) (l  39 c  24)             primary expression
+                      statements (l  39 c  23) (l  39 c  24)               identifier: y (definition: statements: l39, c17-18)
+                      statements (l  39 c  24) (l  39 c  25)             ;
+                      statements (l  39 c  26) (l  39 c  29)           unary_expression (prefix)
+                      statements (l  39 c  26) (l  39 c  28)             ++
+                      statements (l  39 c  28) (l  39 c  29)             primary expression
+                      statements (l  39 c  28) (l  39 c  29)               identifier: y (definition: statements: l39, c17-18)
+                      statements (l  39 c  29) (l  39 c  30)           )
+                      statements (l  39 c  31) (l  39 c  41)           compound statement
+                      statements (l  39 c  31) (l  39 c  32)             {
+                      statements (l  39 c  33) (l  39 c  39)             expression statement
+                      statements (l  39 c  33) (l  39 c  38)               binary expression 
+                      statements (l  39 c  33) (l  39 c  34)                 primary expression
+                      statements (l  39 c  33) (l  39 c  34)                   identifier: x (definition: statements: l33, c14-15)
+                      statements (l  39 c  35) (l  39 c  36)                 =
+                      statements (l  39 c  37) (l  39 c  38)                 primary expression
+                      statements (l  39 c  37) (l  39 c  38)                   identifier: y (definition: statements: l39, c17-18)
+                      statements (l  39 c  38) (l  39 c  39)               ;
+                      statements (l  39 c  40) (l  39 c  41)             }
+                      statements (l  40 c   9) (l  40 c  58)         iteration statement (type for)
+                      statements (l  40 c   9) (l  40 c  12)           "for"
+                      statements (l  40 c  12) (l  40 c  13)           (
+                      statements (l  40 c  13) (l  40 c  30)           declaration
+                      statements (l  40 c  13) (l  40 c  16)             type specifier
+                      statements (l  40 c  13) (l  40 c  16)               "int"
+                      statements (l  40 c  17) (l  40 c  22)             init declarator
+                      statements (l  40 c  17) (l  40 c  18)               direct declarator (identifier)
+                      statements (l  40 c  17) (l  40 c  18)                 identifier (definition): y
+                      statements (l  40 c  19) (l  40 c  20)               =
+                      statements (l  40 c  21) (l  40 c  22)               initializer
+                      statements (l  40 c  21) (l  40 c  22)                 primary expression
+                      statements (l  40 c  21) (l  40 c  22)                   int constant: 0 (type: d)
+                      statements (l  40 c  22) (l  40 c  23)             ,
+                      statements (l  40 c  24) (l  40 c  29)             init declarator
+                      statements (l  40 c  24) (l  40 c  25)               direct declarator (identifier)
+                      statements (l  40 c  24) (l  40 c  25)                 identifier (definition): z
+                      statements (l  40 c  26) (l  40 c  27)               =
+                      statements (l  40 c  28) (l  40 c  29)               initializer
+                      statements (l  40 c  28) (l  40 c  29)                 primary expression
+                      statements (l  40 c  28) (l  40 c  29)                   int constant: 1 (type: d)
+                      statements (l  40 c  29) (l  40 c  30)             ;
+                      statements (l  40 c  31) (l  40 c  38)           expression statement
+                      statements (l  40 c  31) (l  40 c  37)             binary expression 
+                      statements (l  40 c  31) (l  40 c  32)               primary expression
+                      statements (l  40 c  31) (l  40 c  32)                 identifier: y (definition: statements: l40, c17-18)
+                      statements (l  40 c  33) (l  40 c  34)               <
+                      statements (l  40 c  35) (l  40 c  37)               primary expression
+                      statements (l  40 c  35) (l  40 c  37)                 int constant: 10 (type: d)
+                      statements (l  40 c  37) (l  40 c  38)             ;
+                      statements (l  40 c  39) (l  40 c  55)           binary expression 
+                      statements (l  40 c  39) (l  40 c  44)             binary expression 
+                      statements (l  40 c  39) (l  40 c  40)               primary expression
+                      statements (l  40 c  39) (l  40 c  40)                 identifier: y (definition: statements: l40, c17-18)
+                      statements (l  40 c  41) (l  40 c  42)               =
+                      statements (l  40 c  43) (l  40 c  44)               primary expression
+                      statements (l  40 c  43) (l  40 c  44)                 int constant: 0 (type: d)
+                      statements (l  40 c  44) (l  40 c  45)             ,
+                      statements (l  40 c  46) (l  40 c  55)             binary expression 
+                      statements (l  40 c  46) (l  40 c  47)               primary expression
+                      statements (l  40 c  46) (l  40 c  47)                 identifier: z (definition: statements: l40, c24-25)
+                      statements (l  40 c  48) (l  40 c  49)               =
+                      statements (l  40 c  50) (l  40 c  55)               binary expression 
+                      statements (l  40 c  50) (l  40 c  51)                 primary expression
+                      statements (l  40 c  50) (l  40 c  51)                   identifier: y (definition: statements: l40, c17-18)
+                      statements (l  40 c  52) (l  40 c  53)                 +
+                      statements (l  40 c  54) (l  40 c  55)                 primary expression
+                      statements (l  40 c  54) (l  40 c  55)                   int constant: 1 (type: d)
+                      statements (l  40 c  55) (l  40 c  56)           )
+                      statements (l  40 c  57) (l  40 c  58)           expression statement
+                      statements (l  40 c  57) (l  40 c  58)             ;
+                      statements (l  41 c   1) (l  41 c   2)         }

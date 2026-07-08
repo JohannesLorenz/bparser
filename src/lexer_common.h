@@ -720,11 +720,12 @@ public:
 								? expect_type_specifier : declaration_state;
 							break;
 						case ',':
-							next_state = (decl_depth > 0)
-								// in a function, a comma separates identifiers: "void f(int a, int b)"
+							next_state = (par_count > 0 && !in_for_header)
+								// in a function declaration, a comma separates identifiers: "void f(int a, int b)"
+								// or inside parenthesis (e.g. __builtin_va_arg), the second arg is in type context
 								? expect_type_specifier
-								// outside a function, we may have multiple declarators of
-								// "similar" type: "int a,b";
+								// outside a function (or in "for" header), comma separates declarators:
+								// "int a, b" or "for(int a, b; ...)"
 								: expect_braces_pointers_type_qualifiers_identifier;
 							break;
 						case '=':

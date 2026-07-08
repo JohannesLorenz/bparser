@@ -598,6 +598,18 @@ struct sizeof_expression_t : public expression_t
 						end_token > > > > c;
 };
 
+struct va_arg_expression_t : public expression_t
+{
+
+	void accept(class visitor_t& v);
+	ptn<	token_t,							// __builtin_va_arg keyword
+		ptn<	token_t,						// (
+			ptn<	expression_t, 					// va_list arg
+				ptn <	token_t,				// ,
+					ptn <	type_name_t,			// type
+							end_token > > > > > c;	// )
+};
+
 enum constant_type
 {
 	ct_int,

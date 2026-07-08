@@ -107,7 +107,8 @@ const id_and_name names[] =
 	{ t_generic, "generic" },
 	{ t_noreturn, "noreturn" },
 	{ t_static_assert, "static_assert" },
-	{ t_thread_local, "thread_local" }
+	{ t_thread_local, "thread_local" },
+	{ t_builtin_va_arg, "__builtin_va_arg" }
 };
 
 const char* name_of(int token_id)
@@ -123,6 +124,8 @@ std::size_t token_length(token_id t)
 {
 	switch(t)
 	{
+		case t_builtin_va_arg:
+			return 16;
 		case t_attribute:
 		case t_static_assert:
 			return 13;

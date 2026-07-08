@@ -36,4 +36,6 @@ int main()
 	for(int y; y; ) ;
 	for(int y; y; ++y) ;
 	for(int y; y; ++y) { x = y; }
+	for(int y, z; y; ++y) { x = y; }
+	for(int y = 0, z = 1; y < 10; y = 0, z = y + 1) ;
 }
