@@ -114,6 +114,7 @@ enum token_id
 	t_noreturn = NORETURN,
 	t_static_assert = STATIC_ASSERT,
 	t_thread_local = THREAD_LOCAL,
+	t_builtin_va_arg = BUILTIN_VA_ARG,
 
 	t_comment = COMMENT
 };

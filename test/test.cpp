@@ -315,6 +315,7 @@ void run(int argc, char** argv)
 		run_test_file("struct_acc");
 		run_test_file("struct_typedefs");
 		run_test_file("list");
+		run_test_file("va_arg");
 		
 		grep_declspec("basics", "void _() { int x; }", "void _(); int x;");
 		grep_declspec("primitive types", "void* v; _Bool b; _Complex c1; char c2; int i; float f; double d;", "void *v; _Bool b; _Complex c1; char c2; int i; float f; double d;");

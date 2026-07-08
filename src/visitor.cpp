@@ -226,6 +226,11 @@ void fwd::visit(sizeof_expression_t& n)
 	accept_all(n.c);
 }
 
+void fwd::visit(va_arg_expression_t& n)
+{
+	accept_all(n.c);
+}
+
 void fwd::visit(type_specifier_t &t) { accept_all(t.c); }
 //void fwd::visit(type_identifier &t) { visit_all(t.c); }
 void fwd::visit(type_qualifier_t &t) { visit_all(t.c); }
@@ -784,6 +789,13 @@ void dumper_t::visit(sizeof_expression_t& n)
 {
 	incr_depth_t x(&depth, stream, n.span);
 	stream << "sizeof ..." << std::endl;
+	fwd::visit(n);
+}
+
+void dumper_t::visit(va_arg_expression_t& n)
+{
+	incr_depth_t x(&depth, stream, n.span);
+	stream << "__builtin_va_arg ..." << std::endl;
 	fwd::visit(n);
 }
 

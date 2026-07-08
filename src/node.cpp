@@ -191,6 +191,7 @@ void jump_statement_t::accept(visitor_t& v) { v.vis(this); }
 //void block_item_list_t::accept(visitor_t& v) { v.vis(this); }
 void type_specifier_t::accept(visitor_t& v) { v.vis(this); }
 void sizeof_expression_t::accept(visitor_t& v) { v.vis(this); }
+void va_arg_expression_t::accept(visitor_t& v) { v.vis(this); }
 
 /*void expression_t::accept_children(visitor_t& v)
 {

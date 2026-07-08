@@ -217,7 +217,7 @@ typedef void* yyscan_t;
 
 %token  COMMENT
 %token	ATTR_NAME ATTRIBUTE
-%token	IDENTIFIER I_CONSTANT F_CONSTANT STRING_LITERAL FUNC_NAME FUNCTION_NAME SIZEOF
+%token	IDENTIFIER I_CONSTANT F_CONSTANT STRING_LITERAL FUNC_NAME FUNCTION_NAME SIZEOF BUILTIN_VA_ARG
 %token	PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
 %token	AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
 %token	SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
@@ -326,7 +326,7 @@ typedef void* yyscan_t;
 	VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED BOOL COMPLEX INLINE
 	'(' ')' struct_or_union ';' ':' CASE DEFAULT
 	'{' '}' IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
-	INC_OP DEC_OP SIZEOF ',' '*' '/' '%' '+' '-' LEFT_OP RIGHT_OP '<' '>'
+	INC_OP DEC_OP SIZEOF BUILTIN_VA_ARG ',' '*' '/' '%' '+' '-' LEFT_OP RIGHT_OP '<' '>'
 	LE_OP GE_OP EQ_OP NE_OP '&' '^' '|' AND_OP OR_OP '=' '[' ']' '.' '?' PTR_OP
 	'~' '!' MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN SUB_ASSIGN
 	LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
@@ -408,6 +408,7 @@ unary_expression
 	| SIZEOF unary_expression { sizeof_expression_t* e; alloc(e); setc(e, e->c, $1, NULL, NULL, $2, NULL); $$=e; } // example: sizeof 255+1
 	| SIZEOF '(' type_name ')' { sizeof_expression_t* e; alloc(e); setc(e, e->c, $1,$2,$3,NULL, $4); $$=e; }
 	| ALIGNOF '(' type_name ')' { c11(); }
+	| BUILTIN_VA_ARG '(' assignment_expression ',' type_name ')' { va_arg_expression_t* e; alloc(e); setc(e, e->c, $1, $2, $3, $4, $5, $6); $$=e; }
 	;
 
 unary_operator

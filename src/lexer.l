@@ -97,6 +97,7 @@ static int check_type(const char* text);
 "__func__"				{ return app3(yylval->token, FUNC_NAME, yytext); }
 "__FUNCTION__"				{ return app3(yylval->token, FUNCTION_NAME, yytext); }
 "__attribute__"				{ return app3(yylval->token, ATTRIBUTE, yytext); }
+"__builtin_va_arg"			{ return app3(yylval->token, BUILTIN_VA_ARG, yytext); }
 
 {L}{A}*					{	
 						// it should rather be: set_state (IDENTIFIER_OR_ENUMERATOR_OR...)
