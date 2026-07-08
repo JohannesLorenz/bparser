@@ -11,7 +11,7 @@ CFLAGS	= -fPIC
 LFLAGS	= -shared
 #BISON_BIN = /home/t0161834/pakete/bison-3.0.4/install/bin/bison
 #FLEX_BIN = /home/t0161834/pakete/flex-2.5.39/install/bin/flex
-HEADERS := $(shell find . -name '*.h' 2>/dev/null)
+HEADERS := lexer.h parser.h $(shell find . -name '*.h' 2>/dev/null)
 
 all: libbparser.so
 libbparser.so: $(FILES)
@@ -24,13 +24,13 @@ parser.c: parser.y lexer.c
 	$(BISON_BIN) -t --debug -Wno-conflicts-sr parser.y
 
 # default compilation rule
-%.o: %.cpp lexer.c parser.c %.h $(HEADERS)
+%.o: %.cpp lexer.c parser.c $(HEADERS)
 	$(CXX) $(FLAGS) $(CFLAGS) -c $< -o $@
 # main.cpp has no header file:
 #main.o: main.cpp lexer.c parser.c
 #	$(CXX) $(FLAGS) $(CFLAGS) -c $< -o $@
 # rule to compile lexer and parser:
-%.o: %.c lexer.c parser.c node.h lexer_common.h $(HEADERS)
+%.o: %.c lexer.c parser.c $(HEADERS)
 	$(CXX) $(FLAGS) $(CFLAGS) -ansi -c $< -o $@
 clean:
 	rm -f *.o *~ lexer.c lexer.h parser.c parser.h libbparser.so # main
