@@ -424,7 +424,8 @@ static int check_type(const char* text) // FEATURE: lookup_table function?
 			if(allow_undefined) /* in this mode, identifier lists are forbidden */
 				return IDENTIFIER; /* best guess */
 			else /* undefined are forbidden */
-			{ /* fall through => flag as identifier list */ }
+			{ }
+			/* fall through */
 		default:
 			states.flag_symbol(text, lt_identifier_list);
 			states.recent_was_flagged_unknown = text;
