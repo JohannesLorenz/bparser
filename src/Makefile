@@ -30,6 +30,8 @@ parser.c: parser.y lexer.c
 
 parser.h: parser.c
 
+lexer.o: FLAGS += -Wno-unused-parameter
+
 # default compilation rule
 %.o: %.cpp lexer.c parser.c $(HEADERS)
 	$(CXX) $(FLAGS) $(CFLAGS) -c $< -o $@

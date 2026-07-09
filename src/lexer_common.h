@@ -612,6 +612,7 @@ public:
 				case '(':
 					// erase temporarily
 					lookup_table_t::notify_dec_decl_depth(decl_depth + brack_count - 1);
+					/* fall through */
 				default:
 					// keep variables from for loop or function header (FEATURE: useless?)
 					// otherwise, the brace is not reopening, so smash out
@@ -663,6 +664,7 @@ public:
 						case NORETURN:
 							next_state = expect_declaration_specifiers_braces_pointers_type_qualifiers_identifier;
 					}
+					/* fall through */
 				case expect_braces_pointers_type_qualifiers_identifier:
 					switch(token_id)
 					{
