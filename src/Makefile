@@ -20,8 +20,15 @@ libbparser.so: $(FILES)
 lexer.c: lexer.l 
 	$(FLEX_BIN) lexer.l
 
+# lexer.h/parser.h are generated as side outputs of flex/bison runs.
+# Keep explicit targets so Make can satisfy header prerequisites without
+# falling back to implicit C compile rules for lexer.c/parser.c.
+lexer.h: lexer.c
+
 parser.c: parser.y lexer.c
 	$(BISON_BIN) -t --debug -Wno-conflicts-sr parser.y
+
+parser.h: parser.c
 
 # default compilation rule
 %.o: %.cpp lexer.c parser.c $(HEADERS)
