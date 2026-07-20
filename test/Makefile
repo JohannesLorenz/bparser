@@ -12,6 +12,12 @@ all: test
 test: test.o ../src/libbparser.so
 	$(CXX) $(FLAGS) test.o $(LFLAGS) -o test
 
+../src/libbparser.so:
+	$(MAKE) -C ../src libbparser.so
+
+run: test
+	cd .. && LD_LIBRARY_PATH=src:$$LD_LIBRARY_PATH test/test
+
 # test.cpp has no header file:
 test.o: test.cpp ../src/*.h
 	$(CXX) $(FLAGS) $(CFLAGS) -c $< -o $@

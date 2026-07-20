@@ -11,6 +11,8 @@ CFLAGS	= -fPIC
 LFLAGS	= -shared
 #BISON_BIN = /home/t0161834/pakete/bison-3.0.4/install/bin/bison
 #FLEX_BIN = /home/t0161834/pakete/flex-2.5.39/install/bin/flex
+FLEX_BIN ?= /usr/bin/flex
+BISON_BIN ?= /usr/bin/bison
 HEADERS := lexer.h parser.h $(shell find . -name '*.h' 2>/dev/null)
 
 all: libbparser.so
