@@ -6,7 +6,12 @@ build:
 	mkdir -p $(BUILDDIR)
 	cd src && $(MAKE) && cd ..
 	cd test && $(MAKE) test && cd ..
-	cp -f src/libbparser.so test/test $(BUILDDIR)/
+	$(MAKE) $(BUILDDIR)/libbparser.so $(BUILDDIR)/test
+
+$(BUILDDIR)/libbparser.so: src/libbparser.so
+	cp -f src/libbparser.so $(BUILDDIR)/
+$(BUILDDIR)/test: test/test
+	cp -f test/test $(BUILDDIR)/
 
 run: build
 	cd test && $(MAKE) run && cd ..
